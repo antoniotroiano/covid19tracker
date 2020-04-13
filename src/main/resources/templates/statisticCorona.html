@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics of corona worldwide</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+</head>
+<body>
+
+<section>
+    <label>Confirmed</label>
+    <label th:text="${confirmed}"></label>
+    <label>Recovered</label>
+    <label th:text="${recovered}"></label>
+    <label>Deaths</label>
+    <label th:text="${deaths}"></label>
+    <label>Last update</label>
+    <label th:text="${lastUpdate}"></label>
+</section>
+
+<canvas id="dataWorldConfirmed" width="450" height="100"></canvas>
+
+<script>
+    const confirmed = [[${confirmedList}]];
+
+    const today = new Date();
+    const date = today.getDate() + '-' + today.getMonth() + '-' + today.getFullYear();
+
+    let days = [];
+    console.log(days);
+    for (let i = 1; i <= confirmed.length; i++) {
+        if (days[days.length - 1] !== date || days[days.length - 1] === date) {
+            days.push(date);
+            console.log("If push" + days);
+        } else {
+            days.push(date);
+            console.log("Else push" + days);
+        }
+    }
+
+    const ctx = document.getElementById('dataWorldConfirmed').getContext('2d');
+    const dataWorldConfirmed = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: days,
+            datasets: [{
+                label: 'Confirmed',
+                backgroundColor: 'rgb(147,190,234, 0.6)',
+                borderWidth: 1,
+                borderColor: 'rgb(13,23,234)',
+                hoverBackgroundColor: 'rgb(147,190,234, 0.7)',
+                barPercentage: 0.9,
+                barThickness: 25,
+                maxBarThickness: 30,
+                minBarLength: 100,
+                data: confirmed
+            }]
+        },
+        options: {
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'center',
+                labels: {
+                    boxWidth: 40,
+                    fontColor: 'rgb(000, 000, 000)'
+                }
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                padding: 15,
+                fontColor: '#69C8C8',
+                text: 'Confirmed world'
+            }
+        }
+    });
+</script>
+
+<canvas id="dataWorldRecovered" width="450" height="100"></canvas>
+
+<script>
+    const recovered = [[${recoveredList}]];
+
+    const today2 = new Date();
+    const date2 = today2.getDate() + '-' + today2.getMonth() + '-' + today2.getFullYear();
+
+    let days2 = [];
+    console.log(days2);
+    for (let i = 1; i <= recovered.length; i++) {
+        if (days2[days2.length - 1] !== date2 || days[days2.length - 1] === date2) {
+            days2.push(date2);
+            console.log("If push" + days2);
+        } else {
+            days2.push(date2);
+            console.log("Else push" + days2);
+        }
+    }
+
+    const ctx2 = document.getElementById('dataWorldRecovered').getContext('2d');
+    const dataWorldRecovered = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: days2,
+            datasets: [{
+                label: 'Recovered',
+                backgroundColor: 'rgba(167,234,122,0.6)',
+                borderWidth: 1,
+                borderColor: 'rgb(9,234,14)',
+                hoverBackgroundColor: 'rgba(187,234,109,0.7)',
+                barPercentage: 0.9,
+                barThickness: 25,
+                maxBarThickness: 30,
+                minBarLength: 100,
+                data: recovered
+            }]
+        },
+        options: {
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'center',
+                labels: {
+                    boxWidth: 40,
+                    fontColor: 'rgb(000, 000, 000)'
+                }
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                padding: 15,
+                fontColor: '#69C8C8',
+                text: 'Recovered world'
+            }
+        }
+    });
+</script>
+
+<canvas id="dataWorldDeaths" width="450" height="100"></canvas>
+
+<script>
+    const deaths = [[${deathsList}]];
+
+    const today3 = new Date();
+    const date3 = today3.getDate() + '-' + today3.getMonth() + '-' + today3.getFullYear();
+
+    let days3 = [];
+    console.log(days3);
+    for (let i = 1; i <= deaths.length; i++) {
+        if (days3[days3.length - 1] !== date3 || days3[days3.length - 1] === date3) {
+            days3.push(date3);
+            console.log("If push" + days3);
+        } else {
+            days.push(date3);
+            console.log("Else push" + days3);
+        }
+    }
+
+    const ctx3 = document.getElementById('dataWorldDeaths').getContext('2d');
+    const dataWorldDeaths = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: days3,
+            datasets: [{
+                label: 'Death',
+                backgroundColor: 'rgba(234,127,121,0.6)',
+                borderWidth: 1,
+                borderColor: 'rgb(234,3,12)',
+                hoverBackgroundColor: 'rgba(234,81,77,0.7)',
+                barPercentage: 0.9,
+                barThickness: 25,
+                maxBarThickness: 30,
+                minBarLength: 100,
+                data: deaths
+            }]
+        },
+        options: {
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'center',
+                labels: {
+                    boxWidth: 40,
+                    fontColor: 'rgb(000, 000, 000)'
+                }
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                padding: 15,
+                fontColor: '#69C8C8',
+                text: 'Death world'
+            }
+        }
+    });
+</script>
+</body>
+</html>

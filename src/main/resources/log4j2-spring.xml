@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" name="sirmodel">
+    <Properties>
+        <Property name="log-path">logs/</Property>
+    </Properties>
+    <Appenders>
+        <!-- File Appender-->
+        <RollingFile name="com.valtech.statistics.controller.model-log" fileName="${log-path}/com.valtech.statistics.controller.model/com.valtech.statistics.controller.model.log"
+                     filePattern="${log-path}/com.valtech.statistics.controller.model/com.valtech.statistics.controller.model-%d{yyyy-MM-dd}.log">
+            <PatternLayout
+                    pattern="%-5p | %d{dd-MM HH:mm:ss,SSS} | [%X{mdc.traceId}] | [%-16t] | %-5p %-45.45c (%-3L) - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="com.valtech.statistics.controller-log" fileName="${log-path}/com.valtech.statistics.controller/com.valtech.statistics.controller.log"
+                     filePattern="${log-path}/com.valtech.statistics.controller/com.valtech.statistics.controller-%d{yyyy-MM-dd}.log">
+            <PatternLayout
+                    pattern="%-5p | %d{dd-MM HH:mm:ss,SSS} | [%X{mdc.traceId}] | [%-16t] | %-5p %-45.45c (%-3L) - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="com.valtech.statistics.controller.repository-log" fileName="${log-path}/com.valtech.statistics.controller.repository/com.valtech.statistics.controller.repository.log"
+                     filePattern="${log-path}/com.valtech.statistics.controller.repository/com.valtech.statistics.controller.repository-%d{yyyy-MM-dd}.log">
+            <PatternLayout
+                    pattern="%-5p | %d{dd-MM HH:mm:ss,SSS} | [%X{mdc.traceId}] | [%-16t] | %-5p %-45.45c (%-3L) - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="com.valtech.statistics.controller.service-log" fileName="${log-path}/com.valtech.statistics.controller.service/com.valtech.statistics.controller.service.log"
+                     filePattern="${log-path}/com.valtech.statistics.controller.service/com.valtech.statistics.controller.service-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss} %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+        <!-- Console Appender -->
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%-5p | %d{dd-MM HH:mm:ss,SSS} | [%X{mdc.traceId}] | [%-16t] | %-5p %-45.45c (%-3L) - %m%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.valtech.sirmodel.model" level="info" additivity="false">
+            <appender-ref ref="com.valtech.statistics.controller.model-log" level="info"/>
+        </Logger>
+        <Logger name="com.valtech.sirmodel.controller" level="info" additivity="false">
+            <appender-ref ref="com.valtech.statistics.controller-log" level="info"/>
+        </Logger>
+        <Logger name="com.valtech.sirmodel.repository" level="info" additivity="false">
+            <appender-ref ref="com.valtech.statistics.controller.repository-log" level="info"/>
+        </Logger>
+        <Logger name="com.valtech.sirmodel.service" level="info" additivity="false">
+            <appender-ref ref="com.valtech.statistics.controller.service-log" level="info"/>
+        </Logger>
+        <Root level="info" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

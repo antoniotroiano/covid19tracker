@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SIR-Model</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+<body>
+
+<section>
+    <a href="/statisticsCorona/world">Statistics of corona world</a>
+    <a href="/statisticsCorona/germany">Statistics of corona germany</a>
+    <form method="post" th:action="@{/sir-com.valtech.statistics.controller.model/newCalculation}" th:object="${values}">
+        <label>Transmission rate:</label>
+        <label for="transmissionRate"></label>
+        <input id="transmissionRate" th:field="*{transmissionRate}" type="text">
+        <lable>Recovery rate:</lable>
+        <label for="recoveryRate"></label>
+        <input id="recoveryRate" th:field="*{recoveryRate}" type="text">
+        <button type="submit">Send</button>
+    </form>
+
+    <label>Chart with transmission rate =</label>
+    <label th:text="${transmissionRate}" type="text"></label>
+    <label>Chart with recovery rate =</label>
+    <label th:text="${recoveryRate}" type="text"></label>
+</section>
+
+<canvas id="myChart"></canvas>
+
+<script>
+    const sus = [[${resultSusceptible}]];
+    const inf = [[${resultInfected}]];
+    const rec = [[${resultRecovered}]];
+
+    let days = [];
+    for (let i = 1; i <= sus.length; i++) {
+        days.push('Day ' + i);
+    }
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: days,
+            datasets: [{
+                label: 'Susceptible',
+                borderColor: '#4185EA',
+                fill: false,
+                pointRadius: 5,
+                data: sus
+            }, {
+                label: 'Infected',
+                borderColor: '#FA0206',
+                fill: false,
+                pointRadius: 5,
+                data: inf
+            }, {
+                label: 'Recovered',
+                borderColor: '#1BCD04',
+                fill: false,
+                pointRadius: 5,
+                data: rec,
+                showLine: true
+            }]
+        },
+        options: {
+            tooltips: {
+                mode: 'point'
+            },
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'center',
+                labels: {
+                    boxWidth: 60,
+                    fontColor: 'rgb(000, 000, 000)'
+                }
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                padding: 15,
+                fontColor: '#69C8C8',
+                text: 'SIR Model'
+            }
+        }
+    });
+</script>
+</body>
+</html>
