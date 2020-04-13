@@ -17,12 +17,18 @@ public class StatisticService {
     private final CoronaWorldRepository coronaWorldRepository;
 
     public DataWorld saveDataWorld(DataWorld dataWorld) {
-        log.info("Save data of world.");
+        log.info("Invoke save new data of world.");
         return coronaWorldRepository.save(dataWorld);
     }
 
     public List<DataWorld> getAllData() {
+        log.info("Invoke get all data of world.");
         return coronaWorldRepository.findAll();
+    }
+
+    public DataWorld getLastEntry() {
+        log.info("Invoke get last entry.");
+        return coronaWorldRepository.findTopByOrderByDataWorldIdDesc();
     }
 
     public Optional<DataWorld> findDataWorldById(long id) {
@@ -30,6 +36,7 @@ public class StatisticService {
     }
 
     public Optional<DataWorld> findDataWorldByLastUpdate(String lastUpdate) {
+        log.info("Invoke find data of world by last update {}.", lastUpdate);
         return coronaWorldRepository.findDataWorldByLastUpdate(lastUpdate);
     }
 

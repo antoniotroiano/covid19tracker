@@ -57,7 +57,8 @@ public class SIRModelControllerTest {
 
     @Test
     public void showShowModel() throws Exception {
-        when(derivativeService.calculation(anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyInt())).thenReturn(map);
+        when(derivativeService.calculation(anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyInt()))
+                .thenReturn(map);
 
         mockMvc.perform(get("/sir-model"))
                 .andExpect(status().isOk())

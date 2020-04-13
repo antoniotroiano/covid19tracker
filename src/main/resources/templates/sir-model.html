@@ -9,7 +9,7 @@
 <section>
     <a href="/statisticsCorona/world">Statistics of corona world</a>
     <a href="/statisticsCorona/germany">Statistics of corona germany</a>
-    <form method="post" th:action="@{/sir-com.valtech.statistics.controller.model/newCalculation}" th:object="${values}">
+    <form method="post" th:action="@{/sir-model/newCalculation}" th:object="${values}">
         <label>Transmission rate:</label>
         <label for="transmissionRate"></label>
         <input id="transmissionRate" th:field="*{transmissionRate}" type="text">

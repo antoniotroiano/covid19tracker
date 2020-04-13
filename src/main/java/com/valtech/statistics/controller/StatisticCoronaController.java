@@ -1,7 +1,6 @@
 package com.valtech.statistics.controller;
 
 import com.valtech.statistics.model.DataWorld;
-import com.valtech.statistics.service.GetDataWorld;
 import com.valtech.statistics.service.StatisticService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,45 +18,36 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StatisticCoronaController {
 
-    private final GetDataWorld getDataWorld;
     private final StatisticService statisticService;
 
     @GetMapping("/world")
     public String showStatisticCoronaWorld(Model model) throws IOException {
-        log.info("Invoke com.valtech.statistics.controller to show data of world.");
-
-        DataWorld dataWorld = getDataWorld.createDataForOneDay();
-
-        if (statisticService.findDataWorldByLastUpdate(dataWorld.getLastUpdate()).isEmpty()) {
-            log.info("Find no data with the same date.");
-            DataWorld savedDate = statisticService.saveDataWorld(dataWorld);
-            log.info("Saved new data do database and showed on the front end.");
-            return getData(model, savedDate);
-        }
-        log.info("Found a dataset with the same date.");
-        return getData(model, dataWorld);
+        log.info("Invoke controller to show data of world.");
+        return getData(model);
     }
 
     @GetMapping("/germany")
     public String showStatisticCoronaGermany(Model model) {
-        log.info("Invoke com.valtech.statistics.controller to show data of germany.");
+        log.info("Invoke controller to show data of germany.");
         return "statisticGermany";
     }
 
-    private String getData(Model model, DataWorld dataWorld) {
+    private String getData(Model model) {
+        DataWorld dataWorld = statisticService.getLastEntry();
         model.addAttribute("confirmed", dataWorld.getConfirmed());
         model.addAttribute("recovered", dataWorld.getRecovered());
         model.addAttribute("deaths", dataWorld.getDeaths());
         model.addAttribute("lastUpdate", dataWorld.getLastUpdate());
         model.addAttribute("confirmedList", statisticService.getAllData().stream()
-                .map(c -> c.getConfirmed())
+                .map(DataWorld::getConfirmed)
                 .collect(Collectors.toList()));
         model.addAttribute("recoveredList", statisticService.getAllData().stream()
-                .map(c -> c.getRecovered())
+                .map(DataWorld::getRecovered)
                 .collect(Collectors.toList()));
         model.addAttribute("deathsList", statisticService.getAllData().stream()
-                .map(c -> c.getDeaths())
+                .map(DataWorld::getDeaths)
                 .collect(Collectors.toList()));
+        log.debug("Return data of world.");
         return "statisticCorona";
     }
 }

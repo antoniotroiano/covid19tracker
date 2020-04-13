@@ -19,15 +19,16 @@ import java.nio.charset.StandardCharsets;
 public class GetDataWorld {
 
     private static final String URL = "https://covid19.mathdro.id/api";
+    private final StatisticService statisticService;
 
     private static int getValue(JSONObject json, String key) throws JSONException {
         JSONObject confirmed = (JSONObject) json.get(key);
         return confirmed.getInt("value");
     }
 
-    @Scheduled(cron = "30 12 * * * *")
-    public DataWorld createDataForOneDay() throws IOException {
-        log.info("Invoke create data for one day.");
+    @Scheduled(cron = "0 0 * ? * *")
+    public void createDataOfWorld() throws IOException {
+        log.info("Invoke create data of world.");
         JSONObject json = new JSONObject(IOUtils.toString(new URL(URL), StandardCharsets.UTF_8));
 
         int confirmed = getValue(json, "confirmed");
@@ -42,7 +43,11 @@ public class GetDataWorld {
         dataWorld.setDeaths(deaths);
         dataWorld.setLastUpdate(lastUpdate);
 
-        log.info("Create data for one day.");
-        return dataWorld;
+        if (statisticService.findDataWorldByLastUpdate(dataWorld.getLastUpdate()).isEmpty()) {
+            log.info("Saved new data {}", dataWorld.getLastUpdate());
+            statisticService.saveDataWorld(dataWorld);
+        } else {
+            log.info("No new data. Returned last one {}", dataWorld.getLastUpdate());
+        }
     }
 }

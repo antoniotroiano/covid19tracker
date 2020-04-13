@@ -12,4 +12,6 @@ public interface CoronaWorldRepository extends JpaRepository<DataWorld, Long> {
 
     @Query("SELECT d FROM DataWorld d WHERE d.lastUpdate = ?1")
     Optional<DataWorld> findDataWorldByLastUpdate(String lastUpdate);
+
+    DataWorld findTopByOrderByDataWorldIdDesc();
 }
