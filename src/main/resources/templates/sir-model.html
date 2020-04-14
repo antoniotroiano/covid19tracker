@@ -1,31 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <title>SIR-Model</title>
+    <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+</head>
 <body>
 
-<section>
-    <a href="/statisticsCorona/world">Statistics of corona world</a>
-    <a href="/statisticsCorona/germany">Statistics of corona germany</a>
-    <form method="post" th:action="@{/sir-model/newCalculation}" th:object="${values}">
-        <label>Transmission rate:</label>
-        <label for="transmissionRate"></label>
-        <input id="transmissionRate" th:field="*{transmissionRate}" type="text">
-        <lable>Recovery rate:</lable>
-        <label for="recoveryRate"></label>
-        <input id="recoveryRate" th:field="*{recoveryRate}" type="text">
-        <button type="submit">Send</button>
-    </form>
-
-    <label>Chart with transmission rate =</label>
-    <label th:text="${transmissionRate}" type="text"></label>
-    <label>Chart with recovery rate =</label>
-    <label th:text="${recoveryRate}" type="text"></label>
+<section class="section">
+    <div class="columns is-mobile">
+        <div class="column">
+            <div class="buttons is-centered">
+                <a class="button is-small is-link is-rounded" href="/statisticsCorona/world" type="submit">Statistics
+                    of corona world</a>
+                <a class="button is-small is-link is-rounded" href="/statisticsCorona/germany" type="submit">Statistics
+                    of corona germany</a>
+            </div>
+        </div>
+        <div class="column">
+            <form class="is-centered" method="post" th:action="@{/sir-model/newCalculation}" th:object="${values}">
+                <div class="field">
+                    <label class="label">Transmission rate:</label>
+                    <label for="transmissionRate"></label>
+                    <input class="input is-small is-rounded" id="transmissionRate" th:field="*{transmissionRate}"
+                           type="text">
+                </div>
+                <div class="field">
+                    <lable class="label">Recovery rate:</lable>
+                    <label for="recoveryRate"></label>
+                    <input class="input is-small is-rounded" id="recoveryRate" th:field="*{recoveryRate}" type="text">
+                </div>
+                <div class="buttons is-centered">
+                    <button class="button is-small is-warning is-rounded" type="submit">Send</button>
+                </div>
+            </form>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label">Chart with transmission rate:</label>
+                <label class="label" th:text="${transmissionRate}" type="text"></label>
+            </div>
+            <div class="field">
+                <label class="label">Chart with recovery rate:</label>
+                <label class="label" th:text="${recoveryRate}" type="text"></label>
+            </div>
+        </div>
+    </div>
 </section>
 
-<canvas id="myChart"></canvas>
+<canvas height="100" id="myChart" width="300"></canvas>
 
 <script>
     const sus = [[${resultSusceptible}]];

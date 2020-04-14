@@ -17,6 +17,7 @@ public class DataWorld {
     private int recovered;
     private int deaths;
     private String lastUpdate;
+    private String localDate;
 
     public DataWorld() {
     }
@@ -27,6 +28,14 @@ public class DataWorld {
         this.recovered = dataWorld.getRecovered();
         this.deaths = dataWorld.getDeaths();
         this.lastUpdate = dataWorld.getLastUpdate();
+        this.localDate = dataWorld.getLocalDate();
+    }
+
+    public DataWorld(int confirmed, int recovered, int deaths, String lastUpdate) {
+        this.confirmed = confirmed;
+        this.recovered = recovered;
+        this.deaths = deaths;
+        this.lastUpdate = lastUpdate;
     }
 
     public long getDataWorldId() {
@@ -67,6 +76,14 @@ public class DataWorld {
 
     public void setLastUpdate(String lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public String getLocalDate() {
+        return localDate;
+    }
+
+    public void setLocalDate(String localDate) {
+        this.localDate = localDate;
     }
 
     @Override

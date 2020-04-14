@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @Slf4j
@@ -38,10 +40,14 @@ public class GetDataWorld {
 
         DataWorld dataWorld = new DataWorld();
 
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM");
+        LocalDate now = LocalDate.now();
+
         dataWorld.setConfirmed(confirmed);
         dataWorld.setRecovered(recovered);
         dataWorld.setDeaths(deaths);
         dataWorld.setLastUpdate(lastUpdate);
+        dataWorld.setLocalDate(now.format(dtf));
 
         if (statisticService.findDataWorldByLastUpdate(dataWorld.getLastUpdate()).isEmpty()) {
             log.info("Saved new data {}", dataWorld.getLastUpdate());
