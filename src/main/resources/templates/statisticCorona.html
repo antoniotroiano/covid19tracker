@@ -41,11 +41,13 @@
 </section>
 
 <canvas height="100" id="dataWorldConfirmed" width="450"></canvas>
+<canvas height="100" id="dataWorldRecovered" width="450"></canvas>
+<canvas height="100" id="dataWorldDeaths" width="450"></canvas>
 
 <script>
     const confirmed = [[${confirmedList}]];
     const dates = [[${dates}]];
-
+    const dateConfirmed = [];
     const ctx = document.getElementById('dataWorldConfirmed').getContext('2d');
     const dataWorldConfirmed = new Chart(ctx, {
         type: 'bar',
@@ -65,6 +67,36 @@
             }]
         },
         options: {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    label: 'Date',
+                    ticks: {
+                        callback: function (dataLabel) {
+                            dateConfirmed.push(dataLabel);
+                            if (dateConfirmed.filter(d => d === dataLabel).length >= 2) {
+                                return '';
+                            } else {
+                                return dataLabel;
+                            }
+                            // Hide the label of every 2nd dataset. return null to hide the grid line too
+                            //return index % 2 === 0 ? dataLabel : '';
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    beginAtZero: false,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Confirmed'
+                    }
+                }]
+            },
             layout: {
                 padding: {
                     left: 10,
@@ -91,14 +123,10 @@
             }
         }
     });
-</script>
 
-<canvas height="100" id="dataWorldRecovered" width="450"></canvas>
-
-<script>
     const recovered = [[${recoveredList}]];
     const dates2 = [[${dates}]];
-
+    const dateRecovered = [];
     const ctx2 = document.getElementById('dataWorldRecovered').getContext('2d');
     const dataWorldRecovered = new Chart(ctx2, {
         type: 'bar',
@@ -118,6 +146,34 @@
             }]
         },
         options: {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    label: 'Date',
+                    ticks: {
+                        callback: function (dataLabel) {
+                            dateRecovered.push(dataLabel);
+                            if (dateRecovered.filter(d => d === dataLabel).length >= 2) {
+                                return '';
+                            } else {
+                                return dataLabel;
+                            }
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    beginAtZero: false,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Recovered'
+                    }
+                }]
+            },
             layout: {
                 padding: {
                     left: 10,
@@ -144,14 +200,10 @@
             }
         }
     });
-</script>
 
-<canvas height="100" id="dataWorldDeaths" width="450"></canvas>
-
-<script>
     const deaths = [[${deathsList}]];
     const dates3 = [[${dates}]];
-
+    const dateDeath = [];
     const ctx3 = document.getElementById('dataWorldDeaths').getContext('2d');
     const dataWorldDeaths = new Chart(ctx3, {
         type: 'bar',
@@ -171,6 +223,34 @@
             }]
         },
         options: {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    label: 'Date',
+                    ticks: {
+                        callback: function (dataLabel) {
+                            dateDeath.push(dataLabel);
+                            if (dateDeath.filter(d => d === dataLabel).length >= 2) {
+                                return '';
+                            } else {
+                                return dataLabel;
+                            }
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    beginAtZero: false,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Death'
+                    }
+                }]
+            },
             layout: {
                 padding: {
                     left: 10,
