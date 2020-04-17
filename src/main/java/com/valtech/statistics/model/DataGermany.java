@@ -7,43 +7,35 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "dataWorld")
-public class DataWorld {
+@Table(name = "dataGermany")
+public class DataGermany {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long dataWorldId;
+    private long dataGermanyId;
     private int confirmed;
     private int recovered;
     private int deaths;
     private String lastUpdate;
     private String localDate;
 
-    public DataWorld() {
+    public DataGermany() {
     }
 
-    public DataWorld(DataWorld dataWorld) {
-        this.dataWorldId = dataWorld.getDataWorldId();
-        this.confirmed = dataWorld.getConfirmed();
-        this.recovered = dataWorld.getRecovered();
-        this.deaths = dataWorld.getDeaths();
-        this.lastUpdate = dataWorld.getLastUpdate();
-        this.localDate = dataWorld.getLocalDate();
-    }
-
-    public DataWorld(int confirmed, int recovered, int deaths, String lastUpdate) {
+    public DataGermany(int confirmed, int recovered, int deaths, String lastUpdate) {
         this.confirmed = confirmed;
         this.recovered = recovered;
         this.deaths = deaths;
         this.lastUpdate = lastUpdate;
     }
 
-    public long getDataWorldId() {
-        return dataWorldId;
+
+    public long getDataGermanyId() {
+        return dataGermanyId;
     }
 
-    public void setDataWorldId(long dataWorldId) {
-        this.dataWorldId = dataWorldId;
+    public void setDataGermanyId(long dataGermanyId) {
+        this.dataGermanyId = dataGermanyId;
     }
 
     public int getConfirmed() {
@@ -88,9 +80,10 @@ public class DataWorld {
 
     @Override
     public String toString() {
-        return "DataWorld{" +
+        return "DataGermany{" +
                 "lastUpdate='" + lastUpdate + '\'' +
                 ", localDate='" + localDate + '\'' +
                 '}';
     }
+
 }

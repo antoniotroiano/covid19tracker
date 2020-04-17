@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class StatisticService {
+public class WorldService {
 
     private final CoronaWorldRepository coronaWorldRepository;
 
@@ -26,8 +26,8 @@ public class StatisticService {
         return coronaWorldRepository.findAll();
     }
 
-    public DataWorld getLastEntry() {
-        log.info("Invoke get last entry.");
+    public DataWorld getLastEntryWorld() {
+        log.info("Invoke get last entry world.");
         return coronaWorldRepository.findTopByOrderByDataWorldIdDesc();
     }
 

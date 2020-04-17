@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class SIRModelControllerTest {
 
-    private Map<String, List<Double>> map = new HashMap<>();
+    private final Map<String, List<Double>> map = new HashMap<>();
 
     @Autowired
     private MockMvc mockMvc;

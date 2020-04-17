@@ -2,13 +2,294 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Statistics of corona worldwide</title>
+    <title>German statistics of corona</title>
+    <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
 </head>
 <body>
 
-<section>
-<div>Not implemented yet!</div>
-</section>
+<div class="container">
+    <section class="section">
+        <div class="columns is-mobile is-centered">
+            <div class="column">
+                <div class="title is-3 has-text-centered">
+                    John Hopkins University data for Germany
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column">
+                <div class="buttons is-centered">
+                    <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
+                    <a class="button is-small is-link is-rounded" href="/statisticsCorona/world" type="submit">Go to
+                        data worldwide</a>
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-3">
+                <div class="field">
+                    <label class="label">Confirmed:</label>
+                    <label class="label" th:text="${confirmed}"></label>
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="field">
+                    <label class="label">Recovered:</label>
+                    <label class="label" th:text="${recovered}"></label>
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="field">
+                    <label class="label">Deaths:</label>
+                    <label class="label" th:text="${deaths}"></label>
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="field">
+                    <label class="label">Last update:</label>
+                    <label class="label" th:text="${lastUpdate}"></label>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 
+<canvas height="100" id="dataGermanyConfirmed" width="450"></canvas>
+<canvas height="100" id="dataGermanyRecovered" width="450"></canvas>
+<canvas height="100" id="dataGermanyDeaths" width="450"></canvas>
+
+<script>
+    const dates = [[${dates}]];
+    const confirmed = [[${confirmedList}]];
+    const dateConfirmed = [];
+    const ctx = document.getElementById('dataGermanyConfirmed').getContext('2d');
+    const dataGermanyConfirmed = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Confirmed COVID-19',
+                backgroundColor: 'rgb(147,190,234, 0.6)',
+                borderWidth: 1,
+                borderColor: 'rgb(13,23,234)',
+                hoverBackgroundColor: 'rgb(147,190,234, 0.7)',
+                barPercentage: 0.9,
+                barThickness: 15,
+                maxBarThickness: 20,
+                minBarLength: 100,
+                data: confirmed
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    label: 'Date',
+                    ticks: {
+                        callback: function (dataLabel) {
+                            dateConfirmed.push(dataLabel);
+                            if (dateConfirmed.filter(d => d === dataLabel).length >= 2) {
+                                return '';
+                            } else {
+                                return dataLabel;
+                            }
+                            // Hide the label of every 2nd dataset. return null to hide the grid line too
+                            //return index % 2 === 0 ? dataLabel : '';
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    beginAtZero: false,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Confirmed'
+                    }
+                }]
+            },
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'center',
+                labels: {
+                    boxWidth: 40,
+                    fontColor: 'rgb(000, 000, 000)'
+                }
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                padding: 15,
+                fontColor: '#69C8C8',
+                text: 'Confirmed COVID-19'
+            }
+        }
+    });
+
+    const recovered = [[${recoveredList}]];
+    const dateRecovered = [];
+    const ctx2 = document.getElementById('dataGermanyRecovered').getContext('2d');
+    const dataGermanyRecovered = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Recovered COVID-19',
+                backgroundColor: 'rgba(167,234,122,0.6)',
+                borderWidth: 1,
+                borderColor: 'rgb(9,234,14)',
+                hoverBackgroundColor: 'rgba(187,234,109,0.7)',
+                barPercentage: 0.9,
+                barThickness: 15,
+                maxBarThickness: 20,
+                minBarLength: 100,
+                data: recovered
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    label: 'Date',
+                    ticks: {
+                        callback: function (dataLabel) {
+                            dateRecovered.push(dataLabel);
+                            if (dateRecovered.filter(d => d === dataLabel).length >= 2) {
+                                return '';
+                            } else {
+                                return dataLabel;
+                            }
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    beginAtZero: false,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Recovered'
+                    }
+                }]
+            },
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'center',
+                labels: {
+                    boxWidth: 40,
+                    fontColor: 'rgb(000, 000, 000)'
+                }
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                padding: 15,
+                fontColor: '#69C8C8',
+                text: 'Recovered COVID-19'
+            }
+        }
+    });
+
+    const deaths = [[${deathsList}]];
+    const dateDeath = [];
+    const ctx3 = document.getElementById('dataGermanyDeaths').getContext('2d');
+    const dataGermanyDeaths = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Death COVID-19',
+                backgroundColor: 'rgba(234,127,121,0.6)',
+                borderWidth: 1,
+                borderColor: 'rgb(234,3,12)',
+                hoverBackgroundColor: 'rgba(234,81,77,0.7)',
+                barPercentage: 0.9,
+                barThickness: 15,
+                maxBarThickness: 20,
+                minBarLength: 100,
+                data: deaths
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    label: 'Date',
+                    ticks: {
+                        callback: function (dataLabel) {
+                            dateDeath.push(dataLabel);
+                            if (dateDeath.filter(d => d === dataLabel).length >= 2) {
+                                return '';
+                            } else {
+                                return dataLabel;
+                            }
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    beginAtZero: false,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Death'
+                    }
+                }]
+            },
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'center',
+                labels: {
+                    boxWidth: 40,
+                    fontColor: 'rgb(000, 000, 000)'
+                }
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                padding: 15,
+                fontColor: '#69C8C8',
+                text: 'Death COVID-19'
+            }
+        }
+    });
+</script>
 </body>
 </html>

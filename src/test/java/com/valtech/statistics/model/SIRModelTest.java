@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class SIRModelTest {
 
-    private SIRModel SIRModel = new SIRModel();
+    private final SIRModel SIRModel = new SIRModel();
 
     @BeforeEach
     public void setUp() {
