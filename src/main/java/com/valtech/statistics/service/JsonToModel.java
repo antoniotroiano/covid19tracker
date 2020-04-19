@@ -26,12 +26,17 @@ public class JsonToModel {
     private final WorldService worldService;
     private final GermanyService germanyService;
 
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM");
-    LocalDate now = LocalDate.now();
-
     private static int getValue(JSONObject json, String key) throws JSONException {
         JSONObject confirmed = (JSONObject) json.get(key);
         return confirmed.getInt("value");
+    }
+
+    private String getDateNow() {
+        String dateNow = "";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM");
+        LocalDate now = LocalDate.now();
+        dateNow = now.format(dtf);
+        return dateNow;
     }
 
     private JSONObject getJSONObject(String url) throws IOException {
@@ -53,13 +58,16 @@ public class JsonToModel {
         dataWorld.setRecovered(recoveredWorld);
         dataWorld.setDeaths(deathsWorld);
         dataWorld.setLastUpdate(lastUpdateWorld);
-        dataWorld.setLocalDate(now.format(dtf));
+        dataWorld.setLocalDate(getDateNow());
 
-        if (worldService.findDataWorldByLastUpdate(dataWorld.getLastUpdate()).isEmpty()) {
+        DataWorld dataWorldLast = worldService.getLastEntryWorld();
+
+        if (dataWorldLast.getConfirmed() == confirmedWorld && dataWorldLast.getRecovered() == recoveredWorld &&
+                dataWorldLast.getDeaths() == deathsWorld) {
+            log.info("No new data. Returned last one {}", dataWorld.getLastUpdate());
+        } else {
             worldService.saveDataWorld(dataWorld);
             log.info("Saved new data {}", dataWorld.getLastUpdate());
-        } else {
-            log.info("No new data. Returned last one {}", dataWorld.getLastUpdate());
         }
     }
 
@@ -78,13 +86,16 @@ public class JsonToModel {
         dataGermany.setRecovered(recoveredGermany);
         dataGermany.setDeaths(deathsGermany);
         dataGermany.setLastUpdate(lastUpdateGermany);
-        dataGermany.setLocalDate(now.format(dtf));
+        dataGermany.setLocalDate(getDateNow());
 
-        if (germanyService.findDataGermanyByLastUpdate(dataGermany.getLastUpdate()).isEmpty()) {
+        DataGermany dataGermanyLast = germanyService.getLastEntryGermany();
+
+        if (dataGermanyLast.getConfirmed() == confirmedGermany && dataGermanyLast.getRecovered() == recoveredGermany &&
+                dataGermanyLast.getDeaths() == deathsGermany) {
+            log.info("No new data of germany, Returned last one {}", dataGermany.getLastUpdate());
+        } else {
             germanyService.saveDataGermany(dataGermany);
             log.info("Saved new data of germany {}", dataGermany.getLastUpdate());
-        } else {
-            log.info("No new data of germany, Returned last one {}", dataGermany.getLastUpdate());
         }
     }
 }
