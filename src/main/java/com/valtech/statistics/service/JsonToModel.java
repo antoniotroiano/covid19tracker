@@ -23,6 +23,7 @@ public class JsonToModel {
 
     private static final String URL_WORLD = "https://covid19.mathdro.id/api";
     private static final String URL_GERMANY = "https://covid19.mathdro.id/api/countries/germany";
+    private static final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
     private final WorldService worldService;
     private final GermanyService germanyService;
 
@@ -43,7 +44,7 @@ public class JsonToModel {
         return new JSONObject(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
     }
 
-    @Scheduled(cron = "0 0 * ? * *")
+    @Scheduled(cron = "0 0 */2 ? * *")
     public void getDataOfWorldAndSaveIt() throws IOException {
         log.info("Invoke create data of world.");
 
@@ -97,5 +98,9 @@ public class JsonToModel {
             germanyService.saveDataGermany(dataGermany);
             log.info("Saved new data of germany {}", dataGermany.getLastUpdate());
         }
+    }
+
+    public void getDataWorldSummary() {
+
     }
 }
