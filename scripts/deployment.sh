@@ -23,12 +23,12 @@ else
   cd ../../..
   echo "Starting building .jar package..."
   mvn package
-  if [ ! -f target/statistic-corona-$newVersion.jar ]; then
+  if [ ! -f target/statistics-corona-$newVersion.jar ]; then
     echo "Something went wrong. Built .jar file not found!"
     :
   else
     echo "Copying .jar file to server..."
-    scp -i ~/.ssh/coronaKey.pem target/statistic-corona-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
+    scp -i ~/.ssh/coronaKey.pem target/statistics-corona-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
     echo "Copied .jar file to server. Connecting to server..."
     ssh -i "~/.ssh/coronaKey.pem" ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com
     cd ~/app/
