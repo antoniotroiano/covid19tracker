@@ -29,7 +29,6 @@ public class DataGermany {
         this.lastUpdate = lastUpdate;
     }
 
-
     public long getDataGermanyId() {
         return dataGermanyId;
     }

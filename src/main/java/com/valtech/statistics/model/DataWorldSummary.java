@@ -7,26 +7,27 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "dataWorld")
-public class DataWorld {
+@Table(name = "dataWorldSummary")
+public class DataWorldSummary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long dataWorldId;
+    private int newConfirmed;
     private int confirmed;
+    private int newRecovered;
     private int recovered;
+    private int newDeaths;
     private int deaths;
-    private String lastUpdate;
     private String localDate;
 
-    public DataWorld() {
+    public DataWorldSummary() {
     }
 
-    public DataWorld(int confirmed, int recovered, int deaths, String lastUpdate) {
+    public DataWorldSummary(int confirmed, int recovered, int deaths, String lastUpdate) {
         this.confirmed = confirmed;
         this.recovered = recovered;
         this.deaths = deaths;
-        this.lastUpdate = lastUpdate;
     }
 
     public long getDataWorldId() {
@@ -37,6 +38,14 @@ public class DataWorld {
         this.dataWorldId = dataWorldId;
     }
 
+    public int getNewConfirmed() {
+        return newConfirmed;
+    }
+
+    public void setNewConfirmed(int newConfirmed) {
+        this.newConfirmed = newConfirmed;
+    }
+
     public int getConfirmed() {
         return confirmed;
     }
@@ -45,12 +54,28 @@ public class DataWorld {
         this.confirmed = confirmed;
     }
 
+    public int getNewRecovered() {
+        return newRecovered;
+    }
+
+    public void setNewRecovered(int newRecovered) {
+        this.newRecovered = newRecovered;
+    }
+
     public int getRecovered() {
         return recovered;
     }
 
-    public void setRecovered(int recovered) {
+    public void setRecovered(int recoveredS) {
         this.recovered = recovered;
+    }
+
+    public int getNewDeaths() {
+        return newDeaths;
+    }
+
+    public void setNewDeaths(int newDeaths) {
+        this.newDeaths = newDeaths;
     }
 
     public int getDeaths() {
@@ -59,14 +84,6 @@ public class DataWorld {
 
     public void setDeaths(int deaths) {
         this.deaths = deaths;
-    }
-
-    public String getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
     }
 
     public String getLocalDate() {
@@ -79,9 +96,10 @@ public class DataWorld {
 
     @Override
     public String toString() {
-        return "DataWorld{" +
-                "lastUpdate='" + lastUpdate + '\'' +
-                ", localDate='" + localDate + '\'' +
+        return "DataWorldSummary{" +
+                "localDate='" + localDate + '\'' +
                 '}';
     }
+
+
 }

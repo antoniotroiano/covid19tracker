@@ -29,35 +29,49 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-3">
                 <div class="field">
-                    <label class="label">Confirmed:</label>
-                    <label class="label" th:text="${confirmed}"></label>
+                    <div class="is-text">Confirmed:</div>
+                    <div class="is-text" th:text="${confirmed}"></div>
                 </div>
             </div>
             <div class="column is-3">
                 <div class="field">
-                    <label class="label">Recovered:</label>
-                    <label class="label" th:text="${recovered}"></label>
+                    <div class="is-text">Recovered:</div>
+                    <div class="is-text" th:text="${recovered}"></div>
                 </div>
             </div>
             <div class="column is-3">
                 <div class="field">
-                    <label class="label">Deaths:</label>
-                    <label class="label" th:text="${deaths}"></label>
+                    <div class="is-text">Deaths:</div>
+                    <div class="is-text" th:text="${deaths}"></div>
                 </div>
             </div>
             <div class="column is-3">
                 <div class="field">
-                    <label class="label">Last update:</label>
-                    <label class="label" th:text="${lastUpdate}"></label>
+                    <div class="is-text">Last update:</div>
+                    <div class="is-text" th:text="${lastUpdate}"></div>
                 </div>
             </div>
         </div>
     </section>
 </div>
-
-<canvas height="100" id="dataGermanyConfirmed" width="450"></canvas>
-<canvas height="100" id="dataGermanyRecovered" width="450"></canvas>
-<canvas height="100" id="dataGermanyDeaths" width="450"></canvas>
+<div class="columns">
+    <div class="column">
+        <div>
+            New Today show here
+        </div>
+    </div>
+    <div class="column">
+        <canvas height="250" id="dataGermanyConfirmed" width="450"></canvas>
+    </div>
+</div>
+<div class="columns">
+    <div class="column">
+        <canvas height="250" id="dataGermanyRecovered" width="450"></canvas>
+    </div>
+    <div class="column">
+        <canvas height="250" id="dataGermanyDeaths" width="450"></canvas>
+    </div>
+</div>
 
 <script>
     const dates = [[${dates}]];

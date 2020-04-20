@@ -53,6 +53,12 @@ public class StatisticCoronaController {
         return "statisticCorona";
     }
 
+    @GetMapping("/summary")
+    public String showDataWorldSummary(Model model) {
+
+        return "worldSummary";
+    }
+
     @GetMapping("/germany")
     public String showDataGermany(Model model) {
         log.info("Invoke controller to show data of germany.");
