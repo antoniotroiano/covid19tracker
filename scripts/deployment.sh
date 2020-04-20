@@ -34,9 +34,9 @@ else
 cd ~/app/
 echo "Stopping teamleadwahl application and deleting old .jar..."
 pkill -f 'java -jar'
-rm statistics-corona-1.0-SNAPSHOT.jar
+rm statistics-corona-$oldVersion.jar
 echo "Stopped and deleted old teamleadwahl application. Starting new version..."
-java -jar statistics-corona-x.x-SNAPSHOT.jar 2 >dump >&1 &
+java -jar statistics-corona-$newVersion.jar >dump 2>&1 &
 echo "New version of teamleadwahl application is starting. Please wait some seconds..."
 exit
 EOF
