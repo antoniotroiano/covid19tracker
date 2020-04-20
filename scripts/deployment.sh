@@ -30,15 +30,16 @@ else
     echo "Copying .jar file to server..."
     scp -i ~/.ssh/coronaKey.pem target/statistics-corona-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
     echo "Copied .jar file to server. Connecting to server..."
-    ssh -i "~/.ssh/coronaKey.pem" ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com
-    cd ~/app/
-    echo "Stopping teamleadwahl application and deleting old .jar..."
-    pkill -f 'java -jar'
-    rm statistics-corona-1.0-SNAPSHOT.jar
-    echo "Stopped and deleted old teamleadwahl application. Starting new version..."
-    java -jar statistics-corona-x.x-SNAPSHOT.jar 2 >dump >&1 &
-    echo "New version of teamleadwahl application is starting. Please wait some seconds..."
-    exit
+    ssh -i "~/.ssh/coronaKey.pem" ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com /bin/bash <<EOF
+cd ~/app/
+echo "Stopping teamleadwahl application and deleting old .jar..."
+pkill -f 'java -jar'
+rm statistics-corona-1.0-SNAPSHOT.jar
+echo "Stopped and deleted old teamleadwahl application. Starting new version..."
+java -jar statistics-corona-x.x-SNAPSHOT.jar 2 >dump >&1 &
+echo "New version of teamleadwahl application is starting. Please wait some seconds..."
+exit
+EOF
     echo "Leaved server. Undo local changes..."
     git checkout .
     echo "-------------Teamleadwahl deployment finished-------------"
