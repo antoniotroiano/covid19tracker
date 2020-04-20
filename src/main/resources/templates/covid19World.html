@@ -2,18 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>German statistics of corona</title>
+    <title>COVID-19 - Worldwide</title>
     <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
 </head>
 <body>
-
 <div class="container">
     <section class="section">
         <div class="columns is-mobile is-centered">
             <div class="column">
                 <div class="title is-3 has-text-centered">
-                    John Hopkins University data for Germany
+                    John Hopkins University data for worldwide
                 </div>
             </div>
         </div>
@@ -21,8 +20,9 @@
             <div class="column">
                 <div class="buttons is-centered">
                     <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
-                    <a class="button is-small is-link is-rounded" href="/statisticsCorona/world" type="submit">Go to
-                        data worldwide</a>
+                    <a class="button is-small is-link is-rounded" href="/covid19/germany" type="submit">Go to data
+                        germany</a>
+                    <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
                 </div>
             </div>
         </div>
@@ -61,24 +61,23 @@
         </div>
     </div>
     <div class="column">
-        <canvas height="250" id="dataGermanyConfirmed" width="450"></canvas>
+        <canvas height="250" id="dataWorldConfirmed" width="450"></canvas>
     </div>
 </div>
 <div class="columns">
     <div class="column">
-        <canvas height="250" id="dataGermanyRecovered" width="450"></canvas>
+        <canvas height="250" id="dataWorldRecovered" width="450"></canvas>
     </div>
     <div class="column">
-        <canvas height="250" id="dataGermanyDeaths" width="450"></canvas>
+        <canvas height="250" id="dataWorldDeaths" width="450"></canvas>
     </div>
 </div>
-
 <script>
     const dates = [[${dates}]];
     const confirmed = [[${confirmedList}]];
     const dateConfirmed = [];
-    const ctx = document.getElementById('dataGermanyConfirmed').getContext('2d');
-    const dataGermanyConfirmed = new Chart(ctx, {
+    const ctx = document.getElementById('dataWorldConfirmed').getContext('2d');
+    const dataWorldConfirmed = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: dates,
@@ -155,8 +154,8 @@
 
     const recovered = [[${recoveredList}]];
     const dateRecovered = [];
-    const ctx2 = document.getElementById('dataGermanyRecovered').getContext('2d');
-    const dataGermanyRecovered = new Chart(ctx2, {
+    const ctx2 = document.getElementById('dataWorldRecovered').getContext('2d');
+    const dataWorldRecovered = new Chart(ctx2, {
         type: 'bar',
         data: {
             labels: dates,
@@ -231,8 +230,8 @@
 
     const deaths = [[${deathsList}]];
     const dateDeath = [];
-    const ctx3 = document.getElementById('dataGermanyDeaths').getContext('2d');
-    const dataGermanyDeaths = new Chart(ctx3, {
+    const ctx3 = document.getElementById('dataWorldDeaths').getContext('2d');
+    const dataWorldDeaths = new Chart(ctx3, {
         type: 'bar',
         data: {
             labels: dates,

@@ -1,7 +1,7 @@
 package com.valtech.statistics.service;
 
 import com.valtech.statistics.model.DataWorld;
-import com.valtech.statistics.repository.CoronaWorldRepository;
+import com.valtech.statistics.repository.DataWorldRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,33 +14,33 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WorldService {
 
-    private final CoronaWorldRepository coronaWorldRepository;
+    private final DataWorldRepository dataWorldRepository;
 
     public DataWorld saveDataWorld(DataWorld dataWorld) {
         log.info("Invoke save new data of world.");
-        return coronaWorldRepository.save(dataWorld);
+        return dataWorldRepository.save(dataWorld);
     }
 
     public List<DataWorld> getAllData() {
         log.info("Invoke get all data of world.");
-        return coronaWorldRepository.findAll();
+        return dataWorldRepository.findAll();
     }
 
-    public DataWorld getLastEntryWorld() {
+    public Optional<DataWorld> getLastEntryWorld() {
         log.info("Invoke get last entry world.");
-        return coronaWorldRepository.findTopByOrderByDataWorldIdDesc();
+        return dataWorldRepository.findTopByOrderByDataWorldIdDesc();
     }
 
     public Optional<DataWorld> findDataWorldById(long id) {
-        return coronaWorldRepository.findById(id);
+        return dataWorldRepository.findById(id);
     }
 
     public Optional<DataWorld> findDataWorldByLastUpdate(String lastUpdate) {
         log.info("Invoke find data of world by last update {}.", lastUpdate);
-        return coronaWorldRepository.findDataWorldByLastUpdate(lastUpdate);
+        return dataWorldRepository.findDataWorldByLastUpdate(lastUpdate);
     }
 
     public void deleteDataWorld(DataWorld dataWorld) {
-        coronaWorldRepository.delete(dataWorld);
+        dataWorldRepository.delete(dataWorld);
     }
 }

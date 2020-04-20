@@ -11,13 +11,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
-@RequestMapping("statisticsCorona")
+@RequestMapping("covid19")
 @RequiredArgsConstructor
-public class StatisticCoronaController {
+public class Covid19Controller {
 
     private final WorldService worldService;
     private final GermanyService germanyService;
@@ -27,12 +28,12 @@ public class StatisticCoronaController {
         log.info("Invoke controller to show data of world.");
         DataWorld dataWorldNull = new DataWorld(0, 0, 0, "0000-00-00");
 
-        DataWorld dataWorld = worldService.getLastEntryWorld() == null ? dataWorldNull : worldService.getLastEntryWorld();
+        Optional<DataWorld> dataWorld = worldService.getLastEntryWorld().isEmpty() ? Optional.of(dataWorldNull) : worldService.getLastEntryWorld();
         worldService.getLastEntryWorld();
-        model.addAttribute("confirmed", dataWorld.getConfirmed());
-        model.addAttribute("recovered", dataWorld.getRecovered());
-        model.addAttribute("deaths", dataWorld.getDeaths());
-        model.addAttribute("lastUpdate", dataWorld.getLastUpdate());
+        model.addAttribute("confirmed", dataWorld.get().getConfirmed());
+        model.addAttribute("recovered", dataWorld.get().getRecovered());
+        model.addAttribute("deaths", dataWorld.get().getDeaths());
+        model.addAttribute("lastUpdate", dataWorld.get().getLastUpdate());
         model.addAttribute("confirmedList", worldService.getAllData()
                 .stream()
                 .map(DataWorld::getConfirmed)
@@ -50,7 +51,7 @@ public class StatisticCoronaController {
                 .map(DataWorld::getLocalDate)
                 .collect(Collectors.toList()));
         log.debug("Return data of world.");
-        return "statisticCorona";
+        return "covid19World";
     }
 
     @GetMapping("/summary")
@@ -64,12 +65,12 @@ public class StatisticCoronaController {
         log.info("Invoke controller to show data of germany.");
         DataGermany dataGermanyNull = new DataGermany(0, 0, 0, "0000-00-00");
 
-        DataGermany dataGermany = germanyService.getLastEntryGermany() == null ? dataGermanyNull : germanyService.getLastEntryGermany();
+        Optional<DataGermany> dataGermany = germanyService.getLastEntryGermany().isEmpty() ? Optional.of(dataGermanyNull) : germanyService.getLastEntryGermany();
         germanyService.getLastEntryGermany();
-        model.addAttribute("confirmed", dataGermany.getConfirmed());
-        model.addAttribute("recovered", dataGermany.getRecovered());
-        model.addAttribute("deaths", dataGermany.getDeaths());
-        model.addAttribute("lastUpdate", dataGermany.getLastUpdate());
+        model.addAttribute("confirmed", dataGermany.get().getConfirmed());
+        model.addAttribute("recovered", dataGermany.get().getRecovered());
+        model.addAttribute("deaths", dataGermany.get().getDeaths());
+        model.addAttribute("lastUpdate", dataGermany.get().getLastUpdate());
         model.addAttribute("confirmedList", germanyService.getAllDataGermany()
                 .stream()
                 .map(DataGermany::getConfirmed)
@@ -87,6 +88,6 @@ public class StatisticCoronaController {
                 .map(DataGermany::getLocalDate)
                 .collect(Collectors.toList()));
         log.debug("Return data of germany.");
-        return "statisticGermany";
+        return "covid19Germany";
     }
 }

@@ -13,5 +13,5 @@ public interface DataGermanyRepository extends JpaRepository<DataGermany, Long> 
     @Query("SELECT d FROM DataGermany d WHERE d.lastUpdate = ?1")
     Optional<DataGermany> findDataGermanyByLastUpdate(String lastUpdate);
 
-    DataGermany findTopByOrderByDataGermanyIdDesc();
+    Optional<DataGermany> findTopByOrderByDataGermanyIdDesc();
 }

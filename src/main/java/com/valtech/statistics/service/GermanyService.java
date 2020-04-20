@@ -26,7 +26,7 @@ public class GermanyService {
         return dataGermanyRepository.findAll();
     }
 
-    public DataGermany getLastEntryGermany() {
+    public Optional<DataGermany> getLastEntryGermany() {
         log.info("Invoke get last entry germany.");
         return dataGermanyRepository.findTopByOrderByDataGermanyIdDesc();
     }

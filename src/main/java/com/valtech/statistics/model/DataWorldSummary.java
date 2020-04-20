@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "dataWorldSummary")
@@ -12,30 +13,30 @@ public class DataWorldSummary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long dataWorldId;
+    private long dataWorldSummaryId;
     private int newConfirmed;
-    private int confirmed;
+    private int totalConfirmed;
     private int newRecovered;
-    private int recovered;
+    private int totalRecovered;
     private int newDeaths;
-    private int deaths;
-    private String localDate;
+    private int totalDeaths;
+    private LocalDate localDate;
 
     public DataWorldSummary() {
     }
 
-    public DataWorldSummary(int confirmed, int recovered, int deaths, String lastUpdate) {
-        this.confirmed = confirmed;
-        this.recovered = recovered;
-        this.deaths = deaths;
+    public DataWorldSummary(int totalConfirmed, int totalRecovered, int totalDeaths) {
+        this.totalConfirmed = totalConfirmed;
+        this.totalRecovered = totalRecovered;
+        this.totalDeaths = totalDeaths;
     }
 
-    public long getDataWorldId() {
-        return dataWorldId;
+    public long getDataWorldSummaryId() {
+        return dataWorldSummaryId;
     }
 
-    public void setDataWorldId(long dataWorldId) {
-        this.dataWorldId = dataWorldId;
+    public void setDataWorldSummaryId(long dataWorldSummaryId) {
+        this.dataWorldSummaryId = dataWorldSummaryId;
     }
 
     public int getNewConfirmed() {
@@ -46,12 +47,12 @@ public class DataWorldSummary {
         this.newConfirmed = newConfirmed;
     }
 
-    public int getConfirmed() {
-        return confirmed;
+    public int getTotalConfirmed() {
+        return totalConfirmed;
     }
 
-    public void setConfirmed(int confirmed) {
-        this.confirmed = confirmed;
+    public void setTotalConfirmed(int totalConfirmed) {
+        this.totalConfirmed = totalConfirmed;
     }
 
     public int getNewRecovered() {
@@ -62,12 +63,12 @@ public class DataWorldSummary {
         this.newRecovered = newRecovered;
     }
 
-    public int getRecovered() {
-        return recovered;
+    public int getTotalRecovered() {
+        return totalRecovered;
     }
 
-    public void setRecovered(int recoveredS) {
-        this.recovered = recovered;
+    public void setTotalRecovered(int totalRecovered) {
+        this.totalRecovered = totalRecovered;
     }
 
     public int getNewDeaths() {
@@ -78,28 +79,19 @@ public class DataWorldSummary {
         this.newDeaths = newDeaths;
     }
 
-    public int getDeaths() {
-        return deaths;
+    public int getTotalDeaths() {
+        return totalDeaths;
     }
 
-    public void setDeaths(int deaths) {
-        this.deaths = deaths;
+    public void setTotalDeaths(int totalDeaths) {
+        this.totalDeaths = totalDeaths;
     }
 
-    public String getLocalDate() {
+    public LocalDate getLocalDate() {
         return localDate;
     }
 
-    public void setLocalDate(String localDate) {
+    public void setLocalDate(LocalDate localDate) {
         this.localDate = localDate;
     }
-
-    @Override
-    public String toString() {
-        return "DataWorldSummary{" +
-                "localDate='" + localDate + '\'' +
-                '}';
-    }
-
-
 }

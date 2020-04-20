@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
 </head>
 <body>
-
 <div class="container">
     <section class="section">
         <div class="columns is-mobile is-centered">
@@ -20,12 +19,11 @@
         <div class="columns is-mobile is-centered">
             <div class="column">
                 <div class="buttons is-centered">
-                    <a class="button is-small is-link is-rounded" href="/statisticsCorona/world" type="submit">Go to
-                        data
+                    <a class="button is-small is-link is-rounded" href="/covid19/world" type="submit">Go to data
                         worldwide</a>
-                    <a class="button is-small is-link is-rounded" href="/statisticsCorona/germany" type="submit">Go to
-                        data
+                    <a class="button is-small is-link is-rounded" href="/covid19/germany" type="submit">Go to data
                         germany</a>
+                    <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
                 </div>
             </div>
         </div>
@@ -75,9 +73,7 @@
         </div>
     </section>
 </div>
-
 <canvas height="100" id="myChart" width="300"></canvas>
-
 <script>
     const sus = [[${resultSusceptible}]];
     const inf = [[${resultInfected}]];
