@@ -2,8 +2,10 @@ package com.valtech.statistics.controller;
 
 import com.valtech.statistics.model.DataGermany;
 import com.valtech.statistics.model.DataWorld;
+import com.valtech.statistics.model.DataWorldSummary;
 import com.valtech.statistics.service.GermanyService;
 import com.valtech.statistics.service.WorldService;
+import com.valtech.statistics.service.WorldSummaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,6 +25,7 @@ public class Covid19Controller {
 
     private final WorldService worldService;
     private final GermanyService germanyService;
+    private final WorldSummaryService worldSummaryService;
 
     @GetMapping("/world")
     public String showDataWorld(Model model) {
@@ -34,6 +38,21 @@ public class Covid19Controller {
         model.addAttribute("recovered", dataWorld.get().getRecovered());
         model.addAttribute("deaths", dataWorld.get().getDeaths());
         model.addAttribute("lastUpdate", dataWorld.get().getLastUpdate());
+
+        Optional<DataWorldSummary> dataWorldSummary = worldSummaryService.getLastEntryWorldSummary();
+        if (dataWorldSummary.isPresent()) {
+            model.addAttribute("newConfirmed", dataWorldSummary.get().getNewConfirmed());
+            model.addAttribute("totalConfirmed", dataWorldSummary.get().getTotalConfirmed());
+            model.addAttribute("newDeaths", dataWorldSummary.get().getNewDeaths());
+            model.addAttribute("totalDeaths", dataWorldSummary.get().getTotalDeaths());
+            model.addAttribute("newRecovered", dataWorldSummary.get().getNewRecovered());
+            model.addAttribute("totalRecovered", dataWorldSummary.get().getTotalRecovered());
+            model.addAttribute("date", DateTimeFormatter.ofPattern("dd.MM.yyy")
+                    .format(dataWorldSummary.get().getLocalDate()));
+            model.addAttribute("time", dataWorldSummary.get().getLocalTime());
+        } else {
+            model.addAttribute("noFirstData", true);
+        }
         model.addAttribute("confirmedList", worldService.getAllData()
                 .stream()
                 .map(DataWorld::getConfirmed)
@@ -54,12 +73,6 @@ public class Covid19Controller {
         return "covid19World";
     }
 
-    @GetMapping("/summary")
-    public String showDataWorldSummary(Model model) {
-
-        return "worldSummary";
-    }
-
     @GetMapping("/germany")
     public String showDataGermany(Model model) {
         log.info("Invoke controller to show data of germany.");
@@ -71,6 +84,9 @@ public class Covid19Controller {
         model.addAttribute("recovered", dataGermany.get().getRecovered());
         model.addAttribute("deaths", dataGermany.get().getDeaths());
         model.addAttribute("lastUpdate", dataGermany.get().getLastUpdate());
+
+        model.addAttribute("noFirstData", true);
+
         model.addAttribute("confirmedList", germanyService.getAllDataGermany()
                 .stream()
                 .map(DataGermany::getConfirmed)

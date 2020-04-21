@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "dataWorldSummary")
@@ -21,6 +23,7 @@ public class DataWorldSummary {
     private int newDeaths;
     private int totalDeaths;
     private LocalDate localDate;
+    private LocalTime localTime;
 
     public DataWorldSummary() {
     }
@@ -93,5 +96,13 @@ public class DataWorldSummary {
 
     public void setLocalDate(LocalDate localDate) {
         this.localDate = localDate;
+    }
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
     }
 }

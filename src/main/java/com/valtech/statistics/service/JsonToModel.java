@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -140,6 +141,7 @@ public class JsonToModel {
         }
     }
 
+    @Scheduled(cron = "0 5 * ? * *")
     public void getDataWorldSummary() throws IOException {
         log.info("Invoke get data of world summary and save it.");
 
@@ -159,6 +161,7 @@ public class JsonToModel {
         dataWorldSummary.setNewRecovered(newRecovered);
         dataWorldSummary.setTotalRecovered(totalRecovered);
         dataWorldSummary.setLocalDate(LocalDate.now());
+        dataWorldSummary.setLocalTime(LocalTime.now().withNano(0));
 
         Optional<DataWorldSummary> dataWorldSummaryLast = worldSummaryService.getLastEntryWorldSummary();
 
@@ -167,7 +170,7 @@ public class JsonToModel {
             log.info("Saved first data of world summary {}", dataWorldSummary.getLocalDate());
         }
         if (dataWorldSummaryLast.isPresent()) {
-            if (dataWorldSummaryLast.get().getNewConfirmed() != newConfirmed ||dataWorldSummaryLast.get().getTotalConfirmed() !=
+            if (dataWorldSummaryLast.get().getNewConfirmed() != newConfirmed || dataWorldSummaryLast.get().getTotalConfirmed() !=
                     totalConfirmed || dataWorldSummaryLast.get().getNewDeaths() != newDeaths || dataWorldSummaryLast.get().getTotalDeaths() !=
                     totalDeaths || dataWorldSummaryLast.get().getNewRecovered() != newRecovered || dataWorldSummaryLast.get().getTotalRecovered() != totalRecovered) {
                 if (worldSummaryService.findDataWorldSummaryByLocalDate(dataWorldSummary.getLocalDate()).isEmpty()) {
