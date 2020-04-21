@@ -126,8 +126,8 @@ public class JsonToModel {
             log.info("Saved first data of germany {}", dataGermany.getLastUpdate());
         }
         if (dataGermanyLast.isPresent()) {
-            if (dataGermanyLast.get().getConfirmed() == confirmedGermany && dataGermanyLast.get().getRecovered() == recoveredGermany &&
-                    dataGermanyLast.get().getDeaths() == deathsGermany) {
+            if (dataGermanyLast.get().getConfirmed() != confirmedGermany || dataGermanyLast.get().getRecovered() != recoveredGermany ||
+                    dataGermanyLast.get().getDeaths() != deathsGermany) {
                 if (germanyService.findDataGermanyByLastUpdate(lastUpdateGermany).isEmpty()) {
                     germanyService.saveDataGermany(dataGermany);
                     log.info("Saved new data of germany {}", dataGermany.getLastUpdate());
@@ -167,9 +167,9 @@ public class JsonToModel {
             log.info("Saved first data of world summary {}", dataWorldSummary.getLocalDate());
         }
         if (dataWorldSummaryLast.isPresent()) {
-            if (dataWorldSummaryLast.get().getNewConfirmed() == newConfirmed && dataWorldSummaryLast.get().getTotalConfirmed() ==
-                    totalConfirmed && dataWorldSummaryLast.get().getNewDeaths() == newDeaths && dataWorldSummaryLast.get().getTotalDeaths() ==
-                    totalDeaths && dataWorldSummaryLast.get().getNewRecovered() == newRecovered && dataWorldSummaryLast.get().getTotalRecovered() == totalRecovered) {
+            if (dataWorldSummaryLast.get().getNewConfirmed() != newConfirmed ||dataWorldSummaryLast.get().getTotalConfirmed() !=
+                    totalConfirmed || dataWorldSummaryLast.get().getNewDeaths() != newDeaths || dataWorldSummaryLast.get().getTotalDeaths() !=
+                    totalDeaths || dataWorldSummaryLast.get().getNewRecovered() != newRecovered || dataWorldSummaryLast.get().getTotalRecovered() != totalRecovered) {
                 if (worldSummaryService.findDataWorldSummaryByLocalDate(dataWorldSummary.getLocalDate()).isEmpty()) {
                     worldSummaryService.saveDataWorldSummary(dataWorldSummary);
                     log.info("Saved new data of world summary {}", dataWorldSummary.getLocalDate());
