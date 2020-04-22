@@ -86,7 +86,7 @@ public class JsonToModel {
 
         if (dataWorldLast.isEmpty()) {
             worldService.saveDataWorld(dataWorld);
-            log.info("Saved first data of world {}", dataWorld.getLastUpdate());
+            log.info("Saved first data of world {}.", dataWorld.getLastUpdate());
         }
         if (dataWorldLast.isPresent()) {
             if (dataWorldLast.get().getConfirmed() != confirmedWorld ||
@@ -94,12 +94,12 @@ public class JsonToModel {
                     dataWorldLast.get().getDeaths() != deathsWorld) {
                 if (dataWorldLast.get().getLastUpdate() != lastUpdateWorld) {
                     worldService.saveDataWorld(dataWorld);
-                    log.info("Saved new data of world {}", dataWorld.getLastUpdate());
+                    log.info("Saved new data of world {}.", dataWorld.getLastUpdate());
                 } else {
-                    log.info("No new data of world. Returned last one {}", dataWorld.getLastUpdate());
+                    log.info("No new data of world. Returned last one {}.", dataWorld.getLastUpdate());
                 }
             } else {
-                log.info("The data of last entry world are equals the new one.");
+                log.info("The data of last entry world are equals the new one {}.", dataWorld.getLastUpdate());
             }
         }
     }
@@ -124,7 +124,7 @@ public class JsonToModel {
 
         if (dataGermanyLast.isEmpty()) {
             germanyService.saveDataGermany(dataGermany);
-            log.info("Saved first data of germany {}", dataGermany.getLastUpdate());
+            log.info("Saved first data of germany {}.", dataGermany.getLastUpdate());
         }
         if (dataGermanyLast.isPresent()) {
             if (dataGermanyLast.get().getConfirmed() != confirmedGermany ||
@@ -132,12 +132,12 @@ public class JsonToModel {
                     dataGermanyLast.get().getDeaths() != deathsGermany) {
                 if (dataGermanyLast.get().getLastUpdate() != lastUpdateGermany) {
                     germanyService.saveDataGermany(dataGermany);
-                    log.info("Saved new data of germany {}", dataGermany.getLastUpdate());
+                    log.info("Saved new data of germany {}.", dataGermany.getLastUpdate());
                 } else {
-                    log.info("No new data of germany, Returned last one {}", dataGermany.getLastUpdate());
+                    log.info("No new data of germany, Returned last one {}.", dataGermany.getLastUpdate());
                 }
             } else {
-                log.info("The data of last entry of germany are equals the new one.");
+                log.info("The data of last entry of germany are equals the new one {}.", dataGermany.getLastUpdate());
             }
         }
     }
@@ -170,20 +170,23 @@ public class JsonToModel {
 
         if (dataWorldSummaryLast.isEmpty()) {
             worldSummaryService.saveDataWorldSummary(dataWorldSummary);
-            log.info("Saved first data of world summary {}", dataWorldSummary.getLocalDate());
+            log.info("Saved first data of world summary {}.", dataWorldSummary.getLocalDate());
         }
         if (dataWorldSummaryLast.isPresent()) {
-            if (dataWorldSummaryLast.get().getNewConfirmed() != newConfirmed || dataWorldSummaryLast.get().getTotalConfirmed() !=
-                    totalConfirmed || dataWorldSummaryLast.get().getNewDeaths() != newDeaths || dataWorldSummaryLast.get().getTotalDeaths() !=
-                    totalDeaths || dataWorldSummaryLast.get().getNewRecovered() != newRecovered || dataWorldSummaryLast.get().getTotalRecovered() != totalRecovered) {
+            if (dataWorldSummaryLast.get().getNewConfirmed() != newConfirmed ||
+                    dataWorldSummaryLast.get().getTotalConfirmed() != totalConfirmed ||
+                    dataWorldSummaryLast.get().getNewDeaths() != newDeaths ||
+                    dataWorldSummaryLast.get().getTotalDeaths() != totalDeaths ||
+                    dataWorldSummaryLast.get().getNewRecovered() != newRecovered ||
+                    dataWorldSummaryLast.get().getTotalRecovered() != totalRecovered) {
                 if (worldSummaryService.findDataWorldSummaryByLocalDate(dataWorldSummary.getLocalDate()).isEmpty()) {
                     worldSummaryService.saveDataWorldSummary(dataWorldSummary);
-                    log.info("Saved new data of world summary {}", dataWorldSummary.getLocalDate());
+                    log.info("Saved new data of world summary {}.", dataWorldSummary.getLocalDate());
                 } else {
-                    log.info("No new data of world summary, Returned last one {}", dataWorldSummary.getLocalDate());
+                    log.info("No new data of world summary, Returned last one {}.", dataWorldSummary.getLocalDate());
                 }
             } else {
-                log.info("The data of last entry of world summary are equals the new one.");
+                log.info("The data of last entry of world summary are equals the new one {}.", dataWorldSummary.getLocalDate());
             }
         }
     }

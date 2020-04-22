@@ -17,30 +17,44 @@ public class WorldService {
     private final DataWorldRepository dataWorldRepository;
 
     public DataWorld saveDataWorld(DataWorld dataWorld) {
-        log.info("Invoke save new data of world.");
+        log.info("Save new data of world {}.", dataWorld);
         return dataWorldRepository.save(dataWorld);
     }
 
     public List<DataWorld> getAllData() {
-        log.info("Invoke get all data of world.");
-        return dataWorldRepository.findAll();
+        log.info("Get all data of world.");
+        final List<DataWorld> allDataWorld = dataWorldRepository.findAll();
+        if (allDataWorld.isEmpty()) {
+            log.warn("No data world found.");
+            return allDataWorld;
+        }
+        log.info("Got all data world successfully.");
+        return allDataWorld;
     }
 
     public Optional<DataWorld> getLastEntryWorld() {
-        log.info("Invoke get last entry world.");
-        return dataWorldRepository.findTopByOrderByDataWorldIdDesc();
+        log.info("Get last entry of world.");
+        Optional<DataWorld> getLastEntryWorld = dataWorldRepository.findTopByOrderByDataWorldIdDesc();
+        if (getLastEntryWorld.isPresent()) {
+            log.info("Found last entry of data world. {}", getLastEntryWorld.get().getLastUpdate());
+            return getLastEntryWorld;
+        }
+        log.warn("Found no last entry of data world.");
+        return getLastEntryWorld;
     }
 
     public Optional<DataWorld> findDataWorldById(long id) {
+        log.info("Find data of world by id {}.", id);
         return dataWorldRepository.findById(id);
     }
 
     public Optional<DataWorld> findDataWorldByLastUpdate(String lastUpdate) {
-        log.info("Invoke find data of world by last update {}.", lastUpdate);
+        log.info("Find data of world by last update {}.", lastUpdate);
         return dataWorldRepository.findDataWorldByLastUpdate(lastUpdate);
     }
 
     public void deleteDataWorld(DataWorld dataWorld) {
+        log.info("Delete data of world {}.", dataWorld);
         dataWorldRepository.delete(dataWorld);
     }
 }

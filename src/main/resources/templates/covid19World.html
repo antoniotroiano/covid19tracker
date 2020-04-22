@@ -66,7 +66,7 @@
     <div class="column">
         <div class="column">
             <div class="title is-4 has-text-centered">Daily update of COVID-19</div>
-            <div th:if="${noFirstData}">
+            <div th:if="${noFirstDataWorld}">
                 <div class="notification is-white">
                     <div class="is-text has-text-centered">
                         No first dataset. Please try again in an hour.
@@ -138,8 +138,8 @@
     </div>
 </div>
 <script>
-    const dates = [[${dates}]];
-    const confirmed = [[${confirmedList}]];
+    const dates = [[${datesW}]];
+    const confirmed = [[${confirmedListW}]];
     const dateConfirmed = [];
     const ctx = document.getElementById('dataWorldConfirmed').getContext('2d');
     const dataWorldConfirmed = new Chart(ctx, {
@@ -147,7 +147,7 @@
         data: {
             labels: dates,
             datasets: [{
-                label: 'Confirmed COVID-19',
+                label: 'Confirmed World COVID-19',
                 backgroundColor: 'rgb(147,190,234, 0.6)',
                 borderWidth: 1,
                 borderColor: 'rgb(13,23,234)',
@@ -212,12 +212,12 @@
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: 'Confirmed COVID-19'
+                text: 'Confirmed World COVID-19'
             }
         }
     });
 
-    const recovered = [[${recoveredList}]];
+    const recovered = [[${recoveredListW}]];
     const dateRecovered = [];
     const ctx2 = document.getElementById('dataWorldRecovered').getContext('2d');
     const dataWorldRecovered = new Chart(ctx2, {
@@ -225,7 +225,7 @@
         data: {
             labels: dates,
             datasets: [{
-                label: 'Recovered COVID-19',
+                label: 'Recovered World COVID-19',
                 backgroundColor: 'rgba(167,234,122,0.6)',
                 borderWidth: 1,
                 borderColor: 'rgb(9,234,14)',
@@ -288,12 +288,12 @@
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: 'Recovered COVID-19'
+                text: 'Recovered World COVID-19'
             }
         }
     });
 
-    const deaths = [[${deathsList}]];
+    const deaths = [[${deathsListW}]];
     const dateDeath = [];
     const ctx3 = document.getElementById('dataWorldDeaths').getContext('2d');
     const dataWorldDeaths = new Chart(ctx3, {
@@ -301,7 +301,7 @@
         data: {
             labels: dates,
             datasets: [{
-                label: 'Death COVID-19',
+                label: 'Death World COVID-19',
                 backgroundColor: 'rgba(234,127,121,0.6)',
                 borderWidth: 1,
                 borderColor: 'rgb(234,3,12)',
@@ -364,7 +364,7 @@
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: 'Death COVID-19'
+                text: 'Death World COVID-19'
             }
         }
     });

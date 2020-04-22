@@ -66,7 +66,7 @@
     <div class="column">
         <div class="column">
             <div class="title is-4 has-text-centered">Daily update of COVID-19 Germany</div>
-            <div th:if="${noFirstData}">
+            <div th:if="${noFirstDataGermany}">
                 <div class="notification is-white">
                     <div class="is-text has-text-centered">
                         No first dataset. Please try again in an hour.
@@ -138,8 +138,8 @@
     </div>
 </div>
 <script>
-    const dates = [[${dates}]];
-    const confirmed = [[${confirmedList}]];
+    const dates = [[${datesG}]];
+    const confirmed = [[${confirmedListG}]];
     const dateConfirmed = [];
     const ctx = document.getElementById('dataGermanyConfirmed').getContext('2d');
     const dataGermanyConfirmed = new Chart(ctx, {
@@ -147,7 +147,7 @@
         data: {
             labels: dates,
             datasets: [{
-                label: 'Confirmed COVID-19',
+                label: 'Confirmed Germany COVID-19',
                 backgroundColor: 'rgb(147,190,234, 0.6)',
                 borderWidth: 1,
                 borderColor: 'rgb(13,23,234)',
@@ -212,12 +212,12 @@
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: 'Confirmed COVID-19'
+                text: 'Confirmed Germany COVID-19'
             }
         }
     });
 
-    const recovered = [[${recoveredList}]];
+    const recovered = [[${recoveredListG}]];
     const dateRecovered = [];
     const ctx2 = document.getElementById('dataGermanyRecovered').getContext('2d');
     const dataGermanyRecovered = new Chart(ctx2, {
@@ -225,7 +225,7 @@
         data: {
             labels: dates,
             datasets: [{
-                label: 'Recovered COVID-19',
+                label: 'Recovered Germany COVID-19',
                 backgroundColor: 'rgba(167,234,122,0.6)',
                 borderWidth: 1,
                 borderColor: 'rgb(9,234,14)',
@@ -288,12 +288,12 @@
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: 'Recovered COVID-19'
+                text: 'Recovered Germany COVID-19'
             }
         }
     });
 
-    const deaths = [[${deathsList}]];
+    const deaths = [[${deathsListG}]];
     const dateDeath = [];
     const ctx3 = document.getElementById('dataGermanyDeaths').getContext('2d');
     const dataGermanyDeaths = new Chart(ctx3, {
@@ -301,7 +301,7 @@
         data: {
             labels: dates,
             datasets: [{
-                label: 'Death COVID-19',
+                label: 'Death Germany COVID-19',
                 backgroundColor: 'rgba(234,127,121,0.6)',
                 borderWidth: 1,
                 borderColor: 'rgb(234,3,12)',
@@ -364,7 +364,7 @@
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: 'Death COVID-19'
+                text: 'Death Germany COVID-19'
             }
         }
     });
