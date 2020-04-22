@@ -27,7 +27,6 @@ public class JsonToModel {
 
     private static final String URL_WORLD = "https://covid19.mathdro.id/api";
     private static final String URL_GERMANY = "https://covid19.mathdro.id/api/countries/germany";
-    private static final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
     private static final String VALUE = "value";
     private static final String GLOBAL = "Global";
     private final WorldService worldService;
@@ -141,9 +140,11 @@ public class JsonToModel {
         }
     }
 
-    @Scheduled(cron = "0 5 * ? * *")
+    @Scheduled(cron = "0 0 */6 ? * *")
     public void getDataWorldSummary() throws IOException {
         log.info("Invoke get data of world summary and save it.");
+
+        final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
 
         int newConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewConfirmed");
         int totalConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "TotalConfirmed");
