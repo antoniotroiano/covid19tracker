@@ -66,7 +66,7 @@ public class JsonToModel {
         return dateNow;
     }
 
-    @Scheduled(cron = "0 0 */3 ? * *")
+    @Scheduled(cron = "0 5 */3 ? * *")
     public void getDataOfWorldAndSaveIt() throws IOException {
         log.info("Invoke create data of world.");
 
@@ -89,9 +89,10 @@ public class JsonToModel {
             log.info("Saved first data of world {}", dataWorld.getLastUpdate());
         }
         if (dataWorldLast.isPresent()) {
-            if (dataWorldLast.get().getConfirmed() != confirmedWorld || dataWorldLast.get().getRecovered() != recoveredWorld ||
+            if (dataWorldLast.get().getConfirmed() != confirmedWorld ||
+                    dataWorldLast.get().getRecovered() != recoveredWorld ||
                     dataWorldLast.get().getDeaths() != deathsWorld) {
-                if (worldService.findDataWorldByLastUpdate(lastUpdateWorld).isEmpty()) {
+                if (dataWorldLast.get().getLastUpdate() != lastUpdateWorld) {
                     worldService.saveDataWorld(dataWorld);
                     log.info("Saved new data of world {}", dataWorld.getLastUpdate());
                 } else {
@@ -103,7 +104,7 @@ public class JsonToModel {
         }
     }
 
-    @Scheduled(cron = "0 10 * ? * *")
+    @Scheduled(cron = "0 10 */2 ? * *")
     public void getDataOfGermanyAndSaveIt() throws IOException {
         log.info("Invoke get data of germany and save it.");
 
@@ -126,9 +127,10 @@ public class JsonToModel {
             log.info("Saved first data of germany {}", dataGermany.getLastUpdate());
         }
         if (dataGermanyLast.isPresent()) {
-            if (dataGermanyLast.get().getConfirmed() != confirmedGermany || dataGermanyLast.get().getRecovered() != recoveredGermany ||
+            if (dataGermanyLast.get().getConfirmed() != confirmedGermany ||
+                    dataGermanyLast.get().getRecovered() != recoveredGermany ||
                     dataGermanyLast.get().getDeaths() != deathsGermany) {
-                if (germanyService.findDataGermanyByLastUpdate(lastUpdateGermany).isEmpty()) {
+                if (dataGermanyLast.get().getLastUpdate() != lastUpdateGermany) {
                     germanyService.saveDataGermany(dataGermany);
                     log.info("Saved new data of germany {}", dataGermany.getLastUpdate());
                 } else {
@@ -140,8 +142,8 @@ public class JsonToModel {
         }
     }
 
-    @Scheduled(cron = "0 0 */6 ? * *")
-    public void getDataWorldSummary() throws IOException {
+    @Scheduled(cron = "0 15 */5 ? * *")
+    public void getDataWorldSummaryAndSaveIt() throws IOException {
         log.info("Invoke get data of world summary and save it.");
 
         final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
