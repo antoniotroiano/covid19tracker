@@ -49,6 +49,7 @@ public class WorldController {
             model.addAttribute("totalDeaths", dataWorldSummary.get().getTotalDeaths());
             model.addAttribute("newRecovered", dataWorldSummary.get().getNewRecovered());
             model.addAttribute("totalRecovered", dataWorldSummary.get().getTotalRecovered());
+            model.addAttribute("activeCases", dataWorldSummary.get().getActiveCases());
             model.addAttribute("date", DateTimeFormatter.ofPattern("dd.MM.yyy")
                     .format(dataWorldSummary.get().getLocalDate()));
             model.addAttribute("time", dataWorldSummary.get().getLocalTime());

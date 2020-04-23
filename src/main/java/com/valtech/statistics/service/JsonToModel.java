@@ -1,6 +1,7 @@
 package com.valtech.statistics.service;
 
 import com.valtech.statistics.model.DataGermany;
+import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.model.DataWorld;
 import com.valtech.statistics.model.DataWorldSummary;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,13 @@ public class JsonToModel {
     private static final String URL_GERMANY = "https://covid19.mathdro.id/api/countries/germany";
     private static final String VALUE = "value";
     private static final String GLOBAL = "Global";
+    private static final String TOTAL_CONFIRMED = "TotalConfirmed";
+    private static final String TOTAL_DEATHS = "TotalDeaths";
+    private static final String TOTAL_RECOVERED = "TotalRecovered";
     private final WorldService worldService;
     private final WorldSummaryService worldSummaryService;
     private final GermanyService germanyService;
+    private final GermanySummaryService germanySummaryService;
 
     private JSONObject getJSONObject(String url) throws IOException {
         return new JSONObject(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
@@ -40,22 +45,6 @@ public class JsonToModel {
     private int getValueOfJSONObject(JSONObject jsonObject, String key, String valueKey) throws JSONException {
         JSONObject getIntValue = (JSONObject) jsonObject.get(key);
         return getIntValue.getInt(valueKey);
-    }
-
-    private void getStringValueOfJSONObject(JSONObject jsonObject, String key) throws JSONException {
-        JSONArray getValueOfJSONArray = jsonObject.getJSONArray("Countries");
-        for (int i = 0; i < getValueOfJSONArray.length(); i++) {
-            JSONObject json = getValueOfJSONArray.getJSONObject(i);
-            if (json.getString(key).equals("Germany")) {
-                json.getString("Country");
-                json.getInt("NewConfirmed");
-                json.getInt("TotalConfirmed");
-                json.getInt("NewDeaths");
-                json.getInt("TotalDeaths");
-                json.getInt("NewRecovered");
-                json.getInt("TotalRecovered");
-            }
-        }
     }
 
     private String getDateNow() {
@@ -92,7 +81,7 @@ public class JsonToModel {
             if (dataWorldLast.get().getConfirmed() != confirmedWorld ||
                     dataWorldLast.get().getRecovered() != recoveredWorld ||
                     dataWorldLast.get().getDeaths() != deathsWorld) {
-                if (dataWorldLast.get().getLastUpdate() != lastUpdateWorld) {
+                if (dataWorldLast.get().getLastUpdate() != null && dataWorldLast.get().getLastUpdate().equals(lastUpdateWorld)) {
                     worldService.saveDataWorld(dataWorld);
                     log.info("Saved new data of world {}.", dataWorld.getLastUpdate());
                 } else {
@@ -130,7 +119,7 @@ public class JsonToModel {
             if (dataGermanyLast.get().getConfirmed() != confirmedGermany ||
                     dataGermanyLast.get().getRecovered() != recoveredGermany ||
                     dataGermanyLast.get().getDeaths() != deathsGermany) {
-                if (dataGermanyLast.get().getLastUpdate() != lastUpdateGermany) {
+                if (dataGermanyLast.get().getLastUpdate() != null && dataGermanyLast.get().getLastUpdate().equals(lastUpdateGermany)) {
                     germanyService.saveDataGermany(dataGermany);
                     log.info("Saved new data of germany {}.", dataGermany.getLastUpdate());
                 } else {
@@ -142,18 +131,18 @@ public class JsonToModel {
         }
     }
 
-    @Scheduled(cron = "0 15 */5 ? * *")
+    @Scheduled(cron = "0 15 */4 ? * *")
     public void getDataWorldSummaryAndSaveIt() throws IOException {
         log.info("Invoke get data of world summary and save it.");
 
         final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
 
         int newConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewConfirmed");
-        int totalConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "TotalConfirmed");
+        int totalConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, TOTAL_CONFIRMED);
         int newDeaths = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewDeaths");
-        int totalDeaths = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "TotalDeaths");
+        int totalDeaths = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, TOTAL_DEATHS);
         int newRecovered = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewRecovered");
-        int totalRecovered = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "TotalRecovered");
+        int totalRecovered = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, TOTAL_RECOVERED);
 
         DataWorldSummary dataWorldSummary = new DataWorldSummary();
 
@@ -163,6 +152,7 @@ public class JsonToModel {
         dataWorldSummary.setTotalDeaths(totalDeaths);
         dataWorldSummary.setNewRecovered(newRecovered);
         dataWorldSummary.setTotalRecovered(totalRecovered);
+        dataWorldSummary.setActiveCases(totalConfirmed - totalDeaths - totalRecovered);
         dataWorldSummary.setLocalDate(LocalDate.now());
         dataWorldSummary.setLocalTime(LocalTime.now().withNano(0));
 
@@ -173,20 +163,51 @@ public class JsonToModel {
             log.info("Saved first data of world summary {}.", dataWorldSummary.getLocalDate());
         }
         if (dataWorldSummaryLast.isPresent()) {
-            if (dataWorldSummaryLast.get().getNewConfirmed() != newConfirmed ||
-                    dataWorldSummaryLast.get().getTotalConfirmed() != totalConfirmed ||
-                    dataWorldSummaryLast.get().getNewDeaths() != newDeaths ||
-                    dataWorldSummaryLast.get().getTotalDeaths() != totalDeaths ||
-                    dataWorldSummaryLast.get().getNewRecovered() != newRecovered ||
-                    dataWorldSummaryLast.get().getTotalRecovered() != totalRecovered) {
-                if (worldSummaryService.findDataWorldSummaryByLocalDate(dataWorldSummary.getLocalDate()).isEmpty()) {
-                    worldSummaryService.saveDataWorldSummary(dataWorldSummary);
-                    log.info("Saved new data of world summary {}.", dataWorldSummary.getLocalDate());
-                } else {
-                    log.info("No new data of world summary, Returned last one {}.", dataWorldSummary.getLocalDate());
-                }
+            if (worldSummaryService.findDataWorldSummaryByLocalTime(dataWorldSummary.getLocalTime()).isEmpty()) {
+                worldSummaryService.saveDataWorldSummary(dataWorldSummary);
+                log.info("Saved new data of world summary {}.", dataWorldSummary.getLocalDate());
             } else {
-                log.info("The data of last entry of world summary are equals the new one {}.", dataWorldSummary.getLocalDate());
+                log.info("No new data of world summary, Returned last one {}.", dataWorldSummary.getLocalDate());
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 20 */5 ? * *")
+    public void getDataGermanySummaryAndSaveIt() throws IOException {
+        log.info("Invoke get data of germany summary and save it.");
+
+        final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
+
+        DataGermanySummary dataGermanySummary = new DataGermanySummary();
+
+        JSONArray getValueOfJSONArray = getJSONObject(URL_WORLD_SUMMARY).getJSONArray("Countries");
+        for (int i = 0; i < getValueOfJSONArray.length(); i++) {
+            JSONObject json = getValueOfJSONArray.getJSONObject(i);
+            if (json.getString("Country").equals("Germany")) {
+                dataGermanySummary.setNewConfirmed(json.getInt("NewConfirmed"));
+                dataGermanySummary.setTotalConfirmed(json.getInt(TOTAL_CONFIRMED));
+                dataGermanySummary.setNewDeaths(json.getInt("NewDeaths"));
+                dataGermanySummary.setTotalDeaths(json.getInt(TOTAL_DEATHS));
+                dataGermanySummary.setNewRecovered(json.getInt("NewRecovered"));
+                dataGermanySummary.setTotalRecovered(json.getInt(TOTAL_RECOVERED));
+                dataGermanySummary.setActiveCases(json.getInt(TOTAL_CONFIRMED) - json.getInt(TOTAL_DEATHS) - json.getInt(TOTAL_RECOVERED));
+                dataGermanySummary.setLocalDate(LocalDate.now());
+                dataGermanySummary.setLocalTime(LocalTime.now().withNano(0));
+            }
+        }
+
+        Optional<DataGermanySummary> dataGermanySummaryLast = germanySummaryService.getLastEntryGermanySummary();
+
+        if (dataGermanySummaryLast.isEmpty()) {
+            germanySummaryService.saveDataGermanySummary(dataGermanySummary);
+            log.info("Saved first data of germany summary {}.", dataGermanySummary.getLocalDate());
+        }
+        if (dataGermanySummaryLast.isPresent()) {
+            if (germanySummaryService.findDataGermanySummaryByLocalTime(dataGermanySummary.getLocalTime()).isEmpty()) {
+                germanySummaryService.saveDataGermanySummary(dataGermanySummary);
+                log.info("Saved new data of germany summary {}.", dataGermanySummary.getLocalDate());
+            } else {
+                log.info("No new data of germany summary, Returned last one {}.", dataGermanySummary.getLocalDate());
             }
         }
     }

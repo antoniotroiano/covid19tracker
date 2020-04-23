@@ -79,45 +79,43 @@
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-info">
                                 <p class="title is-5">New confirmed</p>
-                                <p class="subtitle is-6" th:text="${newConfirmed}"></p>
+                                <p class="subtitle is-6" th:text="${newConfirmedG}"></p>
                             </article>
                             <article class="tile is-child notification is-info">
                                 <p class="title is-5">Total confirmed</p>
-                                <p class="subtitle is-6" th:text="${totalConfirmed}"></p>
+                                <p class="subtitle is-6" th:text="${totalConfirmedG}"></p>
+                            </article>
+                            <article class="tile is-child notification is-light">
+                                <p class="title is-5">Date</p>
+                                <p class="subtitle is-6" th:text="${dateG}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">New recovered</p>
-                                <p class="subtitle is-6" th:text="${newRecovered}"></p>
+                                <p class="subtitle is-6" th:text="${newRecoveredG}"></p>
                             </article>
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">Total recovered</p>
-                                <p class="subtitle is-6" th:text="${totalRecovered}"></p>
+                                <p class="subtitle is-6" th:text="${totalRecoveredG}"></p>
+                            </article>
+                            <article class="tile is-child notification is-light">
+                                <p class="title is-5">Time</p>
+                                <p class="subtitle is-6" th:text="${timeG}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-danger">
                                 <p class="title is-5">New deaths</p>
-                                <p class="subtitle is-6" th:text="${newDeaths}"></p>
+                                <p class="subtitle is-6" th:text="${newDeathsG}"></p>
                             </article>
                             <article class="tile is-child notification is-danger">
                                 <p class="title is-5">Total deaths</p>
-                                <p class="subtitle is-6" th:text="${totalDeaths}"></p>
+                                <p class="subtitle is-6" th:text="${totalDeathsG}"></p>
                             </article>
-                        </div>
-                    </div>
-                    <div class="tile has-text-centered">
-                        <div class="tile is-parent is-6">
                             <article class="tile is-child notification is-light">
-                                <p class="title is-5">Date</p>
-                                <p class="subtitle is-6" th:text="${date}"></p>
-                            </article>
-                        </div>
-                        <div class="tile is-parent is-6">
-                            <article class="tile is-child notification is-light">
-                                <p class="title is-5">Time</p>
-                                <p class="subtitle is-6" th:text="${time}"></p>
+                                <p class="title is-5">Active cases</p>
+                                <p class="subtitle is-6" th:text="${activeCasesG}"></p>
                             </article>
                         </div>
                     </div>

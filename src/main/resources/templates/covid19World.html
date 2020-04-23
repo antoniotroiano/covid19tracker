@@ -65,7 +65,7 @@
 <div class="columns is-mobile">
     <div class="column">
         <div class="column">
-            <div class="title is-4 has-text-centered">Daily update of COVID-19</div>
+            <div class="title is-4 has-text-centered">Daily update of COVID-19 World</div>
             <div th:if="${noFirstDataWorld}">
                 <div class="notification is-white">
                     <div class="is-text has-text-centered">
@@ -85,6 +85,10 @@
                                 <p class="title is-5">Total confirmed</p>
                                 <p class="subtitle is-6" th:text="${totalConfirmed}"></p>
                             </article>
+                            <article class="tile is-child notification is-light">
+                                <p class="title is-5">Date</p>
+                                <p class="subtitle is-6" th:text="${date}"></p>
+                            </article>
                         </div>
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-primary">
@@ -94,6 +98,10 @@
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">Total recovered</p>
                                 <p class="subtitle is-6" th:text="${totalRecovered}"></p>
+                            </article>
+                            <article class="tile is-child notification is-light">
+                                <p class="title is-5">Time</p>
+                                <p class="subtitle is-6" th:text="${time}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
@@ -105,19 +113,9 @@
                                 <p class="title is-5">Total deaths</p>
                                 <p class="subtitle is-6" th:text="${totalDeaths}"></p>
                             </article>
-                        </div>
-                    </div>
-                    <div class="tile has-text-centered">
-                        <div class="tile is-parent is-6">
                             <article class="tile is-child notification is-light">
-                                <p class="title is-5">Date</p>
-                                <p class="subtitle is-6" th:text="${date}"></p>
-                            </article>
-                        </div>
-                        <div class="tile is-parent is-6">
-                            <article class="tile is-child notification is-light">
-                                <p class="title is-5">Time</p>
-                                <p class="subtitle is-6" th:text="${time}"></p>
+                                <p class="title is-5">Active cases</p>
+                                <p class="subtitle is-6" th:text="${activeCases}"></p>
                             </article>
                         </div>
                     </div>

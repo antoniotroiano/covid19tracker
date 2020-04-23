@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,30 +18,50 @@ public class WorldSummaryService {
     private final DataWorldSummaryRepository dataWorldSummaryRepository;
 
     public DataWorldSummary saveDataWorldSummary(DataWorldSummary dataWorldSummary) {
-        log.info("Invoke save new data world summary.");
+        log.info("Save new data world summary.");
         return dataWorldSummaryRepository.save(dataWorldSummary);
     }
 
     public List<DataWorldSummary> getAllDataWorldSummary() {
-        log.info("Invoke get all data world summary.");
-        return dataWorldSummaryRepository.findAll();
+        log.info("Get all data world summary.");
+        List<DataWorldSummary> allDataWorldSummary = dataWorldSummaryRepository.findAll();
+        if (allDataWorldSummary.isEmpty()) {
+            log.warn("No data world summary found.");
+            return allDataWorldSummary;
+        }
+        log.info("Got all data world summary successfully.");
+        return allDataWorldSummary;
     }
 
     public Optional<DataWorldSummary> getLastEntryWorldSummary() {
-        log.info("Invoke get last entry world summary.");
-        return dataWorldSummaryRepository.findTopByOrderByDataWorldSummaryIdDesc();
+        log.info("Get last entry of world summary.");
+        Optional<DataWorldSummary> getLastEntryWorldSummary = dataWorldSummaryRepository.findTopByOrderByDataWorldSummaryIdDesc();
+        if (getLastEntryWorldSummary.isPresent()) {
+            log.info("Found last entry of data world summary. {}", getLastEntryWorldSummary.get().getLocalDate());
+            return getLastEntryWorldSummary;
+        }
+        log.warn("Found no last entry of data world summary.");
+        return getLastEntryWorldSummary;
     }
 
     public Optional<DataWorldSummary> findDataWorldSummaryById(long id) {
+        log.info("Find data of world summary by id {}.", id);
         return dataWorldSummaryRepository.findById(id);
     }
 
-    public Optional<DataWorldSummary> findDataWorldSummaryByLocalDate(LocalDate localDate) {
-        log.info("Invoke find data of world suummary by local date {}.", localDate);
-        return dataWorldSummaryRepository.findDataWorldSummaryByLocalDate(localDate);
+    public Optional<DataWorldSummary> findDataWorldSummaryByLocalTime(LocalTime localTime) {
+        log.info("Get data of world summary by last time {}.", localTime);
+        Optional<DataWorldSummary> findDataWorldByTime = dataWorldSummaryRepository.findDataWorldSummaryByLocalTime(localTime);
+        if (findDataWorldByTime.isPresent()) {
+            log.info("Found data of world summary by last time {}.", localTime);
+            return findDataWorldByTime;
+        }
+        log.warn("Found no last data of world summary by local time {}.", localTime);
+        return findDataWorldByTime;
     }
 
     public void deleteDataWorldSummary(DataWorldSummary dataWorldSummary) {
+        log.info("Delete data of world {}.", dataWorldSummary);
         dataWorldSummaryRepository.delete(dataWorldSummary);
     }
 }

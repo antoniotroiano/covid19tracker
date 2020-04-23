@@ -6,7 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -22,6 +21,7 @@ public class DataWorldSummary {
     private int totalRecovered;
     private int newDeaths;
     private int totalDeaths;
+    private int activeCases;
     private LocalDate localDate;
     private LocalTime localTime;
 
@@ -88,6 +88,14 @@ public class DataWorldSummary {
 
     public void setTotalDeaths(int totalDeaths) {
         this.totalDeaths = totalDeaths;
+    }
+
+    public int getActiveCases() {
+        return activeCases;
+    }
+
+    public void setActiveCases(int activeCases) {
+        this.activeCases = activeCases;
     }
 
     public LocalDate getLocalDate() {
