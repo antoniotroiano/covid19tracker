@@ -6,7 +6,7 @@
 
     <groupId>org.valtech</groupId>
     <artifactId>statistics-corona</artifactId>
-    <version>1.1.4-SNAPSHOT</version>
+    <version>1.1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
