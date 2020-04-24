@@ -48,7 +48,7 @@ public class JsonToModel {
     }
 
     private String getDateNow() {
-        String dateNow = "";
+        String dateNow;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM");
         LocalDate now = LocalDate.now();
         dateNow = now.format(dtf);
@@ -81,11 +81,11 @@ public class JsonToModel {
             if (dataWorldLast.get().getConfirmed() != confirmedWorld ||
                     dataWorldLast.get().getRecovered() != recoveredWorld ||
                     dataWorldLast.get().getDeaths() != deathsWorld) {
-                if (dataWorldLast.get().getLastUpdate() != null && dataWorldLast.get().getLastUpdate().equals(lastUpdateWorld)) {
+                if (dataWorldLast.get().getLastUpdate().equals(lastUpdateWorld)) {
+                    log.info("No new data of world. Returned last one {}.", dataWorld.getLastUpdate());
+                } else {
                     worldService.saveDataWorld(dataWorld);
                     log.info("Saved new data of world {}.", dataWorld.getLastUpdate());
-                } else {
-                    log.info("No new data of world. Returned last one {}.", dataWorld.getLastUpdate());
                 }
             } else {
                 log.info("The data of last entry world are equals the new one {}.", dataWorld.getLastUpdate());
@@ -119,11 +119,11 @@ public class JsonToModel {
             if (dataGermanyLast.get().getConfirmed() != confirmedGermany ||
                     dataGermanyLast.get().getRecovered() != recoveredGermany ||
                     dataGermanyLast.get().getDeaths() != deathsGermany) {
-                if (dataGermanyLast.get().getLastUpdate() != null && dataGermanyLast.get().getLastUpdate().equals(lastUpdateGermany)) {
+                if (dataGermanyLast.get().getLastUpdate().equals(lastUpdateGermany)) {
+                    log.info("No new data of germany, Returned last one {}.", dataGermany.getLastUpdate());
+                } else {
                     germanyService.saveDataGermany(dataGermany);
                     log.info("Saved new data of germany {}.", dataGermany.getLastUpdate());
-                } else {
-                    log.info("No new data of germany, Returned last one {}.", dataGermany.getLastUpdate());
                 }
             } else {
                 log.info("The data of last entry of germany are equals the new one {}.", dataGermany.getLastUpdate());
