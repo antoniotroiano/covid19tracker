@@ -11,7 +11,7 @@ else
   read newVersion
   sed -i.old -e 's/\<version\>'$oldVersion'\<\/version\>/\<version\>'$newVersion'\<\/version\>/g' pom.xml
   git add .
-  git commit -m "Deployment: Changed version to  $newVersion"
+  git commit -m "Deployment: Changed version to $newVersion"
   git push
   git checkout deploy/master
   git merge master
