@@ -96,10 +96,10 @@ public class GermanyService {
         }
     }
 
-    public List<Optional<DataGermany>> getLastDateLastEntry() {
+    /*public List<Optional<DataGermany>> getLastDateLastEntry() {
         Optional<DataGermany> getLastEntry = getLastEntryGermany();
         List<Optional<DataGermany>> dataGermanyList = new ArrayList<>();
         dataGermanyList.add(getLastEntry);
         return dataGermanyList;
-    }
+    }*/
 }

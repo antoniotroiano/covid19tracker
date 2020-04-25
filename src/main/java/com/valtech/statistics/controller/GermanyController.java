@@ -2,6 +2,7 @@ package com.valtech.statistics.controller;
 
 import com.valtech.statistics.model.DataGermany;
 import com.valtech.statistics.model.DataGermanySummary;
+import com.valtech.statistics.service.DateFormat;
 import com.valtech.statistics.service.GermanyService;
 import com.valtech.statistics.service.GermanySummaryService;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,6 +25,7 @@ public class GermanyController {
 
     private final GermanyService germanyService;
     private final GermanySummaryService germanySummaryService;
+    private final DateFormat dateFormat;
 
     @GetMapping
     public String showDataGermany(Model model) {
@@ -36,24 +34,18 @@ public class GermanyController {
         Optional<DataGermany> dataGermany = germanyService.getLastEntryGermany();
         if (dataGermany.isPresent()) {
             model.addAttribute("dataGermany", dataGermany);
-            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.GERMAN);
-            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy", Locale.GERMAN);
-            DateTimeFormatter outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm", Locale.GERMAN);
-            LocalDate date = LocalDate.parse(dataGermany.get().getLastUpdate(), inputFormatter);
-            LocalTime time = LocalTime.parse(dataGermany.get().getLastUpdate(), inputFormatter);
-            String formattedDate = outputFormatter.format(date);
-            String formattedTime = outputFormatterTime.format(time);
-            model.addAttribute("date", formattedDate + " " + formattedTime);
-
+            String date = dateFormat.formatLastUpdateToDate(dataGermany.get().getLastUpdate());
+            String time = dateFormat.formatLastUpdateToTime(dataGermany.get().getLastUpdate());
+            model.addAttribute("date", date + " " + time);
             log.info("Show last entry of germany {}", dataGermany.get().getLastUpdate());
         } else {
             model.addAttribute("noFirstDataGermany", true);
             log.warn("No last entry in database of germany.");
         }
 
-        List<Optional<DataGermany>> yesterdayLastEntry = germanyService.getLastDateLastEntry();
+        /*List<Optional<DataGermany>> yesterdayLastEntry = germanyService.getLastDateLastEntry();
         int newConfirmed = dataGermany.get().getConfirmed() - yesterdayLastEntry.get(0).get().getConfirmed();
-        model.addAttribute("testNewConfirmed", newConfirmed);
+        model.addAttribute("testNewConfirmed", newConfirmed);*/
 
         Optional<DataGermanySummary> dataGermanySummary = germanySummaryService.getLastEntryGermanySummary();
         if (dataGermanySummary.isPresent()) {
