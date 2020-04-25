@@ -1,11 +1,14 @@
 package com.valtech.statistics.service;
 
+import com.valtech.statistics.model.DataGermany;
 import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.repository.DataGermanySummaryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +53,7 @@ public class GermanySummaryService {
     }
 
     public Optional<DataGermanySummary> findDataGermanySummaryByLocalTime(LocalTime localTime) {
-        log.info("Get data of germany summary by last time {}.", localTime);
+        log.info("Find data of germany summary by last time {}.", localTime);
         Optional<DataGermanySummary> findDataGermanyByTime = dataGermanySummaryRepository.findDataGermanySummaryByLocalTime(localTime);
         if (findDataGermanyByTime.isPresent()) {
             log.info("Found data of germany summary by last time {}.", localTime);
@@ -61,7 +64,32 @@ public class GermanySummaryService {
     }
 
     public void deleteDataGermanySummary(DataGermanySummary dataGermanySummary) {
-        log.info("Delete data of germany {}.", dataGermanySummary);
+        log.info("Delete data of germany summary {}.", dataGermanySummary);
         dataGermanySummaryRepository.delete(dataGermanySummary);
     }
+
+
+    /*public void saveDataOfJson() throws IOException {
+        DataGermanySummary dataGermanySummary = jsonToModel.getDataOfGermanyToModel();
+        Optional<DataGermany> dataGermanyLast = getLastEntryGermany();
+
+        if (dataGermanyLast.isEmpty()) {
+            saveDataGermany(dataGermany);
+            log.info("Saved first data of germany {}.", dataGermany.getLastUpdate());
+        }
+        if (dataGermanyLast.isPresent()) {
+            if (dataGermanyLast.get().getConfirmed() != dataGermany.getConfirmed() ||
+                    dataGermanyLast.get().getRecovered() != dataGermany.getRecovered() ||
+                    dataGermanyLast.get().getDeaths() != dataGermany.getDeaths()) {
+                if (dataGermanyLast.get().getLastUpdate().equals(dataGermany.getLastUpdate())) {
+                    log.info("No new data of germany, Returned last one {}.", dataGermany.getLastUpdate());
+                } else {
+                    saveDataGermany(dataGermany);
+                    log.info("Saved new data of germany {}.", dataGermany.getLastUpdate());
+                }
+            } else {
+                log.info("The data of last entry of germany are equals the new one {}.", dataGermany.getLastUpdate());
+            }
+        }
+    }*/
 }

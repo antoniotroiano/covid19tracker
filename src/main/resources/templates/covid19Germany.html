@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>COVID-19 - Germany</title>
     <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+    <script th:src="@{/js/charts.js}"></script>
+    <script>
+        loading(id)
+    </script>
 </head>
 <body>
 <div class="container">
@@ -23,6 +27,8 @@
                     <a class="button is-small is-link is-rounded" href="/covid19/world" type="submit">Go to data
                         worldwide</a>
                     <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
+                    <a class="button is-small is-link is-rounded" href="/covid19/germany/update" id="loadingUpdate"
+                       onclick="loading('loadingUpdate')">Update germany</a>
                 </div>
             </div>
         </div>
@@ -34,25 +40,25 @@
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Confirmed</p>
-                                    <p class="subtitle is-6" th:text="${confirmed}"></p>
+                                    <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getConfirmed(),3,'POINT')}"></p>
                                 </article>
                             </div>
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Recovered</p>
-                                    <p class="subtitle is-6" th:text="${recovered}"></p>
+                                    <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getRecovered(),3,'POINT')}"></p>
                                 </article>
                             </div>
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Deaths</p>
-                                    <p class="subtitle is-6" th:text="${deaths}"></p>
+                                    <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getDeaths(),3,'POINT')}"></p>
                                 </article>
                             </div>
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Last update</p>
-                                    <p class="subtitle is-6" th:text="${lastUpdate}"></p>
+                                    <p class="subtitle is-6" th:text="${date}"></p>
                                 </article>
                             </div>
                         </div>
@@ -79,43 +85,45 @@
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-info">
                                 <p class="title is-5">New confirmed</p>
-                                <p class="subtitle is-6" th:text="${newConfirmedG}"></p>
+                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(testNewConfirmed,3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-info">
                                 <p class="title is-5">Total confirmed</p>
-                                <p class="subtitle is-6" th:text="${totalConfirmedG}"></p>
+                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getConfirmed(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Date</p>
-                                <p class="subtitle is-6" th:text="${dateG}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#temporals.format(dataGermanySummary.get().getLocalDate(), 'dd.MM.yyyy')}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">New recovered</p>
-                                <p class="subtitle is-6" th:text="${newRecoveredG}"></p>
+                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermanySummary.get().getNewRecovered(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">Total recovered</p>
-                                <p class="subtitle is-6" th:text="${totalRecoveredG}"></p>
+                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getRecovered(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Time</p>
-                                <p class="subtitle is-6" th:text="${timeG}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#temporals.format(dataGermanySummary.get().getLocalTime(), 'HH:mm')}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-danger">
                                 <p class="title is-5">New deaths</p>
-                                <p class="subtitle is-6" th:text="${newDeathsG}"></p>
+                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermanySummary.get().getNewDeaths(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-danger">
                                 <p class="title is-5">Total deaths</p>
-                                <p class="subtitle is-6" th:text="${totalDeathsG}"></p>
+                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getDeaths(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Active cases</p>
-                                <p class="subtitle is-6" th:text="${activeCasesG}"></p>
+                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getConfirmed() - dataGermany.get().getDeaths() - dataGermany.get().getRecovered(),3,'POINT')}"></p>
                             </article>
                         </div>
                     </div>
@@ -135,237 +143,10 @@
         <canvas height="250" id="dataGermanyDeaths" width="450"></canvas>
     </div>
 </div>
-<script>
-    const dates = [[${datesG}]];
-    const confirmed = [[${confirmedListG}]];
-    const dateConfirmed = [];
-    const ctx = document.getElementById('dataGermanyConfirmed').getContext('2d');
-    const dataGermanyConfirmed = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: dates,
-            datasets: [{
-                label: 'Confirmed Germany COVID-19',
-                backgroundColor: 'rgb(147,190,234, 0.6)',
-                borderWidth: 1,
-                borderColor: 'rgb(13,23,234)',
-                hoverBackgroundColor: 'rgb(147,190,234, 0.7)',
-                barPercentage: 0.9,
-                barThickness: 10,
-                maxBarThickness: 15,
-                minBarLength: 200,
-                data: confirmed
-            }]
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    display: true,
-                    label: 'Date',
-                    ticks: {
-                        callback: function (dataLabel) {
-                            dateConfirmed.push(dataLabel);
-                            if (dateConfirmed.filter(d => d === dataLabel).length >= 2) {
-                                return '';
-                            } else {
-                                return dataLabel + '.2020';
-                            }
-                            // Hide the label of every 2nd dataset. return null to hide the grid line too
-                            //return index % 2 === 0 ? dataLabel : '';
-                        }
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Date'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    beginAtZero: false,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Confirmed'
-                    }
-                }]
-            },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
-                }
-            },
-            legend: {
-                display: true,
-                position: 'bottom',
-                align: 'center',
-                labels: {
-                    boxWidth: 40,
-                    fontColor: 'rgb(000, 000, 000)'
-                }
-            },
-            title: {
-                display: true,
-                fontSize: 20,
-                padding: 15,
-                fontColor: '#69C8C8',
-                text: 'Confirmed Germany COVID-19'
-            }
-        }
-    });
-
-    const recovered = [[${recoveredListG}]];
-    const dateRecovered = [];
-    const ctx2 = document.getElementById('dataGermanyRecovered').getContext('2d');
-    const dataGermanyRecovered = new Chart(ctx2, {
-        type: 'bar',
-        data: {
-            labels: dates,
-            datasets: [{
-                label: 'Recovered Germany COVID-19',
-                backgroundColor: 'rgba(167,234,122,0.6)',
-                borderWidth: 1,
-                borderColor: 'rgb(9,234,14)',
-                hoverBackgroundColor: 'rgba(187,234,109,0.7)',
-                barPercentage: 0.9,
-                barThickness: 10,
-                maxBarThickness: 15,
-                minBarLength: 200,
-                data: recovered
-            }]
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    display: true,
-                    label: 'Date',
-                    ticks: {
-                        callback: function (dataLabel) {
-                            dateRecovered.push(dataLabel);
-                            if (dateRecovered.filter(d => d === dataLabel).length >= 2) {
-                                return '';
-                            } else {
-                                return dataLabel + '.2020';
-                            }
-                        }
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Date'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    beginAtZero: false,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Recovered'
-                    }
-                }]
-            },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
-                }
-            },
-            legend: {
-                display: true,
-                position: 'bottom',
-                align: 'center',
-                labels: {
-                    boxWidth: 40,
-                    fontColor: 'rgb(000, 000, 000)'
-                }
-            },
-            title: {
-                display: true,
-                fontSize: 20,
-                padding: 15,
-                fontColor: '#69C8C8',
-                text: 'Recovered Germany COVID-19'
-            }
-        }
-    });
-
-    const deaths = [[${deathsListG}]];
-    const dateDeath = [];
-    const ctx3 = document.getElementById('dataGermanyDeaths').getContext('2d');
-    const dataGermanyDeaths = new Chart(ctx3, {
-        type: 'bar',
-        data: {
-            labels: dates,
-            datasets: [{
-                label: 'Death Germany COVID-19',
-                backgroundColor: 'rgba(234,127,121,0.6)',
-                borderWidth: 1,
-                borderColor: 'rgb(234,3,12)',
-                hoverBackgroundColor: 'rgba(234,81,77,0.7)',
-                barPercentage: 0.9,
-                barThickness: 10,
-                maxBarThickness: 15,
-                minBarLength: 200,
-                data: deaths
-            }]
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    display: true,
-                    label: 'Date',
-                    ticks: {
-                        callback: function (dataLabel) {
-                            dateDeath.push(dataLabel);
-                            if (dateDeath.filter(d => d === dataLabel).length >= 2) {
-                                return '';
-                            } else {
-                                return dataLabel + '.2020';
-                            }
-                        }
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Date'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    beginAtZero: false,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Death'
-                    }
-                }]
-            },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
-                }
-            },
-            legend: {
-                display: true,
-                position: 'bottom',
-                align: 'center',
-                labels: {
-                    boxWidth: 40,
-                    fontColor: 'rgb(000, 000, 000)'
-                }
-            },
-            title: {
-                display: true,
-                fontSize: 20,
-                padding: 15,
-                fontColor: '#69C8C8',
-                text: 'Death Germany COVID-19'
-            }
-        }
-    });
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    chartGermany(/*[[${datesG}]], [[${confirmedListG}]], [[${recoveredListG}]], [[${deathsListG}]]*/);
+    /*]]>*/
 </script>
 </body>
 </html>
