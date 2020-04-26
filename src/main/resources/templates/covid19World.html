@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>COVID-19 - Worldwide</title>
     <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+    <script th:src="@{/js/charts.js}"></script>
+    <script>
+        loading(id)
+    </script>
 </head>
 <body>
 <div class="container">
@@ -23,6 +27,8 @@
                     <a class="button is-small is-link is-rounded" href="/covid19/germany" type="submit">Go to data
                         germany</a>
                     <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
+                    <a class="button is-small is-link is-rounded" href="/covid19/world/update" id="loadingUpdate"
+                       onclick="loading('loadingUpdate')">Update manually world</a>
                 </div>
             </div>
         </div>
@@ -34,25 +40,28 @@
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Confirmed</p>
-                                    <p class="subtitle is-6" th:text="${confirmed}"></p>
+                                    <p class="subtitle is-6"
+                                       th:text="${#numbers.formatInteger(dataWorld.get().getConfirmed(),3,'POINT')}"></p>
                                 </article>
                             </div>
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Recovered</p>
-                                    <p class="subtitle is-6" th:text="${recovered}"></p>
+                                    <p class="subtitle is-6"
+                                       th:text="${#numbers.formatInteger(dataWorld.get().getRecovered(),3,'POINT')}"></p>
                                 </article>
                             </div>
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Deaths</p>
-                                    <p class="subtitle is-6" th:text="${deaths}"></p>
+                                    <p class="subtitle is-6"
+                                       th:text="${#numbers.formatInteger(dataWorld.get().getDeaths(),3,'POINT')}"></p>
                                 </article>
                             </div>
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Last update</p>
-                                    <p class="subtitle is-6" th:text="${lastUpdate}"></p>
+                                    <p class="subtitle is-6" th:text="${date}"></p>
                                 </article>
                             </div>
                         </div>
@@ -79,43 +88,52 @@
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-info">
                                 <p class="title is-5">New confirmed</p>
-                                <p class="subtitle is-6" th:text="${newConfirmed}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataWorldSummary.get().newConfirmed,3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-info">
                                 <p class="title is-5">Total confirmed</p>
-                                <p class="subtitle is-6" th:text="${totalConfirmed}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataWorld.get().getConfirmed(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Date</p>
-                                <p class="subtitle is-6" th:text="${date}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#temporals.format(dataWorldSummary.get().getLocalDate(), 'dd.MM.yyyy')}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">New recovered</p>
-                                <p class="subtitle is-6" th:text="${newRecovered}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataWorldSummary.get().getNewRecovered(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">Total recovered</p>
-                                <p class="subtitle is-6" th:text="${totalRecovered}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataWorld.get().getRecovered(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Time</p>
-                                <p class="subtitle is-6" th:text="${time}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#temporals.format(dataWorldSummary.get().getLocalTime(), 'HH:mm')}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-danger">
                                 <p class="title is-5">New deaths</p>
-                                <p class="subtitle is-6" th:text="${newDeaths}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataWorldSummary.get().getNewRecovered(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-danger">
                                 <p class="title is-5">Total deaths</p>
-                                <p class="subtitle is-6" th:text="${totalDeaths}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataWorld.get().getRecovered(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Active cases</p>
-                                <p class="subtitle is-6" th:text="${activeCases}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataWorld.get().getConfirmed() - dataWorld.get().getDeaths() - dataWorld.get().getRecovered(),3,'POINT')}"></p>
                             </article>
                         </div>
                     </div>

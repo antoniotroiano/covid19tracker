@@ -1,6 +1,5 @@
 package com.valtech.statistics.service;
 
-import com.valtech.statistics.model.DataGermany;
 import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.repository.DataGermanySummaryRepository;
 import lombok.RequiredArgsConstructor;
@@ -67,29 +66,4 @@ public class GermanySummaryService {
         log.info("Delete data of germany summary {}.", dataGermanySummary);
         dataGermanySummaryRepository.delete(dataGermanySummary);
     }
-
-
-    /*public void saveDataOfJson() throws IOException {
-        DataGermanySummary dataGermanySummary = jsonToModel.getDataOfGermanyToModel();
-        Optional<DataGermany> dataGermanyLast = getLastEntryGermany();
-
-        if (dataGermanyLast.isEmpty()) {
-            saveDataGermany(dataGermany);
-            log.info("Saved first data of germany {}.", dataGermany.getLastUpdate());
-        }
-        if (dataGermanyLast.isPresent()) {
-            if (dataGermanyLast.get().getConfirmed() != dataGermany.getConfirmed() ||
-                    dataGermanyLast.get().getRecovered() != dataGermany.getRecovered() ||
-                    dataGermanyLast.get().getDeaths() != dataGermany.getDeaths()) {
-                if (dataGermanyLast.get().getLastUpdate().equals(dataGermany.getLastUpdate())) {
-                    log.info("No new data of germany, Returned last one {}.", dataGermany.getLastUpdate());
-                } else {
-                    saveDataGermany(dataGermany);
-                    log.info("Saved new data of germany {}.", dataGermany.getLastUpdate());
-                }
-            } else {
-                log.info("The data of last entry of germany are equals the new one {}.", dataGermany.getLastUpdate());
-            }
-        }
-    }*/
 }

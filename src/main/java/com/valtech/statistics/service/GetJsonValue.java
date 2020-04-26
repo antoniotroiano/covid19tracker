@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -24,7 +25,10 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class JsonToModel {
+public class GetJsonValue {
+
+    private final WorldSummaryService worldSummaryService;
+    private final GermanyService germanyService;
 
     private static final String URL_WORLD = "https://covid19.mathdro.id/api";
     private static final String URL_GERMANY = "https://covid19.mathdro.id/api/countries/germany";
@@ -33,9 +37,6 @@ public class JsonToModel {
     private static final String TOTAL_CONFIRMED = "TotalConfirmed";
     private static final String TOTAL_DEATHS = "TotalDeaths";
     private static final String TOTAL_RECOVERED = "TotalRecovered";
-    private final WorldService worldService;
-    private final WorldSummaryService worldSummaryService;
-    private final GermanySummaryService germanySummaryService;
 
     private JSONObject getJSONObject(String url) throws IOException {
         return new JSONObject(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
@@ -54,8 +55,7 @@ public class JsonToModel {
         return dateNow;
     }
 
-    @Scheduled(cron = "0 5 */3 ? * *")
-    public void getDataOfWorldAndSaveIt() throws IOException {
+    public DataWorld getDataOfWorldToModel() throws IOException {
         log.info("Invoke create data of world.");
 
         int confirmedWorld = getValueOfJSONObject(getJSONObject(URL_WORLD), "confirmed", VALUE);
@@ -70,26 +70,7 @@ public class JsonToModel {
         dataWorld.setLastUpdate(lastUpdateWorld);
         dataWorld.setLocalDate(getDateNow());
 
-        Optional<DataWorld> dataWorldLast = worldService.getLastEntryWorld();
-
-        if (dataWorldLast.isEmpty()) {
-            worldService.saveDataWorld(dataWorld);
-            log.info("Saved first data of world {}.", dataWorld.getLastUpdate());
-        }
-        if (dataWorldLast.isPresent()) {
-            if (dataWorldLast.get().getConfirmed() != confirmedWorld ||
-                    dataWorldLast.get().getRecovered() != recoveredWorld ||
-                    dataWorldLast.get().getDeaths() != deathsWorld) {
-                if (dataWorldLast.get().getLastUpdate().equals(lastUpdateWorld)) {
-                    log.info("No new data of world. Returned last one {}.", dataWorld.getLastUpdate());
-                } else {
-                    worldService.saveDataWorld(dataWorld);
-                    log.info("Saved new data of world {}.", dataWorld.getLastUpdate());
-                }
-            } else {
-                log.info("The data of last entry world are equals the new one {}.", dataWorld.getLastUpdate());
-            }
-        }
+        return dataWorld;
     }
 
     public DataGermany getDataOfGermanyToModel() throws IOException {
@@ -110,12 +91,57 @@ public class JsonToModel {
         return dataGermany;
     }
 
+    public DataGermany getDataOfGermanyToModelYesterday() throws IOException {
+        log.info("Invoke create data of germany yesterday.");
+        DataGermany dataGermanyYesterday = new DataGermany();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String URL_GERMANY_YESTERDAY = "https://covid19.mathdro.id/api/daily/" + yesterday.format(dtf);
+        URL u = new URL(URL_GERMANY_YESTERDAY);
+        HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+        huc.setRequestMethod("GET");
+        huc.connect();
+        int code = huc.getResponseCode();
+        if (code == 404) {
+            LocalDate dayBeforeYesterday = LocalDate.now().minusDays(2);
+            URL_GERMANY_YESTERDAY = "https://covid19.mathdro.id/api/daily/" + dayBeforeYesterday.format(dtf);
+        }
+        JSONArray getValueOfArray = new JSONArray(IOUtils.toString(new URL(URL_GERMANY_YESTERDAY), StandardCharsets.UTF_8));
+        for (int i = 0; i < getValueOfArray.length(); i++) {
+            JSONObject json = getValueOfArray.getJSONObject(i);
+            if (json.getString("provinceState").equals("Germany")) {
+                dataGermanyYesterday.setConfirmed(json.getInt("confirmed"));
+                dataGermanyYesterday.setRecovered(json.getInt("recovered"));
+                dataGermanyYesterday.setDeaths(json.getInt("deaths"));
+                dataGermanyYesterday.setLocalDate(yesterday.format(dtf));
+            }
+        }
+        return dataGermanyYesterday;
+    }
+
+    public DataGermanySummary getDataOfGermanySummary() throws IOException {
+        log.info("Invoke create data of germany summary.");
+        DataGermany dataGermanyYesterday = getDataOfGermanyToModelYesterday();
+        Optional<DataGermany> lastDataGermany = germanyService.getLastEntryGermany();
+
+        DataGermanySummary dataGermanySummary = new DataGermanySummary();
+        if (lastDataGermany.isPresent()) {
+            dataGermanySummary.setNewConfirmed(lastDataGermany.get().getConfirmed() - dataGermanyYesterday.getConfirmed());
+            dataGermanySummary.setTotalConfirmed(lastDataGermany.get().getConfirmed());
+            dataGermanySummary.setNewRecovered(lastDataGermany.get().getRecovered() - dataGermanyYesterday.getRecovered());
+            dataGermanySummary.setTotalRecovered(lastDataGermany.get().getConfirmed());
+            dataGermanySummary.setNewDeaths(lastDataGermany.get().getDeaths() - dataGermanyYesterday.getDeaths());
+            dataGermanySummary.setTotalDeaths(lastDataGermany.get().getDeaths());
+            dataGermanySummary.setLocalDate(LocalDate.now());
+            dataGermanySummary.setLocalTime(LocalTime.now().withNano(0));
+        }
+        return dataGermanySummary;
+    }
+
     @Scheduled(cron = "0 15 */4 ? * *")
     public void getDataWorldSummaryAndSaveIt() throws IOException {
         log.info("Invoke get data of world summary and save it.");
-
         final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
-
         int newConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewConfirmed");
         int totalConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, TOTAL_CONFIRMED);
         int newDeaths = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewDeaths");
@@ -147,46 +173,6 @@ public class JsonToModel {
                 log.info("Saved new data of world summary {}.", dataWorldSummary.getLocalDate());
             } else {
                 log.info("No new data of world summary, Returned last one {}.", dataWorldSummary.getLocalDate());
-            }
-        }
-    }
-
-    @Scheduled(cron = "0 20 */5 ? * *")
-    public void getDataGermanySummaryToModel() throws IOException {
-        log.info("Invoke get data of germany summary and save it.");
-
-        final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
-
-        DataGermanySummary dataGermanySummary = new DataGermanySummary();
-
-        JSONArray getValueOfJSONArray = getJSONObject(URL_WORLD_SUMMARY).getJSONArray("Countries");
-        for (int i = 0; i < getValueOfJSONArray.length(); i++) {
-            JSONObject json = getValueOfJSONArray.getJSONObject(i);
-            if (json.getString("Country").equals("Germany")) {
-                dataGermanySummary.setNewConfirmed(json.getInt("NewConfirmed"));
-                dataGermanySummary.setTotalConfirmed(json.getInt(TOTAL_CONFIRMED));
-                dataGermanySummary.setNewDeaths(json.getInt("NewDeaths"));
-                dataGermanySummary.setTotalDeaths(json.getInt(TOTAL_DEATHS));
-                dataGermanySummary.setNewRecovered(json.getInt("NewRecovered"));
-                dataGermanySummary.setTotalRecovered(json.getInt(TOTAL_RECOVERED));
-                dataGermanySummary.setActiveCases(json.getInt(TOTAL_CONFIRMED) - json.getInt(TOTAL_DEATHS) - json.getInt(TOTAL_RECOVERED));
-                dataGermanySummary.setLocalDate(LocalDate.now());
-                dataGermanySummary.setLocalTime(LocalTime.now().withNano(0));
-            }
-        }
-
-        Optional<DataGermanySummary> dataGermanySummaryLast = germanySummaryService.getLastEntryGermanySummary();
-
-        if (dataGermanySummaryLast.isEmpty()) {
-            germanySummaryService.saveDataGermanySummary(dataGermanySummary);
-            log.info("Saved first data of germany summary {}.", dataGermanySummary.getLocalDate());
-        }
-        if (dataGermanySummaryLast.isPresent()) {
-            if (germanySummaryService.findDataGermanySummaryByLocalTime(dataGermanySummary.getLocalTime()).isEmpty()) {
-                germanySummaryService.saveDataGermanySummary(dataGermanySummary);
-                log.info("Saved new data of germany summary {}.", dataGermanySummary.getLocalDate());
-            } else {
-                log.info("No new data of germany summary, Returned last one {}.", dataGermanySummary.getLocalDate());
             }
         }
     }

@@ -1,10 +1,13 @@
 package com.valtech.statistics.service;
 
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+@Component
 public class DateFormat {
 
     public String formatLastUpdateToDate(String lastUpdate) {

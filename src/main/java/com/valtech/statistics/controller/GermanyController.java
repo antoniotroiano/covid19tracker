@@ -5,6 +5,7 @@ import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.service.DateFormat;
 import com.valtech.statistics.service.GermanyService;
 import com.valtech.statistics.service.GermanySummaryService;
+import com.valtech.statistics.service.ScheduledQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class GermanyController {
 
     private final GermanyService germanyService;
     private final GermanySummaryService germanySummaryService;
+    private final ScheduledQuery scheduledQuery;
     private final DateFormat dateFormat;
 
     @GetMapping
@@ -42,10 +44,6 @@ public class GermanyController {
             model.addAttribute("noFirstDataGermany", true);
             log.warn("No last entry in database of germany.");
         }
-
-        /*List<Optional<DataGermany>> yesterdayLastEntry = germanyService.getLastDateLastEntry();
-        int newConfirmed = dataGermany.get().getConfirmed() - yesterdayLastEntry.get(0).get().getConfirmed();
-        model.addAttribute("testNewConfirmed", newConfirmed);*/
 
         Optional<DataGermanySummary> dataGermanySummary = germanySummaryService.getLastEntryGermanySummary();
         if (dataGermanySummary.isPresent()) {
@@ -84,7 +82,8 @@ public class GermanyController {
 
     @GetMapping("/update")
     public String updateDatabase(Model model) throws IOException {
-        germanyService.saveDataOfJson();
+        scheduledQuery.saveGermanyDataOfJson();
+        scheduledQuery.saveGermanySummaryDataOfJson();
         return showDataGermany(model);
     }
 }

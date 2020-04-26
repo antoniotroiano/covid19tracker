@@ -8,9 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +17,6 @@ import java.util.Optional;
 public class GermanyService {
 
     private final DataGermanyRepository dataGermanyRepository;
-    private final JsonToModel jsonToModel;
 
     public DataGermany saveDataGermany(DataGermany dataGermany) {
         log.info("Invoke save new data of germany.");
@@ -70,36 +66,4 @@ public class GermanyService {
         log.info("Delete data of germany {}.", dataGermany);
         dataGermanyRepository.delete(dataGermany);
     }
-
-    @Scheduled(cron = "0 10 */2 ? * *")
-    public void saveDataOfJson() throws IOException {
-        DataGermany dataGermany = jsonToModel.getDataOfGermanyToModel();
-        Optional<DataGermany> dataGermanyLast = getLastEntryGermany();
-
-        if (dataGermanyLast.isEmpty()) {
-            saveDataGermany(dataGermany);
-            log.info("Saved first data of germany {}.", dataGermany.getLastUpdate());
-        }
-        if (dataGermanyLast.isPresent()) {
-            if (dataGermanyLast.get().getConfirmed() != dataGermany.getConfirmed() ||
-                    dataGermanyLast.get().getRecovered() != dataGermany.getRecovered() ||
-                    dataGermanyLast.get().getDeaths() != dataGermany.getDeaths()) {
-                if (dataGermanyLast.get().getLastUpdate().equals(dataGermany.getLastUpdate())) {
-                    log.info("No new data of germany, Returned last one {}.", dataGermany.getLastUpdate());
-                } else {
-                    saveDataGermany(dataGermany);
-                    log.info("Saved new data of germany {}.", dataGermany.getLastUpdate());
-                }
-            } else {
-                log.info("The data of last entry of germany are equals the new one {}.", dataGermany.getLastUpdate());
-            }
-        }
-    }
-
-    /*public List<Optional<DataGermany>> getLastDateLastEntry() {
-        Optional<DataGermany> getLastEntry = getLastEntryGermany();
-        List<Optional<DataGermany>> dataGermanyList = new ArrayList<>();
-        dataGermanyList.add(getLastEntry);
-        return dataGermanyList;
-    }*/
 }

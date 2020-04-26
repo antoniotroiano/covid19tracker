@@ -9,15 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class JsonToModelTest {
+public class GetJsonValueTest {
 
     private final DataGermany dataGermanyFirst = new DataGermany();
     private final DataGermany dataGermanyNew = new DataGermany();
@@ -28,7 +25,7 @@ public class JsonToModelTest {
     private GermanyService germanyService;
 
     @InjectMocks
-    private JsonToModel jsonToModel;
+    private GetJsonValue getJsonValue;
 
     @BeforeEach
     public void setUp() {

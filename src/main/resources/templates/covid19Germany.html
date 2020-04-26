@@ -28,7 +28,7 @@
                         worldwide</a>
                     <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/germany/update" id="loadingUpdate"
-                       onclick="loading('loadingUpdate')">Update germany</a>
+                       onclick="loading('loadingUpdate')">Update manually germany</a>
                 </div>
             </div>
         </div>
@@ -40,19 +40,22 @@
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Confirmed</p>
-                                    <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getConfirmed(),3,'POINT')}"></p>
+                                    <p class="subtitle is-6"
+                                       th:text="${#numbers.formatInteger(dataGermany.get().getConfirmed(),3,'POINT')}"></p>
                                 </article>
                             </div>
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Recovered</p>
-                                    <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getRecovered(),3,'POINT')}"></p>
+                                    <p class="subtitle is-6"
+                                       th:text="${#numbers.formatInteger(dataGermany.get().getRecovered(),3,'POINT')}"></p>
                                 </article>
                             </div>
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-light">
                                     <p class="title is-4">Deaths</p>
-                                    <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getDeaths(),3,'POINT')}"></p>
+                                    <p class="subtitle is-6"
+                                       th:text="${#numbers.formatInteger(dataGermany.get().getDeaths(),3,'POINT')}"></p>
                                 </article>
                             </div>
                             <div class="tile is-parent is-vertical">
@@ -85,11 +88,13 @@
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-info">
                                 <p class="title is-5">New confirmed</p>
-                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(testNewConfirmed,3,'POINT')}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataGermanySummary.get().newConfirmed,3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-info">
                                 <p class="title is-5">Total confirmed</p>
-                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getConfirmed(),3,'POINT')}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataGermany.get().getConfirmed(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Date</p>
@@ -100,11 +105,13 @@
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">New recovered</p>
-                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermanySummary.get().getNewRecovered(),3,'POINT')}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataGermanySummary.get().getNewRecovered(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">Total recovered</p>
-                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getRecovered(),3,'POINT')}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataGermany.get().getRecovered(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Time</p>
@@ -115,15 +122,18 @@
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-danger">
                                 <p class="title is-5">New deaths</p>
-                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermanySummary.get().getNewDeaths(),3,'POINT')}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataGermanySummary.get().getNewDeaths(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-danger">
                                 <p class="title is-5">Total deaths</p>
-                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getDeaths(),3,'POINT')}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataGermany.get().getDeaths(),3,'POINT')}"></p>
                             </article>
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Active cases</p>
-                                <p class="subtitle is-6" th:text="${#numbers.formatInteger(dataGermany.get().getConfirmed() - dataGermany.get().getDeaths() - dataGermany.get().getRecovered(),3,'POINT')}"></p>
+                                <p class="subtitle is-6"
+                                   th:text="${#numbers.formatInteger(dataGermany.get().getConfirmed() - dataGermany.get().getDeaths() - dataGermany.get().getRecovered(),3,'POINT')}"></p>
                             </article>
                         </div>
                     </div>

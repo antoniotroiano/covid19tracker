@@ -2,6 +2,7 @@ package com.valtech.statistics.controller;
 
 import com.valtech.statistics.model.DataWorld;
 import com.valtech.statistics.model.DataWorldSummary;
+import com.valtech.statistics.service.DateFormat;
 import com.valtech.statistics.service.WorldService;
 import com.valtech.statistics.service.WorldSummaryService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.format.DateTimeFormatter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ public class WorldController {
 
     private final WorldService worldService;
     private final WorldSummaryService worldSummaryService;
+    private final DateFormat dateFormat;
 
     @GetMapping
     public String showDataWorld(Model model) {
@@ -31,10 +33,10 @@ public class WorldController {
 
         Optional<DataWorld> dataWorld = worldService.getLastEntryWorld();
         if (dataWorld.isPresent()) {
-            model.addAttribute("confirmed", dataWorld.get().getConfirmed());
-            model.addAttribute("recovered", dataWorld.get().getRecovered());
-            model.addAttribute("deaths", dataWorld.get().getDeaths());
-            model.addAttribute("lastUpdate", dataWorld.get().getLastUpdate());
+            model.addAttribute("dataWorld", dataWorld);
+            String date = dateFormat.formatLastUpdateToDate(dataWorld.get().getLastUpdate());
+            String time = dateFormat.formatLastUpdateToTime(dataWorld.get().getLastUpdate());
+            model.addAttribute("date", date + " " + time);
             log.info("Show last entry for world {}.", dataWorld.get().getLastUpdate());
         } else {
             model.addAttribute("noFirstDataWorld", true);
@@ -43,16 +45,7 @@ public class WorldController {
 
         Optional<DataWorldSummary> dataWorldSummary = worldSummaryService.getLastEntryWorldSummary();
         if (dataWorldSummary.isPresent()) {
-            model.addAttribute("newConfirmed", dataWorldSummary.get().getNewConfirmed());
-            model.addAttribute("totalConfirmed", dataWorldSummary.get().getTotalConfirmed());
-            model.addAttribute("newDeaths", dataWorldSummary.get().getNewDeaths());
-            model.addAttribute("totalDeaths", dataWorldSummary.get().getTotalDeaths());
-            model.addAttribute("newRecovered", dataWorldSummary.get().getNewRecovered());
-            model.addAttribute("totalRecovered", dataWorldSummary.get().getTotalRecovered());
-            model.addAttribute("activeCases", dataWorldSummary.get().getActiveCases());
-            model.addAttribute("date", DateTimeFormatter.ofPattern("dd.MM.yyy")
-                    .format(dataWorldSummary.get().getLocalDate()));
-            model.addAttribute("time", dataWorldSummary.get().getLocalTime());
+            model.addAttribute("dataWorldSummary", dataWorldSummary);
             log.info("Show last entry for world summary {}.", dataWorldSummary.get().getLocalDate());
         } else {
             model.addAttribute("noFirstDataWorld", true);
@@ -85,5 +78,9 @@ public class WorldController {
         return "covid19World";
     }
 
-
+    @GetMapping("/update")
+    public String updateDatabase(Model model) throws IOException {
+        worldService.saveDataOfJson();
+        return showDataWorld(model);
+    }
 }
