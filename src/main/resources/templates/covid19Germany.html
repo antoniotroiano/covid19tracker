@@ -140,7 +140,8 @@
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Active cases</p>
                                 <p class="subtitle is-6"
-                                   th:text="${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed() - dataGermanySummary.getTotalDeaths() - dataGermanySummary.getTotalRecovered(),3,'POINT')}"></p>
+                                   th:text="${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed() -
+                                   dataGermanySummary.getTotalDeaths() - dataGermanySummary.getTotalRecovered(),3,'POINT')}"></p>
                             </article>
                         </div>
                     </div>

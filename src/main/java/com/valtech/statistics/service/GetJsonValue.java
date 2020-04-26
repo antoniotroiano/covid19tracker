@@ -3,14 +3,12 @@ package com.valtech.statistics.service;
 import com.valtech.statistics.model.DataGermany;
 import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.model.DataWorld;
-import com.valtech.statistics.model.DataWorldSummary;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -146,7 +144,7 @@ public class GetJsonValue {
     }
 
     //@Scheduled(cron = "0 15 */4 ? * *")
-/*    public void getDataWorldSummaryAndSaveIt() throws IOException {
+    /*public void getDataWorldSummaryAndSaveIt() throws IOException {
         log.info("Invoke get data of world summary and save it.");
         final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
         int newConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewConfirmed");

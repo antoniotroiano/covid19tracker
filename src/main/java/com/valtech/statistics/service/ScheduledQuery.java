@@ -29,52 +29,6 @@ public class ScheduledQuery {
     private final GetJsonValue getJsonValue;
     private final DateFormat dateFormat;
 
-    @Scheduled(cron = "0 10 */2 ? * *")
-    public void saveGermanyDataOfJson() throws IOException {
-        DataGermany dataGermany = getJsonValue.getDataOfGermanyToModel();
-        Optional<DataGermany> dataGermanyLast = germanyService.getLastEntryGermany();
-
-        if (dataGermanyLast.isEmpty()) {
-            germanyService.saveDataGermany(dataGermany);
-            log.info("Saved first data of germany {}.", dataGermany.getLastUpdate());
-        }
-        if (dataGermanyLast.isPresent()) {
-            if (dataGermanyLast.get().getConfirmed() != dataGermany.getConfirmed() ||
-                    dataGermanyLast.get().getRecovered() != dataGermany.getRecovered() ||
-                    dataGermanyLast.get().getDeaths() != dataGermany.getDeaths()) {
-                if (dataGermanyLast.get().getLastUpdate().equals(dataGermany.getLastUpdate())) {
-                    log.info("No new data of germany, Returned last one {}.", dataGermany.getLastUpdate());
-                } else {
-                    germanyService.saveDataGermany(dataGermany);
-                    log.info("Saved new data of germany {}.", dataGermany.getLastUpdate());
-                }
-            } else {
-                log.info("The data of last entry of germany are equals the new one {}.", dataGermany.getLastUpdate());
-            }
-        }
-    }
-
-    @Scheduled(cron = "0 20 */5 ? * *")
-    public void saveGermanySummaryDataOfJson() throws IOException {
-        DataGermanySummary dataGermanySummary = getJsonValue.createDataOfGermanySummary();
-        Optional<DataGermanySummary> dataGermanySummaryLast = germanySummaryService.getLastEntryGermanySummary();
-
-        if (dataGermanySummaryLast.isEmpty()) {
-            germanySummaryService.saveDataGermanySummary(dataGermanySummary);
-            log.info("Saved first data of germany summary {}.", dataGermanySummary.getLocalDate());
-        }
-        if (dataGermanySummaryLast.isPresent()) {
-            if (dataGermanySummaryLast.get().getNewConfirmed() != dataGermanySummary.getNewConfirmed() &&
-                    dataGermanySummaryLast.get().getNewRecovered() != dataGermanySummary.getNewRecovered() &&
-                    dataGermanySummaryLast.get().getNewDeaths() != dataGermanySummary.getNewDeaths()) {
-                germanySummaryService.saveDataGermanySummary(dataGermanySummary);
-                log.info("Saved new data of germany summary {}.", dataGermanySummary.getLocalDate());
-            } else {
-                log.info("No new data of germany summary, Returned last one {}.", dataGermanySummary.getLocalDate());
-            }
-        }
-    }
-
     @Scheduled(cron = "0 5 */3 ? * *")
     public void saveWorldDataOfJson() throws IOException {
         DataWorld dataWorld = getJsonValue.getDataOfWorldToModel();
@@ -171,6 +125,52 @@ public class ScheduledQuery {
             }
         } else {
             log.warn("No last data of world.");
+        }
+    }
+
+    @Scheduled(cron = "0 10 */2 ? * *")
+    public void saveGermanyDataOfJson() throws IOException {
+        DataGermany dataGermany = getJsonValue.getDataOfGermanyToModel();
+        Optional<DataGermany> dataGermanyLast = germanyService.getLastEntryGermany();
+
+        if (dataGermanyLast.isEmpty()) {
+            germanyService.saveDataGermany(dataGermany);
+            log.info("Saved first data of germany {}.", dataGermany.getLastUpdate());
+        }
+        if (dataGermanyLast.isPresent()) {
+            if (dataGermanyLast.get().getConfirmed() != dataGermany.getConfirmed() ||
+                    dataGermanyLast.get().getRecovered() != dataGermany.getRecovered() ||
+                    dataGermanyLast.get().getDeaths() != dataGermany.getDeaths()) {
+                if (dataGermanyLast.get().getLastUpdate().equals(dataGermany.getLastUpdate())) {
+                    log.info("No new data of germany, Returned last one {}.", dataGermany.getLastUpdate());
+                } else {
+                    germanyService.saveDataGermany(dataGermany);
+                    log.info("Saved new data of germany {}.", dataGermany.getLastUpdate());
+                }
+            } else {
+                log.info("The data of last entry of germany are equals the new one {}.", dataGermany.getLastUpdate());
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 20 */5 ? * *")
+    public void saveGermanySummaryDataOfJson() throws IOException {
+        DataGermanySummary dataGermanySummary = getJsonValue.createDataOfGermanySummary();
+        Optional<DataGermanySummary> dataGermanySummaryLast = germanySummaryService.getLastEntryGermanySummary();
+
+        if (dataGermanySummaryLast.isEmpty()) {
+            germanySummaryService.saveDataGermanySummary(dataGermanySummary);
+            log.info("Saved first data of germany summary {}.", dataGermanySummary.getLocalDate());
+        }
+        if (dataGermanySummaryLast.isPresent()) {
+            if (dataGermanySummaryLast.get().getNewConfirmed() != dataGermanySummary.getNewConfirmed() &&
+                    dataGermanySummaryLast.get().getNewRecovered() != dataGermanySummary.getNewRecovered() &&
+                    dataGermanySummaryLast.get().getNewDeaths() != dataGermanySummary.getNewDeaths()) {
+                germanySummaryService.saveDataGermanySummary(dataGermanySummary);
+                log.info("Saved new data of germany summary {}.", dataGermanySummary.getLocalDate());
+            } else {
+                log.info("No new data of germany summary, Returned last one {}.", dataGermanySummary.getLocalDate());
+            }
         }
     }
 }

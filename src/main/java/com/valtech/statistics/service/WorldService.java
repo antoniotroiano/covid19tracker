@@ -4,10 +4,8 @@ import com.valtech.statistics.model.DataWorld;
 import com.valtech.statistics.repository.DataWorldRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +15,6 @@ import java.util.Optional;
 public class WorldService {
 
     private final DataWorldRepository dataWorldRepository;
-    private final GetJsonValue getJsonValue;
 
     public DataWorld saveDataWorld(DataWorld dataWorld) {
         log.info("Save new data of world {}.", dataWorld);

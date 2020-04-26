@@ -4,10 +4,8 @@ import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.repository.DataGermanySummaryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
