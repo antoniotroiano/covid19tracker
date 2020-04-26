@@ -52,7 +52,7 @@ public class GermanyController {
             model.addAttribute("dataGermanySummary", new DataGermanySummary(dataGermanySummary.get()));
             log.info("Show last entry for germany summary {}.", dataGermanySummary.get().getLocalDate());
         } else {
-            model.addAttribute("noFirstDataGermany", true);
+            model.addAttribute("noFirstDataGermanySummary", true);
             log.warn("No last daily entry in database for germany summary.");
         }
 

@@ -42,7 +42,7 @@ public class WorldController {
             model.addAttribute("dataWorld", new DataWorld(dataWorld.get()));
             String date = dateFormat.formatLastUpdateToDate(dataWorld.get().getLastUpdate());
             String time = dateFormat.formatLastUpdateToTime(dataWorld.get().getLastUpdate());
-            model.addAttribute("date", date + " " + time);
+            model.addAttribute("date", date + " " + time + "h");
             log.info("Show last entry for world {}.", dataWorld.get().getLastUpdate());
         } else {
             model.addAttribute("noFirstDataWorld", true);
@@ -54,7 +54,7 @@ public class WorldController {
             model.addAttribute("dataWorldSummary", new DataWorldSummary(dataWorldSummary.get()));
             log.info("Show last entry for world summary {}.", dataWorldSummary.get().getLocalDate());
         } else {
-            model.addAttribute("noFirstDataWorld", true);
+            model.addAttribute("noFirstDataWorldSummary", true);
             log.warn("No last daily entry in database for world summary.");
         }
 

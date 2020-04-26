@@ -37,7 +37,7 @@
                 <div th:if="${noFirstDataGermany}">
                     <div class="notification is-white">
                         <div class="is-text has-text-centered">
-                            No first dataset. Please try again in an hour.
+                            No first dataset germany. Please try again in an hour.
                         </div>
                     </div>
                 </div>
@@ -82,10 +82,10 @@
     <div class="column">
         <div class="column">
             <div class="title is-4 has-text-centered">Daily update of COVID-19 Germany</div>
-            <div th:if="${noFirstDataGermany}">
+            <div th:if="${noFirstDataGermanySummary}">
                 <div class="notification is-white">
                     <div class="is-text has-text-centered">
-                        No first dataset. Please try again in an hour.
+                        No first dataset germany. Please try again in an hour.
                     </div>
                 </div>
             </div>
@@ -103,11 +103,13 @@
                                 <p class="subtitle is-6"
                                    th:text="${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed(),3,'POINT')}"></p>
                             </article>
-                            <article class="tile is-child notification is-light">
-                                <p class="title is-5">Date</p>
+                            <!--<article class="tile is-child notification is-light">
+                                <p class="title is-5">Date / Time </p>
                                 <p class="subtitle is-6"
                                    th:text="${#temporals.format(dataGermanySummary.getLocalDate(), 'dd.MM.yyyy')}"></p>
-                            </article>
+                                <p class="subtitle is-6"
+                                   th:text="${#temporals.format(dataGermanySummary.getLocalTime(), 'HH:mm')}"></p>
+                            </article>-->
                         </div>
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-primary">
@@ -119,11 +121,6 @@
                                 <p class="title is-5">Total recovered</p>
                                 <p class="subtitle is-6"
                                    th:text="${#numbers.formatInteger(dataGermanySummary.getTotalRecovered(),3,'POINT')}"></p>
-                            </article>
-                            <article class="tile is-child notification is-light">
-                                <p class="title is-5">Time</p>
-                                <p class="subtitle is-6"
-                                   th:text="${#temporals.format(dataGermanySummary.getLocalTime(), 'HH:mm')}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
@@ -137,6 +134,17 @@
                                 <p class="subtitle is-6"
                                    th:text="${#numbers.formatInteger(dataGermanySummary.getTotalDeaths(),3,'POINT')}"></p>
                             </article>
+                        </div>
+                    </div>
+                    <div class="tile">
+                        <div class="tile is-parent is-vertical">
+                            <article class="tile is-child notification is-light">
+                                <p class="title is-5">Last update</p>
+                                <p class="subtitle is-6"
+                                   th:text="${date}"></p>
+                            </article>
+                        </div>
+                        <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-light">
                                 <p class="title is-5">Active cases</p>
                                 <p class="subtitle is-6"
