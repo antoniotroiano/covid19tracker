@@ -32,13 +32,15 @@ public class GermanyController {
     @GetMapping
     public String showDataGermany(Model model) {
         log.info("Invoke show data of germany.");
+        model.addAttribute("dataGermany", new DataGermany());
+        model.addAttribute("dataGermanySummary", new DataGermanySummary());
 
         Optional<DataGermany> dataGermany = germanyService.getLastEntryGermany();
         if (dataGermany.isPresent()) {
-            model.addAttribute("dataGermany", dataGermany);
+            model.addAttribute("dataGermany", new DataGermany(dataGermany.get()));
             String date = dateFormat.formatLastUpdateToDate(dataGermany.get().getLastUpdate());
             String time = dateFormat.formatLastUpdateToTime(dataGermany.get().getLastUpdate());
-            model.addAttribute("date", date + " " + time);
+            model.addAttribute("date", date + " " + time + "h");
             log.info("Show last entry of germany {}", dataGermany.get().getLastUpdate());
         } else {
             model.addAttribute("noFirstDataGermany", true);
@@ -47,7 +49,7 @@ public class GermanyController {
 
         Optional<DataGermanySummary> dataGermanySummary = germanySummaryService.getLastEntryGermanySummary();
         if (dataGermanySummary.isPresent()) {
-            model.addAttribute("dataGermanySummary", dataGermanySummary);
+            model.addAttribute("dataGermanySummary", new DataGermanySummary(dataGermanySummary.get()));
             log.info("Show last entry for germany summary {}.", dataGermanySummary.get().getLocalDate());
         } else {
             model.addAttribute("noFirstDataGermany", true);

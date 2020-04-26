@@ -27,16 +27,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GetJsonValue {
 
-    private final WorldSummaryService worldSummaryService;
-    private final GermanyService germanyService;
-
     private static final String URL_WORLD = "https://covid19.mathdro.id/api";
     private static final String URL_GERMANY = "https://covid19.mathdro.id/api/countries/germany";
     private static final String VALUE = "value";
     private static final String GLOBAL = "Global";
-    private static final String TOTAL_CONFIRMED = "TotalConfirmed";
-    private static final String TOTAL_DEATHS = "TotalDeaths";
-    private static final String TOTAL_RECOVERED = "TotalRecovered";
+    private static final String CONFIRMED = "confirmed";
+    private static final String RECOVERED = "recovered";
+    private static final String DEATHS = "deaths";
+    private static final String LAST_UPDATE = "lastUpdate";
+    private final WorldSummaryService worldSummaryService;
+    private final GermanyService germanyService;
 
     private JSONObject getJSONObject(String url) throws IOException {
         return new JSONObject(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
@@ -47,21 +47,20 @@ public class GetJsonValue {
         return getIntValue.getInt(valueKey);
     }
 
+    //TODO: Chart.js xAchse anpassen für normales Date Format
     private String getDateNow() {
-        String dateNow;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM");
         LocalDate now = LocalDate.now();
-        dateNow = now.format(dtf);
-        return dateNow;
+        return now.format(dtf);
     }
 
     public DataWorld getDataOfWorldToModel() throws IOException {
         log.info("Invoke create data of world.");
 
-        int confirmedWorld = getValueOfJSONObject(getJSONObject(URL_WORLD), "confirmed", VALUE);
-        int recoveredWorld = getValueOfJSONObject(getJSONObject(URL_WORLD), "recovered", VALUE);
-        int deathsWorld = getValueOfJSONObject(getJSONObject(URL_WORLD), "deaths", VALUE);
-        String lastUpdateWorld = getJSONObject(URL_WORLD).getString("lastUpdate");
+        int confirmedWorld = getValueOfJSONObject(getJSONObject(URL_WORLD), CONFIRMED, VALUE);
+        int recoveredWorld = getValueOfJSONObject(getJSONObject(URL_WORLD), RECOVERED, VALUE);
+        int deathsWorld = getValueOfJSONObject(getJSONObject(URL_WORLD), DEATHS, VALUE);
+        String lastUpdateWorld = getJSONObject(URL_WORLD).getString(LAST_UPDATE);
 
         DataWorld dataWorld = new DataWorld();
         dataWorld.setConfirmed(confirmedWorld);
@@ -76,10 +75,10 @@ public class GetJsonValue {
     public DataGermany getDataOfGermanyToModel() throws IOException {
         log.info("Invoke get data of germany to model.");
 
-        int confirmedGermany = getValueOfJSONObject(getJSONObject(URL_GERMANY), "confirmed", VALUE);
-        int recoveredGermany = getValueOfJSONObject(getJSONObject(URL_GERMANY), "recovered", VALUE);
-        int deathsGermany = getValueOfJSONObject(getJSONObject(URL_GERMANY), "deaths", VALUE);
-        String lastUpdateGermany = getJSONObject(URL_GERMANY).getString("lastUpdate");
+        int confirmedGermany = getValueOfJSONObject(getJSONObject(URL_GERMANY), CONFIRMED, VALUE);
+        int recoveredGermany = getValueOfJSONObject(getJSONObject(URL_GERMANY), RECOVERED, VALUE);
+        int deathsGermany = getValueOfJSONObject(getJSONObject(URL_GERMANY), DEATHS, VALUE);
+        String lastUpdateGermany = getJSONObject(URL_GERMANY).getString(LAST_UPDATE);
 
         DataGermany dataGermany = new DataGermany();
         dataGermany.setConfirmed(confirmedGermany);
@@ -91,35 +90,43 @@ public class GetJsonValue {
         return dataGermany;
     }
 
-    public DataGermany getDataOfGermanyToModelYesterday() throws IOException {
-        log.info("Invoke create data of germany yesterday.");
-        DataGermany dataGermanyYesterday = new DataGermany();
+    private String getURLWithDate() throws IOException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         LocalDate yesterday = LocalDate.now().minusDays(1);
-        String URL_GERMANY_YESTERDAY = "https://covid19.mathdro.id/api/daily/" + yesterday.format(dtf);
-        URL u = new URL(URL_GERMANY_YESTERDAY);
-        HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+        String dailyCOVID19 = "https://covid19.mathdro.id/api/daily/" + yesterday.format(dtf);
+        URL url = new URL(dailyCOVID19);
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         huc.setRequestMethod("GET");
         huc.connect();
         int code = huc.getResponseCode();
         if (code == 404) {
             LocalDate dayBeforeYesterday = LocalDate.now().minusDays(2);
-            URL_GERMANY_YESTERDAY = "https://covid19.mathdro.id/api/daily/" + dayBeforeYesterday.format(dtf);
+            dailyCOVID19 = "https://covid19.mathdro.id/api/daily/" + dayBeforeYesterday.format(dtf);
+            return dailyCOVID19;
         }
+        return dailyCOVID19;
+    }
+
+    public DataGermany getDataOfGermanyToModelYesterday() throws IOException {
+        log.info("Invoke create data of germany yesterday.");
+
+        String URL_GERMANY_YESTERDAY = getURLWithDate();
+
+        DataGermany dataGermanyYesterday = new DataGermany();
         JSONArray getValueOfArray = new JSONArray(IOUtils.toString(new URL(URL_GERMANY_YESTERDAY), StandardCharsets.UTF_8));
         for (int i = 0; i < getValueOfArray.length(); i++) {
             JSONObject json = getValueOfArray.getJSONObject(i);
-            if (json.getString("provinceState").equals("Germany")) {
-                dataGermanyYesterday.setConfirmed(json.getInt("confirmed"));
-                dataGermanyYesterday.setRecovered(json.getInt("recovered"));
-                dataGermanyYesterday.setDeaths(json.getInt("deaths"));
-                dataGermanyYesterday.setLocalDate(yesterday.format(dtf));
+            if (json.getString("countryRegion").equals("Germany")) {
+                dataGermanyYesterday.setConfirmed(json.getInt(CONFIRMED));
+                dataGermanyYesterday.setRecovered(json.getInt(RECOVERED));
+                dataGermanyYesterday.setDeaths(json.getInt(DEATHS));
+                dataGermanyYesterday.setLocalDate(json.getString(LAST_UPDATE));
             }
         }
         return dataGermanyYesterday;
     }
 
-    public DataGermanySummary getDataOfGermanySummary() throws IOException {
+    public DataGermanySummary createDataOfGermanySummary() throws IOException {
         log.info("Invoke create data of germany summary.");
         DataGermany dataGermanyYesterday = getDataOfGermanyToModelYesterday();
         Optional<DataGermany> lastDataGermany = germanyService.getLastEntryGermany();
@@ -129,7 +136,7 @@ public class GetJsonValue {
             dataGermanySummary.setNewConfirmed(lastDataGermany.get().getConfirmed() - dataGermanyYesterday.getConfirmed());
             dataGermanySummary.setTotalConfirmed(lastDataGermany.get().getConfirmed());
             dataGermanySummary.setNewRecovered(lastDataGermany.get().getRecovered() - dataGermanyYesterday.getRecovered());
-            dataGermanySummary.setTotalRecovered(lastDataGermany.get().getConfirmed());
+            dataGermanySummary.setTotalRecovered(lastDataGermany.get().getRecovered());
             dataGermanySummary.setNewDeaths(lastDataGermany.get().getDeaths() - dataGermanyYesterday.getDeaths());
             dataGermanySummary.setTotalDeaths(lastDataGermany.get().getDeaths());
             dataGermanySummary.setLocalDate(LocalDate.now());
@@ -138,16 +145,16 @@ public class GetJsonValue {
         return dataGermanySummary;
     }
 
-    @Scheduled(cron = "0 15 */4 ? * *")
-    public void getDataWorldSummaryAndSaveIt() throws IOException {
+    //@Scheduled(cron = "0 15 */4 ? * *")
+/*    public void getDataWorldSummaryAndSaveIt() throws IOException {
         log.info("Invoke get data of world summary and save it.");
         final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
         int newConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewConfirmed");
-        int totalConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, TOTAL_CONFIRMED);
+        int totalConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "TotalConfirmed");
         int newDeaths = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewDeaths");
-        int totalDeaths = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, TOTAL_DEATHS);
+        int totalDeaths = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "TotalDeaths");
         int newRecovered = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewRecovered");
-        int totalRecovered = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, TOTAL_RECOVERED);
+        int totalRecovered = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "TotalRecovered");
 
         DataWorldSummary dataWorldSummary = new DataWorldSummary();
 
@@ -175,5 +182,5 @@ public class GetJsonValue {
                 log.info("No new data of world summary, Returned last one {}.", dataWorldSummary.getLocalDate());
             }
         }
-    }
+    }*/
 }

@@ -21,11 +21,22 @@ public class DataGermanySummary {
     private int totalRecovered;
     private int newDeaths;
     private int totalDeaths;
-    private int activeCases;
     private LocalDate localDate;
     private LocalTime localTime;
 
     public DataGermanySummary() {
+    }
+
+    public DataGermanySummary(DataGermanySummary dataGermanySummary) {
+        this.dataGermanySummaryId = dataGermanySummary.getDataGermanySummaryId();
+        this.newConfirmed = dataGermanySummary.getNewConfirmed();
+        this.totalConfirmed = dataGermanySummary.getTotalConfirmed();
+        this.newRecovered = dataGermanySummary.getNewRecovered();
+        this.totalRecovered = dataGermanySummary.getTotalRecovered();
+        this.newDeaths = dataGermanySummary.getNewDeaths();
+        this.totalDeaths = dataGermanySummary.getTotalDeaths();
+        this.localDate = dataGermanySummary.getLocalDate();
+        this.localTime = dataGermanySummary.getLocalTime();
     }
 
     public DataGermanySummary(int totalConfirmed, int totalRecovered, int totalDeaths) {
@@ -88,14 +99,6 @@ public class DataGermanySummary {
 
     public void setTotalDeaths(int totalDeaths) {
         this.totalDeaths = totalDeaths;
-    }
-
-    public int getActiveCases() {
-        return activeCases;
-    }
-
-    public void setActiveCases(int activeCases) {
-        this.activeCases = activeCases;
     }
 
     public LocalDate getLocalDate() {

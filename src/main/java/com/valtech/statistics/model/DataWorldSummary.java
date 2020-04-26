@@ -21,11 +21,22 @@ public class DataWorldSummary {
     private int totalRecovered;
     private int newDeaths;
     private int totalDeaths;
-    private int activeCases;
     private LocalDate localDate;
     private LocalTime localTime;
 
     public DataWorldSummary() {
+    }
+
+    public DataWorldSummary(DataWorldSummary dataWorldSummary) {
+        this.dataWorldSummaryId = dataWorldSummary.getDataWorldSummaryId();
+        this.newConfirmed = dataWorldSummary.getNewConfirmed();
+        this.totalConfirmed = dataWorldSummary.getTotalConfirmed();
+        this.newRecovered = dataWorldSummary.getNewRecovered();
+        this.totalRecovered = dataWorldSummary.getTotalRecovered();
+        this.newDeaths = dataWorldSummary.getNewDeaths();
+        this.totalDeaths = dataWorldSummary.getTotalDeaths();
+        this.localDate = dataWorldSummary.getLocalDate();
+        this.localTime = dataWorldSummary.getLocalTime();
     }
 
     public DataWorldSummary(int totalConfirmed, int totalRecovered, int totalDeaths) {
@@ -88,14 +99,6 @@ public class DataWorldSummary {
 
     public void setTotalDeaths(int totalDeaths) {
         this.totalDeaths = totalDeaths;
-    }
-
-    public int getActiveCases() {
-        return activeCases;
-    }
-
-    public void setActiveCases(int activeCases) {
-        this.activeCases = activeCases;
     }
 
     public LocalDate getLocalDate() {

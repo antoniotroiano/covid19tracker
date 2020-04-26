@@ -7,42 +7,40 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "dataGermany")
-public class DataGermany {
+@Table(name = "dataWorldDaily")
+public class DataWorldDaily {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long dataGermanyId;
+    private long dataWorldDailyId;
     private int confirmed;
     private int recovered;
     private int deaths;
-    private String lastUpdate;
     private String localDate;
 
-    public DataGermany() {
+    public DataWorldDaily() {
     }
 
-    public DataGermany(DataGermany dataGermany) {
-        this.dataGermanyId = dataGermany.getDataGermanyId();
-        this.confirmed = dataGermany.getConfirmed();
-        this.recovered = dataGermany.getRecovered();
-        this.deaths = dataGermany.getDeaths();
-        this.lastUpdate = dataGermany.getLastUpdate();
+    public DataWorldDaily(DataWorldDaily dataWorldDaily) {
+        this.dataWorldDailyId = dataWorldDaily.getDataWorldDailyId();
+        this.confirmed = dataWorldDaily.getConfirmed();
+        this.recovered = dataWorldDaily.getRecovered();
+        this.deaths = dataWorldDaily.getDeaths();
+        this.localDate = dataWorldDaily.getLocalDate();
     }
 
-    public DataGermany(int confirmed, int recovered, int deaths, String lastUpdate) {
+    public DataWorldDaily(int confirmed, int recovered, int deaths) {
         this.confirmed = confirmed;
         this.recovered = recovered;
         this.deaths = deaths;
-        this.lastUpdate = lastUpdate;
     }
 
-    public long getDataGermanyId() {
-        return dataGermanyId;
+    public long getDataWorldDailyId() {
+        return dataWorldDailyId;
     }
 
-    public void setDataGermanyId(long dataGermanyId) {
-        this.dataGermanyId = dataGermanyId;
+    public void setDataWorldDailyId(long dataWorldDailyId) {
+        this.dataWorldDailyId = dataWorldDailyId;
     }
 
     public int getConfirmed() {
@@ -69,14 +67,6 @@ public class DataGermany {
         this.deaths = deaths;
     }
 
-    public String getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
     public String getLocalDate() {
         return localDate;
     }
@@ -87,9 +77,8 @@ public class DataGermany {
 
     @Override
     public String toString() {
-        return "DataGermany{" +
-                "lastUpdate='" + lastUpdate + '\'' +
-                ", localDate='" + localDate + '\'' +
+        return "DataWorldDaily{" +
+                "localDate='" + localDate + '\'' +
                 '}';
     }
 }

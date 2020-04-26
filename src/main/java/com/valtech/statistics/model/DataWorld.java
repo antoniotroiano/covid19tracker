@@ -22,6 +22,15 @@ public class DataWorld {
     public DataWorld() {
     }
 
+    public DataWorld(DataWorld dataWorld) {
+        this.dataWorldId = dataWorld.getDataWorldId();
+        this.confirmed = dataWorld.getConfirmed();
+        this.recovered = dataWorld.getRecovered();
+        this.deaths = dataWorld.getDeaths();
+        this.lastUpdate = dataWorld.getLastUpdate();
+        this.localDate = dataWorld.getLocalDate();
+    }
+
     public DataWorld(int confirmed, int recovered, int deaths, String lastUpdate) {
         this.confirmed = confirmed;
         this.recovered = recovered;

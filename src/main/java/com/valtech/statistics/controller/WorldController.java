@@ -1,8 +1,10 @@
 package com.valtech.statistics.controller;
 
 import com.valtech.statistics.model.DataWorld;
+import com.valtech.statistics.model.DataWorldDaily;
 import com.valtech.statistics.model.DataWorldSummary;
 import com.valtech.statistics.service.DateFormat;
+import com.valtech.statistics.service.ScheduledQuery;
 import com.valtech.statistics.service.WorldService;
 import com.valtech.statistics.service.WorldSummaryService;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +27,19 @@ public class WorldController {
 
     private final WorldService worldService;
     private final WorldSummaryService worldSummaryService;
+    private final ScheduledQuery scheduledQuery;
     private final DateFormat dateFormat;
 
     @GetMapping
     public String showDataWorld(Model model) {
         log.info("Invoke show data of world.");
+        model.addAttribute("dataWorld", new DataWorld());
+        model.addAttribute("dataWorldSummary", new DataWorldSummary());
+        model.addAttribute("dataWorldDaily", new DataWorldDaily());
 
         Optional<DataWorld> dataWorld = worldService.getLastEntryWorld();
         if (dataWorld.isPresent()) {
-            model.addAttribute("dataWorld", dataWorld);
+            model.addAttribute("dataWorld", new DataWorld(dataWorld.get()));
             String date = dateFormat.formatLastUpdateToDate(dataWorld.get().getLastUpdate());
             String time = dateFormat.formatLastUpdateToTime(dataWorld.get().getLastUpdate());
             model.addAttribute("date", date + " " + time);
@@ -45,7 +51,7 @@ public class WorldController {
 
         Optional<DataWorldSummary> dataWorldSummary = worldSummaryService.getLastEntryWorldSummary();
         if (dataWorldSummary.isPresent()) {
-            model.addAttribute("dataWorldSummary", dataWorldSummary);
+            model.addAttribute("dataWorldSummary", new DataWorldSummary(dataWorldSummary.get()));
             log.info("Show last entry for world summary {}.", dataWorldSummary.get().getLocalDate());
         } else {
             model.addAttribute("noFirstDataWorld", true);
@@ -80,7 +86,8 @@ public class WorldController {
 
     @GetMapping("/update")
     public String updateDatabase(Model model) throws IOException {
-        worldService.saveDataOfJson();
+        scheduledQuery.saveWorldDataOfJson();
+        scheduledQuery.saveWorldSummaryDataOfJson();
         return showDataWorld(model);
     }
 }
