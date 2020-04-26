@@ -3,17 +3,17 @@ function loading(id) {
     element.classList.add("is-loading")
 }
 
-function chartGermany(datesG, confirmedList, recoveredList, deathsList) {
-    const dates = datesG;
-    const confirmed = confirmedList;
+function chartGermany(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, datesA, confList, recList, deaList) {
+    const dates = datesA;
+    const confirmed = confList;
     const dateConfirmed = [];
-    const ctx = document.getElementById('dataGermanyConfirmed').getContext('2d');
-    const dataGermanyConfirmed = new Chart(ctx, {
+    const ctxConfirmed = confCanvas.getContext('2d');
+    const dataConfirmed = new Chart(ctxConfirmed, {
         type: 'bar',
         data: {
             labels: dates,
             datasets: [{
-                label: 'Confirmed Germany COVID-19',
+                label: confLabel,
                 backgroundColor: 'rgb(147,190,234, 0.6)',
                 borderWidth: 1,
                 borderColor: 'rgb(13,23,234)',
@@ -78,20 +78,20 @@ function chartGermany(datesG, confirmedList, recoveredList, deathsList) {
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: 'Confirmed Germany COVID-19'
+                text: confLabel
             }
         }
     });
 
-    const recovered = recoveredList;
+    const recovered = recList;
     const dateRecovered = [];
-    const ctx2 = document.getElementById('dataGermanyRecovered').getContext('2d');
-    const dataGermanyRecovered = new Chart(ctx2, {
+    const ctxRecovered = recCanvas.getContext('2d');
+    const dataRecovered = new Chart(ctxRecovered, {
         type: 'bar',
         data: {
             labels: dates,
             datasets: [{
-                label: 'Recovered Germany COVID-19',
+                label: recLabel,
                 backgroundColor: 'rgba(167,234,122,0.6)',
                 borderWidth: 1,
                 borderColor: 'rgb(9,234,14)',
@@ -154,20 +154,20 @@ function chartGermany(datesG, confirmedList, recoveredList, deathsList) {
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: 'Recovered Germany COVID-19'
+                text: recLabel
             }
         }
     });
 
-    const deaths = deathsList;
+    const deaths = deaList;
     const dateDeath = [];
-    const ctx3 = document.getElementById('dataGermanyDeaths').getContext('2d');
-    const dataGermanyDeaths = new Chart(ctx3, {
+    const ctxDeaths = deaCanvas.getContext('2d');
+    const dataDeaths = new Chart(ctxDeaths, {
         type: 'bar',
         data: {
             labels: dates,
             datasets: [{
-                label: 'Death Germany COVID-19',
+                label: deaLabel,
                 backgroundColor: 'rgba(234,127,121,0.6)',
                 borderWidth: 1,
                 borderColor: 'rgb(234,3,12)',
@@ -230,7 +230,7 @@ function chartGermany(datesG, confirmedList, recoveredList, deathsList) {
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: 'Death Germany COVID-19'
+                text: deaLabel
             }
         }
     });

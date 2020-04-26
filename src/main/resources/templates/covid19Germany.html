@@ -16,7 +16,7 @@
         <div class="columns is-mobile is-centered">
             <div class="column">
                 <div class="title is-3 has-text-centered">
-                    John Hopkins University live update for Germany
+                    John Hopkins University data for Germany
                 </div>
             </div>
         </div>
@@ -161,9 +161,19 @@
     </div>
 </div>
 <script th:inline="javascript">
+    let confCanvas = document.getElementById('dataGermanyConfirmed');
+    let recCanvas = document.getElementById('dataGermanyRecovered');
+    let deaCanvas = document.getElementById('dataGermanyDeaths');
+    let confLabel = 'Confirmed Germany COVID-19';
+    let recLabel = 'Recovered Germany COVID-19';
+    let deaLabel = 'Death Germany COVID-19';
     /*<![CDATA[*/
-    chartGermany(/*[[${datesG}]], [[${confirmedListG}]], [[${recoveredListG}]], [[${deathsListG}]]*/);
+    let dates = /*[[${datesG}]]*/;
+    let confList = /*[[${confirmedListG}]]*/;
+    let recList = /*[[${recoveredListG}]]*/;
+    let deaList = /*[[${deathsListG}]]*/;
     /*]]>*/
+    chartGermany(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, dates, confList, recList, deaList);
 </script>
 </body>
 </html>
