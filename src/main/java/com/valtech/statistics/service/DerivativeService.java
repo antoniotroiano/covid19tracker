@@ -12,11 +12,9 @@ public class DerivativeService {
         double susceptible;
         double infected;
         double recovered;
-
         double derivativeS;
         double derivativeI;
         double derivativeR;
-
         List<Double> susList = new ArrayList<>();
         List<Double> infList = new ArrayList<>();
         List<Double> reList = new ArrayList<>();
@@ -26,7 +24,6 @@ public class DerivativeService {
         reList.add(reStart);
 
         for (int i = 0; i <= maxT; i++) {
-
             derivativeS = -transRate * susList.get(i) * infList.get(i);
             derivativeI = transRate * susList.get(i) * infList.get(i) - reRate * infList.get(i);
             derivativeR = reRate * infList.get(i);
@@ -39,7 +36,6 @@ public class DerivativeService {
             infList.add(infected);
             reList.add(recovered);
         }
-
         Map<String, List<Double>> map = new HashMap<>();
         map.put("Susceptible", susList);
         map.put("Infected", infList);

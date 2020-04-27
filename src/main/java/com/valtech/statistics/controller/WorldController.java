@@ -4,7 +4,7 @@ import com.valtech.statistics.model.DataWorld;
 import com.valtech.statistics.model.DataWorldDaily;
 import com.valtech.statistics.model.DataWorldSummary;
 import com.valtech.statistics.service.DateFormat;
-import com.valtech.statistics.service.ScheduledQuery;
+import com.valtech.statistics.service.scheuled.ScheduledQuery;
 import com.valtech.statistics.service.WorldService;
 import com.valtech.statistics.service.WorldSummaryService;
 import lombok.RequiredArgsConstructor;

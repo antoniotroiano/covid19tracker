@@ -34,10 +34,10 @@ public class WorldSummaryService {
     }
 
     public Optional<DataWorldSummary> getLastEntryWorldSummary() {
-        log.info("Get last entry of world summary.");
+        log.debug("Get last entry of world summary.");
         Optional<DataWorldSummary> getLastEntryWorldSummary = dataWorldSummaryRepository.findTopByOrderByDataWorldSummaryIdDesc();
         if (getLastEntryWorldSummary.isPresent()) {
-            log.info("Found last entry of data world summary. {}", getLastEntryWorldSummary.get().getLocalDate());
+            log.debug("Found last entry of data world summary. {}", getLastEntryWorldSummary.get().getLocalDate());
             return getLastEntryWorldSummary;
         }
         log.warn("Found no last entry of data world summary.");
@@ -50,10 +50,10 @@ public class WorldSummaryService {
     }
 
     public Optional<DataWorldSummary> findDataWorldSummaryByLocalTime(LocalTime localTime) {
-        log.info("Get data of world summary by last time {}.", localTime);
+        log.debug("Get data of world summary by last time {}.", localTime);
         Optional<DataWorldSummary> findDataWorldByTime = dataWorldSummaryRepository.findDataWorldSummaryByLocalTime(localTime);
         if (findDataWorldByTime.isPresent()) {
-            log.info("Found data of world summary by last time {}.", localTime);
+            log.debug("Found data of world summary by last time {}.", localTime);
             return findDataWorldByTime;
         }
         log.warn("Found no last data of world summary by local time {}.", localTime);

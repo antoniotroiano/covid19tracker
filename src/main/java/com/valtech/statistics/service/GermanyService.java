@@ -23,7 +23,6 @@ public class GermanyService {
 
     public List<DataGermany> getAllDataGermany() {
         log.info("Get all data of germany.");
-
         List<DataGermany> allDataGermany = dataGermanyRepository.findAll();
         if (allDataGermany.isEmpty()) {
             log.warn("No data germany found.");
@@ -34,10 +33,10 @@ public class GermanyService {
     }
 
     public Optional<DataGermany> getLastEntryGermany() {
-        log.info("Get last entry of germany.");
+        log.debug("Get last entry of germany.");
         Optional<DataGermany> getLastEntryGermany = dataGermanyRepository.findTopByOrderByDataGermanyIdDesc();
         if (getLastEntryGermany.isPresent()) {
-            log.info("Found last entry of data germany. {}", getLastEntryGermany.get().getLocalDate());
+            log.debug("Found last entry of data germany. {}", getLastEntryGermany.get().getLocalDate());
             return getLastEntryGermany;
         }
         log.warn("Found no last entry of data germany.");
@@ -50,10 +49,10 @@ public class GermanyService {
     }
 
     public Optional<DataGermany> findDataGermanyByLastUpdate(String lastUpdate) {
-        log.info("Find data of germany by last update {}.", lastUpdate);
+        log.debug("Find data of germany by last update {}.", lastUpdate);
         Optional<DataGermany> findDataGermanyByLastUpdate = dataGermanyRepository.findDataGermanyByLastUpdate(lastUpdate);
         if (findDataGermanyByLastUpdate.isPresent()) {
-            log.info("Found data of germany by last update {}.", lastUpdate);
+            log.debug("Found data of germany by last update {}.", lastUpdate);
             return findDataGermanyByLastUpdate;
         }
         log.warn("Found no last data of germany by last update {}.", lastUpdate);

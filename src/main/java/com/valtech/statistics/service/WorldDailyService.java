@@ -21,10 +21,10 @@ public class WorldDailyService {
     }
 
     public Optional<DataWorldDaily> getLastEntryWorldDaily() {
-        log.info("Get last entry of world daily.");
+        log.debug("Get last entry of world daily.");
         Optional<DataWorldDaily> getLastEntryWorldDaily = dataWorldDailyRepository.findTopByOrderByDataWorldDailyIdDesc();
         if (getLastEntryWorldDaily.isPresent()) {
-            log.info("Found last entry of data world. {}", getLastEntryWorldDaily.get().getLocalDate());
+            log.debug("Found last entry of data world. {}", getLastEntryWorldDaily.get().getLocalDate());
             return getLastEntryWorldDaily;
         }
         log.warn("Found no last entry of data world.");

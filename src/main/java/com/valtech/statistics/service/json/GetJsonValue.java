@@ -1,8 +1,10 @@
-package com.valtech.statistics.service;
+package com.valtech.statistics.service.json;
 
 import com.valtech.statistics.model.DataGermany;
 import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.model.DataWorld;
+import com.valtech.statistics.service.GermanyService;
+import com.valtech.statistics.service.WorldSummaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -18,6 +20,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +31,7 @@ public class GetJsonValue {
 
     private static final String URL_WORLD = "https://covid19.mathdro.id/api";
     private static final String URL_GERMANY = "https://covid19.mathdro.id/api/countries/germany";
+    private static final String URL_COUNTRIES = "https://covid19.mathdro.id/api/countries";
     private static final String VALUE = "value";
     private static final String GLOBAL = "Global";
     private static final String CONFIRMED = "confirmed";
@@ -50,6 +55,16 @@ public class GetJsonValue {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM");
         LocalDate now = LocalDate.now();
         return now.format(dtf);
+    }
+
+    private List<String> getCountryOfJSONObject() throws IOException {
+        List<String> allCountries = new ArrayList<>();
+       JSONArray getValueOfArray = new JSONArray(IOUtils.toString(new URL(URL_COUNTRIES), StandardCharsets.UTF_8));
+       for (int i = 0; i < getValueOfArray.length(); i++) {
+           JSONObject jsonObject = getValueOfArray.getJSONObject(i);
+           allCountries.add(jsonObject.getString("name"));
+       }
+        return allCountries;
     }
 
     public DataWorld getDataOfWorldToModel() throws IOException {

@@ -34,10 +34,10 @@ public class GermanySummaryService {
     }
 
     public Optional<DataGermanySummary> getLastEntryGermanySummary() {
-        log.info("Get last entry of germany summary.");
+        log.debug("Get last entry of germany summary.");
         Optional<DataGermanySummary> getLastEntryGermanySummary = dataGermanySummaryRepository.findTopByOrderByDataGermanySummaryIdDesc();
         if (getLastEntryGermanySummary.isPresent()) {
-            log.info("Found last entry of data germany summary. {}", getLastEntryGermanySummary.get().getLocalDate());
+            log.debug("Found last entry of data germany summary. {}", getLastEntryGermanySummary.get().getLocalDate());
             return getLastEntryGermanySummary;
         }
         log.warn("Found no last entry of data germany summary.");
@@ -50,10 +50,10 @@ public class GermanySummaryService {
     }
 
     public Optional<DataGermanySummary> findDataGermanySummaryByLocalTime(LocalTime localTime) {
-        log.info("Find data of germany summary by last time {}.", localTime);
+        log.debug("Find data of germany summary by last time {}.", localTime);
         Optional<DataGermanySummary> findDataGermanyByTime = dataGermanySummaryRepository.findDataGermanySummaryByLocalTime(localTime);
         if (findDataGermanyByTime.isPresent()) {
-            log.info("Found data of germany summary by last time {}.", localTime);
+            log.debug("Found data of germany summary by last time {}.", localTime);
             return findDataGermanyByTime;
         }
         log.warn("Found no last data of germany summary by local time {}.", localTime);

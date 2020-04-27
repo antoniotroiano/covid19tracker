@@ -2,6 +2,7 @@ package com.valtech.statistics.service;
 
 import com.valtech.statistics.model.DataGermany;
 import com.valtech.statistics.repository.DataGermanyRepository;
+import com.valtech.statistics.service.json.GetJsonValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

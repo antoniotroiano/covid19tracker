@@ -33,10 +33,10 @@ public class WorldService {
     }
 
     public Optional<DataWorld> getLastEntryWorld() {
-        log.info("Get last entry of world.");
+        log.debug("Get last entry of world.");
         Optional<DataWorld> getLastEntryWorld = dataWorldRepository.findTopByOrderByDataWorldIdDesc();
         if (getLastEntryWorld.isPresent()) {
-            log.info("Found last entry of data world. {}", getLastEntryWorld.get().getLastUpdate());
+            log.debug("Found last entry of data world. {}", getLastEntryWorld.get().getLastUpdate());
             return getLastEntryWorld;
         }
         log.warn("Found no last entry of data world.");

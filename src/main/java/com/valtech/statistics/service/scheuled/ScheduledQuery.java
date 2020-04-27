@@ -1,10 +1,17 @@
-package com.valtech.statistics.service;
+package com.valtech.statistics.service.scheuled;
 
 import com.valtech.statistics.model.DataGermany;
 import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.model.DataWorld;
 import com.valtech.statistics.model.DataWorldDaily;
 import com.valtech.statistics.model.DataWorldSummary;
+import com.valtech.statistics.service.DateFormat;
+import com.valtech.statistics.service.GermanyService;
+import com.valtech.statistics.service.GermanySummaryService;
+import com.valtech.statistics.service.WorldDailyService;
+import com.valtech.statistics.service.WorldService;
+import com.valtech.statistics.service.WorldSummaryService;
+import com.valtech.statistics.service.json.GetJsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,8 +36,10 @@ public class ScheduledQuery {
     private final GetJsonValue getJsonValue;
     private final DateFormat dateFormat;
 
+    /*Get and save new data of world*/
     @Scheduled(cron = "0 5 */3 ? * *")
     public void saveWorldDataOfJson() throws IOException {
+        log.info("Invoke get and save new data of world.");
         DataWorld dataWorld = getJsonValue.getDataOfWorldToModel();
         Optional<DataWorld> dataWorldLast = worldService.getLastEntryWorld();
 
@@ -56,14 +65,13 @@ public class ScheduledQuery {
 
     private void saveNewWorldDaily() {
         log.info("Invoke save new world daily.");
-
         Optional<DataWorld> dataWorldLast = worldService.getLastEntryWorld();
         DataWorldDaily dataWorldDailyYesterday = new DataWorldDaily();
-        Optional<DataWorldDaily> dataWorldDaily = worldDailyService.getLastEntryWorldDaily();
+        Optional<DataWorldDaily> dataWorldDailyLast = worldDailyService.getLastEntryWorldDaily();
         String dateLastWorld;
         LocalDate localDate = LocalDate.now();
 
-        if (dataWorldDaily.isEmpty()) {
+        if (dataWorldDailyLast.isEmpty()) {
             dataWorldDailyYesterday.setConfirmed(dataWorldLast.get().getConfirmed());
             dataWorldDailyYesterday.setRecovered(dataWorldLast.get().getRecovered());
             dataWorldDailyYesterday.setDeaths(dataWorldLast.get().getDeaths());
@@ -91,9 +99,10 @@ public class ScheduledQuery {
         }
     }
 
+    /*Save new data of world summary*/
     @Scheduled(cron = "0 15 */4 ? * *")
     public void saveWorldSummaryDataOfJson() {
-        log.info("Invoke save world summary.");
+        log.info("Invoke get and save world summary.");
         saveNewWorldDaily();
 
         Optional<DataWorld> dataWorldLast = worldService.getLastEntryWorld();
@@ -111,25 +120,32 @@ public class ScheduledQuery {
                 dataWorldSummaryNew.setTotalDeaths(dataWorldLast.get().getDeaths());
                 dataWorldSummaryNew.setLocalDate(LocalDate.now());
                 dataWorldSummaryNew.setLocalTime(LocalTime.now().withNano(0));
-
-                if (dataWorldSummaryLast.isPresent()) {
-                    if (dataWorldSummaryLast.get().getNewConfirmed() != dataWorldSummaryNew.getNewConfirmed() &&
-                            dataWorldSummaryLast.get().getNewRecovered() != dataWorldSummaryNew.getNewRecovered() &&
-                            dataWorldSummaryLast.get().getNewDeaths() != dataWorldSummaryNew.getNewDeaths()) {
-                        worldSummaryService.saveDataWorldSummary(dataWorldSummaryNew);
-                        log.info("Saved new data of world summary {}.", dataWorldSummaryNew.getLocalDate());
-                    } else {
-                        log.info("No new data of world summary, Returned last one {}.", dataWorldSummaryNew.getLocalDate());
-                    }
+                log.info("Create new dataset of data world summary");
+            }
+            if (dataWorldSummaryLast.isEmpty()) {
+                worldSummaryService.saveDataWorldSummary(dataWorldSummaryNew);
+                log.info("Saved first data world summary {}.", dataWorldSummaryNew.getLocalDate());
+            }
+            if (dataWorldSummaryLast.isPresent()) {
+                if (dataWorldSummaryLast.get().getNewConfirmed() != dataWorldSummaryNew.getNewConfirmed() ||
+                        dataWorldSummaryLast.get().getNewRecovered() != dataWorldSummaryNew.getNewRecovered() ||
+                        dataWorldSummaryLast.get().getNewDeaths() != dataWorldSummaryNew.getNewDeaths()) {
+                    worldSummaryService.saveDataWorldSummary(dataWorldSummaryNew);
+                    log.info("Saved new data of world summary {}.", dataWorldSummaryNew.getLocalDate());
+                } else {
+                    log.warn("No new data of world summary, Returned last one {}.", dataWorldSummaryNew.getLocalDate());
                 }
             }
+
         } else {
             log.warn("No last data of world.");
         }
     }
 
+    /*Get and save new data of germany*/
     @Scheduled(cron = "0 10 */2 ? * *")
     public void saveGermanyDataOfJson() throws IOException {
+        log.info("Invoke get and save new data of germany.");
         DataGermany dataGermany = getJsonValue.getDataOfGermanyToModel();
         Optional<DataGermany> dataGermanyLast = germanyService.getLastEntryGermany();
 
@@ -153,8 +169,10 @@ public class ScheduledQuery {
         }
     }
 
+    /*Get and save new data of gemany summary*/
     @Scheduled(cron = "0 20 */5 ? * *")
     public void saveGermanySummaryDataOfJson() throws IOException {
+        log.info("Invoke get and save new data of germany summary.");
         DataGermanySummary dataGermanySummary = getJsonValue.createDataOfGermanySummary();
         Optional<DataGermanySummary> dataGermanySummaryLast = germanySummaryService.getLastEntryGermanySummary();
 
@@ -163,8 +181,8 @@ public class ScheduledQuery {
             log.info("Saved first data of germany summary {}.", dataGermanySummary.getLocalDate());
         }
         if (dataGermanySummaryLast.isPresent()) {
-            if (dataGermanySummaryLast.get().getNewConfirmed() != dataGermanySummary.getNewConfirmed() &&
-                    dataGermanySummaryLast.get().getNewRecovered() != dataGermanySummary.getNewRecovered() &&
+            if (dataGermanySummaryLast.get().getNewConfirmed() != dataGermanySummary.getNewConfirmed() ||
+                    dataGermanySummaryLast.get().getNewRecovered() != dataGermanySummary.getNewRecovered() ||
                     dataGermanySummaryLast.get().getNewDeaths() != dataGermanySummary.getNewDeaths()) {
                 germanySummaryService.saveDataGermanySummary(dataGermanySummary);
                 log.info("Saved new data of germany summary {}.", dataGermanySummary.getLocalDate());

@@ -5,7 +5,7 @@ import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.service.DateFormat;
 import com.valtech.statistics.service.GermanyService;
 import com.valtech.statistics.service.GermanySummaryService;
-import com.valtech.statistics.service.ScheduledQuery;
+import com.valtech.statistics.service.scheuled.ScheduledQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
