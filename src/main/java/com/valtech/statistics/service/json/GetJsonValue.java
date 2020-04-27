@@ -3,6 +3,7 @@ package com.valtech.statistics.service.json;
 import com.valtech.statistics.model.DataGermany;
 import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.model.DataWorld;
+import com.valtech.statistics.model.SummaryToday;
 import com.valtech.statistics.service.GermanyService;
 import com.valtech.statistics.service.WorldSummaryService;
 import lombok.RequiredArgsConstructor;
@@ -57,14 +58,44 @@ public class GetJsonValue {
         return now.format(dtf);
     }
 
-    private List<String> getCountryOfJSONObject() throws IOException {
+    public List<String> getCountryOfJSONObject() throws IOException {
         List<String> allCountries = new ArrayList<>();
-       JSONArray getValueOfArray = new JSONArray(IOUtils.toString(new URL(URL_COUNTRIES), StandardCharsets.UTF_8));
-       for (int i = 0; i < getValueOfArray.length(); i++) {
-           JSONObject jsonObject = getValueOfArray.getJSONObject(i);
-           allCountries.add(jsonObject.getString("name"));
-       }
+        JSONObject countries = new JSONObject(IOUtils.toString(new URL(URL_COUNTRIES), StandardCharsets.UTF_8));
+        JSONArray getValueOfArray = countries.getJSONArray("countries");
+        for (int i = 1; i < getValueOfArray.length(); i++) {
+            JSONObject jsonObject = getValueOfArray.getJSONObject(i);
+            allCountries.add(jsonObject.getString("name"));
+        }
         return allCountries;
+    }
+
+    public SummaryToday getDataOfForSelectedCountry(String country) throws IOException{
+        log.info("Invoke create data for selected country {}", country);
+        SummaryToday summaryToday = new SummaryToday();
+
+        final String URL_COUNTRY = "https://covid19.mathdro.id/api/countries/" + country;
+
+        summaryToday.setConfirmedToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), CONFIRMED, VALUE));
+        summaryToday.setRecoveredToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), RECOVERED, VALUE));
+        summaryToday.setDeathsToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), DEATHS, VALUE));
+        summaryToday.setLastUpdate(getJSONObject(URL_COUNTRY).getString(LAST_UPDATE));
+
+        JSONArray getValueOfArrayCountry = new JSONArray(IOUtils.toString(new URL(getURLWithDate()), StandardCharsets.UTF_8));
+
+        if (getValueOfArrayCountry.isEmpty()) {
+            log.info("No data for last day of country {}", country);
+            return summaryToday;
+        }
+        for (int i = 0; i < getValueOfArrayCountry.length(); i++) {
+            JSONObject json = getValueOfArrayCountry.getJSONObject(i);
+            if (json.getString("countryRegion").equals(country)) {
+                summaryToday.setNewConfirmedToday(summaryToday.getConfirmedToday() - json.getInt(CONFIRMED));
+                summaryToday.setNewRecoveredToday(summaryToday.getRecoveredToday() - json.getInt(RECOVERED));
+                summaryToday.setNewDeathsToday(summaryToday.getDeathsToday() -json.getInt(DEATHS));
+            }
+        }
+        log.info("Set new data for confirmed, recovered and deaths for country {}", country);
+        return summaryToday;
     }
 
     public DataWorld getDataOfWorldToModel() throws IOException {
@@ -123,10 +154,8 @@ public class GetJsonValue {
     public DataGermany getDataOfGermanyToModelYesterday() throws IOException {
         log.info("Invoke create data of germany yesterday.");
 
-        String URL_GERMANY_YESTERDAY = getURLWithDate();
-
         DataGermany dataGermanyYesterday = new DataGermany();
-        JSONArray getValueOfArray = new JSONArray(IOUtils.toString(new URL(URL_GERMANY_YESTERDAY), StandardCharsets.UTF_8));
+        JSONArray getValueOfArray = new JSONArray(IOUtils.toString(new URL(getURLWithDate()), StandardCharsets.UTF_8));
         for (int i = 0; i < getValueOfArray.length(); i++) {
             JSONObject json = getValueOfArray.getJSONObject(i);
             if (json.getString("countryRegion").equals("Germany")) {

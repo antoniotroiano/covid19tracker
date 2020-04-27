@@ -1,9 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <title>COVID-19 - Statistics</title>
     <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <style>
+        .dropdown-menu {
+            max-height: 20em;
+            overflow: auto;
+        }
+    </style>
+    <script th:inline="javascript">
+        function getCountry(country) {
+            document.location.replace("/covid19/summary/" + country);
+        };
+
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
 </head>
 <body>
 <div class="container">
@@ -31,8 +48,21 @@
                             SIR-Model</a>
                     </div>
                     <div class="buttons is-centered">
-                        <a class="button is-medium is-link is-rounded" href="/" type="submit">Select country for daily
-                            update</a>
+                        <div class="dropdown">
+                            <div class="dropdown-trigger">
+                                <button class="button is-medium is-link is-rounded">
+                                    <span>Select country</span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu js-example-basic-single">
+                                <div class="dropdown-content" th:each="countries : ${listCountries}">
+                                    <a class="dropdown-item"
+                                       th:onclick="/*<![CDATA[*/ getCountry(/*[[${countries}]]*/) /*]]>*/"
+                                       th:text="${countries}"></a>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="buttons is-centered">
                         <a class="button is-medium is-link is-rounded" href="/" type="submit">Select country for day one
@@ -43,5 +73,12 @@
         </div>
     </section>
 </div>
+<script>
+    let dropdown = document.querySelector('.dropdown');
+    dropdown.addEventListener('click', function (event) {
+        event.stopPropagation();
+        dropdown.classList.toggle('is-active');
+    });
+</script>
 </body>
 </html>
