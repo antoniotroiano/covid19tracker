@@ -47,38 +47,41 @@
                         <div class="tile">
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-info">
-                                    <p class="title is-5">New confirmed</p>
-                                    <p class="subtitle is-6"
-                                       th:text="${#numbers.formatInteger(dataSummaryToday.getNewConfirmedToday(),3,'POINT')}"></p>
-                                </article>
-                                <article class="tile is-child notification is-info">
                                     <p class="title is-5">Total confirmed</p>
                                     <p class="subtitle is-6"
                                        th:text="${#numbers.formatInteger(dataSummaryToday.getConfirmedToday(),3,'POINT')}"></p>
                                 </article>
+                                <article class="tile is-child notification is-info">
+                                    <p class="title is-5">New confirmed</p>
+                                    <p class="subtitle is-6"
+                                       th:inline="text">
+                                        +[[${#numbers.formatInteger(dataSummaryToday.getNewConfirmedToday(),3,'POINT')}]]</p>
+                                </article>
                             </div>
                             <div class="tile is-parent is-vertical">
-                                <article class="tile is-child notification is-primary">
-                                    <p class="title is-5">New recovered</p>
-                                    <p class="subtitle is-6"
-                                       th:text="${#numbers.formatInteger(dataSummaryToday.getNewRecoveredToday(),3,'POINT')}"></p>
-                                </article>
                                 <article class="tile is-child notification is-primary">
                                     <p class="title is-5">Total recovered</p>
                                     <p class="subtitle is-6"
                                        th:text="${#numbers.formatInteger(dataSummaryToday.getRecoveredToday(),3,'POINT')}"></p>
                                 </article>
+                                <article class="tile is-child notification is-primary">
+                                    <p class="title is-5">New recovered</p>
+                                    <p class="subtitle is-6"
+                                       th:inline="text">
+                                        +[[${#numbers.formatInteger(dataSummaryToday.getNewRecoveredToday(),3,'POINT')}]]</p>
+                                </article>
                             </div>
                             <div class="tile is-parent is-vertical">
-                                <article class="tile is-child notification is-danger">
-                                    <p class="title is-5">New deaths</p>
-                                    <p class="subtitle is-6"
-                                       th:text="${#numbers.formatInteger(dataSummaryToday.getNewDeathsToday(),3,'POINT')}"></p>
-                                </article>
                                 <article class="tile is-child notification is-danger">
                                     <p class="title is-5">Total deaths</p>
                                     <p class="subtitle is-6"
                                        th:text="${#numbers.formatInteger(dataSummaryToday.getDeathsToday(),3,'POINT')}"></p>
+                                </article>
+                                <article class="tile is-child notification is-danger">
+                                    <p class="title is-5">New deaths</p>
+                                    <p class="subtitle is-6"
+                                       th:inline="text">
+                                        +[[${#numbers.formatInteger(dataSummaryToday.getNewDeathsToday(),3,'POINT')}]]</p>
                                 </article>
                             </div>
                         </div>

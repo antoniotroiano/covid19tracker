@@ -5,7 +5,6 @@ import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.model.DataWorld;
 import com.valtech.statistics.model.SummaryToday;
 import com.valtech.statistics.service.GermanyService;
-import com.valtech.statistics.service.WorldSummaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -39,7 +38,6 @@ public class GetJsonValue {
     private static final String RECOVERED = "recovered";
     private static final String DEATHS = "deaths";
     private static final String LAST_UPDATE = "lastUpdate";
-    private final WorldSummaryService worldSummaryService;
     private final GermanyService germanyService;
 
     private JSONObject getJSONObject(String url) throws IOException {
@@ -69,12 +67,42 @@ public class GetJsonValue {
         return allCountries;
     }
 
-    public SummaryToday getDataOfForSelectedCountry(String country) throws IOException{
+    private String getURLWithDate() throws IOException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        LocalDate yesterdayDate = LocalDate.now().minusDays(1);
+        String dailyCOVID19 = "https://covid19.mathdro.id/api/daily/" + yesterdayDate.format(dtf);
+        URL url = new URL(dailyCOVID19);
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        huc.setRequestMethod("GET");
+        huc.connect();
+        int code = huc.getResponseCode();
+        if (code == 404) {
+            //ToDo: Überprüfung kann weg und es kann eine Fehlermeldung rausgegeben werden alles andere was nicht code 200 ist
+            LocalDate dayBeforeYesterdayDate = LocalDate.now().minusDays(2);
+            dailyCOVID19 = "https://covid19.mathdro.id/api/daily/" + dayBeforeYesterdayDate.format(dtf);
+            log.info("Create url for daily update with date {}", dayBeforeYesterdayDate);
+            return dailyCOVID19;
+        }
+        log.info("Create url for daily update with date {}", yesterdayDate);
+        return dailyCOVID19;
+    }
+
+    private String country(String country) {
+        String[] countryArray = country.split(" ");
+        StringBuilder bld = new StringBuilder();
+        for (int i = 0; i < countryArray.length; ++i) {
+            bld.append(countryArray[i] + "%20");
+        }
+        return bld.toString().substring(0, bld.length() - 3);
+    }
+
+    public SummaryToday getDataForSelectedCountry(String country) throws IOException {
         log.info("Invoke create data for selected country {}", country);
         SummaryToday summaryToday = new SummaryToday();
 
-        final String URL_COUNTRY = "https://covid19.mathdro.id/api/countries/" + country;
+        final String URL_COUNTRY = "https://covid19.mathdro.id/api/countries/" + country(country);
 
+        summaryToday.setCountry(country);
         summaryToday.setConfirmedToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), CONFIRMED, VALUE));
         summaryToday.setRecoveredToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), RECOVERED, VALUE));
         summaryToday.setDeathsToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), DEATHS, VALUE));
@@ -83,15 +111,20 @@ public class GetJsonValue {
         JSONArray getValueOfArrayCountry = new JSONArray(IOUtils.toString(new URL(getURLWithDate()), StandardCharsets.UTF_8));
 
         if (getValueOfArrayCountry.isEmpty()) {
-            log.info("No data for last day of country {}", country);
+            log.info("No data for last day of country {}. Return only data of today", country);
             return summaryToday;
         }
         for (int i = 0; i < getValueOfArrayCountry.length(); i++) {
-            JSONObject json = getValueOfArrayCountry.getJSONObject(i);
-            if (json.getString("countryRegion").equals(country)) {
-                summaryToday.setNewConfirmedToday(summaryToday.getConfirmedToday() - json.getInt(CONFIRMED));
-                summaryToday.setNewRecoveredToday(summaryToday.getRecoveredToday() - json.getInt(RECOVERED));
-                summaryToday.setNewDeathsToday(summaryToday.getDeathsToday() -json.getInt(DEATHS));
+            JSONObject jsonObject = getValueOfArrayCountry.getJSONObject(i);
+            JSONArray newJSONArray = new JSONArray();
+            if (jsonObject.getString("countryRegion").equals(country)) {
+                newJSONArray.put(jsonObject);
+            }
+            for (int j = 0; j < newJSONArray.length(); j++) {
+                JSONObject newJSONObject = newJSONArray.getJSONObject(j);
+                summaryToday.setNewConfirmedToday(summaryToday.getConfirmedToday() - newJSONObject.getInt(CONFIRMED));
+                summaryToday.setNewRecoveredToday(summaryToday.getRecoveredToday() - newJSONObject.getInt(RECOVERED));
+                summaryToday.setNewDeathsToday(summaryToday.getDeathsToday() - newJSONObject.getInt(DEATHS));
             }
         }
         log.info("Set new data for confirmed, recovered and deaths for country {}", country);
@@ -134,23 +167,6 @@ public class GetJsonValue {
         return dataGermany;
     }
 
-    private String getURLWithDate() throws IOException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        String dailyCOVID19 = "https://covid19.mathdro.id/api/daily/" + yesterday.format(dtf);
-        URL url = new URL(dailyCOVID19);
-        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-        huc.setRequestMethod("GET");
-        huc.connect();
-        int code = huc.getResponseCode();
-        if (code == 404) {
-            LocalDate dayBeforeYesterday = LocalDate.now().minusDays(2);
-            dailyCOVID19 = "https://covid19.mathdro.id/api/daily/" + dayBeforeYesterday.format(dtf);
-            return dailyCOVID19;
-        }
-        return dailyCOVID19;
-    }
-
     public DataGermany getDataOfGermanyToModelYesterday() throws IOException {
         log.info("Invoke create data of germany yesterday.");
 
@@ -186,43 +202,4 @@ public class GetJsonValue {
         }
         return dataGermanySummary;
     }
-
-    //@Scheduled(cron = "0 15 */4 ? * *")
-    /*public void getDataWorldSummaryAndSaveIt() throws IOException {
-        log.info("Invoke get data of world summary and save it.");
-        final String URL_WORLD_SUMMARY = "https://api.covid19api.com/summary";
-        int newConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewConfirmed");
-        int totalConfirmed = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "TotalConfirmed");
-        int newDeaths = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewDeaths");
-        int totalDeaths = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "TotalDeaths");
-        int newRecovered = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "NewRecovered");
-        int totalRecovered = getValueOfJSONObject(getJSONObject(URL_WORLD_SUMMARY), GLOBAL, "TotalRecovered");
-
-        DataWorldSummary dataWorldSummary = new DataWorldSummary();
-
-        dataWorldSummary.setNewConfirmed(newConfirmed);
-        dataWorldSummary.setTotalConfirmed(totalConfirmed);
-        dataWorldSummary.setNewDeaths(newDeaths);
-        dataWorldSummary.setTotalDeaths(totalDeaths);
-        dataWorldSummary.setNewRecovered(newRecovered);
-        dataWorldSummary.setTotalRecovered(totalRecovered);
-        dataWorldSummary.setActiveCases(totalConfirmed - totalDeaths - totalRecovered);
-        dataWorldSummary.setLocalDate(LocalDate.now());
-        dataWorldSummary.setLocalTime(LocalTime.now().withNano(0));
-
-        Optional<DataWorldSummary> dataWorldSummaryLast = worldSummaryService.getLastEntryWorldSummary();
-
-        if (dataWorldSummaryLast.isEmpty()) {
-            worldSummaryService.saveDataWorldSummary(dataWorldSummary);
-            log.info("Saved first data of world summary {}.", dataWorldSummary.getLocalDate());
-        }
-        if (dataWorldSummaryLast.isPresent()) {
-            if (worldSummaryService.findDataWorldSummaryByLocalTime(dataWorldSummary.getLocalTime()).isEmpty()) {
-                worldSummaryService.saveDataWorldSummary(dataWorldSummary);
-                log.info("Saved new data of world summary {}.", dataWorldSummary.getLocalDate());
-            } else {
-                log.info("No new data of world summary, Returned last one {}.", dataWorldSummary.getLocalDate());
-            }
-        }
-    }*/
 }

@@ -25,7 +25,7 @@ public class SummaryController {
     @GetMapping("/{country}")
     public String showSummaryOfSelectedCountry(@PathVariable("country") String country, Model model) throws IOException {
         log.info("Invoke show summary of country {}", country);
-        SummaryToday summaryToday = getJsonValue.getDataOfForSelectedCountry(country);
+        SummaryToday summaryToday = getJsonValue.getDataForSelectedCountry(country);
         if (summaryToday == null) {
             model.addAttribute("noDataForThisCountry", true);
             log.info("No data for the country {}", country);
