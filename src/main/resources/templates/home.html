@@ -4,22 +4,37 @@
     <meta charset="utf-8">
     <title>COVID-19 - Statistics</title>
     <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <style>
-        .dropdown-menu {
-            max-height: 20em;
+        .dropdown {
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            padding-top: 0em;
+            display: none;
+            position: absolute;
             overflow: auto;
+            z-index: 1;
+            max-height: 20em;
+        }
+
+        .dropdown-content a {
+            padding-right: 0em;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
         }
     </style>
     <script th:inline="javascript">
         function getCountry(country) {
             document.location.replace("/covid19/summary/" + country);
         };
-
-        $(document).ready(function() {
-            $('.js-example-basic-single').select2();
-        });
     </script>
 </head>
 <body>
@@ -49,20 +64,19 @@
                     </div>
                     <div class="buttons is-centered">
                         <div class="dropdown">
-                            <div class="dropdown-trigger">
-                                <button class="button is-medium is-link is-rounded">
-                                    <span>Select country</span>
-                                </button>
-                            </div>
-                            <div class="dropdown-menu js-example-basic-single">
-                                <div class="dropdown-content" th:each="countries : ${listCountries}">
+                            <button class="button is-medium is-link is-rounded" onclick="myFunction()">Select country
+                            </button>
+                            <div class="dropdown-content" id="myDropdown">
+                                <input class="input" id="myInput" onkeyup="filterFunction()"
+                                       placeholder="Search for country.."
+                                       type="text">
+                                <div th:each="countries : ${listCountries}">
                                     <a class="dropdown-item"
                                        th:onclick="/*<![CDATA[*/ getCountry(/*[[${countries}]]*/) /*]]>*/"
                                        th:text="${countries}"></a>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="buttons is-centered">
                         <a class="button is-medium is-link is-rounded" href="/" type="submit">Select country for day one
@@ -79,6 +93,26 @@
         event.stopPropagation();
         dropdown.classList.toggle('is-active');
     });
+
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function filterFunction() {
+        let input, filter, div, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            let txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
 </script>
 </body>
 </html>
