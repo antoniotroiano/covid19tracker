@@ -15,12 +15,14 @@ public class DataGermanySummary {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long dataGermanySummaryId;
+    private String country;
     private int newConfirmed;
     private int totalConfirmed;
     private int newRecovered;
     private int totalRecovered;
     private int newDeaths;
     private int totalDeaths;
+    private String lastUpdate;
     private LocalDate localDate;
     private LocalTime localTime;
 
@@ -29,20 +31,29 @@ public class DataGermanySummary {
 
     public DataGermanySummary(DataGermanySummary dataGermanySummary) {
         this.dataGermanySummaryId = dataGermanySummary.getDataGermanySummaryId();
+        this.country = dataGermanySummary.getCountry();
         this.newConfirmed = dataGermanySummary.getNewConfirmed();
         this.totalConfirmed = dataGermanySummary.getTotalConfirmed();
         this.newRecovered = dataGermanySummary.getNewRecovered();
         this.totalRecovered = dataGermanySummary.getTotalRecovered();
         this.newDeaths = dataGermanySummary.getNewDeaths();
         this.totalDeaths = dataGermanySummary.getTotalDeaths();
+        this.lastUpdate = dataGermanySummary.getLastUpdate();
         this.localDate = dataGermanySummary.getLocalDate();
         this.localTime = dataGermanySummary.getLocalTime();
     }
 
-    public DataGermanySummary(int totalConfirmed, int totalRecovered, int totalDeaths) {
-        this.totalConfirmed = totalConfirmed;
-        this.totalRecovered = totalRecovered;
-        this.totalDeaths = totalDeaths;
+    public DataGermanySummary(SummaryToday summaryToday) {
+        this.country = summaryToday.getCountry();
+        this.newConfirmed = summaryToday.getNewConfirmedToday();
+        this.totalConfirmed = summaryToday.getConfirmedToday();
+        this.newRecovered = summaryToday.getNewRecoveredToday();
+        this.totalRecovered = summaryToday.getRecoveredToday();
+        this.newDeaths = summaryToday.getNewDeathsToday();
+        this.totalDeaths = summaryToday.getDeathsToday();
+        this.lastUpdate = summaryToday.getLastUpdate();
+        this.localDate = summaryToday.getLocalDate();
+        this.localTime = summaryToday.getLocalTime();
     }
 
     public long getDataGermanySummaryId() {
@@ -51,6 +62,14 @@ public class DataGermanySummary {
 
     public void setDataGermanySummaryId(long dataGermanySummaryId) {
         this.dataGermanySummaryId = dataGermanySummaryId;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public int getNewConfirmed() {
@@ -101,6 +120,14 @@ public class DataGermanySummary {
         this.totalDeaths = totalDeaths;
     }
 
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
     public LocalDate getLocalDate() {
         return localDate;
     }
@@ -115,5 +142,13 @@ public class DataGermanySummary {
 
     public void setLocalTime(LocalTime localTime) {
         this.localTime = localTime;
+    }
+
+    @Override
+    public String toString() {
+        return "DataGermanySummary{" +
+                "country='" + country + '\'' +
+                ", lastUpdate='" + lastUpdate + '\'' +
+                '}';
     }
 }

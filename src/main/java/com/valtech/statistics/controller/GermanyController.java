@@ -1,9 +1,7 @@
 package com.valtech.statistics.controller;
 
-import com.valtech.statistics.model.DataGermany;
 import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.service.DateFormat;
-import com.valtech.statistics.service.GermanyService;
 import com.valtech.statistics.service.GermanySummaryService;
 import com.valtech.statistics.service.scheuled.ScheduledQuery;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +22,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GermanyController {
 
-    private final GermanyService germanyService;
     private final GermanySummaryService germanySummaryService;
     private final ScheduledQuery scheduledQuery;
     private final DateFormat dateFormat;
@@ -32,31 +29,21 @@ public class GermanyController {
     @GetMapping
     public String showDataGermany(Model model) {
         log.info("Invoke show data of germany.");
-        model.addAttribute("dataGermany", new DataGermany());
         model.addAttribute("dataGermanySummary", new DataGermanySummary());
-
-        Optional<DataGermany> dataGermany = germanyService.getLastEntryGermany();
-        if (dataGermany.isPresent()) {
-            model.addAttribute("dataGermany", new DataGermany(dataGermany.get()));
-            String date = dateFormat.formatLastUpdateToDate(dataGermany.get().getLastUpdate());
-            String time = dateFormat.formatLastUpdateToTime(dataGermany.get().getLastUpdate());
-            model.addAttribute("date", date + " " + time + "h");
-            log.info("Show last entry of germany {}", dataGermany.get().getLastUpdate());
-        } else {
-            model.addAttribute("noFirstDataGermany", true);
-            log.warn("No last entry in database of germany.");
-        }
 
         Optional<DataGermanySummary> dataGermanySummary = germanySummaryService.getLastEntryGermanySummary();
         if (dataGermanySummary.isPresent()) {
             model.addAttribute("dataGermanySummary", new DataGermanySummary(dataGermanySummary.get()));
-            log.info("Show last entry for germany summary {}.", dataGermanySummary.get().getLocalDate());
+            String date = dateFormat.formatLastUpdateToDate(dataGermanySummary.get().getLastUpdate());
+            String time = dateFormat.formatLastUpdateToTime(dataGermanySummary.get().getLastUpdate());
+            model.addAttribute("date", date + " " + time + "h");
+            log.info("Show last entry for germany {}.", dataGermanySummary.get().getLocalDate());
         } else {
-            model.addAttribute("noFirstDataGermanySummary", true);
-            log.warn("No last daily entry in database for germany summary.");
+            model.addAttribute("noFirstDataGermany", true);
+            log.warn("No last daily entry in database for germany.");
         }
 
-        List<DataGermany> dataGermanyList = germanyService.getAllDataGermany();
+        List<DataGermanySummary> dataGermanyList = germanySummaryService.getAllDataGermanySummary();
         if (dataGermanyList.isEmpty()) {
             model.addAttribute("noDataGermany", true);
             log.warn("Found no data germany.");
@@ -64,19 +51,19 @@ public class GermanyController {
         }
         model.addAttribute("confirmedListG", dataGermanyList
                 .stream()
-                .map(DataGermany::getConfirmed)
+                .map(DataGermanySummary::getTotalConfirmed)
                 .collect(Collectors.toList()));
         model.addAttribute("recoveredListG", dataGermanyList
                 .stream()
-                .map(DataGermany::getRecovered)
+                .map(DataGermanySummary::getTotalRecovered)
                 .collect(Collectors.toList()));
         model.addAttribute("deathsListG", dataGermanyList
                 .stream()
-                .map(DataGermany::getDeaths)
+                .map(DataGermanySummary::getTotalDeaths)
                 .collect(Collectors.toList()));
         model.addAttribute("datesG", dataGermanyList
                 .stream()
-                .map(DataGermany::getLocalDate)
+                .map(DataGermanySummary::getLocalDate)
                 .collect(Collectors.toList()));
         log.debug("Return data of germany.");
         return "covid19Germany";
@@ -85,7 +72,6 @@ public class GermanyController {
     @GetMapping("/update")
     public String updateDatabase(Model model) throws IOException {
         scheduledQuery.saveGermanyDataOfJson();
-        scheduledQuery.saveGermanySummaryDataOfJson();
         return showDataGermany(model);
     }
 }

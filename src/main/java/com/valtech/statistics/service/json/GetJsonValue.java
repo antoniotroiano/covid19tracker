@@ -1,10 +1,7 @@
 package com.valtech.statistics.service.json;
 
-import com.valtech.statistics.model.DataGermany;
-import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.model.DataWorld;
 import com.valtech.statistics.model.SummaryToday;
-import com.valtech.statistics.service.GermanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -22,7 +19,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -30,7 +26,6 @@ import java.util.Optional;
 public class GetJsonValue {
 
     private static final String URL_WORLD = "https://covid19.mathdro.id/api";
-    private static final String URL_GERMANY = "https://covid19.mathdro.id/api/countries/germany";
     private static final String URL_COUNTRIES = "https://covid19.mathdro.id/api/countries";
     private static final String VALUE = "value";
     private static final String GLOBAL = "Global";
@@ -38,7 +33,6 @@ public class GetJsonValue {
     private static final String RECOVERED = "recovered";
     private static final String DEATHS = "deaths";
     private static final String LAST_UPDATE = "lastUpdate";
-    private final GermanyService germanyService;
 
     private JSONObject getJSONObject(String url) throws IOException {
         return new JSONObject(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
@@ -107,6 +101,8 @@ public class GetJsonValue {
         summaryToday.setRecoveredToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), RECOVERED, VALUE));
         summaryToday.setDeathsToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), DEATHS, VALUE));
         summaryToday.setLastUpdate(getJSONObject(URL_COUNTRY).getString(LAST_UPDATE));
+        summaryToday.setLocalDate(LocalDate.now());
+        summaryToday.setLocalTime(LocalTime.now().withNano(0));
 
         JSONArray getValueOfArrayCountry = new JSONArray(IOUtils.toString(new URL(getURLWithDate()), StandardCharsets.UTF_8));
 
@@ -147,59 +143,5 @@ public class GetJsonValue {
         dataWorld.setLocalDate(getDateNow());
 
         return dataWorld;
-    }
-
-    public DataGermany getDataOfGermanyToModel() throws IOException {
-        log.info("Invoke get data of germany to model.");
-
-        int confirmedGermany = getValueOfJSONObject(getJSONObject(URL_GERMANY), CONFIRMED, VALUE);
-        int recoveredGermany = getValueOfJSONObject(getJSONObject(URL_GERMANY), RECOVERED, VALUE);
-        int deathsGermany = getValueOfJSONObject(getJSONObject(URL_GERMANY), DEATHS, VALUE);
-        String lastUpdateGermany = getJSONObject(URL_GERMANY).getString(LAST_UPDATE);
-
-        DataGermany dataGermany = new DataGermany();
-        dataGermany.setConfirmed(confirmedGermany);
-        dataGermany.setRecovered(recoveredGermany);
-        dataGermany.setDeaths(deathsGermany);
-        dataGermany.setLastUpdate(lastUpdateGermany);
-        dataGermany.setLocalDate(getDateNow());
-
-        return dataGermany;
-    }
-
-    public DataGermany getDataOfGermanyToModelYesterday() throws IOException {
-        log.info("Invoke create data of germany yesterday.");
-
-        DataGermany dataGermanyYesterday = new DataGermany();
-        JSONArray getValueOfArray = new JSONArray(IOUtils.toString(new URL(getURLWithDate()), StandardCharsets.UTF_8));
-        for (int i = 0; i < getValueOfArray.length(); i++) {
-            JSONObject json = getValueOfArray.getJSONObject(i);
-            if (json.getString("countryRegion").equals("Germany")) {
-                dataGermanyYesterday.setConfirmed(json.getInt(CONFIRMED));
-                dataGermanyYesterday.setRecovered(json.getInt(RECOVERED));
-                dataGermanyYesterday.setDeaths(json.getInt(DEATHS));
-                dataGermanyYesterday.setLocalDate(json.getString(LAST_UPDATE));
-            }
-        }
-        return dataGermanyYesterday;
-    }
-
-    public DataGermanySummary createDataOfGermanySummary() throws IOException {
-        log.info("Invoke create data of germany summary.");
-        DataGermany dataGermanyYesterday = getDataOfGermanyToModelYesterday();
-        Optional<DataGermany> lastDataGermany = germanyService.getLastEntryGermany();
-
-        DataGermanySummary dataGermanySummary = new DataGermanySummary();
-        if (lastDataGermany.isPresent()) {
-            dataGermanySummary.setNewConfirmed(lastDataGermany.get().getConfirmed() - dataGermanyYesterday.getConfirmed());
-            dataGermanySummary.setTotalConfirmed(lastDataGermany.get().getConfirmed());
-            dataGermanySummary.setNewRecovered(lastDataGermany.get().getRecovered() - dataGermanyYesterday.getRecovered());
-            dataGermanySummary.setTotalRecovered(lastDataGermany.get().getRecovered());
-            dataGermanySummary.setNewDeaths(lastDataGermany.get().getDeaths() - dataGermanyYesterday.getDeaths());
-            dataGermanySummary.setTotalDeaths(lastDataGermany.get().getDeaths());
-            dataGermanySummary.setLocalDate(LocalDate.now());
-            dataGermanySummary.setLocalTime(LocalTime.now().withNano(0));
-        }
-        return dataGermanySummary;
     }
 }
