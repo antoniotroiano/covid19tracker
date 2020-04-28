@@ -1,6 +1,5 @@
 package com.valtech.statistics.model;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class SummaryToday {
@@ -14,7 +13,7 @@ public class SummaryToday {
     private int newDeathsToday;
     private int deathsToday;
     private String lastUpdate;
-    private LocalDate localDate;
+    private String localDate;
     private LocalTime localTime;
 
     public long getDataSummaryTodayId() {
@@ -89,11 +88,11 @@ public class SummaryToday {
         this.lastUpdate = lastUpdate;
     }
 
-    public LocalDate getLocalDate() {
+    public String getLocalDate() {
         return localDate;
     }
 
-    public void setLocalDate(LocalDate localDate) {
+    public void setLocalDate(String localDate) {
         this.localDate = localDate;
     }
 
@@ -110,6 +109,7 @@ public class SummaryToday {
         return "SummaryToday{" +
                 "country='" + country + '\'' +
                 ", lastUpdate='" + lastUpdate + '\'' +
+                ", localDate='" + localDate + '\'' +
                 '}';
     }
 }

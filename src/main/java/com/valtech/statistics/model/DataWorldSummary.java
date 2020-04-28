@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -21,7 +20,8 @@ public class DataWorldSummary {
     private int totalRecovered;
     private int newDeaths;
     private int totalDeaths;
-    private LocalDate localDate;
+    private String lastUpdate;
+    private String localDate;
     private LocalTime localTime;
 
     public DataWorldSummary() {
@@ -39,10 +39,16 @@ public class DataWorldSummary {
         this.localTime = dataWorldSummary.getLocalTime();
     }
 
-    public DataWorldSummary(int totalConfirmed, int totalRecovered, int totalDeaths) {
-        this.totalConfirmed = totalConfirmed;
-        this.totalRecovered = totalRecovered;
-        this.totalDeaths = totalDeaths;
+    public DataWorldSummary(SummaryToday summaryToday) {
+        this.newConfirmed = summaryToday.getNewConfirmedToday();
+        this.totalConfirmed = summaryToday.getConfirmedToday();
+        this.newRecovered = summaryToday.getNewRecoveredToday();
+        this.totalRecovered = summaryToday.getRecoveredToday();
+        this.newDeaths = summaryToday.getNewDeathsToday();
+        this.totalDeaths = summaryToday.getDeathsToday();
+        this.lastUpdate = summaryToday.getLastUpdate();
+        this.localDate = summaryToday.getLocalDate();
+        this.localTime = summaryToday.getLocalTime();
     }
 
     public long getDataWorldSummaryId() {
@@ -101,11 +107,19 @@ public class DataWorldSummary {
         this.totalDeaths = totalDeaths;
     }
 
-    public LocalDate getLocalDate() {
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public String getLocalDate() {
         return localDate;
     }
 
-    public void setLocalDate(LocalDate localDate) {
+    public void setLocalDate(String localDate) {
         this.localDate = localDate;
     }
 
@@ -115,5 +129,13 @@ public class DataWorldSummary {
 
     public void setLocalTime(LocalTime localTime) {
         this.localTime = localTime;
+    }
+
+    @Override
+    public String toString() {
+        return "DataWorldSummary{" +
+                "lastUpdate='" + lastUpdate + '\'' +
+                ", localDate='" + localDate + '\'' +
+                '}';
     }
 }

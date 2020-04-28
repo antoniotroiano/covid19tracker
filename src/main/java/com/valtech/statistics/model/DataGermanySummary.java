@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -23,7 +22,7 @@ public class DataGermanySummary {
     private int newDeaths;
     private int totalDeaths;
     private String lastUpdate;
-    private LocalDate localDate;
+    private String localDate;
     private LocalTime localTime;
 
     public DataGermanySummary() {
@@ -128,11 +127,11 @@ public class DataGermanySummary {
         this.lastUpdate = lastUpdate;
     }
 
-    public LocalDate getLocalDate() {
+    public String getLocalDate() {
         return localDate;
     }
 
-    public void setLocalDate(LocalDate localDate) {
+    public void setLocalDate(String localDate) {
         this.localDate = localDate;
     }
 
@@ -149,6 +148,7 @@ public class DataGermanySummary {
         return "DataGermanySummary{" +
                 "country='" + country + '\'' +
                 ", lastUpdate='" + lastUpdate + '\'' +
+                ", localDate='" + localDate + '\'' +
                 '}';
     }
 }

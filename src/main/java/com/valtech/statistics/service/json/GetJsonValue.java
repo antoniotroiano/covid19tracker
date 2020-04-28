@@ -1,6 +1,6 @@
 package com.valtech.statistics.service.json;
 
-import com.valtech.statistics.model.DataWorld;
+import com.valtech.statistics.model.DataWorldSummary;
 import com.valtech.statistics.model.SummaryToday;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,6 @@ public class GetJsonValue {
     private static final String URL_WORLD = "https://covid19.mathdro.id/api";
     private static final String URL_COUNTRIES = "https://covid19.mathdro.id/api/countries";
     private static final String VALUE = "value";
-    private static final String GLOBAL = "Global";
     private static final String CONFIRMED = "confirmed";
     private static final String RECOVERED = "recovered";
     private static final String DEATHS = "deaths";
@@ -77,7 +76,7 @@ public class GetJsonValue {
             log.info("Create url for daily update with date {}", dayBeforeYesterdayDate);
             return dailyCOVID19;
         }
-        log.info("Create url for daily update with date {}", yesterdayDate);
+        log.info("Create url for daily update with date {}.", yesterdayDate);
         return dailyCOVID19;
     }
 
@@ -101,13 +100,13 @@ public class GetJsonValue {
         summaryToday.setRecoveredToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), RECOVERED, VALUE));
         summaryToday.setDeathsToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), DEATHS, VALUE));
         summaryToday.setLastUpdate(getJSONObject(URL_COUNTRY).getString(LAST_UPDATE));
-        summaryToday.setLocalDate(LocalDate.now());
+        summaryToday.setLocalDate(getDateNow());
         summaryToday.setLocalTime(LocalTime.now().withNano(0));
 
         JSONArray getValueOfArrayCountry = new JSONArray(IOUtils.toString(new URL(getURLWithDate()), StandardCharsets.UTF_8));
 
         if (getValueOfArrayCountry.isEmpty()) {
-            log.info("No data for last day of country {}. Return only data of today", country);
+            log.info("No data for last day of country {}. Return only data of today.", country);
             return summaryToday;
         }
         for (int i = 0; i < getValueOfArrayCountry.length(); i++) {
@@ -123,25 +122,39 @@ public class GetJsonValue {
                 summaryToday.setNewDeathsToday(summaryToday.getDeathsToday() - newJSONObject.getInt(DEATHS));
             }
         }
-        log.info("Set new data for confirmed, recovered and deaths for country {}", country);
+        log.info("Set new data for confirmed, recovered and deaths for country {}.", country);
         return summaryToday;
     }
 
-    public DataWorld getDataOfWorldToModel() throws IOException {
+    public DataWorldSummary getDataOfWorldToModel() throws IOException {
         log.info("Invoke create data of world.");
+        DataWorldSummary dataWorldSummary = new DataWorldSummary();
 
-        int confirmedWorld = getValueOfJSONObject(getJSONObject(URL_WORLD), CONFIRMED, VALUE);
-        int recoveredWorld = getValueOfJSONObject(getJSONObject(URL_WORLD), RECOVERED, VALUE);
-        int deathsWorld = getValueOfJSONObject(getJSONObject(URL_WORLD), DEATHS, VALUE);
-        String lastUpdateWorld = getJSONObject(URL_WORLD).getString(LAST_UPDATE);
+        dataWorldSummary.setTotalConfirmed(getValueOfJSONObject(getJSONObject(URL_WORLD), CONFIRMED, VALUE));
+        dataWorldSummary.setTotalRecovered(getValueOfJSONObject(getJSONObject(URL_WORLD), RECOVERED, VALUE));
+        dataWorldSummary.setTotalDeaths(getValueOfJSONObject(getJSONObject(URL_WORLD), DEATHS, VALUE));
+        dataWorldSummary.setLastUpdate(getJSONObject(URL_WORLD).getString(LAST_UPDATE));
+        dataWorldSummary.setLocalDate(getDateNow());
 
-        DataWorld dataWorld = new DataWorld();
-        dataWorld.setConfirmed(confirmedWorld);
-        dataWorld.setRecovered(recoveredWorld);
-        dataWorld.setDeaths(deathsWorld);
-        dataWorld.setLastUpdate(lastUpdateWorld);
-        dataWorld.setLocalDate(getDateNow());
+        JSONArray getAllValueOfArray = new JSONArray(IOUtils.toString(new URL(getURLWithDate()), StandardCharsets.UTF_8));
 
-        return dataWorld;
+        if (getAllValueOfArray.isEmpty()) {
+            log.info("No data for last day of world {}. Return only data of today.", dataWorldSummary.getLocalDate());
+            return dataWorldSummary;
+        }
+        int confirmed = 0;
+        int recovered = 0;
+        int deaths = 0;
+        for (int i = 0; i < getAllValueOfArray.length(); i++) {
+            JSONObject jsonObject = getAllValueOfArray.getJSONObject(i);
+            confirmed = +jsonObject.getInt(CONFIRMED);
+            recovered = +jsonObject.getInt(RECOVERED);
+            deaths = +jsonObject.getInt(DEATHS);
+        }
+        dataWorldSummary.setNewConfirmed(dataWorldSummary.getTotalConfirmed() - confirmed);
+        dataWorldSummary.setNewRecovered(dataWorldSummary.getTotalRecovered() - recovered);
+        dataWorldSummary.setNewDeaths(dataWorldSummary.getTotalDeaths() - deaths);
+        log.info("Set new data for confirmed, recovered, and deaths for world.");
+        return dataWorldSummary;
     }
 }
