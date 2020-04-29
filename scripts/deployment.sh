@@ -1,31 +1,41 @@
 #!/bin/bash
 cd ..
+echo "$(tput setaf 7)------------------Statistic COVID-19 deployment started------------------"
 if [[ $(git status --porcelain) ]]; then
   echo 'Please commit your changes before deployment'
   :
 else
-  echo -e "-------------Statistic COVID-19 deployment started...-------------"
-  echo "Please enter the old version number (e.g. 1.0.0-SNAPSHOT)"
-  read oldVersion
+  oldVersion="$(egrep -o "\d[.]\d[.]\d[-](SNAPSHOT)" pom.xml)"
+  echo "Old version of statistics application is: $(tput setaf 1) $oldVersion $(tput setaf 7)"
   echo "Please enter the new version number (e.g. 1.1.0-SNAPSHOT)"
   read newVersion
   sed -i.old -e 's/\<version\>'$oldVersion'\<\/version\>/\<version\>'$newVersion'\<\/version\>/g' pom.xml
-  git add .
-  git commit -m "Deployment: Changed version to $newVersion"
-  git push
-  git checkout deploy/master
-  git merge master
-  git push
-  echo "Starting building .jar package..."
-  mvn package
-  if [ ! -f target/statistics-corona-$newVersion.jar ]; then
-    echo "Something went wrong. Built .jar file not found!"
+  if grep -q $oldVersion "pom.xml"; then
+    echo "Replacing version number failed. (Old version: $(tput setaf 1)$oldVersion$(tput setaf 7), new version: $(tput setaf 1)$newVersion$(tput setaf 7).) Aborting script..."
+    git checkout .
     :
   else
-    echo "Copying .jar file to server..."
-    scp -i ~/.ssh/coronaKey.pem target/statistics-corona-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
-    echo "Copied .jar file to server. Connecting to server..."
-    ssh -i "~/.ssh/coronaKey.pem" ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com /bin/bash <<EOF
+    echo "Replaced $(tput setaf 1)$oldVersion$(tput setaf 7) with $(tput setaf 1) $newVersion$(tput setaf 7)."
+    read -p "Next step: merging files to deploy branch and deploying to server. Do you want continue? (y or n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      #remove .old files before committing?
+      git add .
+      git commit -m "Deployment: Changed version to $newVersion"
+      git push
+      git checkout deploy/master
+      git merge master
+      git push
+      echo "Starting building .jar package..."
+      mvn package
+      if [ ! -f target/statistics-corona-$newVersion.jar ]; then
+        echo "Something went wrong. Built .jar file not found!"
+        :
+      else
+        echo "Copying .jar file to server..."
+        scp -i ~/.ssh/coronaKey.pem target/statistics-corona-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
+        echo "Copied .jar file to server. Connecting to server..."
+        ssh -i "~/.ssh/coronaKey.pem" ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com /bin/bash <<EOF
 cd ~/app/
 echo "Stopping statistics-corona application and deleting old .jar..."
 pkill -f 'java -jar'
@@ -35,8 +45,14 @@ java -jar statistics-corona-$newVersion.jar >dump 2>&1 &
 echo "New version of statistics-corona application is starting. Please wait some seconds..."
 exit
 EOF
-    echo "Leaved server. Undo local changes..."
-    git checkout .
-    echo "-------------Statistic COVID-19 deployment finished-------------"
+        echo "Leaved server. Undo local changes..."
+        git checkout .
+        echo "-------------Statistic COVID-19 deployment finished-------------"
+      fi
+    else
+      git checkout .
+      echo "Aborted deployment!"
+      :
+    fi
   fi
 fi
