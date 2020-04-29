@@ -57,8 +57,7 @@
                             <article class="tile is-child notification is-info">
                                 <p class="title is-5">New confirmed</p>
                                 <p class="subtitle is-6"
-                                   th:inline="text">
-                                    +[[${#numbers.formatInteger(dataWorldSummary.newConfirmed,3,'POINT')}]]</p>
+                                   th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.newConfirmed,3,'POINT')}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
@@ -70,8 +69,7 @@
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">New recovered</p>
                                 <p class="subtitle is-6"
-                                   th:inline="text">
-                                    +[[${#numbers.formatInteger(dataWorldSummary.getNewRecovered(),3,'POINT')}]]</p>
+                                   th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.getNewRecovered(),3,'POINT')}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
@@ -83,8 +81,7 @@
                             <article class="tile is-child notification is-danger">
                                 <p class="title is-5">New deaths</p>
                                 <p class="subtitle is-6"
-                                   th:inline="text">
-                                    +[[${#numbers.formatInteger(dataWorldSummary.getNewRecovered(),3,'POINT')}]]</p>
+                                   th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.getNewRecovered(),3,'POINT')}"></p>
                             </article>
                         </div>
                     </div>

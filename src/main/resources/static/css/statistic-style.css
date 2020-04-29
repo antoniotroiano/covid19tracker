@@ -1,0 +1,25 @@
+.dropdown {
+    display: inline-block;
+}
+
+.dropdown-content {
+    padding-top: 0em;
+    display: none;
+    position: absolute;
+    overflow: auto;
+    z-index: 1;
+    max-height: 20em;
+}
+
+.dropdown-content a {
+    padding-right: 0em;
+    display: block;
+}
+
+.dropdown a:hover {
+    background-color: #ddd;
+}
+
+.show {
+    display: block;
+}

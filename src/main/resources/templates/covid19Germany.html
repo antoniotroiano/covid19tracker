@@ -24,8 +24,6 @@
             <div class="column">
                 <div class="buttons is-centered">
                     <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
-                    <a class="button is-small is-link is-rounded" href="/covid19/world" type="submit">Go to data
-                        worldwide</a>
                     <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/germany/update" id="loadingUpdate"
                        onclick="loading('loadingUpdate')">Update manually germany</a>
@@ -57,8 +55,7 @@
                             <article class="tile is-child notification is-info">
                                 <p class="title is-5">New confirmed</p>
                                 <p class="subtitle is-6"
-                                   th:inline="text">
-                                    +[[${#numbers.formatInteger(dataGermanySummary.newConfirmed,3,'POINT')}]]</p>
+                                   th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.newConfirmed,3,'POINT')}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
@@ -70,8 +67,7 @@
                             <article class="tile is-child notification is-primary">
                                 <p class="title is-5">New recovered</p>
                                 <p class="subtitle is-6"
-                                   th:inline="text">
-                                    +[[${#numbers.formatInteger(dataGermanySummary.getNewRecovered(),3,'POINT')}]]</p>
+                                   th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.getNewRecovered(),3,'POINT')}"></p>
                             </article>
                         </div>
                         <div class="tile is-parent is-vertical">
@@ -83,8 +79,7 @@
                             <article class="tile is-child notification is-danger">
                                 <p class="title is-5">New deaths</p>
                                 <p class="subtitle is-6"
-                                   th:inline="text">
-                                    +[[${#numbers.formatInteger(dataGermanySummary.getNewDeaths(),3,'POINT')}]]</p>
+                                   th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.getNewDeaths(),3,'POINT')}"></p>
                             </article>
                         </div>
                     </div>

@@ -26,7 +26,7 @@ public class WorldController {
     private final ScheduledQuery scheduledQuery;
     private final DateFormat dateFormat;
 
-    @GetMapping
+    /*@GetMapping
     public String showDataWorld(Model model) {
         log.info("Invoke show data of world.");
         model.addAttribute("dataWorldSummary", new DataWorldSummary());
@@ -73,5 +73,5 @@ public class WorldController {
     public String updateDatabase(Model model) throws IOException {
         scheduledQuery.saveWorldDataOfJson();
         return showDataWorld(model);
-    }
+    }*/
 }
