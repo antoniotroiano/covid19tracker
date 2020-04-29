@@ -27,7 +27,8 @@ public class ScheduledQuery {
     @Scheduled(cron = "0 5 */3 ? * *")
     public void saveWorldDataOfJson() throws IOException {
         log.info("Invoke get and save new data of world.");
-        DataWorldSummary dataWorldSummary = getJsonValue.getDataOfWorldToModel();
+        SummaryToday summaryToday = getJsonValue.getDataOfWorldToModel();
+        DataWorldSummary dataWorldSummary = new DataWorldSummary(summaryToday);
 
         Optional<DataWorldSummary> getLastSummary = worldSummaryService.getLastEntryWorldSummary();
 

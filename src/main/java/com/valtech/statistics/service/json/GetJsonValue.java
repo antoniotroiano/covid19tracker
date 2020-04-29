@@ -133,21 +133,22 @@ public class GetJsonValue {
         return summaryToday;
     }
 
-    public DataWorldSummary getDataOfWorldToModel() throws IOException {
+    public SummaryToday getDataOfWorldToModel() throws IOException {
         log.info("Invoke create data of world.");
-        DataWorldSummary dataWorldSummary = new DataWorldSummary();
+        SummaryToday summaryToday = new SummaryToday();
 
-        dataWorldSummary.setTotalConfirmed(getValueOfJSONObject(getJSONObject(URL_WORLD), CONFIRMED, VALUE));
-        dataWorldSummary.setTotalRecovered(getValueOfJSONObject(getJSONObject(URL_WORLD), RECOVERED, VALUE));
-        dataWorldSummary.setTotalDeaths(getValueOfJSONObject(getJSONObject(URL_WORLD), DEATHS, VALUE));
-        dataWorldSummary.setLastUpdate(getJSONObject(URL_WORLD).getString(LAST_UPDATE));
-        dataWorldSummary.setLocalDate(getDateNow());
+        summaryToday.setCountry("World");
+        summaryToday.setConfirmedToday(getValueOfJSONObject(getJSONObject(URL_WORLD), CONFIRMED, VALUE));
+        summaryToday.setRecoveredToday(getValueOfJSONObject(getJSONObject(URL_WORLD), RECOVERED, VALUE));
+        summaryToday.setDeathsToday(getValueOfJSONObject(getJSONObject(URL_WORLD), DEATHS, VALUE));
+        summaryToday.setLastUpdate(getJSONObject(URL_WORLD).getString(LAST_UPDATE));
+        summaryToday.setLocalDate(getDateNow());
 
         JSONArray getAllValueOfArray = new JSONArray(IOUtils.toString(new URL(getURLWithDate()), StandardCharsets.UTF_8));
 
         if (getAllValueOfArray.isEmpty()) {
-            log.info("No data for last day of world {}. Return only data of today.", dataWorldSummary.getLocalDate());
-            return dataWorldSummary;
+            log.info("No data for last day of world {}. Return only data of today.", summaryToday.getLocalDate());
+            return summaryToday;
         }
         int confirmed = 0;
         int recovered = 0;
@@ -158,10 +159,10 @@ public class GetJsonValue {
             recovered += jsonObject.getInt(RECOVERED);
             deaths += jsonObject.getInt(DEATHS);
         }
-        dataWorldSummary.setNewConfirmed(dataWorldSummary.getTotalConfirmed() - confirmed);
-        dataWorldSummary.setNewRecovered(dataWorldSummary.getTotalRecovered() - recovered);
-        dataWorldSummary.setNewDeaths(dataWorldSummary.getTotalDeaths() - deaths);
+        summaryToday.setNewConfirmedToday(summaryToday.getConfirmedToday() - confirmed);
+        summaryToday.setNewRecoveredToday(summaryToday.getRecoveredToday() - recovered);
+        summaryToday.setNewDeathsToday(summaryToday.getDeathsToday() - deaths);
         log.info("Set new data for confirmed, recovered, and deaths for world.");
-        return dataWorldSummary;
+        return summaryToday;
     }
 }

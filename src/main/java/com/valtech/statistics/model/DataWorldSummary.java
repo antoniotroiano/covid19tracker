@@ -14,6 +14,7 @@ public class DataWorldSummary {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long dataWorldSummaryId;
+    private String country;
     private int newConfirmed;
     private int totalConfirmed;
     private int newRecovered;
@@ -29,17 +30,20 @@ public class DataWorldSummary {
 
     public DataWorldSummary(DataWorldSummary dataWorldSummary) {
         this.dataWorldSummaryId = dataWorldSummary.getDataWorldSummaryId();
+        this.country = dataWorldSummary.getCountry();
         this.newConfirmed = dataWorldSummary.getNewConfirmed();
         this.totalConfirmed = dataWorldSummary.getTotalConfirmed();
         this.newRecovered = dataWorldSummary.getNewRecovered();
         this.totalRecovered = dataWorldSummary.getTotalRecovered();
         this.newDeaths = dataWorldSummary.getNewDeaths();
         this.totalDeaths = dataWorldSummary.getTotalDeaths();
+        this.lastUpdate = dataWorldSummary.getLastUpdate();
         this.localDate = dataWorldSummary.getLocalDate();
         this.localTime = dataWorldSummary.getLocalTime();
     }
 
     public DataWorldSummary(SummaryToday summaryToday) {
+        this.country = summaryToday.getCountry();
         this.newConfirmed = summaryToday.getNewConfirmedToday();
         this.totalConfirmed = summaryToday.getConfirmedToday();
         this.newRecovered = summaryToday.getNewRecoveredToday();
@@ -57,6 +61,14 @@ public class DataWorldSummary {
 
     public void setDataWorldSummaryId(long dataWorldSummaryId) {
         this.dataWorldSummaryId = dataWorldSummaryId;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public int getNewConfirmed() {
@@ -134,7 +146,8 @@ public class DataWorldSummary {
     @Override
     public String toString() {
         return "DataWorldSummary{" +
-                "lastUpdate='" + lastUpdate + '\'' +
+                "country='" + country + '\'' +
+                ", lastUpdate='" + lastUpdate + '\'' +
                 ", localDate='" + localDate + '\'' +
                 '}';
     }
