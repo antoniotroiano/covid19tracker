@@ -92,8 +92,8 @@ public class GetJsonValue {
     public SummaryToday getDataForSelectedCountry(String country) throws IOException {
         log.info("Invoke create data for selected country {}", country);
         SummaryToday summaryToday = new SummaryToday();
-
-        final String URL_COUNTRY = "https://covid19.mathdro.id/api/countries/" + country(country);
+        String formattedCountry = country(country);
+        final String URL_COUNTRY = "https://covid19.mathdro.id/api/countries/" + formattedCountry;
 
         summaryToday.setCountry(country);
         summaryToday.setConfirmedToday(getValueOfJSONObject(getJSONObject(URL_COUNTRY), CONFIRMED, VALUE));
@@ -109,19 +109,26 @@ public class GetJsonValue {
             log.info("No data for last day of country {}. Return only data of today.", country);
             return summaryToday;
         }
+        JSONArray newJSONArray = new JSONArray();
         for (int i = 0; i < getValueOfArrayCountry.length(); i++) {
             JSONObject jsonObject = getValueOfArrayCountry.getJSONObject(i);
-            JSONArray newJSONArray = new JSONArray();
+
             if (jsonObject.getString("countryRegion").equals(country)) {
                 newJSONArray.put(jsonObject);
             }
-            for (int j = 0; j < newJSONArray.length(); j++) {
-                JSONObject newJSONObject = newJSONArray.getJSONObject(j);
-                summaryToday.setNewConfirmedToday(summaryToday.getConfirmedToday() - newJSONObject.getInt(CONFIRMED));
-                summaryToday.setNewRecoveredToday(summaryToday.getRecoveredToday() - newJSONObject.getInt(RECOVERED));
-                summaryToday.setNewDeathsToday(summaryToday.getDeathsToday() - newJSONObject.getInt(DEATHS));
-            }
         }
+        int confirmed = 0;
+        int recovered = 0;
+        int deaths = 0;
+        for (int j = 0; j < newJSONArray.length(); j++) {
+            JSONObject newJSONObject = newJSONArray.getJSONObject(j);
+            confirmed += newJSONObject.getInt(CONFIRMED);
+            recovered += newJSONObject.getInt(RECOVERED);
+            deaths += newJSONObject.getInt(DEATHS);
+        }
+        summaryToday.setNewConfirmedToday(summaryToday.getConfirmedToday() - confirmed);
+        summaryToday.setNewRecoveredToday(summaryToday.getRecoveredToday() - recovered);
+        summaryToday.setNewDeathsToday(summaryToday.getDeathsToday() - deaths);
         log.info("Set new data for confirmed, recovered and deaths for country {}.", country);
         return summaryToday;
     }
@@ -147,9 +154,9 @@ public class GetJsonValue {
         int deaths = 0;
         for (int i = 0; i < getAllValueOfArray.length(); i++) {
             JSONObject jsonObject = getAllValueOfArray.getJSONObject(i);
-            confirmed = +jsonObject.getInt(CONFIRMED);
-            recovered = +jsonObject.getInt(RECOVERED);
-            deaths = +jsonObject.getInt(DEATHS);
+            confirmed += jsonObject.getInt(CONFIRMED);
+            recovered += jsonObject.getInt(RECOVERED);
+            deaths += jsonObject.getInt(DEATHS);
         }
         dataWorldSummary.setNewConfirmed(dataWorldSummary.getTotalConfirmed() - confirmed);
         dataWorldSummary.setNewRecovered(dataWorldSummary.getTotalRecovered() - recovered);
