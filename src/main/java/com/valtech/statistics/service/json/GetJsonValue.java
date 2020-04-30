@@ -78,7 +78,7 @@ public class GetJsonValue {
         int statusCode = huc.getResponseCode();
         if (statusCode == 404) {
             log.warn("No new json array for yesterday exist.");
-            return jsonArray;
+            return new JSONArray();
         }
         log.debug("Get new json array for yesterday {}.", yesterdayDate);
         return jsonArray;
