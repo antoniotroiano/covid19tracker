@@ -7,8 +7,9 @@
     <link href="../../css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
     <script th:src="@{/js/charts.js}"></script>
-    <script>
+    <script th:inline="javascript">
         loading(id)
+
         getCountry(country);
     </script>
 </head>
@@ -122,7 +123,8 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
                 <div class="has-text-centered is-size-5" th:if="${noDataForDayOne}">
-                    No data for day one until today for <span th:text="${selectedCountry}"></span>. Please try again later.
+                    No data for day one until today for <span th:text="${selectedCountry}"></span>. Please try again
+                    later.
                 </div>
                 <canvas id="lineChartAllData"></canvas>
             </div>
@@ -138,7 +140,14 @@
     let recoveredList = /*[[${recovered}]]*/;
     let dates = /*[[${dates}]]*/;
     /*]]>*/
+
     lineChartDayOneToday(lineChartCanvas, country, confirmedList, deathsList, recoveredList, dates);
+
+    let dropdown = document.querySelector('.dropdown');
+    dropdown.addEventListener('click', function (event) {
+        event.stopPropagation();
+        dropdown.classList.toggle('is-active');
+    });
 </script>
 </body>
 </html>

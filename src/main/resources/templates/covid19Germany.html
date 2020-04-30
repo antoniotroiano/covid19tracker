@@ -7,8 +7,9 @@
     <link href="../../css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
     <script th:src="@{/js/charts.js}"></script>
-    <script>
+    <script th:inline="javascript">
         loading(id)
+
         getCountry(country);
     </script>
 </head>
@@ -144,7 +145,14 @@
     let recList = /*[[${recoveredListG}]]*/;
     let deaList = /*[[${deathsListG}]]*/;
     /*]]>*/
+
     barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, dates, confList, recList, deaList);
+
+    let dropdown = document.querySelector('.dropdown');
+    dropdown.addEventListener('click', function (event) {
+        event.stopPropagation();
+        dropdown.classList.toggle('is-active');
+    });
 </script>
 </body>
 </html>

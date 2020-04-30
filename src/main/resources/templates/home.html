@@ -9,6 +9,7 @@
     <script th:src="@{/js/charts.js}"></script>
     <script th:inline="javascript">
         loading(id);
+
         getCountry(country);
     </script>
 </head>
@@ -146,12 +147,14 @@
     let recList = /*[[${recoveredListW}]]*/;
     let deaList = /*[[${deathsListW}]]*/;
     /*]]>*/
+
     barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, dates, confList, recList, deaList);
-    /*let dropdown = document.querySelector('.dropdown');
+
+    let dropdown = document.querySelector('.dropdown');
     dropdown.addEventListener('click', function (event) {
         event.stopPropagation();
         dropdown.classList.toggle('is-active');
-    });*/
+    });
 </script>
 </body>
 </html>
