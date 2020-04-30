@@ -46,7 +46,7 @@ echo "New version of statistics-corona application is starting. Please wait some
 exit
 EOF
         echo "Leaved server. Undo local changes..."
-        git checkout .
+        git checkout master
         echo "-------------Statistic COVID-19 deployment finished-------------"
       fi
     else
