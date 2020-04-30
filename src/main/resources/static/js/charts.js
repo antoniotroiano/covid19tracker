@@ -1,9 +1,37 @@
+/*Loading symbol in buttons*/
 function loading(id) {
     let element = document.getElementById(id);
     element.classList.add("is-loading")
 }
 
-function chartGermany(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, datesA, confList, recList, deaList) {
+/*Dropdown menu*/
+function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+/*Filter for dropdown menu*/
+function filterFunction() {
+    let input, filter, div, a, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    div = document.getElementById("myDropdown");
+    a = div.getElementsByTagName("a");
+    for (i = 0; i < a.length; i++) {
+        let txtValue = a[i].textContent || a[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            a[i].style.display = "";
+        } else {
+            a[i].style.display = "none";
+        }
+    }
+}
+
+/*Get selected country*/
+function getCountry(country) {
+    document.location.replace("/covid19/summary/" + country);
+};
+
+function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, datesA, confList, recList, deaList) {
     const dates = datesA;
     const confirmed = confList;
     const dateConfirmed = [];
@@ -31,16 +59,18 @@ function chartGermany(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, dea
                     display: true,
                     label: 'Date',
                     ticks: {
-                        callback: function (dataLabel) {
-                            dateConfirmed.push(dataLabel);
-                            if (dateConfirmed.filter(d => d === dataLabel).length >= 2) {
+                        autoSkip: true,
+                        maxTicksLimit: 30
+                        /*callback: function (dataLabel) {
+                            dateDeath.push(dataLabel);
+                            if (dateDeath.filter(d => d === dataLabel).length >= 2) {
                                 return '';
                             } else {
                                 return dataLabel + '.2020';
                             }
-                            // Hide the label of every 2nd dataset. return null to hide the grid line too
-                            //return index % 2 === 0 ? dataLabel : '';
-                        }
+                        }*/
+                        // Hide the label of every 2nd dataset. return null to hide the grid line too
+                        //return index % 2 === 0 ? dataLabel : '';
                     },
                     scaleLabel: {
                         display: true,
@@ -78,7 +108,7 @@ function chartGermany(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, dea
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: confLabel
+                text: 'Confirmed'
             }
         }
     });
@@ -109,14 +139,16 @@ function chartGermany(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, dea
                     display: true,
                     label: 'Date',
                     ticks: {
-                        callback: function (dataLabel) {
-                            dateRecovered.push(dataLabel);
-                            if (dateRecovered.filter(d => d === dataLabel).length >= 2) {
+                        autoSkip: true,
+                        maxTicksLimit: 30
+                        /*callback: function (dataLabel) {
+                            dateDeath.push(dataLabel);
+                            if (dateDeath.filter(d => d === dataLabel).length >= 2) {
                                 return '';
                             } else {
                                 return dataLabel + '.2020';
                             }
-                        }
+                        }*/
                     },
                     scaleLabel: {
                         display: true,
@@ -154,7 +186,7 @@ function chartGermany(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, dea
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: recLabel
+                text: 'Recovered'
             }
         }
     });
@@ -185,14 +217,16 @@ function chartGermany(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, dea
                     display: true,
                     label: 'Date',
                     ticks: {
-                        callback: function (dataLabel) {
+                        autoSkip: true,
+                        maxTicksLimit: 30
+                        /*callback: function (dataLabel) {
                             dateDeath.push(dataLabel);
                             if (dateDeath.filter(d => d === dataLabel).length >= 2) {
                                 return '';
                             } else {
                                 return dataLabel + '.2020';
                             }
-                        }
+                        }*/
                     },
                     scaleLabel: {
                         display: true,
@@ -230,7 +264,98 @@ function chartGermany(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, dea
                 fontSize: 20,
                 padding: 15,
                 fontColor: '#69C8C8',
-                text: deaLabel
+                text: 'Death'
+            }
+        }
+    });
+}
+
+function lineChartDayOneToday(canvasLine, country, confirmedList, deathsList, recoveredList, dates) {
+
+    const ctx = canvasLine.getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Confirmed',
+                borderColor: 'rgb(65, 133, 234, 0.6)',
+                fill: false,
+                pointRadius: 3,
+                data: confirmedList
+            }, {
+                label: 'Deaths',
+                borderColor: 'rgb(250, 2, 6, 0.6)',
+                fill: false,
+                pointRadius: 3,
+                data: deathsList
+            }, {
+                label: 'Recovered',
+                borderColor: 'rgb(27, 205, 4, 0.6)',
+                fill: false,
+                pointRadius: 3,
+                data: recoveredList,
+                showLine: true
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    label: 'Date',
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 40
+                        /*callback: function (dataLabel) {
+                            labelDate.push(dataLabel);
+                            if (labelDate.filter(d => d === dataLabel).length >= 11) {
+                                return '';
+                            } else {
+                                return dataLabel;
+                            }
+                            /!*return index % 2 === 0 ? dataLabel : '';*!/
+                        }*/
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    beginAtZero: false,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Confirmed Recovered Deaths'
+                    }
+                }]
+            },
+            tooltips: {
+                mode: 'point'
+            },
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'center',
+                labels: {
+                    boxWidth: 60,
+                    fontColor: 'rgb(000, 000, 000)'
+                }
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                padding: 15,
+                fontColor: '#69C8C8',
+                text: country
             }
         }
     });

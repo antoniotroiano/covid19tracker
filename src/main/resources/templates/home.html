@@ -9,139 +9,129 @@
     <script th:src="@{/js/charts.js}"></script>
     <script th:inline="javascript">
         loading(id);
-
-        function getCountry(country) {
-            document.location.replace("/covid19/summary/" + country);
-        };
+        getCountry(country);
     </script>
 </head>
 <body>
 <div class="container">
     <section class="section">
-        <div class="columns is-centered">
+        <div class="columns is-mobile is-centered">
             <div class="column">
-                <div class="title is-3 has-text-centered">
-                    John Hopkins University data for world
+                <div class="title is-3 has-text-centered">Daily data of COVID-19 from JHU for world</div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-10-tablet">
+                <div class="buttons is-mobile is-centered">
+                    <a class="button is-small is-link is-rounded" href="/covid19/germany" type="submit">Go to data
+                        germany</a>
+                    <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
+                    <a class="button is-small is-link is-rounded" href="/update" id="loadingUpdate"
+                       onclick="loading('loadingUpdate')">Manual update world</a>
+                </div>
+                <div class="buttons is-centered">
+                    <div class="dropdown">
+                        <button class="button is-small is-link is-rounded" onclick="myFunction()">Select country
+                        </button>
+                        <div class="dropdown-content" id="myDropdown">
+                            <input class="input" id="myInput" onkeyup="filterFunction()"
+                                   placeholder="Search for country.." type="text">
+                            <div th:each="countries : ${listCountries}">
+                                <a class="dropdown-item"
+                                   th:onclick="/*<![CDATA[*/ getCountry(/*[[${countries}]]*/) /*]]>*/"
+                                   th:text="${countries}"></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="columns is-centered">
-            <div class="column is-half">
-                <div class="box is-3">
-                    <div class="buttons is-centered">
-                        <a class="button is-small is-link is-rounded" href="/covid19/germany" type="submit">Go
-                            to data germany</a>
-                        <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to
-                            SIR-Model</a>
-                        <a class="button is-small is-link is-rounded" href="/update" id="loadingUpdate"
-                           onclick="loading('loadingUpdate')">Update manually world</a>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-10-tablet">
+                <div th:if="${noFirstDataWorld}">
+                    <div class="notification is-white">
+                        <div class="is-text has-text-centered">
+                            No first dataset world. Please try again in an hour.
+                        </div>
                     </div>
-                    <div class="buttons is-centered">
-                        <div class="dropdown">
-                            <button class="button is-small is-link is-rounded" onclick="myFunction()">Select country
-                            </button>
-                            <div class="dropdown-content" id="myDropdown">
-                                <input class="input" id="myInput" onkeyup="filterFunction()"
-                                       placeholder="Search for country.."
-                                       type="text">
-                                <div th:each="countries : ${listCountries}">
-                                    <a class="dropdown-item"
-                                       th:onclick="/*<![CDATA[*/ getCountry(/*[[${countries}]]*/) /*]]>*/"
-                                       th:text="${countries}"></a>
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-10-tablet">
+                <div class="tile is-ancestor">
+                    <div class="tile is-vertical">
+                        <div class="tile">
+                            <div class="tile is-parent is-vertical">
+                                <div class="tile is-child notification is-info">
+                                    <div class="is-size-5">Total confirmed <span class="icon"><img
+                                            src="/img/checkmark-outline.svg"></span></div>
+                                    <div class="is-size-6"
+                                         th:text="${#numbers.formatInteger(dataWorldSummary.getTotalConfirmed(),3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.newConfirmed,3,'POINT')}"></div>
+                                </div>
+                            </div>
+                            <div class="tile is-parent is-vertical">
+                                <div class="tile is-child notification is-primary">
+                                    <div class="is-size-5">Total recovered <span class="icon"><img
+                                            src="/img/fitness-outline.svg"></span></div>
+                                    <div class="is-size-6"
+                                         th:text="${#numbers.formatInteger(dataWorldSummary.getTotalRecovered(),3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.getNewRecovered(),3,'POINT')}"></div>
+                                </div>
+                            </div>
+                            <div class="tile is-parent is-vertical">
+                                <div class="tile is-child notification is-danger">
+                                    <div class="is-size-5">Total deaths <span class="icon"><img
+                                            src="/img/skull-outline.svg"></span></div>
+                                    <div class="is-size-6"
+                                         th:text="${#numbers.formatInteger(dataWorldSummary.getTotalDeaths(),3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.getNewRecovered(),3,'POINT')}"></div>
                                 </div>
                             </div>
                         </div>
-                        <a class="button is-small is-link is-rounded" href="/" type="submit">Select country for day one
-                            total</a>
+                        <div class="tile">
+                            <div class="tile is-parent is-vertical">
+                                <div class="tile is-child notification is-light">
+                                    <div class="is-size-5">Active cases <span class="icon"><img
+                                            src="/img/medkit-outline.svg"></span></div>
+                                    <div class="is-size-6"
+                                         th:text="${#numbers.formatInteger(dataWorldSummary.getTotalConfirmed() - dataWorldSummary.getTotalDeaths() -
+                                   dataWorldSummary.getTotalRecovered(),3,'POINT')}"></div>
+                                </div>
+                            </div>
+                            <div class="tile is-parent is-vertical">
+                                <div class="tile is-child notification is-light">
+                                    <div class="is-size-5">Last update</div>
+                                    <div class="is-size-6"
+                                         th:text="${date}"></div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-9-tablet">
+                <canvas id="dataWorldConfirmed"></canvas>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-9-tablet">
+                <canvas id="dataWorldRecovered"></canvas>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-9-tablet">
+                <canvas id="dataWorldDeaths"></canvas>
             </div>
         </div>
     </section>
-</div>
-<div class="columns is-mobile">
-    <div class="column">
-        <div class="column">
-            <div class="title is-4 has-text-centered">Daily update of COVID-19 World</div>
-            <div th:if="${noFirstDataWorld}">
-                <div class="notification is-white">
-                    <div class="is-text has-text-centered">
-                        No first dataset world. Please try again in an hour.
-                    </div>
-                </div>
-            </div>
-            <div class="tile is-ancestor">
-                <div class="tile is-vertical is-11">
-                    <div class="tile">
-                        <div class="tile is-parent is-vertical">
-                            <article class="tile is-child notification is-info">
-                                <p class="title is-5">Total confirmed</p>
-                                <p class="subtitle is-6"
-                                   th:text="${#numbers.formatInteger(dataWorldSummary.getTotalConfirmed(),3,'POINT')}"></p>
-                            </article>
-                            <article class="tile is-child notification is-info">
-                                <p class="title is-5">New confirmed</p>
-                                <p class="subtitle is-6"
-                                   th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.newConfirmed,3,'POINT')}"></p>
-                            </article>
-                        </div>
-                        <div class="tile is-parent is-vertical">
-                            <article class="tile is-child notification is-primary">
-                                <p class="title is-5">Total recovered</p>
-                                <p class="subtitle is-6"
-                                   th:text="${#numbers.formatInteger(dataWorldSummary.getTotalRecovered(),3,'POINT')}"></p>
-                            </article>
-                            <article class="tile is-child notification is-primary">
-                                <p class="title is-5">New recovered</p>
-                                <p class="subtitle is-6"
-                                   th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.getNewRecovered(),3,'POINT')}"></p>
-                            </article>
-                        </div>
-                        <div class="tile is-parent is-vertical">
-                            <article class="tile is-child notification is-danger">
-                                <p class="title is-5">Total deaths</p>
-                                <p class="subtitle is-6"
-                                   th:text="${#numbers.formatInteger(dataWorldSummary.getTotalDeaths(),3,'POINT')}"></p>
-                            </article>
-                            <article class="tile is-child notification is-danger">
-                                <p class="title is-5">New deaths</p>
-                                <p class="subtitle is-6"
-                                   th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.getNewRecovered(),3,'POINT')}"></p>
-                            </article>
-                        </div>
-                    </div>
-                    <div class="tile">
-                        <div class="tile is-parent is-vertical">
-                            <article class="tile is-child notification is-light">
-                                <p class="title is-5">Last update</p>
-                                <p class="subtitle is-6"
-                                   th:text="${date}"></p>
-                            </article>
-                        </div>
-                        <div class="tile is-parent is-vertical">
-                            <article class="tile is-child notification is-light">
-                                <p class="title is-5">Active cases</p>
-                                <p class="subtitle is-6"
-                                   th:text="${#numbers.formatInteger(dataWorldSummary.getTotalConfirmed() - dataWorldSummary.getTotalDeaths() -
-                                   dataWorldSummary.getTotalRecovered(),3,'POINT')}"></p>
-                            </article>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="column">
-        <canvas height="250" id="dataWorldConfirmed" width="450"></canvas>
-    </div>
-</div>
-<div class="columns">
-    <div class="column">
-        <canvas height="250" id="dataWorldRecovered" width="450"></canvas>
-    </div>
-    <div class="column">
-        <canvas height="250" id="dataWorldDeaths" width="450"></canvas>
-    </div>
 </div>
 <script th:inline="javascript">
     let confCanvas = document.getElementById('dataWorldConfirmed');
@@ -156,33 +146,12 @@
     let recList = /*[[${recoveredListW}]]*/;
     let deaList = /*[[${deathsListW}]]*/;
     /*]]>*/
-    chartGermany(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, dates, confList, recList, deaList);
-
-    let dropdown = document.querySelector('.dropdown');
+    barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, dates, confList, recList, deaList);
+    /*let dropdown = document.querySelector('.dropdown');
     dropdown.addEventListener('click', function (event) {
         event.stopPropagation();
         dropdown.classList.toggle('is-active');
-    });
-
-    function myFunction() {
-        document.getElementById("myDropdown").classList.toggle("show");
-    }
-
-    function filterFunction() {
-        let input, filter, div, a, i;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        div = document.getElementById("myDropdown");
-        a = div.getElementsByTagName("a");
-        for (i = 0; i < a.length; i++) {
-            let txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-            } else {
-                a[i].style.display = "none";
-            }
-        }
-    }
+    });*/
 </script>
 </body>
 </html>

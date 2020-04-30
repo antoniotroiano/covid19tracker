@@ -3,6 +3,7 @@ package com.valtech.statistics.controller;
 import com.valtech.statistics.model.DataGermanySummary;
 import com.valtech.statistics.service.DateFormat;
 import com.valtech.statistics.service.GermanySummaryService;
+import com.valtech.statistics.service.json.GetJsonValue;
 import com.valtech.statistics.service.scheuled.ScheduledQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +26,13 @@ public class GermanyController {
     private final GermanySummaryService germanySummaryService;
     private final ScheduledQuery scheduledQuery;
     private final DateFormat dateFormat;
+    private final GetJsonValue getJsonValue;
 
     @GetMapping
-    public String showDataGermany(Model model) {
+    public String showDataGermany(Model model) throws IOException {
         log.info("Invoke show data of germany.");
+        List<String> allCountries = getJsonValue.getCountryOfJSONObject();
+        model.addAttribute("listCountries", allCountries);
         model.addAttribute("dataGermanySummary", new DataGermanySummary());
 
         Optional<DataGermanySummary> dataGermanySummary = germanySummaryService.getLastEntryGermanySummary();
@@ -71,6 +75,7 @@ public class GermanyController {
 
     @GetMapping("/update")
     public String updateDatabase(Model model) throws IOException {
+        log.info("Invoke update data manual for germany.");
         scheduledQuery.saveGermanyDataOfJson();
         return showDataGermany(model);
     }

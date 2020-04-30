@@ -1,6 +1,7 @@
 package com.valtech.statistics.service.json;
 
 import com.valtech.statistics.model.SummaryToday;
+import com.valtech.statistics.service.DateFormat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -28,6 +29,7 @@ public class GetJsonValue {
     private static final String CONFIRMED = "confirmed";
     private static final String RECOVERED = "recovered";
     private static final String DEATHS = "deaths";
+    private final DateFormat dateFormat;
 
     private JSONObject getJSONObject(String url) throws IOException {
         return new JSONObject(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
@@ -51,6 +53,15 @@ public class GetJsonValue {
             bld.append(s).append("%20");
         }
         return bld.toString().substring(0, bld.length() - 3);
+    }
+
+    private String formatCountryDayOne(String country) {
+        String[] countryArray = country.split(" ");
+        StringBuilder bld = new StringBuilder();
+        for (String s : countryArray) {
+            bld.append(s).append("-");
+        }
+        return bld.toString().substring(0, bld.length() - 1);
     }
 
     public List<String> getCountryOfJSONObject() throws IOException {
@@ -151,5 +162,37 @@ public class GetJsonValue {
         getNewData(summaryToday, jsonArrayOneCountry);
         log.info("Set new data for confirmed, recovered and deaths for country {}.", country);
         return summaryToday;
+    }
+
+    public List<SummaryToday> getDataDayOneTotalSelectedCountry(String country) throws IOException {
+        log.info("Invoke get data of day one for selected country {}", country);
+        List<SummaryToday> summaryTodayList = new ArrayList<>();
+        String formattedCountry = formatCountryDayOne(country);
+        String formattedURL = "https://api.covid19api.com/total/dayone/country/" + formattedCountry;
+
+        JSONArray jsonArray = new JSONArray(IOUtils.toString(new URL(formattedURL), StandardCharsets.UTF_8));
+
+        if (jsonArray.isEmpty()) {
+            log.info("No data for selected country available {}", country);
+            return summaryTodayList;
+        }
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            int confirmed = jsonObject.getInt("Confirmed");
+            int deaths = jsonObject.getInt("Deaths");
+            int recovered = jsonObject.getInt("Recovered");
+            String date = jsonObject.getString("Date");
+
+            String formattedDate = dateFormat.formatLastUpdateToDateDayOne(date);
+
+            SummaryToday summaryToday = new SummaryToday();
+            summaryToday.setConfirmedToday(confirmed);
+            summaryToday.setDeathsToday(deaths);
+            summaryToday.setRecoveredToday(recovered);
+            summaryToday.setLastUpdate(formattedDate);
+            summaryTodayList.add(summaryToday);
+        }
+        log.info("Return list with all data since day one od {}", country);
+        return summaryTodayList;
     }
 }

@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import java.io.IOException;
+import java.security.cert.CollectionCertStoreParameters;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -25,6 +29,8 @@ public class SummaryController {
     @GetMapping("/{country}")
     public String showSummaryOfSelectedCountry(@PathVariable("country") String country, Model model) throws IOException {
         log.info("Invoke show summary of country {}", country);
+        List<String> allCountries = getJsonValue.getCountryOfJSONObject();
+        model.addAttribute("listCountries", allCountries);
         SummaryToday summaryToday = getJsonValue.getDataForSelectedCountry(country);
         if (summaryToday == null) {
             model.addAttribute("noDataForThisCountry", true);
@@ -37,6 +43,29 @@ public class SummaryController {
         String date = dateFormat.formatLastUpdateToDate(summaryToday.getLastUpdate());
         String time = dateFormat.formatLastUpdateToTime(summaryToday.getLastUpdate());
         model.addAttribute("date", date + " " + time + "h");
+
+        List<SummaryToday> summaryTodayList = getJsonValue.getDataDayOneTotalSelectedCountry(country);
+        if (summaryTodayList.isEmpty()) {
+            model.addAttribute("noDataForDayOne", true);
+            log.warn("Found no data of day one to today for {}", country);
+            return "covid19Summary";
+        }
+        model.addAttribute("confirmed", summaryTodayList
+                .stream()
+                .map(SummaryToday::getConfirmedToday)
+                .collect(Collectors.toList()));
+        model.addAttribute("deaths", summaryTodayList
+                .stream()
+                .map(SummaryToday::getDeathsToday)
+                .collect(Collectors.toList()));
+        model.addAttribute("recovered", summaryTodayList
+                .stream()
+                .map(SummaryToday::getRecoveredToday)
+                .collect(Collectors.toList()));
+        model.addAttribute("dates", summaryTodayList
+                .stream()
+                .map(SummaryToday::getLastUpdate)
+                .collect(Collectors.toList()));
         return "covid19Summary";
     }
 }

@@ -75,6 +75,7 @@ public class HomeController {
 
     @GetMapping("/update")
     public String updateDatabase(Model model) throws IOException {
+        log.info("Invoke update data of world.");
         scheduledQuery.saveWorldDataOfJson();
         return showHomeController(model);
     }

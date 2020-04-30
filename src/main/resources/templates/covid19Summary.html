@@ -4,37 +4,54 @@
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
     <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
+    <link href="../../css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
     <script th:src="@{/js/charts.js}"></script>
     <script>
         loading(id)
+        getCountry(country);
     </script>
 </head>
 <body>
 <div class="container">
     <section class="section">
         <div class="columns is-mobile is-centered">
-            <div class="column">
-                <div class="title is-3 has-text-centered">John Hopkins University COVID-19 data for <span
+            <div class="column is-10-tablet">
+                <div class="title is-3 has-text-centered">Daily data of COVID-19 from JHU for <span
                         th:text="${selectedCountry}"></span></div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column">
+            <div class="column is-10-tablet">
                 <div class="buttons is-centered">
-                    <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
+                    <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/germany" type="submit">Go to data
                         germany</a>
-                    <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
+                    <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
                     <a class="button is-small is-link is-rounded" id="loadingUpdate"
                        onclick="loading('loadingUpdate')"
                        th:href="@{/covid19/summary/{country}(country = ${selectedCountry})}">Update data for <span
                             th:text="${selectedCountry}"></span></a>
                 </div>
+                <div class="buttons is-centered">
+                    <div class="dropdown">
+                        <button class="button is-small is-link is-rounded" onclick="myFunction()">Select country
+                        </button>
+                        <div class="dropdown-content" id="myDropdown">
+                            <input class="input" id="myInput" onkeyup="filterFunction()"
+                                   placeholder="Search for country.." type="text">
+                            <div th:each="countries : ${listCountries}">
+                                <a class="dropdown-item"
+                                   th:onclick="/*<![CDATA[*/ getCountry(/*[[${countries}]]*/) /*]]>*/"
+                                   th:text="${countries}"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column">
+            <div class="column is-10-tablet">
                 <div th:if="${noDataForThisCountry}">
                     <div class="notification is-white">
                         <div class="is-text has-text-centered">
@@ -42,68 +59,86 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-10-tablet">
                 <div class="tile is-ancestor">
-                    <div class="tile is-vertical is-11">
+                    <div class="tile is-vertical">
                         <div class="tile">
                             <div class="tile is-parent is-vertical">
-                                <article class="tile is-child notification is-info">
-                                    <p class="title is-5">Total confirmed</p>
-                                    <p class="subtitle is-6"
-                                       th:text="${#numbers.formatInteger(dataSummaryToday.getConfirmedToday(),3,'POINT')}"></p>
-                                </article>
-                                <article class="tile is-child notification is-info">
-                                    <p class="title is-5">New confirmed</p>
-                                    <p class="subtitle is-6"
-                                       th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewConfirmedToday(),3,'POINT')}"></p>
-                                </article>
+                                <div class="tile is-child notification is-info">
+                                    <div class="is-size-5">Total confirmed <span class="icon"><img
+                                            src="/img/checkmark-outline.svg"></span></div>
+                                    <div class="is-size-6"
+                                         th:text="${#numbers.formatInteger(dataSummaryToday.getConfirmedToday(),3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewConfirmedToday(),3,'POINT')}"></div>
+                                </div>
                             </div>
                             <div class="tile is-parent is-vertical">
-                                <article class="tile is-child notification is-primary">
-                                    <p class="title is-5">Total recovered</p>
-                                    <p class="subtitle is-6"
-                                       th:text="${#numbers.formatInteger(dataSummaryToday.getRecoveredToday(),3,'POINT')}"></p>
-                                </article>
-                                <article class="tile is-child notification is-primary">
-                                    <p class="title is-5">New recovered</p>
-                                    <p class="subtitle is-6"
-                                       th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewRecoveredToday(),3,'POINT')}"></p>
-                                </article>
+                                <div class="tile is-child notification is-primary">
+                                    <div class="is-size-5">Total recovered <span class="icon"><img
+                                            src="/img/fitness-outline.svg"></span></div>
+                                    <div class="is-size-6"
+                                         th:text="${#numbers.formatInteger(dataSummaryToday.getRecoveredToday(),3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewRecoveredToday(),3,'POINT')}"></div>
+                                </div>
                             </div>
                             <div class="tile is-parent is-vertical">
-                                <article class="tile is-child notification is-danger">
-                                    <p class="title is-5">Total deaths</p>
-                                    <p class="subtitle is-6"
-                                       th:text="${#numbers.formatInteger(dataSummaryToday.getDeathsToday(),3,'POINT')}"></p>
-                                </article>
-                                <article class="tile is-child notification is-danger">
-                                    <p class="title is-5">New deaths</p>
-                                    <p class="subtitle is-6"
-                                       th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewDeathsToday(),3,'POINT')}"></p>
-                                </article>
+                                <div class="tile is-child notification is-danger">
+                                    <div class="is-size-5">Total deaths <span class="icon"><img
+                                            src="/img/skull-outline.svg"></span></div>
+                                    <div class="is-size-6"
+                                         th:text="${#numbers.formatInteger(dataSummaryToday.getDeathsToday(),3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewDeathsToday(),3,'POINT')}"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="tile">
                             <div class="tile is-parent is-vertical">
-                                <article class="tile is-child notification is-light">
-                                    <p class="title is-5">Last update</p>
-                                    <p class="subtitle is-6"
-                                       th:text="${date}"></p>
-                                </article>
+                                <div class="tile is-child notification is-warning">
+                                    <div class="is-size-5">Active cases <span class="icon"><img
+                                            src="/img/medkit-outline.svg"></span></div>
+                                    <div class="is-size-6"
+                                         th:text="${#numbers.formatInteger(dataSummaryToday.getConfirmedToday() -
+                                       dataSummaryToday.getDeathsToday() - dataSummaryToday.getRecoveredToday(),3,'POINT')}"></div>
+                                </div>
                             </div>
                             <div class="tile is-parent is-vertical">
-                                <article class="tile is-child notification is-light">
-                                    <p class="title is-5">Active cases</p>
-                                    <p class="subtitle is-6"
-                                       th:text="${#numbers.formatInteger(dataSummaryToday.getConfirmedToday() -
-                                       dataSummaryToday.getDeathsToday() - dataSummaryToday.getRecoveredToday(),3,'POINT')}"></p>
-                                </article>
+                                <div class="tile is-child notification is-light">
+                                    <div class="is-size-5">Last update</div>
+                                    <div class="is-size-6"
+                                         th:text="${date}"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-10-tablet">
+                <div class="has-text-centered is-size-5" th:if="${noDataForDayOne}">
+                    No data for day one to today.
+                </div>
+                <canvas id="lineChartAllData"></canvas>
+            </div>
+        </div>
     </section>
 </div>
+<script th:inline="javascript">
+    let lineChartCanvas = document.getElementById('lineChartAllData');
+    /*<![CDATA[*/
+    let country = /*[[${selectedCountry}]]*/;
+    let confirmedList = /*[[${confirmed}]]*/;
+    let deathsList = /*[[${deaths}]]*/;
+    let recoveredList = /*[[${recovered}]]*/;
+    let dates = /*[[${dates}]]*/;
+    /*]]>*/
+    lineChartDayOneToday(lineChartCanvas, country, confirmedList, deathsList, recoveredList, dates);
+</script>
 </body>
 </html>
