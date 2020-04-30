@@ -40,7 +40,6 @@ public class DerivativeService {
         map.put("Susceptible", susList);
         map.put("Infected", infList);
         map.put("Recovered", reList);
-
         return map;
     }
 }

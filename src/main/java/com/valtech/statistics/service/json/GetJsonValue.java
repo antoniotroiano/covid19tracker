@@ -40,11 +40,11 @@ public class GetJsonValue {
         return getIntValue.getInt(valueKey);
     }
 
-    private String getDateNow() {
+/*    private String getDateNow() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM");
         LocalDate now = LocalDate.now();
         return now.format(dtf);
-    }
+    }*/
 
     private String formatCountry(String country) {
         String[] countryArray = country.split(" ");
@@ -75,21 +75,25 @@ public class GetJsonValue {
         return allCountries;
     }
 
-    private JSONArray getJSONArrayOfYesterday() throws IOException {
+    private JSONArray getJSONArrayOfYesterday() {
         log.debug("Invoke get json array of yesterday.");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         LocalDate yesterdayDate = LocalDate.now().minusDays(1);
         String yesterdayDaily = "https://covid19.mathdro.id/api/daily/" + yesterdayDate.format(dtf);
 
-        JSONArray jsonArray = new JSONArray(IOUtils.toString(new URL(yesterdayDaily), StandardCharsets.UTF_8));
-
-        HttpURLConnection huc = (HttpURLConnection) new URL(yesterdayDaily).openConnection();
-        huc.setRequestMethod("GET");
-        huc.connect();
-        int statusCode = huc.getResponseCode();
-        if (statusCode == 404) {
-            log.warn("No new json array for yesterday exist.");
-            return new JSONArray();
+        JSONArray jsonArray = new JSONArray();
+        try {
+            jsonArray = new JSONArray(IOUtils.toString(new URL(yesterdayDaily), StandardCharsets.UTF_8));
+            HttpURLConnection huc = (HttpURLConnection) new URL(yesterdayDaily).openConnection();
+            huc.setRequestMethod("GET");
+            huc.connect();
+            int statusCode = huc.getResponseCode();
+            if (statusCode == 404) {
+                log.warn("No new json array for yesterday exist.");
+            }
+        } catch (Exception e) {
+            log.error("No new json array for yesterday exist. {}", e.getMessage());
+            return jsonArray;
         }
         log.debug("Get new json array for yesterday {}.", yesterdayDate);
         return jsonArray;
@@ -123,11 +127,11 @@ public class GetJsonValue {
         log.info("Invoke create data of world.");
         SummaryToday summaryToday = new SummaryToday();
 
+        //ToDo: die exception fangen oder nach vorne weitergeben auch für die try chatch blöcke versuchen umzusetzen.
         getTodayData("World", summaryToday, "https://covid19.mathdro.id/api");
-        summaryToday.setLocalDate(getDateNow());
+        summaryToday.setLocalDate(LocalDate.now().toString());
 
         JSONArray getValueOfArray = getJSONArrayOfYesterday();
-
         if (getValueOfArray.isEmpty()) {
             log.info("No data for last day of world {}. Return only data of today.", summaryToday.getLocalDate());
             return summaryToday;
@@ -143,11 +147,11 @@ public class GetJsonValue {
         String formattedCountry = formatCountry(country);
         String formattedURL = "https://covid19.mathdro.id/api/countries/" + formattedCountry;
 
+        //ToDo: die exception fangen oder nach vorne weitergeben auch für die try chatch blöcke versuchen umzusetzen.
         getTodayData(country, summaryToday, formattedURL);
         summaryToday.setLocalDate(LocalDate.now().toString());
 
         JSONArray getValueOfArray = getJSONArrayOfYesterday();
-
         if (getValueOfArray.isEmpty()) {
             log.info("No data for last day of country {}. Return only data of today.", country);
             return summaryToday;
@@ -164,35 +168,39 @@ public class GetJsonValue {
         return summaryToday;
     }
 
-    public List<SummaryToday> getDataDayOneTotalSelectedCountry(String country) throws IOException {
+    public List<SummaryToday> getDataDayOneTotalSelectedCountry(String country) {
         log.info("Invoke get data of day one for selected country {}", country);
         List<SummaryToday> summaryTodayList = new ArrayList<>();
         String formattedCountry = formatCountryDayOne(country);
         String formattedURL = "https://api.covid19api.com/total/dayone/country/" + formattedCountry;
 
-        JSONArray jsonArray = new JSONArray(IOUtils.toString(new URL(formattedURL), StandardCharsets.UTF_8));
+        try {
+            JSONArray jsonArray = new JSONArray(IOUtils.toString(new URL(formattedURL), StandardCharsets.UTF_8));
+            if (jsonArray.isEmpty()) {
+                log.info("No data for selected country available {}", country);
+                return summaryTodayList;
+            }
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                int confirmed = jsonObject.getInt("Confirmed");
+                int deaths = jsonObject.getInt("Deaths");
+                int recovered = jsonObject.getInt("Recovered");
+                String date = jsonObject.getString("Date");
 
-        if (jsonArray.isEmpty()) {
-            log.info("No data for selected country available {}", country);
+                String formattedDate = dateFormat.formatLastUpdateToDateDayOne(date);
+
+                SummaryToday summaryToday = new SummaryToday();
+                summaryToday.setConfirmedToday(confirmed);
+                summaryToday.setDeathsToday(deaths);
+                summaryToday.setRecoveredToday(recovered);
+                summaryToday.setLastUpdate(formattedDate);
+                summaryTodayList.add(summaryToday);
+            }
+            log.info("Return list with all data since day one od {}", country);
+            return summaryTodayList;
+        } catch (Exception e) {
+            log.warn("No new update for day one to today.");
             return summaryTodayList;
         }
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            int confirmed = jsonObject.getInt("Confirmed");
-            int deaths = jsonObject.getInt("Deaths");
-            int recovered = jsonObject.getInt("Recovered");
-            String date = jsonObject.getString("Date");
-
-            String formattedDate = dateFormat.formatLastUpdateToDateDayOne(date);
-
-            SummaryToday summaryToday = new SummaryToday();
-            summaryToday.setConfirmedToday(confirmed);
-            summaryToday.setDeathsToday(deaths);
-            summaryToday.setRecoveredToday(recovered);
-            summaryToday.setLastUpdate(formattedDate);
-            summaryTodayList.add(summaryToday);
-        }
-        log.info("Return list with all data since day one od {}", country);
-        return summaryTodayList;
     }
 }

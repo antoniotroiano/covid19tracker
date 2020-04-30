@@ -31,7 +31,7 @@
                     <a class="button is-small is-link is-rounded" id="loadingUpdate"
                        onclick="loading('loadingUpdate')"
                        th:href="@{/covid19/summary/{country}(country = ${selectedCountry})}">Update data for <span
-                            th:text="${selectedCountry}"></span></a>
+                            th:text="${selectedCountry}"> </span></a>
                 </div>
                 <div class="buttons is-centered">
                     <div class="dropdown">
@@ -122,7 +122,7 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
                 <div class="has-text-centered is-size-5" th:if="${noDataForDayOne}">
-                    No data for day one to today.
+                    No data for day one until today for <span th:text="${selectedCountry}"></span>. Please try again later.
                 </div>
                 <canvas id="lineChartAllData"></canvas>
             </div>

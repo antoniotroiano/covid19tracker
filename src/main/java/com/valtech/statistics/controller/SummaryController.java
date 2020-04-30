@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import java.io.IOException;
-import java.security.cert.CollectionCertStoreParameters;
 import java.util.List;
 import java.util.stream.Collectors;
 
