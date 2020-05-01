@@ -55,30 +55,30 @@
                         <div class="tile">
                             <div class="tile is-parent is-vertical">
                                 <div class="tile is-child notification is-info">
-                                    <div class="is-size-5">Total confirmed <span class="icon"><img
-                                            src="/img/checkmark-outline.svg"></span></div>
+                                    <div class="is-size-5">Total confirmed</div>
                                     <div class="is-size-6"
                                          th:text="${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed(),3,'POINT')}"></div>
+                                    <span class="icon is-pulled-right"><img src="/img/checkmark-outline.svg"></span>
                                     <div class="is-size-6"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.newConfirmed,3,'POINT')}"></div>
                                 </div>
                             </div>
                             <div class="tile is-parent is-vertical">
                                 <div class="tile is-child notification is-primary">
-                                    <div class="is-size-5">Total recovered <span class="icon"><img
-                                            src="/img/fitness-outline.svg"></span></div>
+                                    <div class="is-size-5">Total recovered</div>
                                     <div class="is-size-6"
                                          th:text="${#numbers.formatInteger(dataGermanySummary.getTotalRecovered(),3,'POINT')}"></div>
+                                    <span class="icon is-pulled-right"><img src="/img/fitness-outline.svg"></span>
                                     <div class="is-size-6"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.getNewRecovered(),3,'POINT')}"></div>
                                 </div>
                             </div>
                             <div class="tile is-parent is-vertical">
                                 <div class="tile is-child notification is-danger">
-                                    <div class="is-size-5">Total deaths <span class="icon"><img
-                                            src="/img/skull-outline.svg"></span></div>
+                                    <div class="is-size-5">Total deaths</div>
                                     <div class="is-size-6"
                                          th:text="${#numbers.formatInteger(dataGermanySummary.getTotalDeaths(),3,'POINT')}"></div>
+                                    <span class="icon is-pulled-right"><img src="/img/skull-outline.svg"></span>
                                     <div class="is-size-6"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.getNewDeaths(),3,'POINT')}"></div>
                                 </div>
@@ -112,17 +112,17 @@
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-9-tablet">
+            <div class="column box">
                 <canvas id="dataGermanyConfirmed"></canvas>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-9-tablet">
+            <div class="column box">
                 <canvas id="dataGermanyRecovered"></canvas>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-9-tablet">
+            <div class="column box">
                 <canvas id="dataGermanyDeaths"></canvas>
             </div>
         </div>

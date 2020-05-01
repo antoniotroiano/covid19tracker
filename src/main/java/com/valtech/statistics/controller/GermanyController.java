@@ -31,6 +31,7 @@ public class GermanyController {
     @GetMapping
     public String showDataGermany(Model model) throws IOException {
         log.info("Invoke show data of germany.");
+        //ToDo: Exception abfangen im service für die countries
         List<String> allCountries = getJsonValue.getCountryOfJSONObject();
         model.addAttribute("listCountries", allCountries);
         model.addAttribute("dataGermanySummary", new DataGermanySummary());

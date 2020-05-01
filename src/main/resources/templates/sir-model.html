@@ -1,79 +1,93 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>SIR-Model</title>
     <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
+    <link href="../../css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+    <script th:src="@{/js/charts.js}"></script>
+    <script th:inline="javascript">
+        loading(id);
+
+        getCountry(country);
+    </script>
 </head>
 <body>
 <div class="container">
     <section class="section">
         <div class="columns is-mobile is-centered">
             <div class="column">
-                <div class="title is-3 has-text-centered">
-                    SIR-Model for pandemic
-                </div>
+                <div class="title is-3 has-text-centered">SIR-Model for pandemic</div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column">
                 <div class="buttons is-centered">
-                    <a class="button is-small is-link is-rounded" href="/covid19/world" type="submit">Go to data
-                        worldwide</a>
+                    <a class="button is-small is-link is-rounded" href="/covid19" type="submit">Go to home</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/germany" type="submit">Go to data
                         germany</a>
-                    <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
+                </div>
+                <div class="buttons is-centered">
+                    <div class="dropdown">
+                        <button class="button is-link is-rounded" onclick="myFunction()">Select country
+                        </button>
+                        <div class="dropdown-content" id="myDropdown">
+                            <input class="input" id="myInput" onkeyup="filterFunction()"
+                                   placeholder="Search for country.." type="text">
+                            <div th:each="countries : ${listCountries}">
+                                <a class="dropdown-item"
+                                   th:onclick="/*<![CDATA[*/ getCountry(/*[[${countries}]]*/) /*]]>*/"
+                                   th:text="${countries}"></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-4">
+            <div class="column is-4-tablet">
                 <form class="is-centered" method="post" th:action="@{/sir-model/newCalculation}" th:object="${values}">
-                    <div class="field is-horizontal">
-                        <div class="field-label">
-                            <label class="label">Transmission rate:</label>
-                            <label for="transmissionRate"></label>
-                        </div>
-                        <div class="field">
-                            <input class="input is-small is-rounded" id="transmissionRate"
-                                   th:field="*{transmissionRate}"
-                                   type="text">
-                        </div>
+                    <div class="field">
+                        <label class="label">Transmission rate:</label>
+                        <label for="transmissionRate"></label>
                     </div>
-                    <div class="field is-horizontal">
-                        <div class="field-label">
-                            <lable class="label">Recovery rate:</lable>
-                            <label for="recoveryRate"></label>
-                        </div>
-                        <div class="field">
-                            <input class="input is-small is-rounded" id="recoveryRate" th:field="*{recoveryRate}"
-                                   type="text">
-                        </div>
+                    <div class="field">
+                        <input class="input is-small is-rounded" id="transmissionRate"
+                               th:field="*{transmissionRate}" type="text">
+                    </div>
+                    <div class="field">
+                        <lable class="label">Recovery rate:</lable>
+                        <label for="recoveryRate"></label>
+                    </div>
+                    <div class="field">
+                        <input class="input is-small is-rounded" id="recoveryRate" th:field="*{recoveryRate}"
+                               type="text">
                     </div>
                     <div class="buttons is-centered">
                         <button class="button is-small is-warning is-rounded" type="submit">Send</button>
                     </div>
                 </form>
             </div>
-            <div class="column is-4">
-                <div class="field is-horizontal">
-                    <div class="field-label">
-                        <div class="is-text">Chart with transmission rate:</div>
-                    </div>
-                    <label class="label" th:text="${transmissionRate}" type="text"></label>
+            <div class="column is-3-tablet is-pulled-left">
+                <div class="field">
+                    <div class="is-text">Chart transmission rate:</div>
                 </div>
-                <div class="field is-horizontal">
-                    <div class="field-label">
-                        <div class="is-text">Chart with recovery rate:</div>
-                    </div>
-                    <label class="label" th:text="${recoveryRate}" type="text"></label>
+                <label class="label" th:text="${transmissionRate}" type="text"></label>
+                <div class="field">
+                    <div class="is-text">Chart recovery rate:</div>
                 </div>
+                <label class="label" th:text="${recoveryRate}" type="text"></label>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-tablet box">
+                <canvas id="myChart"></canvas>
             </div>
         </div>
     </section>
 </div>
-<canvas height="100" id="myChart" width="300"></canvas>
 <script>
     const sus = [[${resultSusceptible}]];
     const inf = [[${resultInfected}]];
@@ -111,23 +125,20 @@
             }]
         },
         options: {
+            responsive: true,
+            responsiveAnimationDuration: 0,
+            maintainAspectRatio: false,
+            aspectRatio: 0.9,
+            onResize: null,
             tooltips: {
                 mode: 'point'
-            },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
-                }
             },
             legend: {
                 display: true,
                 position: 'bottom',
                 align: 'center',
                 labels: {
-                    boxWidth: 60,
+                    boxWidth: 40,
                     fontColor: 'rgb(000, 000, 000)'
                 }
             },

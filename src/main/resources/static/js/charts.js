@@ -34,7 +34,6 @@ function getCountry(country) {
 /*Bar chart for selected country*/
 function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, datesA, confList, recList, deaList) {
     const dates = datesA;
-    const confirmed = confList;
     const ctxConfirmed = confCanvas.getContext('2d');
     const dataConfirmed = new Chart(ctxConfirmed, {
         type: 'bar',
@@ -49,11 +48,11 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
                 barPercentage: 0.9,
                 barThickness: 10,
                 maxBarThickness: 15,
-                minBarLength: 200,
-                data: confirmed
+                data: confList
             }]
         },
         options: {
+            responsive: true,
             scales: {
                 xAxes: [{
                     display: true,
@@ -86,14 +85,6 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
                     }
                 }]
             },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
-                }
-            },
             legend: {
                 display: true,
                 position: 'bottom',
@@ -113,7 +104,6 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
         }
     });
 
-    const recovered = recList;
     const ctxRecovered = recCanvas.getContext('2d');
     const dataRecovered = new Chart(ctxRecovered, {
         type: 'bar',
@@ -128,11 +118,11 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
                 barPercentage: 0.9,
                 barThickness: 10,
                 maxBarThickness: 15,
-                minBarLength: 200,
-                data: recovered
+                data: recList
             }]
         },
         options: {
+            responsive: true,
             scales: {
                 xAxes: [{
                     display: true,
@@ -155,14 +145,6 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
                     }
                 }]
             },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
-                }
-            },
             legend: {
                 display: true,
                 position: 'bottom',
@@ -182,7 +164,6 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
         }
     });
 
-    const deaths = deaList;
     const ctxDeaths = deaCanvas.getContext('2d');
     const dataDeaths = new Chart(ctxDeaths, {
         type: 'bar',
@@ -197,11 +178,11 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
                 barPercentage: 0.9,
                 barThickness: 10,
                 maxBarThickness: 15,
-                minBarLength: 200,
-                data: deaths
+                data: deaList
             }]
         },
         options: {
+            responsive: true,
             scales: {
                 xAxes: [{
                     display: true,
@@ -223,14 +204,6 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
                         labelString: 'Death'
                     }
                 }]
-            },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
-                }
             },
             legend: {
                 display: true,
@@ -282,54 +255,50 @@ function lineChartDayOneToday(canvasLine, country, confirmedList, deathsList, re
             }]
         },
         options: {
+            responsive: true,
+            responsiveAnimationDuration: 0,
+            maintainAspectRatio: false,
+            aspectRatio: 0.9,
+            onResize: null,
             scales: {
                 xAxes: [{
                     display: true,
-                    label: 'Date',
+                    gridLines: {
+                        display: true
+                    },
                     ticks: {
                         autoSkip: true,
-                        maxTicksLimit: 40
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Date'
+                        maxTicksLimit: 17
                     }
                 }],
                 yAxes: [{
                     display: true,
-                    beginAtZero: false,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Confirmed Recovered Deaths'
+                    gridLines: {
+                        display: true
                     }
                 }]
             },
             tooltips: {
                 mode: 'point'
             },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
-                }
+            title: {
+                display: true,
+                fontSize: 20,
+                lineHeight: 1,
+                padding: 8,
+                fontColor: '#69C8C8',
+                text: country
             },
             legend: {
                 display: true,
                 position: 'bottom',
                 align: 'center',
                 labels: {
-                    boxWidth: 60,
-                    fontColor: 'rgb(000, 000, 000)'
+                    fontColor: 'rgb(000, 000, 000)',
+                    fontSize: 12,
+                    boxWidth: 35,
+                    padding: 8
                 }
-            },
-            title: {
-                display: true,
-                fontSize: 20,
-                padding: 15,
-                fontColor: '#69C8C8',
-                text: country
             }
         }
     });
