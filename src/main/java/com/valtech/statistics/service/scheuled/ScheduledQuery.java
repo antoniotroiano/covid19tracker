@@ -29,31 +29,34 @@ public class ScheduledQuery {
         log.info("Invoke get and save new data of world.");
         SummaryToday summaryToday = getJsonValue.getDataOfWorldToModel();
         DataWorldSummary dataWorldSummary = new DataWorldSummary(summaryToday);
-        Optional<DataWorldSummary> getLastSummary = worldSummaryService.getLastEntryWorldSummary();
+        Optional<DataWorldSummary> getLastEntry = worldSummaryService.getLastEntryWorldSummary();
 
-        if (getLastSummary.isEmpty()) {
+        if (getLastEntry.isEmpty()) {
             worldSummaryService.saveDataWorldSummary(dataWorldSummary);
             log.info("Saved first data of world {}.", dataWorldSummary.getLastUpdate());
-        }
-        if (getLastSummary.isPresent()) {
-            if (getLastSummary.get().getTotalConfirmed() != dataWorldSummary.getTotalConfirmed() ||
-                    getLastSummary.get().getTotalRecovered() != dataWorldSummary.getTotalRecovered() ||
-                    getLastSummary.get().getTotalDeaths() != dataWorldSummary.getTotalDeaths()) {
-                if (getLastSummary.get().getLastUpdate().equals(dataWorldSummary.getLastUpdate())) {
-                    log.info("No new data of world, returned last one {}.", dataWorldSummary.getLastUpdate());
-                } else {
-                    if (dataWorldSummary.getNewConfirmed() == 0 &&
-                            dataWorldSummary.getNewRecovered() == 0 &&
-                            dataWorldSummary.getNewDeaths() == 0) {
-                        log.info("No new data of world, returned last one {}.", dataWorldSummary.getLastUpdate());
-                    } else {
-                        worldSummaryService.saveDataWorldSummary(dataWorldSummary);
-                        log.info("Saved new data of world {}.", dataWorldSummary.getLastUpdate());
-                    }
-                }
+        } else {
+            if (getLastEntry.get().getLastUpdate().equals(dataWorldSummary.getLastUpdate())) {
+                log.info("No new data of world, returned last one {}.", dataWorldSummary.getLastUpdate());
             } else {
-                log.info("The data of last entry of world are equals the new one, returned last one {}.", dataWorldSummary.getLastUpdate());
+                if (getLastEntry.get().getTotalConfirmed() != dataWorldSummary.getTotalConfirmed() ||
+                        getLastEntry.get().getTotalRecovered() != dataWorldSummary.getTotalRecovered() ||
+                        getLastEntry.get().getTotalDeaths() != dataWorldSummary.getTotalDeaths()) {
+                    lastCheckBeforeSaveWorld(dataWorldSummary);
+                } else {
+                    log.info("One or more information of last entry of world are equals the new one, returned last one {}.", dataWorldSummary.getLastUpdate());
+                }
             }
+        }
+    }
+
+    private void lastCheckBeforeSaveWorld(DataWorldSummary dataWorldSummary) {
+        if (dataWorldSummary.getNewConfirmed() == 0 &&
+                dataWorldSummary.getNewRecovered() == 0 &&
+                dataWorldSummary.getNewDeaths() == 0) {
+            log.info("No new data of world, returned last one {}.", dataWorldSummary.getLastUpdate());
+        } else {
+            worldSummaryService.saveDataWorldSummary(dataWorldSummary);
+            log.info("Saved new data of world {}.", dataWorldSummary.getLastUpdate());
         }
     }
 
@@ -68,26 +71,29 @@ public class ScheduledQuery {
         if (getLastSummary.isEmpty()) {
             germanySummaryService.saveDataGermanySummary(dataGermanySummary);
             log.info("Saved first data of germany {}.", dataGermanySummary.getLastUpdate());
-        }
-        if (getLastSummary.isPresent()) {
-            if (getLastSummary.get().getTotalConfirmed() != dataGermanySummary.getTotalConfirmed() ||
-                    getLastSummary.get().getTotalRecovered() != dataGermanySummary.getTotalRecovered() ||
-                    getLastSummary.get().getTotalDeaths() != dataGermanySummary.getTotalDeaths()) {
-                if (getLastSummary.get().getLastUpdate().equals(dataGermanySummary.getLastUpdate())) {
-                    log.info("No new data of germany, returned last one {}.", dataGermanySummary.getLastUpdate());
-                } else {
-                    if (summaryToday.getNewConfirmedToday() == 0 &&
-                            summaryToday.getNewRecoveredToday() == 0 &&
-                            summaryToday.getNewDeathsToday() == 0) {
-                        log.info("No new data of germany, returned last one {}.", dataGermanySummary.getLastUpdate());
-                    } else {
-                        germanySummaryService.saveDataGermanySummary(dataGermanySummary);
-                        log.info("Saved new data of germany {}.", dataGermanySummary.getLastUpdate());
-                    }
-                }
+        } else {
+            if (getLastSummary.get().getLastUpdate().equals(dataGermanySummary.getLastUpdate())) {
+                log.info("No new data of germany, returned last one {}.", dataGermanySummary.getLastUpdate());
             } else {
-                log.info("The data of last entry of germany are equals the new one, returned last one {}.", dataGermanySummary.getLastUpdate());
+                if (getLastSummary.get().getTotalConfirmed() != dataGermanySummary.getTotalConfirmed() ||
+                        getLastSummary.get().getTotalRecovered() != dataGermanySummary.getTotalRecovered() ||
+                        getLastSummary.get().getTotalDeaths() != dataGermanySummary.getTotalDeaths()) {
+                    lastCheckBeforeSaveGermany(dataGermanySummary);
+                } else {
+                    log.info("One or more information of last entry of germany are equals the new one, returned last one {}.", dataGermanySummary.getLastUpdate());
+                }
             }
+        }
+    }
+
+    private void lastCheckBeforeSaveGermany(DataGermanySummary dataGermanySummary) {
+        if (dataGermanySummary.getNewConfirmed() == 0 &&
+                dataGermanySummary.getNewRecovered() == 0 &&
+                dataGermanySummary.getNewDeaths() == 0) {
+            log.info("No new data of germany, returned last one {}.", dataGermanySummary.getLastUpdate());
+        } else {
+            germanySummaryService.saveDataGermanySummary(dataGermanySummary);
+            log.info("Saved new data of germany {}.", dataGermanySummary.getLastUpdate());
         }
     }
 }

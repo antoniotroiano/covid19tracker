@@ -2,6 +2,7 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <title th:text="${title}"></title>
     <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
     <link href="../../css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
@@ -25,18 +26,18 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
                 <div class="buttons is-centered">
-                    <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
+                    <a class="button is-small is-link is-rounded" href="/covid19" type="submit">Go to home</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/germany" type="submit">Go to data
                         germany</a>
                     <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
                     <a class="button is-small is-link is-rounded" id="loadingUpdate"
                        onclick="loading('loadingUpdate')"
-                       th:href="@{/covid19/summary/{country}(country = ${selectedCountry})}">Update data for <span
+                       th:href="@{/covid19/daily/{country}(country = ${selectedCountry})}">Update data for <span
                             th:text="${selectedCountry}"> </span></a>
                 </div>
                 <div class="buttons is-centered">
                     <div class="dropdown">
-                        <button class="button is-small is-link is-rounded" onclick="myFunction()">Select country
+                        <button class="button is-link is-rounded" onclick="myFunction()">Select country
                         </button>
                         <div class="dropdown-content" id="myDropdown">
                             <input class="input" id="myInput" onkeyup="filterFunction()"
@@ -53,17 +54,7 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <div th:if="${noDataForThisCountry}">
-                    <div class="notification is-white">
-                        <div class="is-text has-text-centered">
-                            No dataset for <span th:text="${selectedCountry}"></span>. Please try again later.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-10-tablet">
+                <div class="has-text-centered is-size-5" th:if="${noDataForThisCountry}"></div>
                 <div class="tile is-ancestor">
                     <div class="tile is-vertical">
                         <div class="tile">
@@ -72,7 +63,7 @@
                                     <div class="is-size-5">Total confirmed <span class="icon"><img
                                             src="/img/checkmark-outline.svg"></span></div>
                                     <div class="is-size-6"
-                                         th:text="${#numbers.formatInteger(dataSummaryToday.getConfirmedToday(),3,'POINT')}"></div>
+                                         th:text="${dataSummaryToday.getConfirmedToday() == 0} ? ${'No value, please try again later!'} : ${#numbers.formatInteger(dataSummaryToday.getConfirmedToday(),3,'POINT')}"></div>
                                     <div class="is-size-6"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewConfirmedToday(),3,'POINT')}"></div>
                                 </div>
@@ -82,7 +73,7 @@
                                     <div class="is-size-5">Total recovered <span class="icon"><img
                                             src="/img/fitness-outline.svg"></span></div>
                                     <div class="is-size-6"
-                                         th:text="${#numbers.formatInteger(dataSummaryToday.getRecoveredToday(),3,'POINT')}"></div>
+                                         th:text="${dataSummaryToday.getRecoveredToday() == 0} ? ${'No value, please try again later!'} : ${#numbers.formatInteger(dataSummaryToday.getRecoveredToday(),3,'POINT')}"></div>
                                     <div class="is-size-6"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewRecoveredToday(),3,'POINT')}"></div>
                                 </div>
@@ -92,7 +83,7 @@
                                     <div class="is-size-5">Total deaths <span class="icon"><img
                                             src="/img/skull-outline.svg"></span></div>
                                     <div class="is-size-6"
-                                         th:text="${#numbers.formatInteger(dataSummaryToday.getDeathsToday(),3,'POINT')}"></div>
+                                         th:text="${dataSummaryToday.getDeathsToday() == 0} ? ${'No value, please try again later!'} : ${#numbers.formatInteger(dataSummaryToday.getDeathsToday(),3,'POINT')}"></div>
                                     <div class="is-size-6"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewDeathsToday(),3,'POINT')}"></div>
                                 </div>
@@ -122,10 +113,11 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <div class="has-text-centered is-size-5" th:if="${noDataForDayOne}">
-                    No data for day one until today for <span th:text="${selectedCountry}"></span>. Please try again
-                    later.
-                </div>
+                <div class="has-text-centered is-size-5" th:if="${noDataForDayOne}"></div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-10-tablet">
                 <canvas id="lineChartAllData"></canvas>
             </div>
         </div>
@@ -142,12 +134,6 @@
     /*]]>*/
 
     lineChartDayOneToday(lineChartCanvas, country, confirmedList, deathsList, recoveredList, dates);
-
-    let dropdown = document.querySelector('.dropdown');
-    dropdown.addEventListener('click', function (event) {
-        event.stopPropagation();
-        dropdown.classList.toggle('is-active');
-    });
 </script>
 </body>
 </html>

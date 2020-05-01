@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
-@RequestMapping("/")
+@RequestMapping("/covid19")
 @RequiredArgsConstructor
-public class HomeController {
+public class WorldController {
 
     private final WorldSummaryService worldSummaryService;
     private final ScheduledQuery scheduledQuery;
@@ -43,15 +43,15 @@ public class HomeController {
             model.addAttribute("date", date + " " + time + "h");
             log.info("Show last entry for world {}.", dataWorldSummary.get().getLocalDate());
         } else {
-            model.addAttribute("noFirstDataWorld", true);
+            model.addAttribute("noFirstDataWorld", "No first dataset of world. Please try again in an hour.");
             log.warn("No last daily entry in database for world.");
         }
 
         List<DataWorldSummary> dataWorldList = worldSummaryService.getAllDataWorldSummary();
         if (dataWorldList.isEmpty()) {
-            model.addAttribute("noDataWorld", true);
+            model.addAttribute("noDataWorld", "No data for world. Please try again later.");
             log.warn("Found no data world.");
-            return "home";
+            return "covid19World";
         }
         model.addAttribute("confirmedListW", dataWorldList
                 .stream()
@@ -70,7 +70,7 @@ public class HomeController {
                 .map(DataWorldSummary::getLocalDate)
                 .collect(Collectors.toList()));
         log.debug("Return data of world.");
-        return "home";
+        return "covid19World";
     }
 
     @GetMapping("/update")

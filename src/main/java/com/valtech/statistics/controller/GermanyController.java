@@ -43,13 +43,13 @@ public class GermanyController {
             model.addAttribute("date", date + " " + time + "h");
             log.info("Show last entry for germany {}.", dataGermanySummary.get().getLocalDate());
         } else {
-            model.addAttribute("noFirstDataGermany", true);
+            model.addAttribute("noFirstDataGermany", "No first dataset of germany. Please try again in an hour.");
             log.warn("No last daily entry in database for germany.");
         }
 
         List<DataGermanySummary> dataGermanyList = germanySummaryService.getAllDataGermanySummary();
         if (dataGermanyList.isEmpty()) {
-            model.addAttribute("noDataGermany", true);
+            model.addAttribute("noDataGermany", "No data for germany. Please try again later.");
             log.warn("Found no data germany.");
             return "covid19Germany";
         }

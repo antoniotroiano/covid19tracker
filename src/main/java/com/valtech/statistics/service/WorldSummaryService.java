@@ -23,13 +23,13 @@ public class WorldSummaryService {
     }
 
     public List<DataWorldSummary> getAllDataWorldSummary() {
-        log.info("Get all data world summary.");
+        log.debug("Get all data world summary.");
         List<DataWorldSummary> allDataWorldSummary = dataWorldSummaryRepository.findAll();
         if (allDataWorldSummary.isEmpty()) {
             log.warn("No data world summary found.");
             return allDataWorldSummary;
         }
-        log.info("Got all data world summary successfully.");
+        log.debug("Got all data world summary successfully.");
         return allDataWorldSummary;
     }
 

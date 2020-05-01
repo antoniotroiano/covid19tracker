@@ -28,13 +28,13 @@ function filterFunction() {
 
 /*Get selected country*/
 function getCountry(country) {
-    document.location.replace("/covid19/summary/" + country);
+    document.location.replace("/covid19/daily/" + country);
 };
 
+/*Bar chart for selected country*/
 function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, datesA, confList, recList, deaList) {
     const dates = datesA;
     const confirmed = confList;
-    const dateConfirmed = [];
     const ctxConfirmed = confCanvas.getContext('2d');
     const dataConfirmed = new Chart(ctxConfirmed, {
         type: 'bar',
@@ -114,7 +114,6 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
     });
 
     const recovered = recList;
-    const dateRecovered = [];
     const ctxRecovered = recCanvas.getContext('2d');
     const dataRecovered = new Chart(ctxRecovered, {
         type: 'bar',
@@ -141,14 +140,6 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
                     ticks: {
                         autoSkip: true,
                         maxTicksLimit: 30
-                        /*callback: function (dataLabel) {
-                            dateDeath.push(dataLabel);
-                            if (dateDeath.filter(d => d === dataLabel).length >= 2) {
-                                return '';
-                            } else {
-                                return dataLabel + '.2020';
-                            }
-                        }*/
                     },
                     scaleLabel: {
                         display: true,
@@ -192,7 +183,6 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
     });
 
     const deaths = deaList;
-    const dateDeath = [];
     const ctxDeaths = deaCanvas.getContext('2d');
     const dataDeaths = new Chart(ctxDeaths, {
         type: 'bar',
@@ -219,14 +209,6 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
                     ticks: {
                         autoSkip: true,
                         maxTicksLimit: 30
-                        /*callback: function (dataLabel) {
-                            dateDeath.push(dataLabel);
-                            if (dateDeath.filter(d => d === dataLabel).length >= 2) {
-                                return '';
-                            } else {
-                                return dataLabel + '.2020';
-                            }
-                        }*/
                     },
                     scaleLabel: {
                         display: true,
@@ -270,6 +252,7 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
     });
 }
 
+/*Line chart for selected country*/
 function lineChartDayOneToday(canvasLine, country, confirmedList, deathsList, recoveredList, dates) {
 
     const ctx = canvasLine.getContext('2d');
@@ -306,15 +289,6 @@ function lineChartDayOneToday(canvasLine, country, confirmedList, deathsList, re
                     ticks: {
                         autoSkip: true,
                         maxTicksLimit: 40
-                        /*callback: function (dataLabel) {
-                            labelDate.push(dataLabel);
-                            if (labelDate.filter(d => d === dataLabel).length >= 11) {
-                                return '';
-                            } else {
-                                return dataLabel;
-                            }
-                            /!*return index % 2 === 0 ? dataLabel : '';*!/
-                        }*/
                     },
                     scaleLabel: {
                         display: true,

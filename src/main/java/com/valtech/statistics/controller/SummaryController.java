@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
-@RequestMapping("covid19/summary")
+@RequestMapping("covid19/daily")
 @RequiredArgsConstructor
 public class SummaryController {
 
@@ -31,20 +31,21 @@ public class SummaryController {
         model.addAttribute("listCountries", allCountries);
         SummaryToday summaryToday = getJsonValue.getDataForSelectedCountry(country);
         if (summaryToday == null) {
-            model.addAttribute("noDataForThisCountry", true);
+            model.addAttribute("noDataForThisCountry", "No dataset for " + country + ". Please try again later.");
             log.info("No data for the country {}", country);
+        } else {
+            model.addAttribute("summaryToday", new SummaryToday());
+            model.addAttribute("title", "COVID-19 - Summary for " + country);
+            model.addAttribute("selectedCountry", country);
+            model.addAttribute("dataSummaryToday", summaryToday);
+            String date = dateFormat.formatLastUpdateToDate(summaryToday.getLastUpdate());
+            String time = dateFormat.formatLastUpdateToTime(summaryToday.getLastUpdate());
+            model.addAttribute("date", date + " " + time + "h");
         }
-        model.addAttribute("summaryToday", new SummaryToday());
-        model.addAttribute("title", "COVID-19 - Summary for " + country);
-        model.addAttribute("selectedCountry", country);
-        model.addAttribute("dataSummaryToday", summaryToday);
-        String date = dateFormat.formatLastUpdateToDate(summaryToday.getLastUpdate());
-        String time = dateFormat.formatLastUpdateToTime(summaryToday.getLastUpdate());
-        model.addAttribute("date", date + " " + time + "h");
 
         List<SummaryToday> summaryTodayList = getJsonValue.getDataDayOneTotalSelectedCountry(country);
         if (summaryTodayList.isEmpty()) {
-            model.addAttribute("noDataForDayOne", true);
+            model.addAttribute("noDataForDayOne", "No data for day one until today for " + country + ". Please try again later.");
             log.warn("Found no data of day one to today for {}", country);
             return "covid19Summary";
         }

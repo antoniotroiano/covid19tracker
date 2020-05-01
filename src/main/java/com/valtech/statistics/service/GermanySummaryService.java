@@ -23,13 +23,13 @@ public class GermanySummaryService {
     }
 
     public List<DataGermanySummary> getAllDataGermanySummary() {
-        log.info("Get all data germany summary.");
+        log.debug("Get all data germany summary.");
         List<DataGermanySummary> allDataGermanySummary = dataGermanySummaryRepository.findAll();
         if (allDataGermanySummary.isEmpty()) {
             log.warn("No data germany summary found.");
             return allDataGermanySummary;
         }
-        log.info("Got all data germany summary successfully.");
+        log.debug("Got all data germany summary successfully.");
         return allDataGermanySummary;
     }
 

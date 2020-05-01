@@ -2,6 +2,7 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>COVID-19 - Germany</title>
     <link href="../../css/bulma.min.css" rel="stylesheet" th:href="@{/css/bulma.min.css}">
     <link href="../../css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
@@ -24,14 +25,14 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
                 <div class="buttons is-centered">
-                    <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
+                    <a class="button is-small is-link is-rounded" href="/covid19" type="submit">Go to home</a>
                     <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/germany/update" id="loadingUpdate"
                        onclick="loading('loadingUpdate')">Manual update germany</a>
                 </div>
                 <div class="buttons is-centered">
                     <div class="dropdown">
-                        <button class="button is-small is-link is-rounded" onclick="myFunction()">Select country
+                        <button class="button is-link is-rounded" onclick="myFunction()">Select country
                         </button>
                         <div class="dropdown-content" id="myDropdown">
                             <input class="input" id="myInput" onkeyup="filterFunction()"
@@ -48,17 +49,7 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <div th:if="${noFirstDataGermany}">
-                    <div class="notification is-white">
-                        <div class="is-text has-text-centered">
-                            No first dataset germany. Please try again in an hour.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-10-tablet">
+                <div class="has-text-centered is-size-5" th:if="${noFirstDataGermany}"></div>
                 <div class="tile is-ancestor">
                     <div class="tile is-vertical">
                         <div class="tile">
@@ -113,6 +104,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-10-tablet">
+                <div class="has-text-centered is-size-5" th:if="${noDataGermany}"></div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">

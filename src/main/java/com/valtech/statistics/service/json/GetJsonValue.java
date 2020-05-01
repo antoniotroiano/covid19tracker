@@ -2,6 +2,7 @@ package com.valtech.statistics.service.json;
 
 import com.valtech.statistics.model.SummaryToday;
 import com.valtech.statistics.service.DateFormat;
+import com.valtech.statistics.service.WorldSummaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -19,6 +20,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Slf4j
@@ -39,12 +41,6 @@ public class GetJsonValue {
         JSONObject getIntValue = (JSONObject) jsonObject.get(key);
         return getIntValue.getInt(valueKey);
     }
-
-/*    private String getDateNow() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM");
-        LocalDate now = LocalDate.now();
-        return now.format(dtf);
-    }*/
 
     private String formatCountry(String country) {
         String[] countryArray = country.split(" ");
@@ -88,15 +84,16 @@ public class GetJsonValue {
             huc.setRequestMethod("GET");
             huc.connect();
             int statusCode = huc.getResponseCode();
-            if (statusCode == 404) {
+            if (statusCode != 200) {
                 log.warn("No new json array for yesterday exist.");
+                return jsonArray;
             }
+            log.debug("Get new json array for yesterday {}.", yesterdayDate);
+            return jsonArray;
         } catch (Exception e) {
             log.error("No new json array for yesterday exist. {}", e.getMessage());
             return jsonArray;
         }
-        log.debug("Get new json array for yesterday {}.", yesterdayDate);
-        return jsonArray;
     }
 
     private void getTodayData(String country, SummaryToday summaryToday, String url) throws IOException {
@@ -105,22 +102,35 @@ public class GetJsonValue {
         summaryToday.setRecoveredToday(getValueOfJSONObject(getJSONObject(url), RECOVERED, VALUE));
         summaryToday.setDeathsToday(getValueOfJSONObject(getJSONObject(url), DEATHS, VALUE));
         summaryToday.setLastUpdate(getJSONObject(url).getString("lastUpdate"));
+        summaryToday.setLocalDate(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyy", Locale.GERMAN)));
         summaryToday.setLocalTime(LocalTime.now().withNano(0));
     }
 
     private void getNewData(SummaryToday summaryToday, JSONArray jsonArray) {
-        int confirmed = 0;
-        int recovered = 0;
-        int deaths = 0;
+        int confirmedNew = 0;
+        int recoveredNew = 0;
+        int deathsNew = 0;
         for (int j = 0; j < jsonArray.length(); j++) {
             JSONObject jsonObject = jsonArray.getJSONObject(j);
-            confirmed += jsonObject.getInt(CONFIRMED);
-            recovered += jsonObject.getInt(RECOVERED);
-            deaths += jsonObject.getInt(DEATHS);
+            confirmedNew += jsonObject.getInt(CONFIRMED);
+            recoveredNew += jsonObject.getInt(RECOVERED);
+            deathsNew += jsonObject.getInt(DEATHS);
         }
-        summaryToday.setNewConfirmedToday(summaryToday.getConfirmedToday() - confirmed);
-        summaryToday.setNewRecoveredToday(summaryToday.getRecoveredToday() - recovered);
-        summaryToday.setNewDeathsToday(summaryToday.getDeathsToday() - deaths);
+        if (summaryToday.getConfirmedToday() == 0) {
+            summaryToday.setNewConfirmedToday(confirmedNew);
+        } else {
+            summaryToday.setNewConfirmedToday(summaryToday.getConfirmedToday() - confirmedNew);
+        }
+        if (summaryToday.getRecoveredToday() == 0) {
+            summaryToday.setNewRecoveredToday(recoveredNew);
+        } else {
+            summaryToday.setNewRecoveredToday(summaryToday.getRecoveredToday() - recoveredNew);
+        }
+        if (summaryToday.getDeathsToday() == 0) {
+            summaryToday.setNewDeathsToday(deathsNew);
+        } else {
+            summaryToday.setNewDeathsToday(summaryToday.getDeathsToday() - deathsNew);
+        }
     }
 
     public SummaryToday getDataOfWorldToModel() throws IOException {
@@ -129,7 +139,6 @@ public class GetJsonValue {
 
         //ToDo: die exception fangen oder nach vorne weitergeben auch für die try chatch blöcke versuchen umzusetzen.
         getTodayData("World", summaryToday, "https://covid19.mathdro.id/api");
-        summaryToday.setLocalDate(LocalDate.now().toString());
 
         JSONArray getValueOfArray = getJSONArrayOfYesterday();
         if (getValueOfArray.isEmpty()) {
@@ -149,7 +158,6 @@ public class GetJsonValue {
 
         //ToDo: die exception fangen oder nach vorne weitergeben auch für die try chatch blöcke versuchen umzusetzen.
         getTodayData(country, summaryToday, formattedURL);
-        summaryToday.setLocalDate(LocalDate.now().toString());
 
         JSONArray getValueOfArray = getJSONArrayOfYesterday();
         if (getValueOfArray.isEmpty()) {
