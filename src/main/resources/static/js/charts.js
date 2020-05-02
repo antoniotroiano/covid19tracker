@@ -53,13 +53,20 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
         },
         options: {
             responsive: true,
+            responsiveAnimationDuration: 0,
+            maintainAspectRatio: false,
+            aspectRatio: 0.9,
+            onResize: null,
             scales: {
                 xAxes: [{
                     display: true,
-                    label: 'Date',
+                    gridLines: {
+                        display: true
+                    },
                     ticks: {
                         autoSkip: true,
-                        maxTicksLimit: 30
+                        maxTicksLimit: 25
+                    }
                         /*callback: function (dataLabel) {
                             dateDeath.push(dataLabel);
                             if (dateDeath.filter(d => d === dataLabel).length >= 2) {
@@ -70,36 +77,32 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
                         }*/
                         // Hide the label of every 2nd dataset. return null to hide the grid line too
                         //return index % 2 === 0 ? dataLabel : '';
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Date'
-                    }
                 }],
                 yAxes: [{
                     display: true,
-                    beginAtZero: false,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Confirmed'
+                    gridLines: {
+                        display: true
                     }
                 }]
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                lineHeight: 1,
+                padding: 8,
+                fontColor: '#69C8C8',
+                text: 'Confirmed'
             },
             legend: {
                 display: true,
                 position: 'bottom',
                 align: 'center',
                 labels: {
-                    boxWidth: 40,
-                    fontColor: 'rgb(000, 000, 000)'
+                    fontColor: 'rgb(000, 000, 000)',
+                    fontSize: 12,
+                    boxWidth: 35,
+                    padding: 8
                 }
-            },
-            title: {
-                display: true,
-                fontSize: 20,
-                padding: 15,
-                fontColor: '#69C8C8',
-                text: 'Confirmed'
             }
         }
     });
@@ -123,43 +126,46 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
         },
         options: {
             responsive: true,
+            responsiveAnimationDuration: 0,
+            maintainAspectRatio: false,
+            aspectRatio: 0.9,
+            onResize: null,
             scales: {
                 xAxes: [{
                     display: true,
-                    label: 'Date',
+                    gridLines: {
+                        display: true
+                    },
                     ticks: {
                         autoSkip: true,
-                        maxTicksLimit: 30
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Date'
+                        maxTicksLimit: 25
                     }
                 }],
                 yAxes: [{
                     display: true,
-                    beginAtZero: false,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Recovered'
+                    gridLines: {
+                        display: true
                     }
                 }]
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                lineHeight: 1,
+                padding: 8,
+                fontColor: '#69C8C8',
+                text: 'Recovered'
             },
             legend: {
                 display: true,
                 position: 'bottom',
                 align: 'center',
                 labels: {
-                    boxWidth: 40,
-                    fontColor: 'rgb(000, 000, 000)'
+                    fontColor: 'rgb(000, 000, 000)',
+                    fontSize: 12,
+                    boxWidth: 35,
+                    padding: 8
                 }
-            },
-            title: {
-                display: true,
-                fontSize: 20,
-                padding: 15,
-                fontColor: '#69C8C8',
-                text: 'Recovered'
             }
         }
     });
@@ -183,43 +189,46 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
         },
         options: {
             responsive: true,
+            responsiveAnimationDuration: 0,
+            maintainAspectRatio: false,
+            aspectRatio: 0.9,
+            onResize: null,
             scales: {
                 xAxes: [{
                     display: true,
-                    label: 'Date',
+                    gridLines: {
+                        display: true
+                    },
                     ticks: {
                         autoSkip: true,
-                        maxTicksLimit: 30
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Date'
+                        maxTicksLimit: 25
                     }
                 }],
                 yAxes: [{
                     display: true,
-                    beginAtZero: false,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Death'
+                    gridLines: {
+                        display: true
                     }
                 }]
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                lineHeight: 1,
+                padding: 8,
+                fontColor: '#69C8C8',
+                text: 'Deaths'
             },
             legend: {
                 display: true,
                 position: 'bottom',
                 align: 'center',
                 labels: {
-                    boxWidth: 40,
-                    fontColor: 'rgb(000, 000, 000)'
+                    fontColor: 'rgb(000, 000, 000)',
+                    fontSize: 12,
+                    boxWidth: 35,
+                    padding: 8
                 }
-            },
-            title: {
-                display: true,
-                fontSize: 20,
-                padding: 15,
-                fontColor: '#69C8C8',
-                text: 'Death'
             }
         }
     });

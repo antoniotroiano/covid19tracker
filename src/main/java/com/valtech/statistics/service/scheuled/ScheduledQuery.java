@@ -24,7 +24,7 @@ public class ScheduledQuery {
     private final GetJsonValue getJsonValue;
 
     /*Get and save new data of world*/
-    @Scheduled(cron = "0 5 */3 ? * *")
+    @Scheduled(cron = "0 5 */2 ? * *")
     public void saveWorldDataOfJson() throws IOException {
         log.info("Invoke get and save new data of world.");
         SummaryToday summaryToday = getJsonValue.getDataOfWorldToModel();
