@@ -6,12 +6,16 @@ public class SummaryToday {
 
     private long dataSummaryTodayId;
     private String country;
+    private String provinceState;
     private int newConfirmedToday;
     private int confirmedToday;
     private int newRecoveredToday;
     private int recoveredToday;
     private int newDeathsToday;
     private int deathsToday;
+    private int active;
+    private String combinedKey;
+    private double incidentRate;
     private String lastUpdate;
     private String localDate;
     private LocalTime localTime;
@@ -30,6 +34,14 @@ public class SummaryToday {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getProvinceState() {
+        return provinceState;
+    }
+
+    public void setProvinceState(String provinceState) {
+        this.provinceState = provinceState;
     }
 
     public int getNewConfirmedToday() {
@@ -80,6 +92,30 @@ public class SummaryToday {
         this.deathsToday = deathsToday;
     }
 
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public String getCombinedKey() {
+        return combinedKey;
+    }
+
+    public void setCombinedKey(String combinedKey) {
+        this.combinedKey = combinedKey;
+    }
+
+    public double getIncidentRate() {
+        return incidentRate;
+    }
+
+    public void setIncidentRate(double incidentRate) {
+        this.incidentRate = incidentRate;
+    }
+
     public String getLastUpdate() {
         return lastUpdate;
     }
@@ -108,6 +144,8 @@ public class SummaryToday {
     public String toString() {
         return "SummaryToday{" +
                 "country='" + country + '\'' +
+                ", provinceState='" + provinceState + '\'' +
+                ", combinedKey='" + combinedKey + '\'' +
                 ", lastUpdate='" + lastUpdate + '\'' +
                 ", localDate='" + localDate + '\'' +
                 '}';

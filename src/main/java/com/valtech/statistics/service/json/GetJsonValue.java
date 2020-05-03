@@ -2,7 +2,6 @@ package com.valtech.statistics.service.json;
 
 import com.valtech.statistics.model.SummaryToday;
 import com.valtech.statistics.service.DateFormat;
-import com.valtech.statistics.service.WorldSummaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -40,6 +39,14 @@ public class GetJsonValue {
     private int getValueOfJSONObject(JSONObject jsonObject, String key, String valueKey) throws JSONException {
         JSONObject getIntValue = (JSONObject) jsonObject.get(key);
         return getIntValue.getInt(valueKey);
+    }
+
+    private JSONArray getJSONOArray(String url) throws IOException {
+        return new JSONArray(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
+    }
+
+    private int getValueOfJSONArray(JSONArray jsonArray, int index, String key) throws JSONException {
+        return jsonArray.getJSONObject(index).getInt(key);
     }
 
     private String formatCountry(String country) {
@@ -208,6 +215,32 @@ public class GetJsonValue {
             return summaryTodayList;
         } catch (Exception e) {
             log.warn("No new update for day one to today.");
+            return summaryTodayList;
+        }
+    }
+
+    public List<SummaryToday> getJSONArrayOfOneCountry(String country) {
+        log.debug("Invoke get data of country {} for all province.", country);
+        String formattedCountry = formatCountry(country);
+        String countryUrl = "https://covid19.mathdro.id/api/countries/" + formattedCountry + "/confirmed";
+        List<SummaryToday> summaryTodayList = new ArrayList<>();
+
+        try {
+            JSONArray jsonArray = getJSONOArray(countryUrl);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                SummaryToday summaryToday = new SummaryToday();
+                summaryToday.setCombinedKey(jsonArray.getJSONObject(i).get("combinedKey").toString());
+                summaryToday.setConfirmedToday(jsonArray.getJSONObject(i).getInt(CONFIRMED));
+                summaryToday.setRecoveredToday(jsonArray.getJSONObject(i).getInt(RECOVERED));
+                summaryToday.setDeathsToday(jsonArray.getJSONObject(i).getInt(DEATHS));
+                summaryToday.setActive(jsonArray.getJSONObject(i).getInt("active"));
+                summaryToday.setIncidentRate(jsonArray.getJSONObject(i).getDouble("incidentRate"));
+                summaryTodayList.add(summaryToday);
+            }
+            log.debug("Get new data for selected country {} for all province.", country);
+            return summaryTodayList;
+        } catch (Exception e) {
+            log.error("No new data for selected country {} for all province. {}", country, e.getMessage());
             return summaryTodayList;
         }
     }

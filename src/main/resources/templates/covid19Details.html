@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title th:text="${title}"></title>
+    <link href="../../css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
+    <link href="../../css/mystyles.css" rel="stylesheet" th:href="@{/css/mystyles.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script th:src="@{/js/charts.js}"></script>
+    <script th:inline="javascript">
+        loading(id)
+    </script>
+</head>
+<body>
+<div class="container">
+    <section class="section">
+        <div class="columns is-mobile is-centered">
+            <div class="column is-10-tablet">
+                <div class="title is-3 has-text-centered">Details for country <span
+                        th:text="${selectedCountry}"></span></div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-10-tablet">
+                <div class="buttons is-centered">
+                    <a class="button is-small is-link is-rounded" href="/covid19" type="submit">Go to home</a>
+                    <a class="button is-small is-link is-rounded" href="/covid19/germany" type="submit">Go to data
+                        germany</a>
+                    <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
+                    <a class="button is-small is-link is-rounded"
+                       th:href="@{/covid19/daily/{country}(country = ${selectedCountry})}" type="submit">Go back</a>
+                </div>
+            </div>
+        </div>
+        <div class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card" style="width: 25em;">
+                <header class="modal-card-head">
+                    <div class="modal-card-title has-text-centered">More details for</div>
+                    <button class="delete closeBtn"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="has-text-centered is-size-9 has-text-weight-bold" id="region"></div>
+                    <br>
+                    <div>Confirmed: <span
+                            class="is-pulled-right button is-rounded is-static is-small has-text-white has-background-info"
+                            id="confirmed"></span></div>
+                    <hr class="dropdown-divider">
+                    <div>Recovered: <span
+                            class="is-pulled-right button is-rounded is-static is-small is-rounded has-text-white has-background-success"
+                            id="recovered"></span></div>
+                    <hr class="dropdown-divider">
+                    <div>Deaths: <span
+                            class="is-pulled-right button  is-rounded is-static is-small has-text-white has-background-danger"
+                            id="deaths"></span></div>
+                    <hr class="dropdown-divider">
+                    <div>Active: <span
+                            class="is-pulled-right button is-rounded is-static is-small black has-background-warning"
+                            id="active"></span></div>
+                </section>
+                <footer class="modal-card-foot">
+                </footer>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-5-widescreen is-7-desktop is-7-tablet is-11-mobile">
+                <div class="has-text-centered is-size-5" th:if="${noDataFound}" th:text="${noDataFound}"></div>
+                <div class="has-text-centered is-size-5" th:if="${noDataDetails}" th:text="${noDataDetails}"></div><br>
+                <div class="table-container">
+                    <table class="table is-striped is-hoverable">
+                        <thead>
+                        <tr>
+                            <th>Province state</th>
+                            <th>Incident rate</th>
+                            <th>More details</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="summaryToday : ${summaryTodayList}">
+                            <td th:text="${summaryToday.getCombinedKey()}"></td>
+                            <td class="is-hidden" th:text="${summaryToday.getConfirmedToday()}"></td>
+                            <td class="is-hidden" th:text="${summaryToday.getRecoveredToday()}"></td>
+                            <td class="is-hidden" th:text="${summaryToday.getDeathsToday()}"></td>
+                            <td class="is-hidden" th:text="${summaryToday.getActive()}"></td>
+                            <td th:text="${#numbers.formatDecimal(summaryToday.getIncidentRate(), 0, 'POINT', 2, 'COMMA')}"></td>
+                            <td>
+                                <a class="button is-rounded is-light modal-bulma" href="javascript:void(0);"
+                                   th:attr="data-region=${summaryToday.getCombinedKey()}, data-confirmed=${summaryToday.getConfirmedToday()},
+                                   data-recovered=${summaryToday.getRecoveredToday()}, data-deaths=${summaryToday.getDeathsToday()},
+                                   data-active=${summaryToday.getActive()}">Details</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script th:inline="javascript">
+    let $activeElement = undefined;
+
+    $(function () {
+        $(".modal-bulma").click(function () {
+            $activeElement = $(this);
+            $("#region").text($activeElement.data("region"));
+            $("#confirmed").text($activeElement.data("confirmed"));
+            $("#recovered").text($activeElement.data("recovered"));
+            $("#deaths").text($activeElement.data("deaths"));
+            $("#active").text($activeElement.data("active"));
+            $(".modal").addClass("is-active");
+        });
+        $(".modal-close").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+        $(".closeBtn").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+</script>
+</body>
+</html>

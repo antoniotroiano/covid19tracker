@@ -31,6 +31,7 @@ public class SummaryController {
         model.addAttribute("listCountries", allCountries);
         SummaryToday summaryToday = getJsonValue.getDataForSelectedCountry(country);
         if (summaryToday == null) {
+            model.addAttribute("title", "COVID-19 - Summary for " + country);
             model.addAttribute("noDataForThisCountry", "No dataset for " + country + ". Please try again later.");
             log.info("No data for the country {}", country);
         } else {
@@ -41,6 +42,7 @@ public class SummaryController {
             String date = dateFormat.formatLastUpdateToDate(summaryToday.getLastUpdate());
             String time = dateFormat.formatLastUpdateToTime(summaryToday.getLastUpdate());
             model.addAttribute("date", date + " " + time + "h");
+            log.info("Show data for selected country {}", country);
         }
 
         List<SummaryToday> summaryTodayList = getJsonValue.getDataDayOneTotalSelectedCountry(country);
@@ -65,6 +67,38 @@ public class SummaryController {
                 .stream()
                 .map(SummaryToday::getLastUpdate)
                 .collect(Collectors.toList()));
+        log.info("Show day one to today data for selected country {}", country);
         return "covid19Summary";
+    }
+
+    @GetMapping("/{country}/details")
+    public String showDetailsOfSelectedCountry(@PathVariable("country") String country, Model model) throws IOException {
+        log.info("Invoke show details of country {}", country);
+        List<SummaryToday> summaryTodayList = getJsonValue.getJSONArrayOfOneCountry(country);
+        if (summaryTodayList.isEmpty()) {
+            model.addAttribute("title", "COVID-19 - Details for " + country);
+            model.addAttribute("selectedCountry", country);
+            model.addAttribute("noDataFound", "No data found for selected country " + country + ".");
+            log.warn("No data found for selected country  {}", country);
+            return "covid19Details";
+        }
+        if (summaryTodayList.size() <= 1) {
+            model.addAttribute("title", "COVID-19 - Details for " + country);
+            model.addAttribute("selectedCountry", country);
+            model.addAttribute("noDataDetails", "No details available for selected country " + country + ".");
+            log.warn("No details available for selected country {}", country);
+            return "covid19Details";
+        }
+        model.addAttribute("summaryToday", new SummaryToday());
+        model.addAttribute("title", "COVID-19 - Details for " + country);
+        model.addAttribute("selectedCountry", country);
+        model.addAttribute("summaryTodayList", summaryTodayList);
+        log.info("Show more details for selected country {}", country);
+        return "covid19Details";
+    }
+
+    public String createBaseModel(String country, Model model, String direction) {
+        model.addAttribute("title", "COVID-19 - Summary for " + country);
+        return direction;
     }
 }
