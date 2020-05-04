@@ -32,7 +32,7 @@
                     <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
                     <a class="button is-small is-link is-rounded" id="loadingUpdate"
                        onclick="loading('loadingUpdate')"
-                       th:href="@{/covid19/daily/{country}(country = ${selectedCountry})}">Update data for <span
+                       th:href="@{/covid19/daily/{country}(country = ${selectedCountry})}">Update data for&nbsp;<span
                             th:text="${selectedCountry}"></span></a>
                 </div>
                 <div class="buttons is-centered">
@@ -121,14 +121,14 @@
             <div class="column is-10-tablet">
                 <div class="buttons has-addons is-centered">
                     <a class="button is-small is-rounded is-info"
-                       th:href="@{/covid19/daily/{country}/details(country = ${selectedCountry})}">Details for <span
+                       th:href="@{/covid19/daily/{country}/details(country = ${selectedCountry})}">Details for&nbsp;<span
                             th:text="${selectedCountry}"></span></a>
                 </div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <div class="has-text-centered is-size-5" th:if="${noDataForDayOne}"></div>
+                <div class="has-text-centered is-size-5" th:if="${noDataForDayOne}" th:text="${noDataForDayOne}"></div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
