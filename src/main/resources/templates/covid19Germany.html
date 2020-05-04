@@ -60,6 +60,7 @@
                                          th:text="${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed(),3,'POINT')}"></div>
                                     <span class="icon is-pulled-right"><img src="/img/checkmark-outline.svg"></span>
                                     <div class="is-size-6"
+                                         th:if="${dataGermanySummary.getNewConfirmed() != 0} OR ${dataGermanySummary.getNewConfirmed() == dataGermanySummary.getTotalConfirmed()}"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.newConfirmed,3,'POINT')}"></div>
                                 </div>
                             </div>
@@ -70,6 +71,7 @@
                                          th:text="${#numbers.formatInteger(dataGermanySummary.getTotalRecovered(),3,'POINT')}"></div>
                                     <span class="icon is-pulled-right"><img src="/img/fitness-outline.svg"></span>
                                     <div class="is-size-6"
+                                         th:if="${dataGermanySummary.getNewRecovered() != 0} OR ${dataGermanySummary.getNewRecovered() == dataGermanySummary.getTotalRecovered()}"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.getNewRecovered(),3,'POINT')}"></div>
                                 </div>
                             </div>
@@ -80,6 +82,7 @@
                                          th:text="${#numbers.formatInteger(dataGermanySummary.getTotalDeaths(),3,'POINT')}"></div>
                                     <span class="icon is-pulled-right"><img src="/img/skull-outline.svg"></span>
                                     <div class="is-size-6"
+                                         th:if="${dataGermanySummary.getNewDeaths() != 0} OR ${dataGermanySummary.getNewDeaths() == dataGermanySummary.getTotalDeaths()}"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.getNewDeaths(),3,'POINT')}"></div>
                                 </div>
                             </div>
@@ -87,11 +90,11 @@
                         <div class="tile">
                             <div class="tile is-parent is-vertical">
                                 <div class="tile is-child notification is-warning">
-                                    <p class="is-size-5">Active cases <span class="icon"><img
-                                            src="/img/medkit-outline.svg"></span></p>
-                                    <p class="is-size-6"
-                                       th:text="${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed() -
-                                   dataGermanySummary.getTotalDeaths() - dataGermanySummary.getTotalRecovered(),3,'POINT')}"></p>
+                                    <div class="is-size-5">Active cases</div>
+                                    <span class="icon is-pulled-right"><img src="/img/medkit-outline.svg"></span>
+                                    <div class="is-size-6"
+                                         th:text="${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed() -
+                                   dataGermanySummary.getTotalDeaths() - dataGermanySummary.getTotalRecovered(),3,'POINT')}"></div>
                                 </div>
                             </div>
                             <div class="tile is-parent is-vertical">
@@ -113,17 +116,17 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <canvas id="dataGermanyConfirmed" class="box"></canvas>
+                <canvas class="box" id="dataGermanyConfirmed"></canvas>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <canvas id="dataGermanyRecovered" class="box"></canvas>
+                <canvas class="box" id="dataGermanyRecovered"></canvas>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <canvas id="dataGermanyDeaths" class="box"></canvas>
+                <canvas class="box" id="dataGermanyDeaths"></canvas>
             </div>
         </div>
     </section>

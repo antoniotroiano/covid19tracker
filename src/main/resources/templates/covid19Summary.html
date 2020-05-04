@@ -62,9 +62,11 @@
                                 <div class="tile is-child notification is-info">
                                     <div class="is-size-5">Total confirmed</div>
                                     <div class="is-size-6"
-                                         th:text="${dataSummaryToday.getConfirmedToday() == 0} ? ${'No value, please try again later!'} : ${#numbers.formatInteger(dataSummaryToday.getConfirmedToday(),3,'POINT')}"></div>
+                                         th:text="${dataSummaryToday.getConfirmedToday() == 0} ? ${'No value, please try again later!'}
+                                         : ${#numbers.formatInteger(dataSummaryToday.getConfirmedToday(),3,'POINT')}"></div>
                                     <span class="icon is-pulled-right"><img src="/img/checkmark-outline.svg"></span>
-                                    <div class="is-size-6 "
+                                    <div class="is-size-6"
+                                         th:if="${dataSummaryToday.getNewConfirmedToday() != 0} OR ${dataSummaryToday.getNewConfirmedToday() == dataSummaryToday.getConfirmedToday()}"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewConfirmedToday(),3,'POINT')}"></div>
                                 </div>
                             </div>
@@ -72,9 +74,11 @@
                                 <div class="tile is-child notification is-primary">
                                     <div class="is-size-5">Total recovered</div>
                                     <div class="is-size-6"
-                                         th:text="${dataSummaryToday.getRecoveredToday() == 0} ? ${'No value, please try again later!'} : ${#numbers.formatInteger(dataSummaryToday.getRecoveredToday(),3,'POINT')}"></div>
+                                         th:text="${dataSummaryToday.getRecoveredToday() == 0} ? ${'No value, please try again later!'}
+                                         : ${#numbers.formatInteger(dataSummaryToday.getRecoveredToday(),3,'POINT')}"></div>
                                     <span class="icon is-pulled-right"><img src="/img/fitness-outline.svg"></span>
                                     <div class="is-size-6"
+                                         th:if="${dataSummaryToday.getNewRecoveredToday() != 0} OR ${dataSummaryToday.getNewRecoveredToday() == dataSummaryToday.getRecoveredToday()}"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewRecoveredToday(),3,'POINT')}"></div>
                                 </div>
                             </div>
@@ -82,9 +86,11 @@
                                 <div class="tile is-child notification is-danger">
                                     <div class="is-size-5">Total deaths</div>
                                     <div class="is-size-6"
-                                         th:text="${dataSummaryToday.getDeathsToday() == 0} ? ${'No value, please try again later!'} : ${#numbers.formatInteger(dataSummaryToday.getDeathsToday(),3,'POINT')}"></div>
+                                         th:text="${dataSummaryToday.getDeathsToday() == 0} ? ${'No value, please try again later!'}
+                                         : ${#numbers.formatInteger(dataSummaryToday.getDeathsToday(),3,'POINT')}"></div>
                                     <span class="icon is-pulled-right"><img src="/img/skull-outline.svg"></span>
                                     <div class="is-size-6"
+                                         th:if="${dataSummaryToday.getNewDeathsToday() != 0} OR ${dataSummaryToday.getNewDeathsToday() == dataSummaryToday.getDeathsToday()}"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataSummaryToday.getNewDeathsToday(),3,'POINT')}"></div>
                                 </div>
                             </div>

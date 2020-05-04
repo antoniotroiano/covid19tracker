@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>COVID-19 - World</title>
     <link href="../../css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
@@ -58,9 +58,11 @@
                                 <div class="tile is-child notification is-info">
                                     <div class="is-size-5">Total confirmed</div>
                                     <div class="is-size-6"
-                                         th:text="${dataWorldSummary.getTotalConfirmed() == 0} ? ${'No value, please try again later!'} : ${#numbers.formatInteger(dataWorldSummary.getTotalConfirmed(),3,'POINT')}"></div>
+                                         th:text="${dataWorldSummary.getTotalConfirmed() == 0} ? ${'No value, please try again later!'}
+                                         : ${#numbers.formatInteger(dataWorldSummary.getTotalConfirmed(),3,'POINT')}"></div>
                                     <span class="icon is-pulled-right"><img src="/img/checkmark-outline.svg"></span>
                                     <div class="is-size-6"
+                                         th:if="${dataWorldSummary.getNewConfirmed() != 0} OR ${dataWorldSummary.getNewConfirmed() == dataWorldSummary.getTotalConfirmed()}"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.newConfirmed,3,'POINT')}"></div>
                                 </div>
                             </div>
@@ -68,9 +70,11 @@
                                 <div class="tile is-child notification is-primary">
                                     <div class="is-size-5">Total recovered</div>
                                     <div class="is-size-6"
-                                         th:text="${dataWorldSummary.getTotalRecovered() == 0} ? ${'No value, please try again later!'} : ${#numbers.formatInteger(dataWorldSummary.getTotalRecovered(),3,'POINT')}"></div>
+                                         th:text="${dataWorldSummary.getTotalRecovered() == 0} ? ${'No value, please try again later!'}
+                                         : ${#numbers.formatInteger(dataWorldSummary.getTotalRecovered(),3,'POINT')}"></div>
                                     <span class="icon is-pulled-right"><img src="/img/fitness-outline.svg"></span>
                                     <div class="is-size-6"
+                                         th:if="${dataWorldSummary.getNewRecovered() != 0} OR ${dataWorldSummary.getNewRecovered() == dataWorldSummary.getTotalRecovered()}"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.getNewRecovered(),3,'POINT')}"></div>
                                 </div>
                             </div>
@@ -78,9 +82,11 @@
                                 <div class="tile is-child notification is-danger">
                                     <div class="is-size-5">Total deaths</div>
                                     <div class="is-size-6"
-                                         th:text="${dataWorldSummary.getTotalDeaths() == 0} ? ${'No value, please try again later!'} : ${#numbers.formatInteger(dataWorldSummary.getTotalDeaths(),3,'POINT')}"></div>
+                                         th:text="${dataWorldSummary.getTotalDeaths() == 0} ? ${'No value, please try again later!'}
+                                         : ${#numbers.formatInteger(dataWorldSummary.getTotalDeaths(),3,'POINT')}"></div>
                                     <span class="icon is-pulled-right"><img src="/img/skull-outline.svg"></span>
                                     <div class="is-size-6"
+                                         th:if="${dataWorldSummary.getNewDeaths() != 0} OR ${dataWorldSummary.getNewDeaths() == dataWorldSummary.getTotalDeaths()}"
                                          th:text="'+ ' + ${#numbers.formatInteger(dataWorldSummary.getNewRecovered(),3,'POINT')}"></div>
                                 </div>
                             </div>
@@ -113,17 +119,17 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <canvas id="dataWorldConfirmed" class="box"></canvas>
+                <canvas class="box" id="dataWorldConfirmed"></canvas>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <canvas id="dataWorldRecovered" class="box"></canvas>
+                <canvas class="box" id="dataWorldRecovered"></canvas>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <canvas id="dataWorldDeaths" class="box"></canvas>
+                <canvas class="box" id="dataWorldDeaths"></canvas>
             </div>
         </div>
     </section>

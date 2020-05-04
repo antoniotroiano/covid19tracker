@@ -45,10 +45,6 @@ public class GetJsonValue {
         return new JSONArray(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
     }
 
-    private int getValueOfJSONArray(JSONArray jsonArray, int index, String key) throws JSONException {
-        return jsonArray.getJSONObject(index).getInt(key);
-    }
-
     private String formatCountry(String country) {
         String[] countryArray = country.split(" ");
         StringBuilder bld = new StringBuilder();
@@ -144,7 +140,6 @@ public class GetJsonValue {
         log.info("Invoke create data of world.");
         SummaryToday summaryToday = new SummaryToday();
 
-        //ToDo: die exception fangen oder nach vorne weitergeben auch für die try chatch blöcke versuchen umzusetzen.
         getTodayData("World", summaryToday, "https://covid19.mathdro.id/api");
 
         JSONArray getValueOfArray = getJSONArrayOfYesterday();
@@ -163,7 +158,6 @@ public class GetJsonValue {
         String formattedCountry = formatCountry(country);
         String formattedURL = "https://covid19.mathdro.id/api/countries/" + formattedCountry;
 
-        //ToDo: die exception fangen oder nach vorne weitergeben auch für die try chatch blöcke versuchen umzusetzen.
         getTodayData(country, summaryToday, formattedURL);
 
         JSONArray getValueOfArray = getJSONArrayOfYesterday();
