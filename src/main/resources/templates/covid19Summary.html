@@ -13,6 +13,67 @@
 
         getCountry(country);
     </script>
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -121,34 +182,59 @@
             <div class="column is-10-tablet">
                 <div class="buttons has-addons is-centered">
                     <a class="button is-small is-rounded is-info"
-                       th:href="@{/covid19/daily/{country}/details(country = ${selectedCountry})}">Details for&nbsp;<span
-                            th:text="${selectedCountry}"></span></a>
+                       th:href="@{/covid19/daily/{country}/details(country = ${selectedCountry})}">Details
+                        for&nbsp;<span
+                                th:text="${selectedCountry}"></span></a>
                 </div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
+                <label class="switch">
+                    <input checked onclick="myFunction()" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
                 <div class="has-text-centered is-size-5" th:if="${noDataForDayOne}" th:text="${noDataForDayOne}"></div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-10-tablet box">
-                <canvas id="lineChartAllData"></canvas>
+            <div class="column is-10-tablet">
+                <div class="box">
+                    <canvas id="lineChartAllData"></canvas>
+                </div>
+                <div class="box">
+                    <canvas id="barChartAllData"></canvas>
+                </div>
             </div>
         </div>
     </section>
 </div>
+<script>
+    function myFunction() {
+        let x = document.getElementById("lineChartAllData");
+        let y = document.getElementById("barChartAllData");
+        if (x.style.visibility === 'visible') {
+            x.style.visibility = 'hidden';
+            y.style.visibility = 'visible';
+        } else {
+            x.style.visibility = 'visible';
+            y.style.visibility = 'hidden';
+        }
+    }
+</script>
 <script th:inline="javascript">
     let lineChartCanvas = document.getElementById('lineChartAllData');
+    let barChartCanvas = document.getElementById('barChartAllData');
     /*<![CDATA[*/
     let country = /*[[${selectedCountry}]]*/;
     let confirmedList = /*[[${confirmed}]]*/;
     let deathsList = /*[[${deaths}]]*/;
     let recoveredList = /*[[${recovered}]]*/;
-    let dates = /*[[${dates}]]*/;
+    let dates = /*[[${datesSummary}]]*/;
     /*]]>*/
 
     lineChartDayOneToday(lineChartCanvas, country, confirmedList, deathsList, recoveredList, dates);
+    barChartDayOneToday(barChartCanvas, confirmedList, deathsList, recoveredList, dates, country)
 </script>
 </body>
 </html>

@@ -312,3 +312,80 @@ function lineChartDayOneToday(canvasLine, country, confirmedList, deathsList, re
         }
     });
 }
+
+/*Bar chart for selected country*/
+function barChartDayOneToday(canvasLine2 , confirmed, deaths, recovered, dates, country) {
+    const ctxBar = canvasLine2;
+    const myChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Confirmed',
+                backgroundColor: 'rgb(147,190,234, 0.6)',
+                barThickness: 8,
+                maxBarThickness: 10,
+                data: confirmed
+            }, {
+                label: 'Recovered',
+                backgroundColor: 'rgba(167,234,122,0.6)',
+                barThickness: 8,
+                maxBarThickness: 10,
+                data: recovered
+            }, {
+                label: 'Deaths',
+                backgroundColor: 'rgba(234,127,121,0.6)',
+                barThickness: 8,
+                maxBarThickness: 10,
+                data: deaths
+            }
+            ]
+        },
+        options: {
+            responsive: true,
+            responsiveAnimationDuration: 0,
+            maintainAspectRatio: false,
+            aspectRatio: 0.9,
+            onResize: null,
+            scales: {
+                xAxes: [{
+                    display: true,
+                    stacked: true,
+                    gridLines: {
+                        display: true
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 20
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    stacked: true,
+                    gridLines: {
+                        display: true
+                    }
+                }]
+            },
+            title: {
+                display: true,
+                fontSize: 20,
+                lineHeight: 1,
+                padding: 8,
+                fontColor: '#69C8C8',
+                text: country
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                align: 'center',
+                labels: {
+                    fontColor: 'rgb(000, 000, 000)',
+                    fontSize: 12,
+                    boxWidth: 35,
+                    padding: 8
+                }
+            }
+        }
+    });
+}
