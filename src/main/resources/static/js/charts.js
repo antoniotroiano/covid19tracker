@@ -29,7 +29,30 @@ function filterFunction() {
 /*Get selected country*/
 function getCountry(country) {
     document.location.replace("/covid19/daily/" + country);
-};
+}
+
+/*Modal with bulma*/
+function openModal(region, confirmed, recovered, deaths, active) {
+    let $activeElement = undefined;
+
+    $(function () {
+        $(".modal-bulma").click(function () {
+            $activeElement = $(this);
+            $("#region").text($activeElement.data(region));
+            $("#confirmed").text($activeElement.data(confirmed));
+            $("#recovered").text($activeElement.data(recovered));
+            $("#deaths").text($activeElement.data(deaths));
+            $("#active").text($activeElement.data(active));
+            $(".modal").addClass("is-active");
+        });
+        $(".modal-close").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+        $(".closeBtn").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+}
 
 /*Bar chart for selected country*/
 function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, datesA, confList, recList, deaList) {
@@ -67,16 +90,16 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
                         autoSkip: true,
                         maxTicksLimit: 25
                     }
-                        /*callback: function (dataLabel) {
-                            dateDeath.push(dataLabel);
-                            if (dateDeath.filter(d => d === dataLabel).length >= 2) {
-                                return '';
-                            } else {
-                                return dataLabel + '.2020';
-                            }
-                        }*/
-                        // Hide the label of every 2nd dataset. return null to hide the grid line too
-                        //return index % 2 === 0 ? dataLabel : '';
+                    /*callback: function (dataLabel) {
+                        dateDeath.push(dataLabel);
+                        if (dateDeath.filter(d => d === dataLabel).length >= 2) {
+                            return '';
+                        } else {
+                            return dataLabel + '.2020';
+                        }
+                    }*/
+                    // Hide the label of every 2nd dataset. return null to hide the grid line too
+                    //return index % 2 === 0 ? dataLabel : '';
                 }],
                 yAxes: [{
                     display: true,
@@ -234,33 +257,63 @@ function barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, re
     });
 }
 
-/*Line chart for selected country*/
-function lineChartDayOneToday(canvasLine, country, confirmedList, deathsList, recoveredList, dates) {
+let stackedBoolean = false;
+let charType = 'line';
+let barChart;
 
-    const ctx = canvasLine.getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'line',
+/*Toggle line and bar chart*/
+function change(newType, toggleCharts, dates, confirmed, recovered, deaths, countryToggle) {
+    barChart.destroy();
+
+    if (newType === 'bar') {
+        charType = newType;
+        stackedBoolean = true;
+        toggleChartTypes(toggleCharts, dates, confirmed, recovered, deaths, countryToggle);
+    } else {
+        charType = 'line';
+        stackedBoolean = false;
+        toggleChartTypes(toggleCharts, dates, confirmed, recovered, deaths, countryToggle);
+    }
+};
+
+/*Line or bar chart*/
+function toggleChartTypes(toggleCharts, dates, confirmed, recovered, deaths, countryToggle) {
+
+    const ctxToggle = toggleCharts;
+    barChart = new Chart(ctxToggle, {
+        type: charType,
         data: {
             labels: dates,
             datasets: [{
                 label: 'Confirmed',
-                borderColor: 'rgb(65, 133, 234, 0.6)',
+                backgroundColor: 'rgb(147,190,234,0.6)',
+                borderColor: 'rgb(65,133,234,0.6)',
+                borderWidth: 2,
                 fill: false,
                 pointRadius: 3,
-                data: confirmedList
-            }, {
-                label: 'Deaths',
-                borderColor: 'rgb(250, 2, 6, 0.6)',
-                fill: false,
-                pointRadius: 3,
-                data: deathsList
+                barThickness: 8,
+                maxBarThickness: 10,
+                data: confirmed
             }, {
                 label: 'Recovered',
-                borderColor: 'rgb(27, 205, 4, 0.6)',
+                backgroundColor: 'rgba(167,234,122,0.6)',
+                borderColor: 'rgb(27,205,4,0.6)',
+                borderWidth: 2,
                 fill: false,
                 pointRadius: 3,
-                data: recoveredList,
-                showLine: true
+                barThickness: 8,
+                maxBarThickness: 10,
+                data: recovered
+            }, {
+                label: 'Deaths',
+                backgroundColor: 'rgba(234,127,121,0.6)',
+                borderColor: 'rgb(250,2,6,0.6)',
+                borderWidth: 2,
+                fill: false,
+                pointRadius: 3,
+                barThickness: 8,
+                maxBarThickness: 10,
+                data: deaths
             }]
         },
         options: {
@@ -272,85 +325,7 @@ function lineChartDayOneToday(canvasLine, country, confirmedList, deathsList, re
             scales: {
                 xAxes: [{
                     display: true,
-                    gridLines: {
-                        display: true
-                    },
-                    ticks: {
-                        autoSkip: true,
-                        maxTicksLimit: 17
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    gridLines: {
-                        display: true
-                    }
-                }]
-            },
-            tooltips: {
-                mode: 'point'
-            },
-            title: {
-                display: true,
-                fontSize: 20,
-                lineHeight: 1,
-                padding: 8,
-                fontColor: '#69C8C8',
-                text: country
-            },
-            legend: {
-                display: true,
-                position: 'bottom',
-                align: 'center',
-                labels: {
-                    fontColor: 'rgb(000, 000, 000)',
-                    fontSize: 12,
-                    boxWidth: 35,
-                    padding: 8
-                }
-            }
-        }
-    });
-}
-
-/*Bar chart for selected country*/
-function barChartDayOneToday(canvasLine2 , confirmed, deaths, recovered, dates, country) {
-    const ctxBar = canvasLine2;
-    const myChart = new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-            labels: dates,
-            datasets: [{
-                label: 'Confirmed',
-                backgroundColor: 'rgb(147,190,234, 0.6)',
-                barThickness: 8,
-                maxBarThickness: 10,
-                data: confirmed
-            }, {
-                label: 'Recovered',
-                backgroundColor: 'rgba(167,234,122,0.6)',
-                barThickness: 8,
-                maxBarThickness: 10,
-                data: recovered
-            }, {
-                label: 'Deaths',
-                backgroundColor: 'rgba(234,127,121,0.6)',
-                barThickness: 8,
-                maxBarThickness: 10,
-                data: deaths
-            }
-            ]
-        },
-        options: {
-            responsive: true,
-            responsiveAnimationDuration: 0,
-            maintainAspectRatio: false,
-            aspectRatio: 0.9,
-            onResize: null,
-            scales: {
-                xAxes: [{
-                    display: true,
-                    stacked: true,
+                    stacked: stackedBoolean,
                     gridLines: {
                         display: true
                     },
@@ -361,7 +336,7 @@ function barChartDayOneToday(canvasLine2 , confirmed, deaths, recovered, dates, 
                 }],
                 yAxes: [{
                     display: true,
-                    stacked: true,
+                    stacked: stackedBoolean,
                     gridLines: {
                         display: true
                     }
@@ -373,7 +348,7 @@ function barChartDayOneToday(canvasLine2 , confirmed, deaths, recovered, dates, 
                 lineHeight: 1,
                 padding: 8,
                 fontColor: '#69C8C8',
-                text: country
+                text: countryToggle
             },
             legend: {
                 display: true,

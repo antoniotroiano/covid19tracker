@@ -9,15 +9,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
     <script th:src="@{/js/charts.js}"></script>
     <script th:inline="javascript">
-        loading(id)
-
         getCountry(country);
     </script>
     <style>
         .switch {
             position: relative;
             display: inline-block;
-            width: 60px;
+            width: 120px;
             height: 34px;
         }
 
@@ -60,12 +58,33 @@
         }
 
         input:checked + .slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
+            -webkit-transform: translateX(84px);
+            -ms-transform: translateX(84px);
+            transform: translateX(84px);
         }
 
-        /* Rounded sliders */
+        .on {
+            display: none;
+        }
+
+        .on, .off {
+            color: white;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            font-size: 10px;
+            font-family: Verdana, sans-serif;
+        }
+
+        input:checked + .slider .on {
+            display: block;
+        }
+
+        input:checked + .slider .off {
+            display: none;
+        }
+
         .slider.round {
             border-radius: 34px;
         }
@@ -183,58 +202,54 @@
                 <div class="buttons has-addons is-centered">
                     <a class="button is-small is-rounded is-info"
                        th:href="@{/covid19/daily/{country}/details(country = ${selectedCountry})}">Details
-                        for&nbsp;<span
-                                th:text="${selectedCountry}"></span></a>
+                        for&nbsp;<span th:text="${selectedCountry}"></span></a>
                 </div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <label class="switch">
-                    <input checked onclick="myFunction()" type="checkbox">
-                    <span class="slider round"></span>
-                </label>
                 <div class="has-text-centered is-size-5" th:if="${noDataForDayOne}" th:text="${noDataForDayOne}"></div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-10-tablet">
-                <div class="box">
-                    <canvas id="lineChartAllData"></canvas>
+                <div class="buttons has-addons is-centered">
+                    <label class="switch is-centered">
+                        <input checked id="togBtn" onclick="changeHTML()" type="checkbox">
+                        <div class="slider round">
+                            <span class="on">Line Chart</span><span class="off">Bar Chart</span>
+                        </div>
+                    </label>
                 </div>
                 <div class="box">
-                    <canvas id="barChartAllData"></canvas>
+                    <canvas id="toggleChartType"></canvas>
                 </div>
             </div>
         </div>
     </section>
 </div>
-<script>
-    function myFunction() {
-        let x = document.getElementById("lineChartAllData");
-        let y = document.getElementById("barChartAllData");
-        if (x.style.visibility === 'visible') {
-            x.style.visibility = 'hidden';
-            y.style.visibility = 'visible';
-        } else {
-            x.style.visibility = 'visible';
-            y.style.visibility = 'hidden';
-        }
-    }
-</script>
 <script th:inline="javascript">
-    let lineChartCanvas = document.getElementById('lineChartAllData');
-    let barChartCanvas = document.getElementById('barChartAllData');
+    let toggleCharts = document.getElementById('toggleChartType');
     /*<![CDATA[*/
-    let country = /*[[${selectedCountry}]]*/;
-    let confirmedList = /*[[${confirmed}]]*/;
-    let deathsList = /*[[${deaths}]]*/;
-    let recoveredList = /*[[${recovered}]]*/;
-    let dates = /*[[${datesSummary}]]*/;
+    let country = /*[[${selectedCountry}]]*/ '';
+    let confirmedList = /*[[${confirmed}]]*/ '';
+    let deathsList = /*[[${deaths}]]*/ '';
+    let recoveredList = /*[[${recovered}]]*/ '';
+    let dates = /*[[${datesSummary}]]*/ '';
     /*]]>*/
 
-    lineChartDayOneToday(lineChartCanvas, country, confirmedList, deathsList, recoveredList, dates);
-    barChartDayOneToday(barChartCanvas, confirmedList, deathsList, recoveredList, dates, country)
+    toggleChartTypes(toggleCharts, dates, confirmedList, recoveredList, deathsList, country);
+
+    function changeHTML() {
+        let isChecked = document.getElementById("togBtn").checked;
+        if (isChecked === true) {
+            let lineChart = 'line';
+            change(lineChart, toggleCharts, dates, confirmedList, recoveredList, deathsList, country);
+        } else {
+            let barChart = 'bar';
+            change(barChart, toggleCharts, dates, confirmedList, recoveredList, deathsList, country);
+        }
+    }
 </script>
 </body>
 </html>

@@ -11,7 +11,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script th:src="@{/js/charts.js}"></script>
     <script th:inline="javascript">
-        loading(id)
+        openModal("region", "confirmed", "recovered", "deaths", "active")
     </script>
 </head>
 <body>
@@ -93,7 +93,7 @@
     </section>
 </div>
 <script th:inline="javascript">
-    let $activeElement = undefined;
+    /*let $activeElement = undefined;
 
     $(function () {
         $(".modal-bulma").click(function () {
@@ -111,7 +111,7 @@
         $(".closeBtn").click(function () {
             $(".modal").removeClass("is-active");
         });
-    });
+    });*/
 </script>
 </body>
 </html>
