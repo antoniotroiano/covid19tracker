@@ -11,17 +11,44 @@
     <script th:inline="javascript">
         getCountry(country);
     </script>
+    <style>
+        .dropdown {
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            padding-top: 0em;
+            display: none;
+            position: absolute;
+            overflow: auto;
+            z-index: 1;
+            max-height: 20em;
+        }
+
+        .dropdown-content a {
+            padding-right: 0em;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
     <section class="section">
         <div class="columns is-mobile is-centered">
-            <div class="column is-10-tablet">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="title is-3 has-text-centered">Daily data of COVID-19 from JHU for Germany</div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-10-tablet">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons is-centered">
                     <a class="button is-small is-link is-rounded" href="/covid19" type="submit">Go to home</a>
                     <a class="button is-small is-link is-rounded" href="/sir-model" type="submit">Go to SIR-Model</a>
@@ -46,61 +73,64 @@
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-10-tablet">
+            <div class="column is-12-tablet is-11-desktop is-10-widescreen is-9-fullhd">
                 <div class="has-text-centered is-size-5" th:if="${noFirstDataGermany}"></div>
                 <div class="tile is-ancestor">
-                    <div class="tile is-vertical">
-                        <div class="tile">
-                            <div class="tile is-parent is-vertical">
-                                <div class="tile is-child notification is-info">
-                                    <div class="is-size-5">Total confirmed</div>
-                                    <div class="is-size-6"
-                                         th:text="${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed(),3,'POINT')}"></div>
-                                    <span class="icon is-pulled-right"><img src="/img/checkmark-outline.svg"></span>
-                                    <div class="is-size-6"
-                                         th:if="${dataGermanySummary.getNewConfirmed() != 0} OR ${dataGermanySummary.getNewConfirmed() == dataGermanySummary.getTotalConfirmed()}"
-                                         th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.newConfirmed,3,'POINT')}"></div>
-                                </div>
-                            </div>
-                            <div class="tile is-parent is-vertical">
-                                <div class="tile is-child notification is-primary">
-                                    <div class="is-size-5">Total recovered</div>
-                                    <div class="is-size-6"
-                                         th:text="${#numbers.formatInteger(dataGermanySummary.getTotalRecovered(),3,'POINT')}"></div>
-                                    <span class="icon is-pulled-right"><img src="/img/fitness-outline.svg"></span>
-                                    <div class="is-size-6"
-                                         th:if="${dataGermanySummary.getNewRecovered() != 0} OR ${dataGermanySummary.getNewRecovered() == dataGermanySummary.getTotalRecovered()}"
-                                         th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.getNewRecovered(),3,'POINT')}"></div>
-                                </div>
-                            </div>
-                            <div class="tile is-parent is-vertical">
-                                <div class="tile is-child notification is-danger">
-                                    <div class="is-size-5">Total deaths</div>
-                                    <div class="is-size-6"
-                                         th:text="${#numbers.formatInteger(dataGermanySummary.getTotalDeaths(),3,'POINT')}"></div>
-                                    <span class="icon is-pulled-right"><img src="/img/skull-outline.svg"></span>
-                                    <div class="is-size-6"
-                                         th:if="${dataGermanySummary.getNewDeaths() != 0} OR ${dataGermanySummary.getNewDeaths() == dataGermanySummary.getTotalDeaths()}"
-                                         th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.getNewDeaths(),3,'POINT')}"></div>
-                                </div>
+                    <div class="tile is-horizontal">
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-info">
+                                <span class="icon is-pulled-right"><img src="/img/checkmark-outline.svg"></span>
+                                <div class="is-size-5">Total confirmed</div>
+                                <div class="is-size-6"
+                                     th:text="${dataGermanySummary.getTotalConfirmed() == 0} ? ${'No value, please try again later!'}
+                                         : ${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed(),3,'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${dataGermanySummary.getNewConfirmed() != 0} AND ${dataGermanySummary.getNewConfirmed() != dataGermanySummary.getTotalConfirmed()}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.newConfirmed,3,'POINT')}"></div>
                             </div>
                         </div>
-                        <div class="tile">
-                            <div class="tile is-parent is-vertical">
-                                <div class="tile is-child notification is-warning">
-                                    <div class="is-size-5">Active cases</div>
-                                    <span class="icon is-pulled-right"><img src="/img/medkit-outline.svg"></span>
-                                    <div class="is-size-6"
-                                         th:text="${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed() -
-                                   dataGermanySummary.getTotalDeaths() - dataGermanySummary.getTotalRecovered(),3,'POINT')}"></div>
-                                </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-primary">
+                                <span class="icon is-pulled-right"><img src="/img/fitness-outline.svg"></span>
+                                <div class="is-size-5">Total recovered</div>
+                                <div class="is-size-6"
+                                     th:text="${dataGermanySummary.getTotalRecovered() == 0} ? ${'No value, please try again later!'}
+                                         : ${#numbers.formatInteger(dataGermanySummary.getTotalRecovered(),3,'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${dataGermanySummary.getNewRecovered() != 0} AND ${dataGermanySummary.getNewRecovered() != dataGermanySummary.getTotalRecovered()}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.getNewRecovered(),3,'POINT')}"></div>
                             </div>
-                            <div class="tile is-parent is-vertical">
-                                <div class="tile is-child notification is-light">
-                                    <div class="is-size-5">Last update</div>
-                                    <div class="is-size-6"
-                                         th:text="${date}"></div>
-                                </div>
+                        </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-danger">
+                                <span class="icon is-pulled-right"><img src="/img/skull-outline.svg"></span>
+                                <div class="is-size-5">Total deaths</div>
+                                <div class="is-size-6"
+                                     th:text="${dataGermanySummary.getTotalDeaths() == 0} ? ${'No value, please try again later!'}
+                                         : ${#numbers.formatInteger(dataGermanySummary.getTotalDeaths(),3,'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${dataGermanySummary.getNewDeaths() != 0} AND ${dataGermanySummary.getNewDeaths() != dataGermanySummary.getTotalDeaths()}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(dataGermanySummary.getNewDeaths(),3,'POINT')}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-ancestor">
+                    <div class="tile is-horizontal">
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-warning">
+                                <span class="icon is-pulled-right"><img src="/img/medkit-outline.svg"></span>
+                                <div class="is-size-5">Active cases</div>
+                                <div class="is-size-6"
+                                     th:text="${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed() -
+                                   dataGermanySummary.getTotalDeaths() - dataGermanySummary.getTotalRecovered(),3,'POINT')}"></div>
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-light">
+                                <div class="is-size-5">Last update</div>
+                                <div class="is-size-6"
+                                     th:text="${date}"></div>
                             </div>
                         </div>
                     </div>
@@ -108,48 +138,70 @@
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-10-tablet">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="has-text-centered is-size-5" th:if="${noDataGermany}"></div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-10-tablet">
-                <canvas class="box" id="dataGermanyConfirmed"></canvas>
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <div class="buttons has-addons-centered is-centered">
+                    <button class="button is-small is-rounded is-info" onclick="toggleToBarChart()" type="button">All in
+                        one
+                    </button>
+                    <button class="button is-small is-rounded is-info" onclick="confirmed()" type="button">Confirmed
+                    </button>
+                    <button class="button is-small is-rounded is-info" onclick="recovered()" type="button">Recovered
+                    </button>
+                    <button class="button is-small is-rounded is-info" onclick="deaths()" type="button">Deaths</button>
+                    <button class="button is-small is-rounded is-info" onclick="toggleToLineChart()" type="button">Line
+                        Chart
+                    </button>
+                </div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-10-tablet">
-                <canvas class="box" id="dataGermanyRecovered"></canvas>
-            </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-10-tablet">
-                <canvas class="box" id="dataGermanyDeaths"></canvas>
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd box">
+                <canvas id="canvasGermany"></canvas>
             </div>
         </div>
     </section>
 </div>
 <script th:inline="javascript">
-    let confCanvas = document.getElementById('dataGermanyConfirmed');
-    let recCanvas = document.getElementById('dataGermanyRecovered');
-    let deaCanvas = document.getElementById('dataGermanyDeaths');
-    let confLabel = 'Confirmed';
-    let recLabel = 'Recovered';
-    let deaLabel = 'Death';
+    let canvasGermany = document.getElementById('canvasGermany');
     /*<![CDATA[*/
-    let dates = /*[[${datesG}]]*/;
-    let confList = /*[[${confirmedListG}]]*/;
-    let recList = /*[[${recoveredListG}]]*/;
-    let deaList = /*[[${deathsListG}]]*/;
+    let dates = /*[[${datesG}]]*/ '';
+    let confList = /*[[${confirmedListG}]]*/ '';
+    let recList = /*[[${recoveredListG}]]*/ '';
+    let deaList = /*[[${deathsListG}]]*/ '';
     /*]]>*/
 
-    barChartSelectedCountry(confCanvas, recCanvas, deaCanvas, confLabel, recLabel, deaLabel, dates, confList, recList, deaList);
+    barChartAll(canvasGermany, dates, 'Germany', confList, recList, deaList);
 
-    let dropdown = document.querySelector('.dropdown');
-    dropdown.addEventListener('click', function (event) {
-        event.stopPropagation();
-        dropdown.classList.toggle('is-active');
-    });
+    function confirmed() {
+        changeBarChart(canvasGermany, dates, 'Confirmed', confList, recList, deaList)
+    }
+
+    function recovered() {
+        changeBarChart(canvasGermany, dates, 'Recovered', confList, recList, deaList);
+    }
+
+    function deaths() {
+        changeBarChart(canvasGermany, dates, 'Deaths', confList, recList, deaList);
+    }
+
+    function allValues() {
+        changeBarChart(canvasGermany, dates, 'Germany', confList, recList, deaList)
+    }
+
+    function toggleToBarChart() {
+        let barChartString = 'bar';
+        changeBarChart(canvasGermany, dates, 'Germany', confList, recList, deaList, barChartString);
+    }
+
+    function toggleToLineChart() {
+        let lineChartString = 'line';
+        changeBarChart(canvasGermany, dates, 'Germany', confList, recList, deaList, lineChartString);
+    }
 </script>
 </body>
 </html>

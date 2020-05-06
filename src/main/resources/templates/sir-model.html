@@ -11,6 +11,33 @@
     <script th:inline="javascript">
         getCountry(country);
     </script>
+    <style>
+        .dropdown {
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            padding-top: 0em;
+            display: none;
+            position: absolute;
+            overflow: auto;
+            z-index: 1;
+            max-height: 20em;
+        }
+
+        .dropdown-content a {
+            padding-right: 0em;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -80,75 +107,21 @@
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-12-tablet box">
-                <canvas id="myChart"></canvas>
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd box">
+                <canvas id="sirModel"></canvas>
             </div>
         </div>
     </section>
 </div>
-<script>
-    const sus = [[${resultSusceptible}]];
-    const inf = [[${resultInfected}]];
-    const rec = [[${resultRecovered}]];
+<script th:inline="javascript">
+    let sirModelCanvas = document.getElementById('sirModel');
+    /*<![CDATA[*/
+    let sus = /*[[${resultSusceptible}]]*/ '';
+    let inf = /*[[${resultInfected}]]*/ '';
+    let rec = /*[[${resultRecovered}]]*/ '';
+    /*]]>*/
 
-    let days = [];
-    for (let i = 1; i <= sus.length; i++) {
-        days.push('Day ' + i);
-    }
-
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: days,
-            datasets: [{
-                label: 'Susceptible',
-                borderColor: 'rgb(65, 133, 234, 0.6)',
-                fill: false,
-                pointRadius: 5,
-                data: sus
-            }, {
-                label: 'Infected',
-                borderColor: 'rgb(250, 2, 6, 0.6)',
-                fill: false,
-                pointRadius: 5,
-                data: inf
-            }, {
-                label: 'Recovered',
-                borderColor: 'rgb(27, 205, 4, 0.6)',
-                fill: false,
-                pointRadius: 5,
-                data: rec,
-                showLine: true
-            }]
-        },
-        options: {
-            responsive: true,
-            responsiveAnimationDuration: 0,
-            maintainAspectRatio: false,
-            aspectRatio: 0.9,
-            onResize: null,
-            tooltips: {
-                mode: 'point'
-            },
-            legend: {
-                display: true,
-                position: 'bottom',
-                align: 'center',
-                labels: {
-                    boxWidth: 40,
-                    fontColor: 'rgb(000, 000, 000)'
-                }
-            },
-            title: {
-                display: true,
-                fontSize: 20,
-                padding: 15,
-                fontColor: '#69C8C8',
-                text: 'SIR Model'
-            }
-        }
-    });
+    sirModelChart(sirModelCanvas, sus, inf, rec);
 </script>
 </body>
 </html>
