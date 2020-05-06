@@ -69,17 +69,17 @@ function changeBarChart(canvas, dates, label, listConfirmed, listRecovered, list
         backgroundColor = 'rgba(167,234,122,0.6)';
         borderColor = 'rgb(9,234,14)';
         hoverBackgroundColor = 'rgba(187,234,109,0.7)';
-        barChartSelectedCountry(canvas, dates, label, listConfirmed);
+        barChartSelectedCountry(canvas, dates, label, listRecovered);
     } else if (label === 'Deaths') {
         backgroundColor = 'rgba(234,127,121,0.6)';
         borderColor = 'rgb(234,3,12)';
         hoverBackgroundColor = 'rgba(234,81,77,0.7)';
-        barChartSelectedCountry(canvas, dates, label, listRecovered);
+        barChartSelectedCountry(canvas, dates, label, listDeaths);
     } else if (label === 'Confirmed') {
         backgroundColor = 'rgb(147,190,234, 0.6)';
         borderColor = 'rgb(13,23,234)';
         hoverBackgroundColor = 'rgb(147,190,234, 0.7)';
-        barChartSelectedCountry(canvas, dates, label, listDeaths);
+        barChartSelectedCountry(canvas, dates, label, listConfirmed);
     } else if (type === 'bar') {
         typeChart = 'bar';
         booleanStacked = true;

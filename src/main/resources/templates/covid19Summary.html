@@ -166,7 +166,7 @@
                         <div class="tile is-parent">
                             <div class="tile is-child notification is-info">
                                 <span class="icon is-pulled-right"><img src="/img/checkmark-outline.svg"></span>
-                                <div class="is-size-5">Total confirmed</div>
+                                <div class="is-size-5">Confirmed</div>
                                 <div class="is-size-6"
                                      th:text="${dataSummaryToday.getConfirmedToday() == 0} ? ${'No value, please try again later!'}
                                          : ${#numbers.formatInteger(dataSummaryToday.getConfirmedToday(),3,'POINT')}"></div>
@@ -178,7 +178,7 @@
                         <div class="tile is-parent">
                             <div class="tile is-child notification is-primary">
                                 <span class="icon is-pulled-right"><img src="/img/fitness-outline.svg"></span>
-                                <div class="is-size-5">Total recovered</div>
+                                <div class="is-size-5">Recovered</div>
                                 <div class="is-size-6"
                                      th:text="${dataSummaryToday.getRecoveredToday() == 0} ? ${'No value, please try again later!'}
                                          : ${#numbers.formatInteger(dataSummaryToday.getRecoveredToday(),3,'POINT')}"></div>
@@ -190,7 +190,7 @@
                         <div class="tile is-parent">
                             <div class="tile is-child notification is-danger">
                                 <span class="icon is-pulled-right"><img src="/img/skull-outline.svg"></span>
-                                <div class="is-size-5">Total deaths</div>
+                                <div class="is-size-5">Deaths</div>
                                 <div class="is-size-6"
                                      th:text="${dataSummaryToday.getDeathsToday() == 0} ? ${'No value, please try again later!'}
                                          : ${#numbers.formatInteger(dataSummaryToday.getDeathsToday(),3,'POINT')}"></div>

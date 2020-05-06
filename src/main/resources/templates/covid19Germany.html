@@ -80,7 +80,7 @@
                         <div class="tile is-parent">
                             <div class="tile is-child notification is-info">
                                 <span class="icon is-pulled-right"><img src="/img/checkmark-outline.svg"></span>
-                                <div class="is-size-5">Total confirmed</div>
+                                <div class="is-size-5">Confirmed</div>
                                 <div class="is-size-6"
                                      th:text="${dataGermanySummary.getTotalConfirmed() == 0} ? ${'No value, please try again later!'}
                                          : ${#numbers.formatInteger(dataGermanySummary.getTotalConfirmed(),3,'POINT')}"></div>
@@ -92,7 +92,7 @@
                         <div class="tile is-parent">
                             <div class="tile is-child notification is-primary">
                                 <span class="icon is-pulled-right"><img src="/img/fitness-outline.svg"></span>
-                                <div class="is-size-5">Total recovered</div>
+                                <div class="is-size-5">Recovered</div>
                                 <div class="is-size-6"
                                      th:text="${dataGermanySummary.getTotalRecovered() == 0} ? ${'No value, please try again later!'}
                                          : ${#numbers.formatInteger(dataGermanySummary.getTotalRecovered(),3,'POINT')}"></div>
@@ -104,7 +104,7 @@
                         <div class="tile is-parent">
                             <div class="tile is-child notification is-danger">
                                 <span class="icon is-pulled-right"><img src="/img/skull-outline.svg"></span>
-                                <div class="is-size-5">Total deaths</div>
+                                <div class="is-size-5">Deaths</div>
                                 <div class="is-size-6"
                                      th:text="${dataGermanySummary.getTotalDeaths() == 0} ? ${'No value, please try again later!'}
                                          : ${#numbers.formatInteger(dataGermanySummary.getTotalDeaths(),3,'POINT')}"></div>
