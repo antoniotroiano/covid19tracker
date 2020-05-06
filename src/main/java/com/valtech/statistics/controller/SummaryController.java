@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,6 @@ public class SummaryController {
             model.addAttribute("noDataForThisCountry", "No dataset for " + country + ". Please try again later.");
             log.info("No data for the country {}", country);
         } else {
-            model.addAttribute("summaryToday", new SummaryToday());
             createBaseModelSummary(country, model);
             model.addAttribute("dataSummaryToday", summaryToday);
             String date = dateFormat.formatLastUpdateToDate(summaryToday.getLastUpdate());
@@ -63,7 +63,7 @@ public class SummaryController {
                 .stream()
                 .map(SummaryToday::getRecoveredToday)
                 .collect(Collectors.toList()));
-        model.addAttribute("dates", summaryTodayList
+        model.addAttribute("datesSummary", summaryTodayList
                 .stream()
                 .map(SummaryToday::getLastUpdate)
                 .collect(Collectors.toList()));
@@ -87,7 +87,6 @@ public class SummaryController {
             log.warn("No details available for selected country {}", country);
             return COVID19_DETAILS;
         }
-        model.addAttribute("summaryToday", new SummaryToday());
         createBaseModelDetails(country, model);
         model.addAttribute("summaryTodayList", summaryTodayList);
         log.info("Show more details for selected country {}", country);
@@ -95,12 +94,14 @@ public class SummaryController {
     }
 
     private void createBaseModelDetails(String country, Model model) {
+        model.addAttribute("summaryToday", new SummaryToday());
         model.addAttribute("title", "COVID-19 - Details for " + country);
         model.addAttribute("selectedCountry", country);
         log.debug("Create base model with title and selected country for details.");
     }
 
     private void createBaseModelSummary(String country, Model model) {
+        model.addAttribute("summaryToday", new SummaryToday());
         model.addAttribute("title", "COVID-19 - Summary for " + country);
         model.addAttribute("selectedCountry", country);
         log.debug("Create base model with title and selected country for summary.");
