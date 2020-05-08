@@ -1,7 +1,9 @@
 package com.valtech.statistics.controller;
 
+import com.opencsv.exceptions.CsvException;
 import com.valtech.statistics.model.SummaryToday;
 import com.valtech.statistics.service.DateFormat;
+import com.valtech.statistics.service.csv.ReadCSV;
 import com.valtech.statistics.service.json.GetJsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,9 +26,10 @@ public class SummaryController {
     private static final String COVID19_DETAILS = "covid19Details";
     private final GetJsonValue getJsonValue;
     private final DateFormat dateFormat;
+    private final ReadCSV readCSV;
 
     @GetMapping("/{country}")
-    public String showSummaryOfSelectedCountry(@PathVariable("country") String country, Model model) throws IOException {
+    public String showSummaryOfSelectedCountry(@PathVariable("country") String country, Model model) throws IOException, CsvException {
         log.info("Invoke show summary of country {}", country);
         List<String> allCountries = getJsonValue.getCountryOfJSONObject();
         model.addAttribute("listCountries", allCountries);
@@ -67,7 +69,31 @@ public class SummaryController {
                 .stream()
                 .map(SummaryToday::getLastUpdate)
                 .collect(Collectors.toList()));
-        log.info("Show day one to today data for selected country {}", country);
+
+        List<SummaryToday> summaryTodayListOneDay = getJsonValue.getOneDayValues(country);
+        if (summaryTodayListOneDay.isEmpty()) {
+            model.addAttribute("noDataForOneDay", "Sorry no data found. Please try again later.");
+            log.warn("No data for one day found for selected country {}", country);
+            return "covid19Summary";
+        }
+        model.addAttribute("confirmedOneDay", summaryTodayListOneDay
+                .stream()
+                .map(SummaryToday::getConfirmedToday)
+                .collect(Collectors.toList()));
+        model.addAttribute("recoveredOneDay", summaryTodayListOneDay
+                .stream()
+                .map(SummaryToday::getRecoveredToday)
+                .collect(Collectors.toList()));
+        model.addAttribute("deathsOneDay", summaryTodayListOneDay
+                .stream()
+                .map(SummaryToday::getDeathsToday)
+                .collect(Collectors.toList()));
+        model.addAttribute("dateOneDay", summaryTodayListOneDay
+                .stream()
+                .map(SummaryToday::getLastUpdate)
+                .collect(Collectors.toList()));
+
+        log.info("Show day one to today data for selected country {} and show the daily trend", country);
         return "covid19Summary";
     }
 

@@ -181,7 +181,7 @@ public class GetJsonValue {
         log.info("Invoke get data of day one for selected country {}", country);
         List<SummaryToday> summaryTodayList = new ArrayList<>();
         String formattedCountry = formatCountryDayOne(country);
-        String formattedURL = "https://api.covid19api.com/total/dayone/country/" + formattedCountry;
+        String formattedURL = "https://api.covid19api.com/dayone/country/" + formattedCountry;
 
         try {
             JSONArray jsonArray = new JSONArray(IOUtils.toString(new URL(formattedURL), StandardCharsets.UTF_8));
@@ -191,19 +191,17 @@ public class GetJsonValue {
             }
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                int confirmed = jsonObject.getInt("Confirmed");
-                int deaths = jsonObject.getInt("Deaths");
-                int recovered = jsonObject.getInt("Recovered");
                 String date = jsonObject.getString("Date");
-
+                String province = jsonObject.getString("Province");
                 String formattedDate = dateFormat.formatLastUpdateToDateDayOne(date);
-
                 SummaryToday summaryToday = new SummaryToday();
-                summaryToday.setConfirmedToday(confirmed);
-                summaryToday.setDeathsToday(deaths);
-                summaryToday.setRecoveredToday(recovered);
-                summaryToday.setLastUpdate(formattedDate);
-                summaryTodayList.add(summaryToday);
+                if (province.equals("")) {
+                    summaryToday.setConfirmedToday(jsonObject.getInt("Confirmed"));
+                    summaryToday.setDeathsToday(jsonObject.getInt("Deaths"));
+                    summaryToday.setRecoveredToday(jsonObject.getInt("Recovered"));
+                    summaryToday.setLastUpdate(formattedDate);
+                    summaryTodayList.add(summaryToday);
+                }
             }
             log.info("Return list with all data since day one od {}", country);
             return summaryTodayList;
@@ -211,6 +209,38 @@ public class GetJsonValue {
             log.warn("No new update for day one to today.");
             return summaryTodayList;
         }
+    }
+
+    public List<SummaryToday> getOneDayValues(String country) {
+        log.info("Invoke get data of one day for selected country {}", country);
+        List<SummaryToday> allValues = getDataDayOneTotalSelectedCountry(country);
+        List<SummaryToday> dataOneDayList = new ArrayList<>();
+        int confirmedYesterday = 0;
+        int recoveredYesterday = 0;
+        int deathsYesterday = 0;
+        String date = "";
+        for (int i = 0; i < allValues.size(); i++) {
+            int confirmedToday = allValues.get(i).getConfirmedToday();
+            int recoveredToday = allValues.get(i).getRecoveredToday();
+            int deathsToday = allValues.get(i).getDeathsToday();
+            date = allValues.get(i).getLastUpdate();
+            if (i != 0) {
+                confirmedYesterday = allValues.get(i - 1).getConfirmedToday();
+                recoveredYesterday = allValues.get(i - 1).getRecoveredToday();
+                deathsYesterday = allValues.get(i - 1).getDeathsToday();
+            }
+            int oneDayConfirmed = confirmedToday - confirmedYesterday;
+            int oneDayRecovered = recoveredToday - recoveredYesterday;
+            int oneDayDeaths = deathsToday - deathsYesterday;
+            SummaryToday summaryToday = new SummaryToday();
+            summaryToday.setConfirmedToday(oneDayConfirmed);
+            summaryToday.setRecoveredToday(oneDayRecovered);
+            summaryToday.setDeathsToday(oneDayDeaths);
+            summaryToday.setLastUpdate(date);
+            dataOneDayList.add(summaryToday);
+        }
+        log.info("Returned data for one day of selected country {}", country);
+        return dataOneDayList;
     }
 
     public List<SummaryToday> getJSONArrayOfOneCountry(String country) {

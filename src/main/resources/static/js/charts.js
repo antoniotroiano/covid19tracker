@@ -66,17 +66,17 @@ function changeBarChart(canvas, dates, label, listConfirmed, listRecovered, list
     barChart.destroy();
 
     if (label === 'Recovered') {
-        backgroundColor = 'rgba(167,234,122,0.6)';
+        backgroundColor = 'rgba(167,234,122,0.9)';
         borderColor = 'rgb(9,234,14)';
         hoverBackgroundColor = 'rgba(187,234,109,0.7)';
         barChartSelectedCountry(canvas, dates, label, listRecovered);
     } else if (label === 'Deaths') {
-        backgroundColor = 'rgba(234,127,121,0.6)';
+        backgroundColor = 'rgba(234,127,121,0.9)';
         borderColor = 'rgb(234,3,12)';
         hoverBackgroundColor = 'rgba(234,81,77,0.7)';
         barChartSelectedCountry(canvas, dates, label, listDeaths);
     } else if (label === 'Confirmed') {
-        backgroundColor = 'rgb(147,190,234, 0.6)';
+        backgroundColor = 'rgb(147,190,234, 0.9)';
         borderColor = 'rgb(13,23,234)';
         hoverBackgroundColor = 'rgb(147,190,234, 0.7)';
         barChartSelectedCountry(canvas, dates, label, listConfirmed);
@@ -91,6 +91,28 @@ function changeBarChart(canvas, dates, label, listConfirmed, listRecovered, list
     }
 }
 
+function changeSelectedBarChart(selectedCanvas, datesOneDay, dataOneDay, labelSelected) {
+
+    if (labelSelected === 'Confirmed') {
+        backgroundColor = 'rgb(147,190,234, 0.9)';
+        borderColor = 'rgb(13,23,234)';
+        hoverBackgroundColor = 'rgb(147,190,234, 0.7)';
+        barChartSelectedCountry(selectedCanvas, datesOneDay, 'Confirmed per day', dataOneDay);
+    }
+    if (labelSelected === 'Recovered') {
+        backgroundColor = 'rgba(167,234,122,0.9)';
+        borderColor = 'rgb(9,234,14)';
+        hoverBackgroundColor = 'rgba(187,234,109,0.7)';
+        barChartSelectedCountry(selectedCanvas, datesOneDay, 'Recovered per day', dataOneDay);
+    }
+    if (labelSelected === 'Deaths') {
+        backgroundColor = 'rgba(234,127,121,0.9)';
+        borderColor = 'rgb(234,3,12)';
+        hoverBackgroundColor = 'rgba(234,81,77,0.7)';
+        barChartSelectedCountry(selectedCanvas, datesOneDay, 'Deaths per day', dataOneDay);
+    }
+}
+
 /*Bar chart for selected country*/
 function barChartSelectedCountry(canvas, dates, label, listData) {
     barChart = new Chart(canvas, {
@@ -100,11 +122,10 @@ function barChartSelectedCountry(canvas, dates, label, listData) {
             datasets: [{
                 label: label,
                 backgroundColor: backgroundColor,
-                borderWidth: 1,
                 borderColor: borderColor,
                 hoverBackgroundColor: hoverBackgroundColor,
-                barThickness: 8,
-                maxBarThickness: 10,
+                barThickness: 5,
+                maxBarThickness: 8,
                 data: listData
             }]
         },
@@ -173,36 +194,30 @@ function barChartAll(canvas, dates, label, confirmed, recovered, deaths) {
             labels: dates,
             datasets: [{
                 label: 'Confirmed',
-                backgroundColor: 'rgb(147,190,234, 0.6)',
+                backgroundColor: 'rgb(147,190,234, 0.9)',
                 borderColor: 'rgb(13,23,234)',
                 hoverBackgroundColor: 'rgb(147,190,234, 0.7)',
-                borderWidth: 1,
                 fill: false,
-                pointRadius: 3,
-                barThickness: 8,
-                maxBarThickness: 10,
+                barThickness: 5,
+                maxBarThickness: 8,
                 data: confirmed
             }, {
                 label: 'Recovered',
-                backgroundColor: 'rgba(167,234,122,0.6)',
+                backgroundColor: 'rgba(167,234,122,0.9)',
                 borderColor: 'rgb(9,234,14)',
                 hoverBackgroundColor: 'rgba(187,234,109,0.7)',
-                borderWidth: 1,
                 fill: false,
-                pointRadius: 3,
-                barThickness: 8,
-                maxBarThickness: 10,
+                barThickness: 5,
+                maxBarThickness: 8,
                 data: recovered
             }, {
                 label: 'Deaths',
-                backgroundColor: 'rgba(234,127,121,0.6)',
+                backgroundColor: 'rgba(234,127,121,0.9)',
                 borderColor: 'rgb(234,3,12)',
                 hoverBackgroundColor: 'rgba(234,81,77,0.7)',
-                borderWidth: 1,
                 fill: false,
-                pointRadius: 3,
-                barThickness: 8,
-                maxBarThickness: 10,
+                barThickness: 5,
+                maxBarThickness: 8,
                 data: deaths
             }]
         },
@@ -284,31 +299,25 @@ function toggleChartTypes(toggleCharts, dates, confirmed, recovered, deaths, cou
                 label: 'Confirmed',
                 backgroundColor: 'rgb(147,190,234,0.6)',
                 borderColor: 'rgb(65,133,234,0.6)',
-                borderWidth: 2,
                 fill: false,
-                pointRadius: 3,
-                barThickness: 8,
-                maxBarThickness: 10,
+                barThickness: 5,
+                maxBarThickness: 8,
                 data: confirmed
             }, {
                 label: 'Recovered',
                 backgroundColor: 'rgba(167,234,122,0.6)',
                 borderColor: 'rgb(27,205,4,0.6)',
-                borderWidth: 2,
                 fill: false,
-                pointRadius: 3,
-                barThickness: 8,
-                maxBarThickness: 10,
+                barThickness: 5,
+                maxBarThickness: 8,
                 data: recovered
             }, {
                 label: 'Deaths',
                 backgroundColor: 'rgba(234,127,121,0.6)',
                 borderColor: 'rgb(250,2,6,0.6)',
-                borderWidth: 2,
                 fill: false,
-                pointRadius: 3,
-                barThickness: 8,
-                maxBarThickness: 10,
+                barThickness: 5,
+                maxBarThickness: 8,
                 data: deaths
             }]
         },
