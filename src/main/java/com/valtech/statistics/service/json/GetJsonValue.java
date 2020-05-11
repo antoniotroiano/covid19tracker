@@ -63,6 +63,7 @@ public class GetJsonValue {
         return bld.toString().substring(0, bld.length() - 1);
     }
 
+    //https://covid19.mathdro.id/api/countries/ All countries names
     public List<String> getCountryOfJSONObject() throws IOException {
         List<String> allCountries = new ArrayList<>();
         JSONObject countries = getJSONObject("https://covid19.mathdro.id/api/countries");
@@ -74,6 +75,7 @@ public class GetJsonValue {
         return allCountries;
     }
 
+    //https://covid19.mathdro.id/api/daily/05-09-2020
     private JSONArray getJSONArrayOfYesterday() {
         log.debug("Invoke get json array of yesterday.");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
@@ -99,6 +101,7 @@ public class GetJsonValue {
         }
     }
 
+    //Get data of today for a selected country
     private void getTodayData(String country, SummaryToday summaryToday, String url) throws IOException {
         summaryToday.setCountry(country);
         summaryToday.setConfirmedToday(getValueOfJSONObject(getJSONObject(url), CONFIRMED, VALUE));
@@ -109,6 +112,7 @@ public class GetJsonValue {
         summaryToday.setLocalTime(LocalTime.now().withNano(0));
     }
 
+    //Get new data of today for a selected country
     private void getNewData(SummaryToday summaryToday, JSONArray jsonArray) {
         int confirmedNew = 0;
         int recoveredNew = 0;
@@ -136,6 +140,7 @@ public class GetJsonValue {
         }
     }
 
+    //https://covid19.mathdro.id/api/
     public SummaryToday getDataOfWorldToModel() throws IOException {
         log.info("Invoke create data of world.");
         SummaryToday summaryToday = new SummaryToday();
@@ -152,6 +157,7 @@ public class GetJsonValue {
         return summaryToday;
     }
 
+    //https://api.covid19api.com/dayone/country/{country}
     public SummaryToday getDataForSelectedCountry(String country) throws IOException {
         log.info("Invoke get data for selected country {}", country);
         SummaryToday summaryToday = new SummaryToday();
@@ -177,6 +183,7 @@ public class GetJsonValue {
         return summaryToday;
     }
 
+    //https://api.covid19api.com/dayone/country/{germany}
     public List<SummaryToday> getDataDayOneTotalSelectedCountry(String country) {
         log.info("Invoke get data of day one for selected country {}", country);
         List<SummaryToday> summaryTodayList = new ArrayList<>();
@@ -218,7 +225,7 @@ public class GetJsonValue {
         int confirmedYesterday = 0;
         int recoveredYesterday = 0;
         int deathsYesterday = 0;
-        String date = "";
+        String date;
         for (int i = 0; i < allValues.size(); i++) {
             int confirmedToday = allValues.get(i).getConfirmedToday();
             int recoveredToday = allValues.get(i).getRecoveredToday();
@@ -253,7 +260,7 @@ public class GetJsonValue {
             JSONArray jsonArray = getJSONOArray(countryUrl);
             for (int i = 0; i < jsonArray.length(); i++) {
                 SummaryToday summaryToday = new SummaryToday();
-                summaryToday.setCombinedKey(jsonArray.getJSONObject(i).get("combinedKey").toString());
+                summaryToday.setCombinedKey(jsonArray.getJSONObject(i).getString("combinedKey"));
                 summaryToday.setConfirmedToday(jsonArray.getJSONObject(i).getInt(CONFIRMED));
                 summaryToday.setRecoveredToday(jsonArray.getJSONObject(i).getInt(RECOVERED));
                 summaryToday.setDeathsToday(jsonArray.getJSONObject(i).getInt(DEATHS));

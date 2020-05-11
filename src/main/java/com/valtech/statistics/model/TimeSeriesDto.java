@@ -1,25 +1,18 @@
 package com.valtech.statistics.model;
 
-import com.opencsv.bean.CsvBindByPosition;
-
-import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ConfirmedDto {
 
-    @CsvBindByPosition(position = 0)
     String province;
-
-    @CsvBindByPosition(position = 1)
     String country;
-
-    LinkedHashMap<String, String> confirmed;
+    LinkedHashMap<String, Integer> confirmed;
 
     public ConfirmedDto() {
     }
 
-    public ConfirmedDto(String province, String country, LinkedHashMap<String, String> confirmed) {
+    public ConfirmedDto(String province, String country, LinkedHashMap<String, Integer> confirmed) {
         this.province = province;
         this.country = country;
         this.confirmed = confirmed;
@@ -41,11 +34,11 @@ public class ConfirmedDto {
         this.country = country;
     }
 
-    public Map<String, String> getConfirmed() {
+    public Map<String, Integer> getConfirmed() {
         return confirmed;
     }
 
-    public void setConfirmed(LinkedHashMap<String, String> confirmed) {
+    public void setConfirmed(LinkedHashMap<String, Integer> confirmed) {
         this.confirmed = confirmed;
     }
 
