@@ -30,4 +30,11 @@ public class DateFormat {
         LocalTime time = LocalTime.parse(lastUpdate, inputFormatter);
         return outputFormatterTime.format(time);
     }
+
+    public String formatDate(String date) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.GERMAN);
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy", Locale.GERMAN);
+        LocalDate dates = LocalDate.parse(date, inputFormatter);
+        return outputFormatter.format(dates);
+    }
 }

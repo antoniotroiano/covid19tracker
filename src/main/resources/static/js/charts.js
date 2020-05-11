@@ -31,6 +31,10 @@ function getCountry(country) {
     document.location.replace("/covid19/daily/" + country);
 }
 
+function getCountryV2(country) {
+    document.location.replace("/v2/covid19/timeSeries/" + country);
+}
+
 /*Modal with bulma*/
 function openModal(region, confirmed, recovered, deaths, active) {
     let $activeElement = undefined;
@@ -160,6 +164,14 @@ function barChartSelectedCountry(canvas, dates, label, listData) {
                     display: true,
                     gridLines: {
                         display: true
+                    },
+                    ticks: {
+                        userCallback: function(value, index, values) {
+                            value = value.toString();
+                            value = value.split(/(?=(?:...)*$)/);
+                            value = value.join('.');
+                            return value;
+                        }
                     }
                 }]
             },
@@ -244,6 +256,14 @@ function barChartAll(canvas, dates, label, confirmed, recovered, deaths) {
                     stacked: booleanStacked,
                     gridLines: {
                         display: true
+                    },
+                    ticks: {
+                        userCallback: function(value, index, values) {
+                            value = value.toString();
+                            value = value.split(/(?=(?:...)*$)/);
+                            value = value.join('.');
+                            return value;
+                        }
                     }
                 }]
             },
@@ -344,6 +364,14 @@ function toggleChartTypes(toggleCharts, dates, confirmed, recovered, deaths, cou
                     stacked: stackedBoolean,
                     gridLines: {
                         display: true
+                    },
+                    ticks: {
+                        userCallback: function(value, index, values) {
+                            value = value.toString();
+                            value = value.split(/(?=(?:...)*$)/);
+                            value = value.join('.');
+                            return value;
+                        }
                     }
                 }]
             },

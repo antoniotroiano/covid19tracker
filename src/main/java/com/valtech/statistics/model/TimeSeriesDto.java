@@ -1,21 +1,26 @@
 package com.valtech.statistics.model;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
-public class ConfirmedDto {
+public class TimeSeriesDto {
 
     String province;
     String country;
-    LinkedHashMap<String, Integer> confirmed;
+    LinkedHashMap<String, Integer> dataMap;
 
-    public ConfirmedDto() {
+    public TimeSeriesDto() {
     }
 
-    public ConfirmedDto(String province, String country, LinkedHashMap<String, Integer> confirmed) {
+    public TimeSeriesDto(String province, String country, LinkedHashMap<String, Integer> dataMap) {
         this.province = province;
         this.country = country;
-        this.confirmed = confirmed;
+        this.dataMap = dataMap;
+    }
+
+    public TimeSeriesDto(TimeSeriesDto timeSeriesDto) {
+        this.province = timeSeriesDto.getProvince();
+        this.country = timeSeriesDto.getCountry();
+        this.dataMap = timeSeriesDto.getDataMap();
     }
 
     public String getProvince() {
@@ -34,12 +39,12 @@ public class ConfirmedDto {
         this.country = country;
     }
 
-    public Map<String, Integer> getConfirmed() {
-        return confirmed;
+    public LinkedHashMap<String, Integer> getDataMap() {
+        return dataMap;
     }
 
-    public void setConfirmed(LinkedHashMap<String, Integer> confirmed) {
-        this.confirmed = confirmed;
+    public void setDataMap(LinkedHashMap<String, Integer> dataMap) {
+        this.dataMap = dataMap;
     }
 
     @Override
@@ -47,7 +52,7 @@ public class ConfirmedDto {
         return "TimeSeriesConfirmed{" +
                 "province='" + province + '\'' +
                 ", country='" + country + '\'' +
-                ", confirmed=" + confirmed +
+                ", confirmed=" + dataMap +
                 '}';
     }
 }
