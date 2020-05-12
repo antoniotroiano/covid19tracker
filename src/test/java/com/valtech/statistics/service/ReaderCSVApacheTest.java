@@ -85,7 +85,7 @@ public class ReaderCSVApacheTest {
     public void testNewService() {
         TimeSeriesService timeSeriesService = new TimeSeriesService();
 
-        Map<String, List<Integer>> testValues = timeSeriesService.mapFinalResultToMap("Australia");
+        Map<String, List<Integer>> testValues = timeSeriesService.mapFinalResultToMap(timeSeriesService.getValuesSelectedCountry("Australia"));
 
         System.out.println(testValues.get("confirmedResult"));
         System.out.println(testValues.get("recoveredResult"));

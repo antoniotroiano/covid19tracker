@@ -1,5 +1,6 @@
 package com.valtech.statistics.service.json;
 
+import com.valtech.statistics.model.CountryDetailsDto;
 import com.valtech.statistics.model.WorldTimeSeriesDto;
 import com.valtech.statistics.service.DateFormat;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,5 +62,33 @@ public class ReadJSON {
         }
         log.debug("Returned world time series");
         return allValuesWorld;
+    }
+
+    public CountryDetailsDto readDetailsForCountry(String country) throws IOException {
+        log.debug("Invoke read details for {}", country);
+        CountryDetailsDto countryDetailsDto = new CountryDetailsDto();
+
+        JSONObject jsonObject = getJSONObject("https://corona-api.com/countries");
+        JSONArray jsonArray = jsonObject.getJSONArray("data");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (jsonArray.getJSONObject(i).getString("name").equals(country)) {
+                countryDetailsDto.setCountry(jsonArray.getJSONObject(i).optString("name", ""));
+                countryDetailsDto.setCode(jsonArray.getJSONObject(i).optString("code", ""));
+                countryDetailsDto.setPopulation(jsonArray.getJSONObject(i).optInt("population", 0));
+                countryDetailsDto.setLastUpdate(jsonArray.getJSONObject(i).optString("updated_at", ""));
+                countryDetailsDto.setTodayDeaths(jsonArray.getJSONObject(i).getJSONObject("today").optInt("deaths", 0));
+                countryDetailsDto.setTodayConfirmed(jsonArray.getJSONObject(i).getJSONObject("today").optInt("confirmed", 0));
+                countryDetailsDto.setDeaths(jsonArray.getJSONObject(i).getJSONObject("latest_data").optInt("deaths", 0));
+                countryDetailsDto.setConfirmed(jsonArray.getJSONObject(i).getJSONObject("latest_data").optInt("confirmed", 0));
+                countryDetailsDto.setRecovered(jsonArray.getJSONObject(i).getJSONObject("latest_data").optInt("recovered", 0));
+                countryDetailsDto.setCritical(jsonArray.getJSONObject(i).getJSONObject("latest_data").optInt("critical", 0));
+                countryDetailsDto.setDeathRate(jsonArray.getJSONObject(i).getJSONObject("latest_data").getJSONObject("calculated").optDouble("death_rate", 0));
+                countryDetailsDto.setRecoveryRate(jsonArray.getJSONObject(i).getJSONObject("latest_data").getJSONObject("calculated").optDouble("recovery_rate", 0));
+                countryDetailsDto.setRecoveredVSDeathRatio(jsonArray.getJSONObject(i).getJSONObject("latest_data").getJSONObject("calculated").optDouble("recovered_vs_death_ratio", 0));
+                countryDetailsDto.setCasesPerMillionPopulation(jsonArray.getJSONObject(i).getJSONObject("latest_data").getJSONObject("calculated").optInt("cases_per_million_population", 0));
+            }
+        }
+        log.debug("Returned details for {}", country);
+        return countryDetailsDto;
     }
 }

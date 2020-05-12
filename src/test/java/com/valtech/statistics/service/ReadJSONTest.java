@@ -1,5 +1,6 @@
 package com.valtech.statistics.service;
 
+import com.valtech.statistics.model.CountryDetailsDto;
 import com.valtech.statistics.model.WorldTimeSeriesDto;
 import com.valtech.statistics.service.json.ReadJSON;
 import org.junit.jupiter.api.Test;
@@ -24,5 +25,9 @@ public class ReadJSONTest {
         System.out.println(worldTimeSeries.get(1));
         System.out.println(worldTimeSeries.get(2));
         System.out.println(worldTimeSeries.stream().findFirst());
+
+        CountryDetailsDto countryDetailsDto = readJSON.readDetailsForCountry("Germany");
+
+        System.out.println(countryDetailsDto);
     }
 }

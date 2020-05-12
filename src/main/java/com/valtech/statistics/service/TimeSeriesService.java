@@ -1,7 +1,9 @@
 package com.valtech.statistics.service;
 
+import com.valtech.statistics.model.CountryDetailsDto;
 import com.valtech.statistics.model.TimeSeriesDto;
 import com.valtech.statistics.service.csv.ReadTimeSeriesCSV;
+import com.valtech.statistics.service.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,9 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 public class TimeSeriesService {
 
     private static final ReadTimeSeriesCSV readTimeSeriesCSV = new ReadTimeSeriesCSV();
+    private final ReadJSON readJSON = new ReadJSON();
     private final List<TimeSeriesDto> confirmedAllList = readTimeSeriesCSV.readConfirmedCsv();
     private final List<TimeSeriesDto> recoveredAllList = readTimeSeriesCSV.readRecoveredCsv();
     private final List<TimeSeriesDto> deathsAllList = readTimeSeriesCSV.readDeathsCsv();
@@ -48,16 +49,16 @@ public class TimeSeriesService {
         return allValues;
     }
 
-    public Map<String, List<Integer>> mapFinalResultToMap(String country) {
+    public Map<String, List<Integer>> mapFinalResultToMap(Map<String, List<TimeSeriesDto>> getAllValuesSelectedCountry) {
         Map<String, List<Integer>> mapFinalResult = new HashMap<>();
 
-        mapFinalResult.put("confirmedResult", generateFinalResult(interimResult(getValuesSelectedCountry(country).get("confirmedList"))));
-        mapFinalResult.put("recoveredResult", generateFinalResult(interimResult(getValuesSelectedCountry(country).get("recoveredList"))));
-        mapFinalResult.put("deathsResult", generateFinalResult(interimResult(getValuesSelectedCountry(country).get("deathsList"))));
+        mapFinalResult.put("confirmedResult", generateFinalResult(interimResult(getAllValuesSelectedCountry.get("confirmedList"))));
+        mapFinalResult.put("recoveredResult", generateFinalResult(interimResult(getAllValuesSelectedCountry.get("recoveredList"))));
+        mapFinalResult.put("deathsResult", generateFinalResult(interimResult(getAllValuesSelectedCountry.get("deathsList"))));
         return mapFinalResult;
     }
 
-    public List<Integer> mapValuesToList(List<TimeSeriesDto> dataList) {
+    public List<Integer> mapResultToList(List<TimeSeriesDto> dataList) {
         List<Integer> values = new ArrayList<>();
         for (TimeSeriesDto timeSeriesDto : dataList) {
             values = timeSeriesDto.getDataMap()
@@ -70,6 +71,7 @@ public class TimeSeriesService {
     }
 
     private List<List<Integer>> interimResult(List<TimeSeriesDto> dataList) {
+        log.debug("Invoke interim result");
         List<List<Integer>> interimResultList = new ArrayList<>();
         for (TimeSeriesDto timeSeriesDto : dataList) {
             List<Integer> values = timeSeriesDto.getDataMap()
@@ -79,10 +81,12 @@ public class TimeSeriesService {
                     .collect(Collectors.toList());
             interimResultList.add(values);
         }
+        log.debug("Return interim result");
         return interimResultList;
     }
 
     private List<Integer> generateFinalResult(List<List<Integer>> interimResult) {
+        log.debug("Invoke final result");
         List<Integer> finalResult = new ArrayList<>();
         for (int j = 0; j < interimResult.get(0).size(); j++) {
             int sum = 0;
@@ -91,10 +95,12 @@ public class TimeSeriesService {
             }
             finalResult.add(sum);
         }
+        log.debug("Return final result");
         return finalResult;
     }
 
     public List<Integer> getOneDayValues(List<Integer> values) {
+        log.debug("Invoke get one day values of {}", values);
         List<Integer> oneDayValues = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
             int sumPerDay = 0;
@@ -109,11 +115,24 @@ public class TimeSeriesService {
                 oneDayValues.add(sumPerDay);
             }
         }
+        log.debug("Return list with one day values");
         return oneDayValues;
     }
 
     public int getLastValues(List<Integer> lastValue) {
+        log.debug("Invoke get last value of list {}", lastValue);
         long count = lastValue.stream().count();
         return lastValue.stream().skip(count - 1).findFirst().get();
+    }
+
+    public CountryDetailsDto getDetailsForCountry(String country) {
+        log.debug("Invoke get details for country {}", country);
+        try {
+            log.debug("Returned details for country {}", country);
+            return readJSON.readDetailsForCountry(country);
+        } catch (Exception e) {
+            log.warn("Failed get details for country {}. {}", country, e.getMessage());
+            return new CountryDetailsDto();
+        }
     }
 }

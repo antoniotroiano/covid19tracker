@@ -1,10 +1,12 @@
 package com.valtech.statistics.controller;
 
+import com.valtech.statistics.model.CountryDetailsDto;
 import com.valtech.statistics.model.SummaryToday;
 import com.valtech.statistics.model.TimeSeriesDto;
 import com.valtech.statistics.service.DateFormat;
 import com.valtech.statistics.service.TimeSeriesService;
 import com.valtech.statistics.service.json.GetJsonValue;
+import com.valtech.statistics.service.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,11 +30,14 @@ public class TimeSeriesController {
 
     private final TimeSeriesService timeSeriesService;
     private final GetJsonValue getJsonValue;
+    private final ReadJSON readJSON;
     private final DateFormat dateFormat;
 
     @GetMapping("/{country}")
     public String showTimeSeries(@PathVariable("country") String country, Model model) throws IOException {
         log.info("Invoke v2 controller show time series of country {}", country);
+        model.addAttribute("countryDetailsDto", new CountryDetailsDto());
+        model.addAttribute("countryDetails", readJSON.readDetailsForCountry(country));
         List<String> allCountries = getJsonValue.getCountryOfJSONObject();
         model.addAttribute("listCountries", allCountries);
         model.addAttribute("timeSeriesDto", new TimeSeriesDto());
@@ -46,51 +52,29 @@ public class TimeSeriesController {
         model.addAttribute("date", date + " " + time + "h");
 
         Map<String, List<TimeSeriesDto>> getAllValuesSelectedCountry = timeSeriesService.getValuesSelectedCountry(country);
-
         if (getAllValuesSelectedCountry.isEmpty()) {
             model.addAttribute("noDataForThisCountry", "No dataset for " + country + ". Please try again later.");
             log.info("No data for the country {}", country);
+            return "timeSeries";
         }
 
         Optional<TimeSeriesDto> getOneObject = getAllValuesSelectedCountry.get("confirmedList").stream().map(TimeSeriesDto::new).findFirst();
-
         if (getOneObject.isPresent()) {
-            List<String> datesList = getOneObject.get().getDataMap().entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList());
-            if (getAllValuesSelectedCountry.get("confirmedList").stream().filter(c -> c.getCountry() != null).collect(Collectors.toList()).size() > 1) {
-                Map<String, List<Integer>> finalResult = timeSeriesService.mapFinalResultToMap(country);
-                model.addAttribute("confirmedList", finalResult.get("confirmedResult"));
-                model.addAttribute("recoveredList", finalResult.get("recoveredResult"));
-                model.addAttribute("deathsList", finalResult.get("deathsResult"));
-                model.addAttribute("dateList", datesList);
-                List<Integer> dailyTrendConfirmed = timeSeriesService.getOneDayValues(finalResult.get("confirmedResult"));
-                List<Integer> dailyTrendRecovered = timeSeriesService.getOneDayValues(finalResult.get("recoveredResult"));
-                List<Integer> dailyTrendDeaths = timeSeriesService.getOneDayValues(finalResult.get("deathsResult"));
-                model.addAttribute("dailyTrendConfirmed", dailyTrendConfirmed);
-                model.addAttribute("dailyTrendRecovered", dailyTrendRecovered);
-                model.addAttribute("dailyTrendDeaths", dailyTrendDeaths);
-                log.info("Get data for selected country {}", country);
+            Map<String, List<Integer>> finalResult = timeSeriesService.mapFinalResultToMap(getAllValuesSelectedCountry);
+            if (finalResult.isEmpty()) {
+                model.addAttribute("noDataForTimeSeries", "Sorry no data found for time series. Please try again later.");
+                log.warn("No data for time series found, for selected country {}", country);
                 return "timeSeries";
             }
-            List<Integer> confirmedList = timeSeriesService.mapValuesToList(getAllValuesSelectedCountry.get("confirmedList"));
-            List<Integer> recoveredList = timeSeriesService.mapValuesToList(getAllValuesSelectedCountry.get("recoveredList"));
-            List<Integer> deathsList = timeSeriesService.mapValuesToList(getAllValuesSelectedCountry.get("deathsList"));
-            model.addAttribute("confirmedList", confirmedList);
-            model.addAttribute("recoveredList", recoveredList);
-            model.addAttribute("deathsList", deathsList);
-            model.addAttribute("dateList", datesList);
-            List<Integer> dailyConfirmedTrend = timeSeriesService.getOneDayValues(confirmedList);
-            List<Integer> dailyRecoveredTrend = timeSeriesService.getOneDayValues(recoveredList);
-            List<Integer> dailyDeathsTrend = timeSeriesService.getOneDayValues(deathsList);
-            model.addAttribute("dailyTrendConfirmed", dailyConfirmedTrend);
-            model.addAttribute("dailyTrendRecovered", dailyRecoveredTrend);
-            model.addAttribute("dailyTrendDeaths", dailyDeathsTrend);
 
-            int confirmed = timeSeriesService.getLastValues(confirmedList);
-            int recovered = timeSeriesService.getLastValues(recoveredList);
-            int deaths = timeSeriesService.getLastValues(deathsList);
-            model.addAttribute("confirmedYesterday", confirmed);
-            model.addAttribute("recoveredYesterday", recovered);
-            model.addAttribute("deathsYesterday", deaths);
+            List<String> datesList = getOneObject.get().getDataMap().entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList());
+            if (getAllValuesSelectedCountry.get("confirmedList").stream().filter(c -> c.getCountry() != null).collect(Collectors.toList()).size() > 1) {
+                model.addAttribute("moreDetailsAvailable", true);
+                getBaseData(model, finalResult, datesList);
+                log.info("Get data for selected country {}, with extra details", country);
+                return "timeSeries";
+            }
+            getBaseData(model, finalResult, datesList);
             log.info("Get data for selected country {}", country);
             return "timeSeries";
         }
@@ -103,5 +87,20 @@ public class TimeSeriesController {
     public String showDetailsOfSelectedCountry(@PathVariable("country") String country, Model model) {
         //Hier kann ich das ReasDailyRepots benutzen :)
         return "timeSeriesDetails";
+    }
+
+    private void getBaseData(Model model, Map<String, List<Integer>> result, List<String> datesList) {
+        model.addAttribute("confirmedYesterday", timeSeriesService.getLastValues(result.get("confirmedResult")));
+        model.addAttribute("recoveredYesterday", timeSeriesService.getLastValues(result.get("recoveredResult")));
+        model.addAttribute("deathsYesterday", timeSeriesService.getLastValues(result.get("deathsResult")));
+
+        model.addAttribute("confirmedList", result.get("confirmedResult"));
+        model.addAttribute("recoveredList", result.get("recoveredResult"));
+        model.addAttribute("deathsList", result.get("deathsResult"));
+        model.addAttribute("dateList", datesList);
+
+        model.addAttribute("dailyTrendConfirmed", timeSeriesService.getOneDayValues(result.get("confirmedResult")));
+        model.addAttribute("dailyTrendRecovered", timeSeriesService.getOneDayValues(result.get("recoveredResult")));
+        model.addAttribute("dailyTrendDeaths", timeSeriesService.getOneDayValues(result.get("deathsResult")));
     }
 }
