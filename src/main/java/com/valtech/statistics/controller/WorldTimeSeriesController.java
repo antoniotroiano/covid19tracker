@@ -2,7 +2,7 @@ package com.valtech.statistics.controller;
 
 import com.valtech.statistics.model.WorldTimeSeriesDto;
 import com.valtech.statistics.service.DateFormat;
-import com.valtech.statistics.service.json.GetJsonValue;
+import com.valtech.statistics.service.TimeSeriesService;
 import com.valtech.statistics.service.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,20 +23,21 @@ import java.util.stream.Collectors;
 public class WorldTimeSeriesController {
 
     private final ReadJSON readJSON;
-    private final GetJsonValue getJsonValue;
+    private final TimeSeriesService timeSeriesService;
     private final DateFormat dateFormat;
 
     @GetMapping
     public String showWorldTimeSeries(Model model) throws IOException {
         log.info("Invoke v2 controller show time series world");
-        List<String> allCountries = getJsonValue.getCountryOfJSONObject();
-        model.addAttribute("listCountries", allCountries);
         model.addAttribute("worldTimeSeriesDto", new WorldTimeSeriesDto());
-        model.addAttribute("title", "COVID-19 - Data for world");
+
+        List<String> allCountries = timeSeriesService.getCountry();
+        model.addAttribute("listCountries", allCountries);
 
         List<WorldTimeSeriesDto> worldTimeSeriesDtoList = readJSON.readWorldValues();
         if (worldTimeSeriesDtoList.isEmpty()) {
-            model.addAttribute("noDataForWorldTimeSeries", "No data available for world time series. Please try again later.");
+            model.addAttribute("noDataForWorldTimeSeries",
+                    "No data available for world time series. Please try again later.");
             log.warn("No data available for world time series");
             return "timeSeriesWorld";
         }
