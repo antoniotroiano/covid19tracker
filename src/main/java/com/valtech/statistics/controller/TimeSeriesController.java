@@ -1,11 +1,9 @@
 package com.valtech.statistics.controller;
 
 import com.valtech.statistics.model.CountryDetailsDto;
-import com.valtech.statistics.model.SummaryToday;
 import com.valtech.statistics.model.TimeSeriesDto;
 import com.valtech.statistics.service.DateFormat;
 import com.valtech.statistics.service.TimeSeriesService;
-import com.valtech.statistics.service.json.GetJsonValue;
 import com.valtech.statistics.service.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,26 +26,28 @@ import java.util.stream.Collectors;
 public class TimeSeriesController {
 
     private final TimeSeriesService timeSeriesService;
-    private final GetJsonValue getJsonValue;
+
     private final ReadJSON readJSON;
     private final DateFormat dateFormat;
 
     @GetMapping("/{country}")
-    public String showTimeSeries(@PathVariable("country") String country, Model model) throws IOException {
+    public String showTimeSeries(@PathVariable("country") String country, Model model) {
         log.info("Invoke v2 controller show time series of country {}", country);
-        model.addAttribute("countryDetailsDto", new CountryDetailsDto());
-        model.addAttribute("countryDetails", readJSON.readDetailsForCountry(country));
-        List<String> allCountries = getJsonValue.getCountryOfJSONObject();
-        model.addAttribute("listCountries", allCountries);
         model.addAttribute("timeSeriesDto", new TimeSeriesDto());
+        model.addAttribute("countryDetailsDto", new CountryDetailsDto());
         model.addAttribute("title", "COVID-19 - Data for " + country);
         model.addAttribute("selectedCountry", country);
 
-        SummaryToday summaryToday = getJsonValue.getDataForSelectedCountry(country);
-        model.addAttribute("summaryToday", new SummaryToday());
-        model.addAttribute("dataSummaryToday", summaryToday);
-        String date = dateFormat.formatLastUpdateToDate(summaryToday.getLastUpdate());
-        String time = dateFormat.formatLastUpdateToTime(summaryToday.getLastUpdate());
+        List<String> allCountries = timeSeriesService.getCountry();
+        CountryDetailsDto countryDetailsDto = timeSeriesService.getDetailsForCountry(country);
+        if (countryDetailsDto.getCountry() == null) {
+            model.addAttribute("noDataForThisCountry", "No dataset at the moment for " + country + "!");
+            return "timeSeries";
+        }
+        model.addAttribute("listCountries", allCountries);
+        model.addAttribute("countryDetails", countryDetailsDto);
+        String date = dateFormat.formatLastUpdateToDate(countryDetailsDto.getLastUpdate());
+        String time = dateFormat.formatLastUpdateToTime(countryDetailsDto.getLastUpdate());
         model.addAttribute("date", date + " " + time + "h");
 
         Map<String, List<TimeSeriesDto>> getAllValuesSelectedCountry = timeSeriesService.getValuesSelectedCountry(country);

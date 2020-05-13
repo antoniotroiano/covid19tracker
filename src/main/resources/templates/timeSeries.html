@@ -179,12 +179,12 @@
                                 <div class="is-size-5">Recovered</div>
                                 <div class="is-size-6"
                                      th:text="${countryDetails.getRecovered() == 0} ? ${'No value!'}
-                                         : ${#numbers.formatInteger(dataSummaryToday.getRecoveredToday(),3,'POINT')}"></div>
+                                         : ${#numbers.formatInteger(countryDetails.getRecovered(),3,'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${(countryDetails.getRecovered() - recoveredYesterday) != 0}
                                      AND ${(countryDetails.getRecovered() - recoveredYesterday) != countryDetails.getRecovered()}
                                      AND ${(countryDetails.getRecovered() - recoveredYesterday) > 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getRecovered() - recoveredYesterday,3,'POINT')}"></div>
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getRecovered() - recoveredYesterday, 3, 'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -193,7 +193,7 @@
                                 <div class="is-size-5">Deaths</div>
                                 <div class="is-size-6"
                                      th:text="${countryDetails.getDeaths() == 0} ? ${'No value!'}
-                                         : ${#numbers.formatInteger(dataSummaryToday.getDeathsToday(),3,'POINT')}"></div>
+                                         : ${#numbers.formatInteger(countryDetails.getDeaths(),3,'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${countryDetails.getTodayDeaths() != 0}
                                      AND ${countryDetails.getTodayDeaths() != countryDetails.getDeaths()}
@@ -235,15 +235,15 @@
                                 <span class="icon is-pulled-right"><img src="/img/analytics-outline.svg"></span>
                                 <div class="is-size-5">Rate</div>
                                 <div class="is-size-7 is-pulled-right tag is-danger"
-                                     th:text="${#numbers.formatDecimal(countryDetails.getDeathRate(), 0, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                     th:text="${#numbers.formatDecimal(countryDetails.getDeathRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                 <div class="is-size-6">Death rate:</div>
                                 <hr class="dropdown-divider">
                                 <div class="is-size-7 is-pulled-right tag is-success"
-                                     th:text="${#numbers.formatDecimal(countryDetails.getRecoveryRate(), 0, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                     th:text="${#numbers.formatDecimal(countryDetails.getRecoveryRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                 <div class="is-size-6">Recovery rate:</div>
                                 <hr class="dropdown-divider">
                                 <div class="is-size-7 is-pulled-right tag is-warning"
-                                     th:text="${#numbers.formatDecimal(countryDetails.getRecoveredVSDeathRatio(), 0, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                     th:text="${#numbers.formatDecimal(countryDetails.getRecoveredVSDeathRatio(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                 <div class="is-size-6">Recovery vs death rate:</div>
                             </div>
                         </div>

@@ -25,8 +25,11 @@ public class ReadJSONTest {
         System.out.println(worldTimeSeries.get(1));
         System.out.println(worldTimeSeries.get(2));
         System.out.println(worldTimeSeries.stream().findFirst());
+    }
 
-        CountryDetailsDto countryDetailsDto = readJSON.readDetailsForCountry("Germany");
+    @Test
+    public void readDetails() throws IOException {
+        CountryDetailsDto countryDetailsDto = readJSON.readDetailsForCountry("United Kingdom");
 
         System.out.println(countryDetailsDto);
     }

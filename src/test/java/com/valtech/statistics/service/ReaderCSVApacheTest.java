@@ -96,5 +96,7 @@ public class ReaderCSVApacheTest {
         System.out.println(testValuesAll.get("confirmedList"));
         System.out.println(testValuesAll.get("recoveredList"));
         System.out.println(testValuesAll.get("deathsList"));
+
+        System.out.println(timeSeriesService.getLastValues(timeSeriesService.mapResultToList(timeSeriesService.getValuesSelectedCountry("USA").get("confirmedList"))));
     }
 }

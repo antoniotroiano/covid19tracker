@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -60,6 +61,11 @@ public class ReadTimeSeriesCSV {
         }
         log.debug("Returned time series list with all deaths values");
         return timeSeriesDtoList;
+    }
+
+    public List<String> readCountryName() {
+        log.debug("Invoke read country of CSV from github");
+        return readConfirmedCsv().stream().map(TimeSeriesDto::getCountry).distinct().collect(Collectors.toList());
     }
 
     private List<TimeSeriesDto> readTimeSeriesCSV(URL url) {

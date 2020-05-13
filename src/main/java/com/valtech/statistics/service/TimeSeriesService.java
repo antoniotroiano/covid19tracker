@@ -6,8 +6,11 @@ import com.valtech.statistics.service.csv.ReadTimeSeriesCSV;
 import com.valtech.statistics.service.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -134,5 +137,20 @@ public class TimeSeriesService {
             log.warn("Failed get details for country {}. {}", country, e.getMessage());
             return new CountryDetailsDto();
         }
+    }
+
+    /*public List<String> getCountry() {
+        try {
+            log.debug("Returned list with all country names.");
+            return new ArrayList<>(readJSON.getCountryNames().keySet());
+        } catch (IOException e) {
+            log.warn("Occurred an error by getting all country name {}", e.getMessage());
+            return new ArrayList<>();
+        }
+    }*/
+
+    public List<String> getCountry() {
+        log.debug("Returned list with all country names.");
+        return readTimeSeriesCSV.readCountryName();
     }
 }
