@@ -122,13 +122,20 @@ public class ReadJSON {
                 countryDetailsDto.setCountry(jsonArray.getJSONObject(i).optString("name", "Empty"));
                 countryDetailsDto.setCode(jsonArray.getJSONObject(i).optString("code", "Empty"));
                 countryDetailsDto.setPopulation(jsonArray.getJSONObject(i).optInt("population", 0));
-                countryDetailsDto.setTodayDeaths(jsonArray.getJSONObject(i).getJSONObject("today").optInt(DEATHS, 0));
-                countryDetailsDto.setTodayConfirmed(jsonArray.getJSONObject(i).getJSONObject("today").optInt(CONFIRMED, 0));
-                countryDetailsDto.setCritical(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA).optInt("critical", 0));
-                countryDetailsDto.setDeathRate(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA).getJSONObject(CALCULATED).optDouble("death_rate", 0.0));
-                countryDetailsDto.setRecoveryRate(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA).getJSONObject(CALCULATED).optDouble("recovery_rate", 0.0));
-                countryDetailsDto.setRecoveredVSDeathRatio(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA).getJSONObject(CALCULATED).optDouble("recovered_vs_death_ratio", 0.0));
-                countryDetailsDto.setCasesPerMillionPopulation(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA).getJSONObject(CALCULATED).optInt("cases_per_million_population", 0));
+                countryDetailsDto.setTodayDeaths(jsonArray.getJSONObject(i).getJSONObject("today")
+                        .optInt(DEATHS, 0));
+                countryDetailsDto.setTodayConfirmed(jsonArray.getJSONObject(i).getJSONObject("today")
+                        .optInt(CONFIRMED, 0));
+                countryDetailsDto.setCritical(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA)
+                        .optInt("critical", 0));
+                countryDetailsDto.setDeathRate(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA)
+                        .getJSONObject(CALCULATED).optDouble("death_rate", 0.0));
+                countryDetailsDto.setRecoveryRate(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA)
+                        .getJSONObject(CALCULATED).optDouble("recovery_rate", 0.0));
+                countryDetailsDto.setRecoveredVSDeathRatio(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA)
+                        .getJSONObject(CALCULATED).optDouble("recovered_vs_death_ratio", 0.0));
+                countryDetailsDto.setCasesPerMillionPopulation(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA)
+                        .getJSONObject(CALCULATED).optInt("cases_per_million_population", 0));
             }
         }
 

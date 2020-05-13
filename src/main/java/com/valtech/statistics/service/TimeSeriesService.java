@@ -6,15 +6,13 @@ import com.valtech.statistics.service.csv.ReadTimeSeriesCSV;
 import com.valtech.statistics.service.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,11 +62,8 @@ public class TimeSeriesService {
     public List<Integer> mapResultToList(List<TimeSeriesDto> dataList) {
         List<Integer> values = new ArrayList<>();
         for (TimeSeriesDto timeSeriesDto : dataList) {
-            values = timeSeriesDto.getDataMap()
-                    .entrySet()
-                    .stream()
-                    .map(Map.Entry::getValue)
-                    .collect(Collectors.toList());
+            values = new ArrayList<>(timeSeriesDto.getDataMap()
+                    .values());
         }
         return values;
     }
@@ -77,11 +72,8 @@ public class TimeSeriesService {
         log.debug("Invoke interim result");
         List<List<Integer>> interimResultList = new ArrayList<>();
         for (TimeSeriesDto timeSeriesDto : dataList) {
-            List<Integer> values = timeSeriesDto.getDataMap()
-                    .entrySet()
-                    .stream()
-                    .map(Map.Entry::getValue)
-                    .collect(Collectors.toList());
+            List<Integer> values = new ArrayList<>(timeSeriesDto.getDataMap()
+                    .values());
             interimResultList.add(values);
         }
         log.debug("Return interim result");
@@ -93,8 +85,8 @@ public class TimeSeriesService {
         List<Integer> finalResult = new ArrayList<>();
         for (int j = 0; j < interimResult.get(0).size(); j++) {
             int sum = 0;
-            for (int k = 0; k < interimResult.size(); k++) {
-                sum += interimResult.get(k).get(j);
+            for (List<Integer> integers : interimResult) {
+                sum += integers.get(j);
             }
             finalResult.add(sum);
         }
@@ -124,8 +116,13 @@ public class TimeSeriesService {
 
     public int getLastValues(List<Integer> lastValue) {
         log.debug("Invoke get last value of list {}", lastValue);
-        long count = lastValue.stream().count();
-        return lastValue.stream().skip(count - 1).findFirst().get();
+        long count = lastValue.size();
+        int lastValueInt = 0;
+        Optional<Integer> optionalValue = lastValue.stream().skip(count - 1).findFirst();
+        if (optionalValue.isPresent()) {
+            lastValueInt = optionalValue.get();
+        }
+        return lastValueInt;
     }
 
     public CountryDetailsDto getDetailsForCountry(String country) {
@@ -138,16 +135,6 @@ public class TimeSeriesService {
             return new CountryDetailsDto();
         }
     }
-
-    /*public List<String> getCountry() {
-        try {
-            log.debug("Returned list with all country names.");
-            return new ArrayList<>(readJSON.getCountryNames().keySet());
-        } catch (IOException e) {
-            log.warn("Occurred an error by getting all country name {}", e.getMessage());
-            return new ArrayList<>();
-        }
-    }*/
 
     public List<String> getCountry() {
         log.debug("Returned list with all country names.");
