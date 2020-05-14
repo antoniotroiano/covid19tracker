@@ -1,10 +1,11 @@
 package com.valtech.statistics.controller;
 
 import com.valtech.statistics.model.CountryDetailsDto;
+import com.valtech.statistics.model.DailyReportDto;
 import com.valtech.statistics.model.TimeSeriesDto;
 import com.valtech.statistics.service.DateFormat;
+import com.valtech.statistics.service.TimeSeriesDetailsService;
 import com.valtech.statistics.service.TimeSeriesService;
-import com.valtech.statistics.service.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -25,12 +25,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TimeSeriesController {
 
-    private final TimeSeriesService timeSeriesService;
-
     private static final String TIME_SERIES = "timeSeries";
     private static final String CONFIRMED_RESULT = "confirmedResult";
     private static final String RECOVERED_RESULT = "recoveredResult";
     private static final String DEATHS_RESULT = "deathsResult";
+    private final TimeSeriesService timeSeriesService;
+    private final TimeSeriesDetailsService timeSeriesDetailsService;
     private final DateFormat dateFormat;
 
     @GetMapping("/{country}")
@@ -71,7 +71,7 @@ public class TimeSeriesController {
             }
 
             List<String> datesList = new ArrayList<>(getOneObject.get().getDataMap().keySet());
-            if (getAllValuesSelectedCountry.get("confirmedList").stream().filter(c -> c.getCountry() != null).count() > 1) {
+            if ((getAllValuesSelectedCountry.get("confirmedList").stream().filter(c -> c.getCountry() != null).count() > 1) || country.equals("US")) {
                 model.addAttribute("moreDetailsAvailable", true);
                 getBaseData(model, finalResult, datesList);
                 log.info("Get data for selected country {}, with extra details", country);
@@ -88,8 +88,24 @@ public class TimeSeriesController {
 
     @GetMapping("/{country}/details")
     public String showDetailsOfSelectedCountry(@PathVariable("country") String country, Model model) {
-        //Hier kann ich das ReasDailyRepots benutzen :)
+        log.info("Invoke get details for province of selected country {}", country);
+        List<DailyReportDto> allValuesProvince = timeSeriesDetailsService.getAllDetailsProvince(country);
+        if (allValuesProvince.isEmpty()) {
+            createBaseDataDetails(country, model);
+            model.addAttribute("noDetailsProvince", "No values for province of selected country " + country + " available");
+            log.warn("No values for province of selected country {} available", country);
+            return "timeSeriesDetails";
+        }
+        createBaseDataDetails(country, model);
+        model.addAttribute("allValuesProvince", allValuesProvince);
+        log.debug("Returned all data of province for selected country {}", country);
         return "timeSeriesDetails";
+    }
+
+    private void createBaseDataDetails(String country, Model model) {
+        model.addAttribute("dailyReportDto", new DailyReportDto());
+        model.addAttribute("title", "COVID-19 - Details for " + country);
+        model.addAttribute("selectedCountry", country);
     }
 
     private void getBaseData(Model model, Map<String, List<Integer>> result, List<String> datesList) {

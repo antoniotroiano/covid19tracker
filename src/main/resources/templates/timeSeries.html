@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <title th:text="${title}"></title>
     <link href="../static/css/mystyles.css" rel="stylesheet" th:href="@{/css/mystyles.css}">
@@ -271,19 +272,24 @@
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons has-addons is-centered">
                     <a class="button is-small is-rounded is-info"
-                       th:href="@{/covid19/daily/{country}/details(country = ${selectedCountry})}"
-                       th:if="${moreDetailsAvailable}">Details
-                        for&nbsp;<span th:text="${selectedCountry}"></span></a>
+                       th:href="@{/v2/covid19/timeSeries/{country}/details(country = ${selectedCountry})}"
+                       th:if="${moreDetailsAvailable}">Details for&nbsp;<span th:text="${selectedCountry}"></span></a>
                 </div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-7-tablet is-6-desktop is-5-widescreen is-4-fullhd">
+            <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
                 <div class="switch-toggle switch-ios">
                     <input checked id="line" name="view" onclick="changeCharts()" type="radio">
                     <label for="line" onclick="">Line Chart</label>
                     <input id="bar" name="view" onclick="changeCharts()" type="radio">
                     <label for="bar" onclick="">Bar Chart</label>
+                    <input id="confirmed" name="view" onclick="confirmed()" type="radio">
+                    <label for="confirmed" onclick="">Confirmed</label>
+                    <input id="recovered" name="view" onclick="recovered()" type="radio">
+                    <label for="recovered" onclick="">Recovered</label>
+                    <input id="deaths" name="view" onclick="deaths()" type="radio">
+                    <label for="deaths" onclick="">Deaths</label>
                     <a></a>
                 </div>
             </div>
@@ -344,6 +350,18 @@
             let barChart = 'bar';
             change(barChart, toggleCharts, dates, confirmedList, recoveredList, deathsList, country);
         }
+    }
+
+    function confirmed() {
+        changeBarChart(toggleCharts, dates, 'Confirmed', confirmedList, recoveredList, deathsList)
+    }
+
+    function recovered() {
+        changeBarChart(toggleCharts, dates, 'Recovered', confirmedList, recoveredList, deathsList);
+    }
+
+    function deaths() {
+        changeBarChart(toggleCharts, dates, 'Deaths', confirmedList, recoveredList, deathsList);
     }
 
     let canvasConfirmed = document.getElementById('confirmedOneDay');
