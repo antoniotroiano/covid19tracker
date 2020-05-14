@@ -51,24 +51,25 @@ public class WorldTimeSeriesController {
         model.addAttribute("latestDataWorld", latestDataWorld);
         model.addAttribute("lastUpdate", date + " " + time + "h");
 
+
         List<Integer> listConfirmed = worldTimeSeriesDtoList
                 .stream()
                 .map(WorldTimeSeriesDto::getConfirmed)
                 .collect(Collectors.toList());
         Collections.reverse(listConfirmed);
-        model.addAttribute("confirmed", listConfirmed);
+        model.addAttribute("confirmed", timeSeriesService.getEverySecondValue(listConfirmed));
         List<Integer> listRecovered = worldTimeSeriesDtoList
                 .stream()
                 .map(WorldTimeSeriesDto::getRecovered)
                 .collect(Collectors.toList());
         Collections.reverse(listRecovered);
-        model.addAttribute("recovered", listRecovered);
+        model.addAttribute("recovered", timeSeriesService.getEverySecondValue(listRecovered));
         List<Integer> listDeaths = worldTimeSeriesDtoList
                 .stream()
                 .map(WorldTimeSeriesDto::getDeaths)
                 .collect(Collectors.toList());
         Collections.reverse(listDeaths);
-        model.addAttribute("deaths", listDeaths);
+        model.addAttribute("deaths", timeSeriesService.getEverySecondValue(listDeaths));
         model.addAttribute("active", worldTimeSeriesDtoList
                 .stream()
                 .map(WorldTimeSeriesDto::getActive)
@@ -90,7 +91,7 @@ public class WorldTimeSeriesController {
                 .map(WorldTimeSeriesDto::getDate)
                 .collect(Collectors.toList());
         Collections.reverse(listDates);
-        model.addAttribute("dateTimeSeries", listDates);
+        model.addAttribute("dateTimeSeries", timeSeriesService.getEverySecondDate(listDates));
         return "v2/timeSeriesWorld";
     }
 }

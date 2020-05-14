@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @SpringBootTest
@@ -98,5 +99,22 @@ public class ReaderCSVApacheTest {
         System.out.println(testValuesAll.get("deathsList"));
 
         System.out.println(timeSeriesService.getLastValues(timeSeriesService.mapResultToList(timeSeriesService.getValuesSelectedCountry("US").get("confirmedList"))));
+    }
+
+    @Test
+    public void testEvery2Value(){
+        TimeSeriesService timeSeriesService = new TimeSeriesService();
+        List<Integer> test = timeSeriesService
+                .getEverySecondValue(timeSeriesService.mapFinalResultToMap(timeSeriesService.getValuesSelectedCountry("Germany")).get("confirmedResult"));
+        List<Integer> testAll = timeSeriesService.mapFinalResultToMap(timeSeriesService.getValuesSelectedCountry("Germany")).get("confirmedResult");
+        System.out.println(test.size());
+        System.out.println(testAll.size());
+
+        /*List<String> dates = timeSeriesService
+                .getEverySecondDate("Germany");
+        System.out.println(dates.size());*/
+
+        Set<String> getOneObject = timeSeriesService.getValuesSelectedCountry("Germany").get("confirmedList").stream().map(TimeSeriesDto::new).findFirst().get().getDataMap().keySet();
+        System.out.println(getOneObject.size());
     }
 }

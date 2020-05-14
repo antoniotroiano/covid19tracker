@@ -113,13 +113,14 @@ public class TimeSeriesController {
         model.addAttribute("recoveredYesterday", timeSeriesService.getLastValues(result.get(RECOVERED_RESULT)));
         model.addAttribute("deathsYesterday", timeSeriesService.getLastValues(result.get(DEATHS_RESULT)));
 
-        model.addAttribute("confirmedList", result.get(CONFIRMED_RESULT));
-        model.addAttribute("recoveredList", result.get(RECOVERED_RESULT));
-        model.addAttribute("deathsList", result.get(DEATHS_RESULT));
-        model.addAttribute("dateList", datesList);
+        model.addAttribute("confirmedList", timeSeriesService.getEverySecondValue(result.get(CONFIRMED_RESULT)));
+        model.addAttribute("recoveredList", timeSeriesService.getEverySecondValue(result.get(RECOVERED_RESULT)));
+        model.addAttribute("deathsList", timeSeriesService.getEverySecondValue(result.get(DEATHS_RESULT)));
+        model.addAttribute("dateList", timeSeriesService.getEverySecondDate(datesList));
 
         model.addAttribute("dailyTrendConfirmed", timeSeriesService.getOneDayValues(result.get(CONFIRMED_RESULT)));
         model.addAttribute("dailyTrendRecovered", timeSeriesService.getOneDayValues(result.get(RECOVERED_RESULT)));
         model.addAttribute("dailyTrendDeaths", timeSeriesService.getOneDayValues(result.get(DEATHS_RESULT)));
+        model.addAttribute("dateListPerDay", datesList);
     }
 }

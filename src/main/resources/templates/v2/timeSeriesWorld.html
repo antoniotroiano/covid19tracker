@@ -78,7 +78,8 @@
                     <div class="tile is-horizontal">
                         <div class="tile is-parent">
                             <div class="tile is-child notification is-info">
-                                <span class="icon is-pulled-right"><img alt="checkmark" src="/img/checkmark-outline.svg"></span>
+                                <span class="icon is-pulled-right"><img alt="checkmark"
+                                                                        src="/img/checkmark-outline.svg"></span>
                                 <div class="is-size-5">Confirmed</div>
                                 <div class="is-size-6"
                                      th:text="${latestDataWorld.getConfirmed() == 0} ? ${'No value, please try again later!'}
@@ -90,7 +91,8 @@
                         </div>
                         <div class="tile is-parent">
                             <div class="tile is-child notification is-primary">
-                                <span class="icon is-pulled-right"><img alt="fitness" src="/img/fitness-outline.svg"></span>
+                                <span class="icon is-pulled-right"><img alt="fitness"
+                                                                        src="/img/fitness-outline.svg"></span>
                                 <div class="is-size-5">Recovered</div>
                                 <div class="is-size-6"
                                      th:text="${latestDataWorld.getRecovered() == 0} ? ${'No value, please try again later!'}
@@ -118,7 +120,8 @@
                     <div class="tile is-horizontal">
                         <div class="tile is-parent">
                             <div class="tile is-child notification is-warning">
-                                <span class="icon is-pulled-right"><img alt="medkit" src="/img/medkit-outline.svg"></span>
+                                <span class="icon is-pulled-right"><img alt="medkit"
+                                                                        src="/img/medkit-outline.svg"></span>
                                 <div class="is-size-5">Active cases</div>
                                 <div class="is-size-6"
                                      th:text="${#numbers.formatInteger(latestDataWorld.getActive(),3,'POINT')}"></div>
@@ -126,7 +129,8 @@
                         </div>
                         <div class="tile is-parent">
                             <div class="tile is-child notification is-light">
-                                <span class="icon is-pulled-right"><img alt="analytics" src="/img/analytics-outline.svg"></span>
+                                <span class="icon is-pulled-right"><img alt="analytics"
+                                                                        src="/img/analytics-outline.svg"></span>
                                 <div class="is-size-5">Last update</div>
                                 <div class="is-size-6" th:text="${lastUpdate}"></div>
                             </div>
@@ -142,11 +146,11 @@
                     <label for="bar" onclick="">Bar</label>
                     <input id="line" name="view" onclick="toggleToLineChart()" type="radio">
                     <label for="line" onclick="">Line</label>
-                    <input id="confirmed" name="view" onclick="confirmed()" type="radio">
+                    <input id="confirmed" name="view" onclick="toggleToConfirmed()" type="radio">
                     <label for="confirmed" onclick="">Confirmed</label>
-                    <input id="recovered" name="view" onclick="recovered()" type="radio">
+                    <input id="recovered" name="view" onclick="toggleToRecovered()" type="radio">
                     <label for="recovered" onclick="">Recovered</label>
-                    <input id="deaths" name="view" onclick="deaths()" type="radio">
+                    <input id="deaths" name="view" onclick="toggleToDeaths()" type="radio">
                     <label for="deaths" onclick="">Deaths</label>
                     <a></a>
                 </div>
@@ -169,28 +173,26 @@
     let deaList = /*[[${deaths}]]*/ '';
     /*]]>*/
 
-    barChartAll(canvasWorld, dates, 'World', confList, recList, deaList);
-
-    function confirmed() {
-        changeBarChart(canvasWorld, dates, 'Confirmed', confList, recList, deaList)
-    }
-
-    function recovered() {
-        changeBarChart(canvasWorld, dates, 'Recovered', confList, recList, deaList);
-    }
-
-    function deaths() {
-        changeBarChart(canvasWorld, dates, 'Deaths', confList, recList, deaList);
-    }
+    barLineChartAllValues(canvasWorld, dates, 'World', confList, recList, deaList);
 
     function toggleToBarChart() {
-        let barChartString = 'bar';
-        changeBarChart(canvasWorld, dates, 'World', confList, recList, deaList, barChartString);
+        changeChart(canvasWorld, dates, 'World', confList, recList, deaList, 'bar');
     }
 
     function toggleToLineChart() {
-        let lineChartString = 'line';
-        changeBarChart(canvasWorld, dates, 'World', confList, recList, deaList, lineChartString);
+        changeChart(canvasWorld, dates, 'World', confList, recList, deaList, 'line');
+    }
+
+    function toggleToConfirmed() {
+        changeChart(canvasWorld, dates, 'Confirmed', confList, recList, deaList)
+    }
+
+    function toggleToRecovered() {
+        changeChart(canvasWorld, dates, 'Recovered', confList, recList, deaList);
+    }
+
+    function toggleToDeaths() {
+        changeChart(canvasWorld, dates, 'Deaths', confList, recList, deaList);
     }
 
     let dropdown = document.querySelector('.dropdown');

@@ -175,28 +175,28 @@
     let deaList = /*[[${deathsListW}]]*/ '';
     /*]]>*/
 
-    barChartAll(canvasWorld, dates, 'World', confList, recList, deaList);
+    barLineChartAllValues(canvasWorld, dates, 'World', confList, recList, deaList);
 
     function confirmed() {
-        changeBarChart(canvasWorld, dates, 'Confirmed', confList, recList, deaList)
+        changeChart(canvasWorld, dates, 'Confirmed', confList, recList, deaList)
     }
 
     function recovered() {
-        changeBarChart(canvasWorld, dates, 'Recovered', confList, recList, deaList);
+        changeChart(canvasWorld, dates, 'Recovered', confList, recList, deaList);
     }
 
     function deaths() {
-        changeBarChart(canvasWorld, dates, 'Deaths', confList, recList, deaList);
+        changeChart(canvasWorld, dates, 'Deaths', confList, recList, deaList);
     }
 
     function toggleToBarChart() {
         let barChartString = 'bar';
-        changeBarChart(canvasWorld, dates, 'World', confList, recList, deaList, barChartString);
+        changeChart(canvasWorld, dates, 'World', confList, recList, deaList, barChartString);
     }
 
     function toggleToLineChart() {
         let lineChartString = 'line';
-        changeBarChart(canvasWorld, dates, 'World', confList, recList, deaList, lineChartString);
+        changeChart(canvasWorld, dates, 'World', confList, recList, deaList, lineChartString);
     }
 
     let dropdown = document.querySelector('.dropdown');

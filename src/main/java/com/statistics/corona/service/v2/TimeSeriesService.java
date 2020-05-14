@@ -2,8 +2,8 @@ package com.statistics.corona.service.v2;
 
 import com.statistics.corona.model.v2.CountryDetailsDto;
 import com.statistics.corona.model.v2.TimeSeriesDto;
-import com.statistics.corona.service.v2.json.ReadJSON;
 import com.statistics.corona.service.v2.csv.ReadTimeSeriesCSV;
+import com.statistics.corona.service.v2.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @Slf4j
@@ -139,5 +140,18 @@ public class TimeSeriesService {
     public List<String> getCountry() {
         log.debug("Returned list with all country names.");
         return readTimeSeriesCSV.readCountryName();
+    }
+
+    public List<Integer> getEverySecondValue(List<Integer> values) {
+        return IntStream.range(0, values.size())
+                .filter(n -> n % 2 == 0)
+                .mapToObj(values::get)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getEverySecondDate(List<String> dates) {
+        return IntStream.range(0, dates.size())
+                .filter(n -> n % 2 == 0)
+                .mapToObj(dates::get).collect(Collectors.toList());
     }
 }

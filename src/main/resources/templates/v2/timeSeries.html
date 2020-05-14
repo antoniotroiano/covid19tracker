@@ -285,15 +285,15 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
                 <div class="switch-toggle switch-ios">
-                    <input checked id="line" name="view" onclick="changeCharts()" type="radio">
-                    <label for="line" onclick="">Line Chart</label>
-                    <input id="bar" name="view" onclick="changeCharts()" type="radio">
-                    <label for="bar" onclick="">Bar Chart</label>
-                    <input id="confirmed" name="view" onclick="confirmed()" type="radio">
+                    <input checked id="bar" name="view" onclick="toggleToBarChart()" type="radio">
+                    <label for="bar" onclick="">Bar</label>
+                    <input id="line" name="view" onclick="toggleToLineChart()" type="radio">
+                    <label for="line" onclick="">Line</label>
+                    <input id="confirmed" name="view" onclick="toggleToConfirmed()" type="radio">
                     <label for="confirmed" onclick="">Confirmed</label>
-                    <input id="recovered" name="view" onclick="recovered()" type="radio">
+                    <input id="recovered" name="view" onclick="toggleToRecovered()" type="radio">
                     <label for="recovered" onclick="">Recovered</label>
-                    <input id="deaths" name="view" onclick="deaths()" type="radio">
+                    <input id="deaths" name="view" onclick="toggleToDeaths()" type="radio">
                     <label for="deaths" onclick="">Deaths</label>
                     <a></a>
                 </div>
@@ -307,7 +307,7 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <canvas class="box" id="toggleChartType"></canvas>
+                <canvas class="box" id="canvasCountry"></canvas>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
@@ -335,7 +335,7 @@
     </section>
 </div>
 <script th:inline="javascript">
-    let toggleCharts = document.getElementById('toggleChartType');
+    let canvasCountry = document.getElementById('canvasCountry');
     /*<![CDATA[*/
     let country = /*[[${selectedCountry}]]*/ '';
     let confirmedList = /*[[${confirmedList}]]*/ '';
@@ -344,29 +344,26 @@
     let dates = /*[[${dateList}]]*/ '';
     /*]]>*/
 
-    toggleChartTypes(toggleCharts, dates, confirmedList, recoveredList, deathsList, country);
+    barLineChartAllValues(canvasCountry, dates, country, confirmedList, recoveredList, deathsList);
 
-    function changeCharts() {
-        let isChecked = document.getElementById("line").checked;
-        if (isChecked === true) {
-            let lineChart = 'line';
-            change(lineChart, toggleCharts, dates, confirmedList, recoveredList, deathsList, country);
-        } else {
-            let barChart = 'bar';
-            change(barChart, toggleCharts, dates, confirmedList, recoveredList, deathsList, country);
-        }
+    function toggleToBarChart() {
+        changeChart(canvasCountry, dates, country, confirmedList, recoveredList, deathsList, 'bar');
     }
 
-    function confirmed() {
-        changeBarChart(toggleCharts, dates, 'Confirmed', confirmedList, recoveredList, deathsList)
+    function toggleToLineChart() {
+        changeChart(canvasCountry, dates, country, confirmedList, recoveredList, deathsList, 'line');
     }
 
-    function recovered() {
-        changeBarChart(toggleCharts, dates, 'Recovered', confirmedList, recoveredList, deathsList);
+    function toggleToConfirmed() {
+        changeChart(canvasCountry, dates, 'Confirmed', confirmedList, recoveredList, deathsList)
     }
 
-    function deaths() {
-        changeBarChart(toggleCharts, dates, 'Deaths', confirmedList, recoveredList, deathsList);
+    function toggleToRecovered() {
+        changeChart(canvasCountry, dates, 'Recovered', confirmedList, recoveredList, deathsList);
+    }
+
+    function toggleToDeaths() {
+        changeChart(canvasCountry, dates, 'Deaths', confirmedList, recoveredList, deathsList);
     }
 
     let canvasConfirmed = document.getElementById('confirmedOneDay');
@@ -377,12 +374,12 @@
     let confirmedOneDay = /*[[${dailyTrendConfirmed}]]*/ '';
     let recoveredOneDay = /*[[${dailyTrendRecovered}]]*/ '';
     let deathsOneDay = /*[[${dailyTrendDeaths}]]*/ '';
-    let datesOneDay = /*[[${dateList}]]*/ '';
+    let datesOneDay = /*[[${dateListPerDay}]]*/ '';
     /*]]>*/
 
-    changeSelectedBarChart(canvasConfirmed, datesOneDay, confirmedOneDay, 'Confirmed');
-    changeSelectedBarChart(canvasRecovered, datesOneDay, recoveredOneDay, 'Recovered');
-    changeSelectedBarChart(canvasDeaths, datesOneDay, deathsOneDay, 'Deaths');
+    changedBarChartPerDay(canvasConfirmed, datesOneDay, confirmedOneDay, 'Confirmed');
+    changedBarChartPerDay(canvasRecovered, datesOneDay, recoveredOneDay, 'Recovered');
+    changedBarChartPerDay(canvasDeaths, datesOneDay, deathsOneDay, 'Deaths');
 </script>
 </body>
 </html>
