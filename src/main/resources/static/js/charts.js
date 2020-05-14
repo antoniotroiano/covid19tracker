@@ -31,6 +31,10 @@ function getCountry(country) {
     document.location.replace("/covid19/daily/" + country);
 }
 
+function getCountryV2(country) {
+    document.location.replace("/v2/covid19/timeSeries/" + country);
+}
+
 /*Modal with bulma*/
 function openModal(region, confirmed, recovered, deaths, active) {
     let $activeElement = undefined;
@@ -160,6 +164,14 @@ function barChartSelectedCountry(canvas, dates, label, listData) {
                     display: true,
                     gridLines: {
                         display: true
+                    },
+                    ticks: {
+                        userCallback: function(value, index, values) {
+                            value = value.toString();
+                            value = value.split(/(?=(?:...)*$)/);
+                            value = value.join('.');
+                            return value;
+                        }
                     }
                 }]
             },
@@ -244,6 +256,14 @@ function barChartAll(canvas, dates, label, confirmed, recovered, deaths) {
                     stacked: booleanStacked,
                     gridLines: {
                         display: true
+                    },
+                    ticks: {
+                        userCallback: function(value, index, values) {
+                            value = value.toString();
+                            value = value.split(/(?=(?:...)*$)/);
+                            value = value.join('.');
+                            return value;
+                        }
                     }
                 }]
             },
@@ -278,6 +298,22 @@ let chartToggle;
 function change(newType, toggleCharts, dates, confirmed, recovered, deaths, countryToggle) {
     chartToggle.destroy();
 
+    if (newType === 'Recovered') {
+        backgroundColor = 'rgba(167,234,122,0.9)';
+        borderColor = 'rgb(9,234,14)';
+        hoverBackgroundColor = 'rgba(187,234,109,0.7)';
+        toggleChartTypes(toggleCharts, dates, label, listRecovered);
+    } else if (newType === 'Deaths') {
+        backgroundColor = 'rgba(234,127,121,0.9)';
+        borderColor = 'rgb(234,3,12)';
+        hoverBackgroundColor = 'rgba(234,81,77,0.7)';
+        toggleChartTypes(toggleCharts, dates, label, listDeaths);
+    } else if (newType === 'Confirmed') {
+        backgroundColor = 'rgb(147,190,234, 0.9)';
+        borderColor = 'rgb(13,23,234)';
+        hoverBackgroundColor = 'rgb(147,190,234, 0.7)';
+        toggleChartTypes(toggleCharts, dates, label, listConfirmed);
+    } else
     if (newType === 'bar') {
         charType = newType;
         stackedBoolean = true;
@@ -344,6 +380,14 @@ function toggleChartTypes(toggleCharts, dates, confirmed, recovered, deaths, cou
                     stacked: stackedBoolean,
                     gridLines: {
                         display: true
+                    },
+                    ticks: {
+                        userCallback: function(value, index, values) {
+                            value = value.toString();
+                            value = value.split(/(?=(?:...)*$)/);
+                            value = value.join('.');
+                            return value;
+                        }
                     }
                 }]
             },

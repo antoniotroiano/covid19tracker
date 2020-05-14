@@ -1,9 +1,7 @@
 package com.valtech.statistics.controller;
 
-import com.opencsv.exceptions.CsvException;
 import com.valtech.statistics.model.SummaryToday;
 import com.valtech.statistics.service.DateFormat;
-import com.valtech.statistics.service.csv.ReadCSV;
 import com.valtech.statistics.service.json.GetJsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,20 +24,18 @@ public class SummaryController {
     private static final String COVID19_DETAILS = "covid19Details";
     private final GetJsonValue getJsonValue;
     private final DateFormat dateFormat;
-    private final ReadCSV readCSV;
 
     @GetMapping("/{country}")
-    public String showSummaryOfSelectedCountry(@PathVariable("country") String country, Model model) throws IOException, CsvException {
+    public String showSummaryOfSelectedCountry(@PathVariable("country") String country, Model model) throws IOException {
         log.info("Invoke show summary of country {}", country);
         List<String> allCountries = getJsonValue.getCountryOfJSONObject();
         model.addAttribute("listCountries", allCountries);
         SummaryToday summaryToday = getJsonValue.getDataForSelectedCountry(country);
+        createBaseModelSummary(country, model);
         if (summaryToday == null) {
-            createBaseModelSummary(country, model);
             model.addAttribute("noDataForThisCountry", "No dataset for " + country + ". Please try again later.");
             log.info("No data for the country {}", country);
         } else {
-            createBaseModelSummary(country, model);
             model.addAttribute("dataSummaryToday", summaryToday);
             String date = dateFormat.formatLastUpdateToDate(summaryToday.getLastUpdate());
             String time = dateFormat.formatLastUpdateToTime(summaryToday.getLastUpdate());
@@ -98,7 +94,7 @@ public class SummaryController {
     }
 
     @GetMapping("/{country}/details")
-    public String showDetailsOfSelectedCountry(@PathVariable("country") String country, Model model) throws IOException {
+    public String showDetailsOfSelectedCountry(@PathVariable("country") String country, Model model) {
         log.info("Invoke show details of country {}", country);
         List<SummaryToday> summaryTodayList = getJsonValue.getJSONArrayOfOneCountry(country);
         if (summaryTodayList.isEmpty()) {
