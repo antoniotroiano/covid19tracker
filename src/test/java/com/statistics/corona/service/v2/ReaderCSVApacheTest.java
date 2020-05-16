@@ -117,4 +117,10 @@ public class ReaderCSVApacheTest {
         Set<String> getOneObject = timeSeriesService.getValuesSelectedCountry("Germany").get("confirmedList").stream().map(TimeSeriesDto::new).findFirst().get().getDataMap().keySet();
         System.out.println(getOneObject.size());
     }
+
+    @Test
+    public void readUSData() {
+        ReadDailyReportsCSV readDailyReportsCSV = new ReadDailyReportsCSV();
+        System.out.println(readDailyReportsCSV.readDailyReportUs());
+    }
 }
