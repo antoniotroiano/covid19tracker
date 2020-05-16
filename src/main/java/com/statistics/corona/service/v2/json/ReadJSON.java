@@ -64,18 +64,18 @@ public class ReadJSON {
         JSONArray jsonArrayWorld = jsonObjectWorld.getJSONArray("data");
         for (int i = 0; i < jsonArrayWorld.length(); i++) {
             WorldTimeSeriesDto worldTimeSeriesDto = new WorldTimeSeriesDto();
-            worldTimeSeriesDto.setLastUpdate(jsonArrayWorld.getJSONObject(i).getString("updated_at"));
-            String formattedDate = dateFormat.formatDate(jsonArrayWorld.getJSONObject(i).getString("date"));
+            worldTimeSeriesDto.setLastUpdate(jsonArrayWorld.getJSONObject(i).optString("updated_at","2000-01-01'T'00:00:00.000'Z'"));
+            String formattedDate = dateFormat.formatDate(jsonArrayWorld.getJSONObject(i).optString("date", "2000-01-01"));
             worldTimeSeriesDto.setDate(formattedDate);
-            worldTimeSeriesDto.setConfirmed(jsonArrayWorld.getJSONObject(i).getInt(CONFIRMED));
-            worldTimeSeriesDto.setRecovered(jsonArrayWorld.getJSONObject(i).getInt("recovered"));
-            worldTimeSeriesDto.setDeaths(jsonArrayWorld.getJSONObject(i).getInt(DEATHS));
-            worldTimeSeriesDto.setActive(jsonArrayWorld.getJSONObject(i).getInt("active"));
-            worldTimeSeriesDto.setNewConfirmed(jsonArrayWorld.getJSONObject(i).getInt("new_confirmed"));
-            worldTimeSeriesDto.setNewRecovered(jsonArrayWorld.getJSONObject(i).getInt("new_recovered"));
-            worldTimeSeriesDto.setNewDeaths(jsonArrayWorld.getJSONObject(i).getInt("new_deaths"));
+            worldTimeSeriesDto.setConfirmed(jsonArrayWorld.getJSONObject(i).optInt(CONFIRMED, 0));
+            worldTimeSeriesDto.setRecovered(jsonArrayWorld.getJSONObject(i).optInt("recovered", 0));
+            worldTimeSeriesDto.setDeaths(jsonArrayWorld.getJSONObject(i).optInt(DEATHS, 0));
+            worldTimeSeriesDto.setActive(jsonArrayWorld.getJSONObject(i).optInt("active", 0));
+            worldTimeSeriesDto.setNewConfirmed(jsonArrayWorld.getJSONObject(i).optInt("new_confirmed",0));
+            worldTimeSeriesDto.setNewRecovered(jsonArrayWorld.getJSONObject(i).optInt("new_recovered",0));
+            worldTimeSeriesDto.setNewDeaths(jsonArrayWorld.getJSONObject(i).optInt("new_deaths", 0) );
             if (i == 0) {
-                worldTimeSeriesDto.setInProgress(jsonArrayWorld.getJSONObject(i).getBoolean("is_in_progress"));
+                worldTimeSeriesDto.setInProgress(jsonArrayWorld.getJSONObject(i).optBoolean("is_in_progress", false));
             }
             allValuesWorld.add(worldTimeSeriesDto);
         }

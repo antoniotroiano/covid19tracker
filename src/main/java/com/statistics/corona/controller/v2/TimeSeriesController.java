@@ -2,10 +2,13 @@ package com.statistics.corona.controller.v2;
 
 import com.statistics.corona.model.v2.CountryDetailsDto;
 import com.statistics.corona.model.v2.DailyReportDto;
+import com.statistics.corona.model.v2.DailyReportUsDto;
 import com.statistics.corona.model.v2.TimeSeriesDto;
 import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.v2.TimeSeriesDetailsService;
 import com.statistics.corona.service.v2.TimeSeriesService;
+import com.statistics.corona.service.v2.csv.ReadDailyReportsCSV;
+import com.statistics.corona.service.v2.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -31,6 +34,7 @@ public class TimeSeriesController {
     private static final String DEATHS_RESULT = "deathsResult";
     private final TimeSeriesService timeSeriesService;
     private final TimeSeriesDetailsService timeSeriesDetailsService;
+    private final ReadDailyReportsCSV readDailyReportsCSV;
     private final DateFormat dateFormat;
 
     @GetMapping("/{country}")
@@ -90,6 +94,13 @@ public class TimeSeriesController {
     public String showDetailsOfSelectedCountry(@PathVariable("country") String country, Model model) {
         log.info("Invoke get details for province of selected country {}", country);
         List<DailyReportDto> allValuesProvince = timeSeriesDetailsService.getAllDetailsProvince(country);
+        List<DailyReportUsDto> allValuesProvinceUs = readDailyReportsCSV.readDailyReportUs();
+        if (!allValuesProvince.isEmpty()) {
+            createBaseDataDetails(country, model);
+            model.addAttribute("allValuesProvince", allValuesProvinceUs);
+            log.debug("Returned all data of province for selected country {}", country);
+            return "v2/timeSeriesDetails";
+        }
         if (allValuesProvince.isEmpty()) {
             createBaseDataDetails(country, model);
             model.addAttribute("noDetailsProvince", "No values for province of selected country " + country + " available");

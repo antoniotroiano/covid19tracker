@@ -104,12 +104,13 @@ public class ReadDailyReportsCSV {
 
         assert url != null;
         try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-             CSVReader reader = new CSVReader(in)) {
+             CSVReader reader = new CSVReaderBuilder(in)
+                     .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES)
+                     .withSkipLines(1)
+                     .build()) {
 
             CsvToBean csvToBean = new CsvToBeanBuilder(reader)
                     .withType(DailyReportUsDto.class)
-                    .withSkipLines(1)
-                    .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES)
                     .build();
 
             List<DailyReportUsDto> users = csvToBean.parse();
