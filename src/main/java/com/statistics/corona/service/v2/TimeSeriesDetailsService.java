@@ -45,4 +45,26 @@ public class TimeSeriesDetailsService {
         return allDailyReportsUs;
 
     }
+
+    public List<DailyReportDto> getAllCountries() {
+        log.debug("Invoke get details for all countries");
+        List<DailyReportDto> allDailyReports = readDailyReportCSV.readDailyReportsCSV();
+        if (allDailyReports.isEmpty()) {
+            log.warn("No values available for all counties.");
+            return allDailyReports;
+        }
+        List<DailyReportDto> allValuesWithoutUs = new ArrayList<>();
+        for (DailyReportDto allDailyReport : allDailyReports) {
+            if (!allDailyReport.getCountry().equals("US") && !allDailyReport.getCountry().equals("Germany")
+                    && !allDailyReport.getCountry().equals("Italy") && !allDailyReport.getCountry().equals("France")
+                    && !allDailyReport.getCountry().equals("Denmark") && !allDailyReport.getCountry().equals("Canada")
+                    && !allDailyReport.getCountry().equals("Australia") && !allDailyReport.getCountry().equals("China")
+                    && !allDailyReport.getCountry().equals("United Kingdom") && !allDailyReport.getCountry().equals("Netherlands")
+                    && !allDailyReport.getCountry().equals("Spain")) {
+                allValuesWithoutUs.add(allDailyReport);
+            }
+        }
+        log.debug("Returned all values of all countries");
+        return allValuesWithoutUs;
+    }
 }

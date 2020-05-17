@@ -1,7 +1,9 @@
 package com.statistics.corona.controller.v2;
 
+import com.statistics.corona.model.v2.DailyReportDto;
 import com.statistics.corona.model.v2.WorldTimeSeriesDto;
 import com.statistics.corona.service.DateFormat;
+import com.statistics.corona.service.v2.TimeSeriesDetailsService;
 import com.statistics.corona.service.v2.TimeSeriesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class WorldTimeSeriesController {
 
     private final TimeSeriesService timeSeriesService;
+    private final TimeSeriesDetailsService timeSeriesDetailsService;
     private final DateFormat dateFormat;
 
     @GetMapping
@@ -88,6 +91,17 @@ public class WorldTimeSeriesController {
                 .collect(Collectors.toList());
         Collections.reverse(listDates);
         model.addAttribute("dateTimeSeries", timeSeriesService.getEverySecondDate(listDates));
+        log.info("Returned world values");
+
+        model.addAttribute("dailyReportDto", new DailyReportDto());
+        List<DailyReportDto> allValues = timeSeriesDetailsService.getAllCountries();
+        if (allValues.isEmpty()) {
+            model.addAttribute("noValues", true);
+            log.warn("No values available for all countries");
+            return "v2/timeSeriesWorld";
+        }
+        model.addAttribute("allValues", allValues);
+        log.info("Returned all values of all countries");
         return "v2/timeSeriesWorld";
     }
 }
