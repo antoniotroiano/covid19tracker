@@ -76,7 +76,9 @@ public class TimeSeriesController {
             }
 
             List<String> datesList = new ArrayList<>(getOneObject.get().getDataMap().keySet());
-            if ((getAllValuesSelectedCountry.get(CONFIRMED_LIST).stream().filter(c -> c.getCountry() != null).count() > 1) || country.equals("US")) {
+
+            List<DailyReportDto> valuesCountries = timeSeriesDetailsService.getAllDetailsProvince(country);
+            if (!valuesCountries.isEmpty() && valuesCountries.stream().filter(c -> !c.getCountry().isEmpty()).count() > 1) {
                 model.addAttribute("moreDetailsAvailable", true);
                 getBaseData(model, finalResult, datesList);
                 log.info("Get data for selected country {}, with extra details", country);
