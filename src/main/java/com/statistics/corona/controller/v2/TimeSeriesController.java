@@ -8,7 +8,6 @@ import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.v2.TimeSeriesDetailsService;
 import com.statistics.corona.service.v2.TimeSeriesService;
 import com.statistics.corona.service.v2.csv.ReadDailyReportsCSV;
-import com.statistics.corona.service.v2.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -93,29 +92,41 @@ public class TimeSeriesController {
     @GetMapping("/{country}/details")
     public String showDetailsOfSelectedCountry(@PathVariable("country") String country, Model model) {
         log.info("Invoke get details for province of selected country {}", country);
+        if (country.equals("US")) {
+            List<DailyReportUsDto> allValuesProvinceUs = timeSeriesDetailsService.getAllDailyProvinceUs();
+            if (!allValuesProvinceUs.isEmpty()) {
+                createBaseDataDetailsUS(country, model);
+                model.addAttribute("allValuesProvinceUS", allValuesProvinceUs);
+                log.debug("Returned all data of province for US");
+                return "v2/timeSeriesDetailsUs";
+            }
+            createBaseDataDetailsUS(country, model);
+            model.addAttribute("noDetailsProvince", "No values for province of US available");
+            log.warn("No values for province of US available");
+            return "v2/timeSeriesDetailsUs";
+        }
         List<DailyReportDto> allValuesProvince = timeSeriesDetailsService.getAllDetailsProvince(country);
-        List<DailyReportUsDto> allValuesProvinceUs = readDailyReportsCSV.readDailyReportUs();
-        if (!allValuesProvinceUs.isEmpty()) {
+        if (!allValuesProvince.isEmpty()) {
             createBaseDataDetails(country, model);
-            model.addAttribute("allValuesProvince", allValuesProvinceUs);
+            model.addAttribute("allValuesProvince", allValuesProvince);
             log.debug("Returned all data of province for selected country {}", country);
             return "v2/timeSeriesDetails";
         }
-        if (allValuesProvince.isEmpty()) {
-            createBaseDataDetails(country, model);
-            model.addAttribute("noDetailsProvince", "No values for province of selected country " + country + " available");
-            log.warn("No values for province of selected country {} available", country);
-            return "v2/timeSeriesDetails";
-        }
         createBaseDataDetails(country, model);
-        model.addAttribute("allValuesProvince", allValuesProvince);
-        log.debug("Returned all data of province for selected country {}", country);
+        model.addAttribute("noDetailsProvince", "No values for province of selected country " + country + " available");
+        log.warn("No values for province of selected country {} available", country);
         return "v2/timeSeriesDetails";
     }
 
     private void createBaseDataDetails(String country, Model model) {
         model.addAttribute("dailyReportDto", new DailyReportDto());
         model.addAttribute("title", "COVID-19 - Details for " + country);
+        model.addAttribute("selectedCountry", country);
+    }
+
+    private void createBaseDataDetailsUS(String country, Model model) {
+        model.addAttribute("dailyReportUsDto", new DailyReportUsDto());
+        model.addAttribute("title", "COVID-19 - Details for US");
         model.addAttribute("selectedCountry", country);
     }
 

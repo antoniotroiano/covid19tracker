@@ -7,10 +7,9 @@
     <link href="css/mystyles.css" rel="stylesheet" th:href="@{/css/mystyles.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script th:src="@{/js/charts.js}"></script>
     <script th:inline="javascript">
-        openModal("region", "confirmed", "recovered", "deaths", "active")
+        openModalUs("province", "confirmed", "recovered", "deaths", "active", "incidentRate", "peopleTested", "peopleHospitalized", "mortalityRate", "testingRate", "hospitalizationRate")
     </script>
 </head>
 <body>
@@ -43,7 +42,7 @@
                             <button class="delete closeBtn"></button>
                         </header>
                         <section class="modal-card-body">
-                            <div class="has-text-centered is-size-9 has-text-weight-bold" id="region"></div>
+                            <div class="has-text-centered is-size-9 has-text-weight-bold" id="province"></div>
                             <br>
                             <div>Confirmed: <span class="is-pulled-right button tag is-info" id="confirmed"></span>
                             </div>
@@ -53,6 +52,24 @@
                             <div>Deaths: <span class="is-pulled-right tag is-danger" id="deaths"></span></div>
                             <hr class="dropdown-divider">
                             <div>Active: <span class="is-pulled-right tag is-warning" id="active"></span></div>
+                            <hr class="dropdown-divider">
+                            <div>Incident rate: <span class="is-pulled-right tag is-light" id="incidentRate"></span>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <div>People Tested: <span class="is-pulled-right tag is-light" id="peopleTested"></span>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <div>People hospitalized: <span class="is-pulled-right tag is-light"
+                                                            id="peopleHospitalized"></span></div>
+                            <hr class="dropdown-divider">
+                            <div>Mortality rate: <span class="is-pulled-right tag is-light" id="mortalityRate"></span>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <div>Testing rate: <span class="is-pulled-right tag is-light" id="testingRate"></span>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <div>Hospitalization rate: <span class="is-pulled-right tag is-light"
+                                                             id="hospitalizationRate"></span></div>
                         </section>
                         <footer class="modal-card-foot">
                         </footer>
@@ -70,17 +87,31 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="dailyReportDto : ${allValuesProvince}">
-                            <td th:text="${dailyReportDto.getCombinedKey()}"></td>
-                            <td class="is-hidden" th:text="${dailyReportDto.getConfirmed()}"></td>
-                            <td class="is-hidden" th:text="${dailyReportDto.getRecovered()}"></td>
-                            <td class="is-hidden" th:text="${dailyReportDto.getDeaths()}"></td>
-                            <td class="is-hidden" th:text="${dailyReportDto.getActive()}"></td>
+                        <tr th:each="dailyReportUsDto : ${allValuesProvinceUS}">
+                            <td th:text="${dailyReportUsDto.getProvince()}"></td>
+                            <td class="is-hidden" th:text="${dailyReportUsDto.getConfirmed()}"></td>
+                            <td class="is-hidden" th:text="${dailyReportUsDto.getRecovered()}"></td>
+                            <td class="is-hidden" th:text="${dailyReportUsDto.getDeaths()}"></td>
+                            <td class="is-hidden" th:text="${dailyReportUsDto.getActive()}"></td>
+                            <td class="is-hidden" th:text="${dailyReportUsDto.getIncidentRate()}"></td>
+                            <td class="is-hidden" th:text="${dailyReportUsDto.getPeopleTested()}"></td>
+                            <td class="is-hidden" th:text="${dailyReportUsDto.getPeopleHospitalized()}"></td>
+                            <td class="is-hidden" th:text="${dailyReportUsDto.getMortalityRate()}"></td>
+                            <td class="is-hidden" th:text="${dailyReportUsDto.getTestingRate()}"></td>
+                            <td class="is-hidden" th:text="${dailyReportUsDto.getHospitalizationRate()}"></td>
                             <td>
                                 <a class="button is-rounded is-light modal-bulma" href="javascript:void(0);"
-                                   th:attr="data-region=${dailyReportDto.getCombinedKey()}, data-confirmed=${dailyReportDto.getConfirmed()},
-                                   data-recovered=${dailyReportDto.getRecovered()}, data-deaths=${dailyReportDto.getDeaths()},
-                                   data-active=${dailyReportDto.getActive()}">Details</a>
+                                   th:attr="data-province=${dailyReportUsDto.getProvince()},
+                                   data-confirmed=${dailyReportUsDto.getConfirmed()},
+                                   data-recovered=${dailyReportUsDto.getRecovered()},
+                                   data-deaths=${dailyReportUsDto.getDeaths()},
+                                   data-active=${dailyReportUsDto.getActive()},
+                                   data-incidentRate=${dailyReportUsDto.getIncidentRate()},
+                                   data-peopletested=${dailyReportUsDto.getPeopleTested()},
+                                   data-peopleHospitalized=${dailyReportUsDto.getPeopleHospitalized()},
+                                   data-mortalityRate=${dailyReportUsDto.getMortalityRate()},
+                                   data-testingRate=${dailyReportUsDto.getTestingRate()},
+                                   data-hospializationRate=${dailyReportUsDto.getHospitalizationRate()}">Details</a>
                             </td>
                         </tr>
                         </tbody>

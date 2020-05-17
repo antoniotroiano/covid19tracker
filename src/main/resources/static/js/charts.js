@@ -35,7 +35,7 @@ function getCountryV2(country) {
     document.location.replace("/v2/covid19/timeSeries/" + country);
 }
 
-/*Modal with bulma*/
+/*Modal with bulma for all country without US*/
 function openModal(region, confirmed, recovered, deaths, active) {
     let $activeElement = undefined;
 
@@ -47,6 +47,35 @@ function openModal(region, confirmed, recovered, deaths, active) {
             $("#recovered").text($activeElement.data(recovered));
             $("#deaths").text($activeElement.data(deaths));
             $("#active").text($activeElement.data(active));
+            $(".modal").addClass("is-active");
+        });
+        $(".modal-close").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+        $(".closeBtn").click(function () {
+            $(".modal").removeClass("is-active");
+        });
+    });
+}
+
+/*Modal with bulma for US*/
+function openModalUs(province, confirmed, recovered, deaths, active, incidentRate, peopleTested, peopleHospitalized, mortalityRate, testingRate, hospitalizationRate) {
+    let $activeElementUs = undefined;
+
+    $(function () {
+        $(".modal-bulma").click(function () {
+            $activeElementUs = $(this);
+            $("#region").text($activeElementUs.data(province));
+            $("#confirmed").text($activeElementUs.data(confirmed));
+            $("#recovered").text($activeElementUs.data(recovered));
+            $("#deaths").text($activeElementUs.data(deaths));
+            $("#active").text($activeElementUs.data(active));
+            $("#incidentRate").text($activeElementUs.data(incidentRate));
+            $("#peopleTested").text($activeElementUs.data(peopleTested));
+            $("#peopleHospitalized").text($activeElementUs.data(peopleHospitalized));
+            $("#mortalityRate").text($activeElementUs.data(mortalityRate));
+            $("#testingRate").text($activeElementUs.data(testingRate));
+            $("#hospitalizationRate").text($activeElementUs.data(hospitalizationRate));
             $(".modal").addClass("is-active");
         });
         $(".modal-close").click(function () {

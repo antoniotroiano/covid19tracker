@@ -79,7 +79,7 @@ public class ReadDailyReportsCSV {
     }
 
     public List<DailyReportUsDto> readDailyReportUs() {
-        log.debug("Invoke read daily CSV UD from github.");
+        log.debug("Invoke read daily CSV US from github.");
         List<DailyReportUsDto> dailyReportUsDtoList = new ArrayList<>();
 
         URL url = null;
