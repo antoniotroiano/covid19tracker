@@ -95,7 +95,7 @@ public class TimeSeriesController {
         log.info("Invoke get details for province of selected country {}", country);
         List<DailyReportDto> allValuesProvince = timeSeriesDetailsService.getAllDetailsProvince(country);
         List<DailyReportUsDto> allValuesProvinceUs = readDailyReportsCSV.readDailyReportUs();
-        if (!allValuesProvince.isEmpty()) {
+        if (!allValuesProvinceUs.isEmpty()) {
             createBaseDataDetails(country, model);
             model.addAttribute("allValuesProvince", allValuesProvinceUs);
             log.debug("Returned all data of province for selected country {}", country);
