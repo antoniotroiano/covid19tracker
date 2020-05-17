@@ -32,22 +32,7 @@ public class DailyReportUsDto {
     Double hospitalizationRate;
 
     public DailyReportUsDto() {
-    }
-
-    public DailyReportUsDto(String province, String country, String lastUpdate, int confirmed, int deaths, int recovered, Double active, double incidentRate, int peopleTested, int peopleHospitalized, double mortalityRate, double testingRate, double hospitalizationRate) {
-        this.province = province;
-        this.country = country;
-        this.lastUpdate = lastUpdate;
-        this.confirmed = confirmed;
-        this.deaths = deaths;
-        this.recovered = recovered;
-        this.active = active;
-        this.incidentRate = incidentRate;
-        this.peopleTested = peopleTested;
-        this.peopleHospitalized = peopleHospitalized;
-        this.mortalityRate = mortalityRate;
-        this.testingRate = testingRate;
-        this.hospitalizationRate = hospitalizationRate;
+        //Always needed an empty constructor
     }
 
     public String getProvince() {

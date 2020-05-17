@@ -7,7 +7,6 @@ import com.statistics.corona.model.v2.TimeSeriesDto;
 import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.v2.TimeSeriesDetailsService;
 import com.statistics.corona.service.v2.TimeSeriesService;
-import com.statistics.corona.service.v2.csv.ReadDailyReportsCSV;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -31,9 +30,12 @@ public class TimeSeriesController {
     private static final String CONFIRMED_RESULT = "confirmedResult";
     private static final String RECOVERED_RESULT = "recoveredResult";
     private static final String DEATHS_RESULT = "deathsResult";
+    private static final String CONFIRMED_LIST = "confirmedList";
+    private static final String SELECTED_COUNTRY = "selectedCountry";
+    private static final String TITLE = "title";
+    private static final String NO_DATA = "noDataForThisCountry";
     private final TimeSeriesService timeSeriesService;
     private final TimeSeriesDetailsService timeSeriesDetailsService;
-    private final ReadDailyReportsCSV readDailyReportsCSV;
     private final DateFormat dateFormat;
 
     @GetMapping("/{country}")
@@ -41,15 +43,15 @@ public class TimeSeriesController {
         log.info("Invoke v2 controller show time series of country {}", country);
         model.addAttribute("timeSeriesDto", new TimeSeriesDto());
         model.addAttribute("countryDetailsDto", new CountryDetailsDto());
-        model.addAttribute("title", "COVID-19 - Data for " + country);
-        model.addAttribute("selectedCountry", country);
+        model.addAttribute(TITLE, "COVID-19 - Data for " + country);
+        model.addAttribute(SELECTED_COUNTRY, country);
 
         List<String> allCountries = timeSeriesService.getCountry();
         model.addAttribute("listCountries", allCountries);
 
         CountryDetailsDto countryDetailsDto = timeSeriesService.getDetailsForCountry(country);
         if (countryDetailsDto.getCountry() == null) {
-            model.addAttribute("noDataForThisCountry", "No dataset at the moment for " + country + "!");
+            model.addAttribute(NO_DATA, "No dataset at the moment for " + country + "!");
             return TIME_SERIES;
         }
         model.addAttribute("countryDetails", countryDetailsDto);
@@ -59,12 +61,12 @@ public class TimeSeriesController {
 
         Map<String, List<TimeSeriesDto>> getAllValuesSelectedCountry = timeSeriesService.getValuesSelectedCountry(country);
         if (getAllValuesSelectedCountry.isEmpty()) {
-            model.addAttribute("noDataForThisCountry", "No dataset for " + country + ". Please try again later.");
+            model.addAttribute(NO_DATA, "No dataset for " + country + ". Please try again later.");
             log.info("No data for the country {}", country);
             return TIME_SERIES;
         }
 
-        Optional<TimeSeriesDto> getOneObject = getAllValuesSelectedCountry.get("confirmedList").stream().map(TimeSeriesDto::new).findFirst();
+        Optional<TimeSeriesDto> getOneObject = getAllValuesSelectedCountry.get(CONFIRMED_LIST).stream().map(TimeSeriesDto::new).findFirst();
         if (getOneObject.isPresent()) {
             Map<String, List<Integer>> finalResult = timeSeriesService.mapFinalResultToMap(getAllValuesSelectedCountry);
             if (finalResult.isEmpty()) {
@@ -74,7 +76,7 @@ public class TimeSeriesController {
             }
 
             List<String> datesList = new ArrayList<>(getOneObject.get().getDataMap().keySet());
-            if ((getAllValuesSelectedCountry.get("confirmedList").stream().filter(c -> c.getCountry() != null).count() > 1) || country.equals("US")) {
+            if ((getAllValuesSelectedCountry.get(CONFIRMED_LIST).stream().filter(c -> c.getCountry() != null).count() > 1) || country.equals("US")) {
                 model.addAttribute("moreDetailsAvailable", true);
                 getBaseData(model, finalResult, datesList);
                 log.info("Get data for selected country {}, with extra details", country);
@@ -84,7 +86,7 @@ public class TimeSeriesController {
             log.info("Get data for selected country {}", country);
             return TIME_SERIES;
         }
-        model.addAttribute("somethingWrong", "Something getting wrong please try again later");
+        model.addAttribute(NO_DATA, "Something getting wrong please try again later");
         log.warn("Something getting wrong {}", country);
         return TIME_SERIES;
     }
@@ -120,14 +122,14 @@ public class TimeSeriesController {
 
     private void createBaseDataDetails(String country, Model model) {
         model.addAttribute("dailyReportDto", new DailyReportDto());
-        model.addAttribute("title", "COVID-19 - Details for " + country);
-        model.addAttribute("selectedCountry", country);
+        model.addAttribute(TITLE, "COVID-19 - Details for " + country);
+        model.addAttribute(SELECTED_COUNTRY, country);
     }
 
     private void createBaseDataDetailsUS(String country, Model model) {
         model.addAttribute("dailyReportUsDto", new DailyReportUsDto());
-        model.addAttribute("title", "COVID-19 - Details for US");
-        model.addAttribute("selectedCountry", country);
+        model.addAttribute(TITLE, "COVID-19 - Details for US");
+        model.addAttribute(SELECTED_COUNTRY, country);
     }
 
     private void getBaseData(Model model, Map<String, List<Integer>> result, List<String> datesList) {
@@ -135,7 +137,7 @@ public class TimeSeriesController {
         model.addAttribute("recoveredYesterday", timeSeriesService.getLastValues(result.get(RECOVERED_RESULT)));
         model.addAttribute("deathsYesterday", timeSeriesService.getLastValues(result.get(DEATHS_RESULT)));
 
-        model.addAttribute("confirmedList", timeSeriesService.getEverySecondValue(result.get(CONFIRMED_RESULT)));
+        model.addAttribute(CONFIRMED_LIST, timeSeriesService.getEverySecondValue(result.get(CONFIRMED_RESULT)));
         model.addAttribute("recoveredList", timeSeriesService.getEverySecondValue(result.get(RECOVERED_RESULT)));
         model.addAttribute("deathsList", timeSeriesService.getEverySecondValue(result.get(DEATHS_RESULT)));
         model.addAttribute("dateList", timeSeriesService.getEverySecondDate(datesList));

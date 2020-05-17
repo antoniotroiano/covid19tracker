@@ -2,6 +2,7 @@ package com.statistics.corona.service.v2;
 
 import com.statistics.corona.model.v2.CountryDetailsDto;
 import com.statistics.corona.model.v2.TimeSeriesDto;
+import com.statistics.corona.model.v2.WorldTimeSeriesDto;
 import com.statistics.corona.service.v2.csv.ReadTimeSeriesCSV;
 import com.statistics.corona.service.v2.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,7 @@ public class TimeSeriesService {
         return mapFinalResult;
     }
 
+    //ToDo: Only usage in tests
     public List<Integer> mapResultToList(List<TimeSeriesDto> dataList) {
         List<Integer> values = new ArrayList<>();
         for (TimeSeriesDto timeSeriesDto : dataList) {
@@ -132,7 +134,7 @@ public class TimeSeriesService {
             log.debug("Returned details for country {}", country);
             return readJSON.readDetailsForCountry(country);
         } catch (Exception e) {
-            log.warn("Failed get details for country {}. {}", country, e.getMessage());
+            log.warn("Failed get details for country {}: {}", country, e.getMessage());
             return new CountryDetailsDto();
         }
     }
@@ -153,5 +155,22 @@ public class TimeSeriesService {
         return IntStream.range(0, dates.size())
                 .filter(n -> n % 2 == 0)
                 .mapToObj(dates::get).collect(Collectors.toList());
+    }
+
+    public List<WorldTimeSeriesDto> getAllValuesWorld() {
+        log.debug("Invoke get all values of world");
+        List<WorldTimeSeriesDto> worldTimeSeriesDtoList = new ArrayList<>();
+        try {
+            worldTimeSeriesDtoList = readJSON.readWorldValues();
+            if (!worldTimeSeriesDtoList.isEmpty()) {
+                log.warn("No data available for world time series");
+                return worldTimeSeriesDtoList;
+            }
+            log.debug("Returned all values of world time series");
+            return worldTimeSeriesDtoList;
+        } catch (Exception e) {
+            log.warn("Failed get data of world time series: {}", e.getMessage());
+            return worldTimeSeriesDtoList;
+        }
     }
 }

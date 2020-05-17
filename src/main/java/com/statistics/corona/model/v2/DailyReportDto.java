@@ -1,28 +1,28 @@
 package com.statistics.corona.model.v2;
 
+import com.opencsv.bean.CsvBindByPosition;
+
 public class DailyReportDto {
 
+    @CsvBindByPosition(position = 2)
     String province;
+    @CsvBindByPosition(position = 3)
     String country;
+    @CsvBindByPosition(position = 4)
     String lastUpdate;
+    @CsvBindByPosition(position = 7)
     int confirmed;
+    @CsvBindByPosition(position = 8)
     int recovered;
+    @CsvBindByPosition(position = 9)
     int deaths;
+    @CsvBindByPosition(position = 10)
     int active;
+    @CsvBindByPosition(position = 11)
     String combinedKey;
 
     public DailyReportDto() {
-    }
-
-    public DailyReportDto(String province, String country, String lastUpdate, int confirmed, int recovered, int deaths, int active, String combinedKey) {
-        this.province = province;
-        this.country = country;
-        this.lastUpdate = lastUpdate;
-        this.confirmed = confirmed;
-        this.recovered = recovered;
-        this.deaths = deaths;
-        this.active = active;
-        this.combinedKey = combinedKey;
+        //Always needed an empty constructor
     }
 
     public String getProvince() {

@@ -1,11 +1,11 @@
 package com.statistics.corona.service.v2.csv;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.statistics.corona.model.v2.DailyReportDto;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
+import com.statistics.corona.model.v2.DailyReportDto;
 import com.statistics.corona.model.v2.DailyReportUsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +24,6 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class ReadDailyReportsCSV {
-
-    private Object DailyReportUsDto;
 
     public List<DailyReportDto> readDailyReportsCSV() {
         log.debug("Invoke read daily CSV from github.");
@@ -58,17 +56,22 @@ public class ReadDailyReportsCSV {
                      .withSkipLines(1)
                      .build()) {
 
-            String[] record;
-            while ((record = reader.readNext()) != null) {
+            CsvToBean<DailyReportDto> csvToBean = new CsvToBeanBuilder<DailyReportDto>(reader)
+                    .withType(DailyReportDto.class)
+                    .build();
+
+            List<DailyReportDto> dailyReportDtoListCSV = csvToBean.parse();
+
+            for (DailyReportDto dailyReportDtoIterate : dailyReportDtoListCSV) {
                 DailyReportDto dailyReportDto = new DailyReportDto();
-                dailyReportDto.setProvince(record[2]);
-                dailyReportDto.setCountry(record[3]);
-                dailyReportDto.setLastUpdate(record[4]);
-                dailyReportDto.setConfirmed(Integer.parseInt(record[7]));
-                dailyReportDto.setRecovered(Integer.parseInt(record[8]));
-                dailyReportDto.setDeaths(Integer.parseInt(record[9]));
-                dailyReportDto.setActive(Integer.parseInt(record[10]));
-                dailyReportDto.setCombinedKey(record[11]);
+                dailyReportDto.setProvince(dailyReportDtoIterate.getProvince());
+                dailyReportDto.setCountry(dailyReportDtoIterate.getCountry());
+                dailyReportDto.setLastUpdate(dailyReportDtoIterate.getLastUpdate());
+                dailyReportDto.setConfirmed(dailyReportDtoIterate.getConfirmed());
+                dailyReportDto.setRecovered(dailyReportDtoIterate.getRecovered());
+                dailyReportDto.setDeaths(dailyReportDtoIterate.getDeaths());
+                dailyReportDto.setActive(dailyReportDtoIterate.getActive());
+                dailyReportDto.setCombinedKey(dailyReportDtoIterate.getCombinedKey());
                 dailyReportDtoList.add(dailyReportDto);
             }
             log.debug("Add all daily reports to list");
@@ -109,29 +112,29 @@ public class ReadDailyReportsCSV {
                      .withSkipLines(1)
                      .build()) {
 
-            CsvToBean csvToBean = new CsvToBeanBuilder(reader)
+            CsvToBean<DailyReportUsDto> csvToBean = new CsvToBeanBuilder<DailyReportUsDto>(reader)
                     .withType(DailyReportUsDto.class)
                     .build();
 
-            List<DailyReportUsDto> users = csvToBean.parse();
+            List<DailyReportUsDto> dailyReportUsDtoListCSV = csvToBean.parse();
 
-            for (DailyReportUsDto dailyReportUsDto2 : users) {
+            for (DailyReportUsDto dailyReportUsDtoIterate : dailyReportUsDtoListCSV) {
                 DailyReportUsDto dailyReportUsDto = new DailyReportUsDto();
-                dailyReportUsDto.setProvince(dailyReportUsDto2.getProvince());
-                dailyReportUsDto.setCountry(dailyReportUsDto2.getCountry());
-                dailyReportUsDto.setLastUpdate(dailyReportUsDto2.getLastUpdate());
-                dailyReportUsDto.setConfirmed(dailyReportUsDto2.getConfirmed());
-                dailyReportUsDto.setRecovered(dailyReportUsDto2.getRecovered());
-                dailyReportUsDto.setDeaths(dailyReportUsDto2.getDeaths());
-                dailyReportUsDto.setActive(dailyReportUsDto2.getActive());
-                dailyReportUsDto.setIncidentRate(dailyReportUsDto2.getIncidentRate());
-                dailyReportUsDto.setPeopleTested(dailyReportUsDto2.getPeopleTested());
-                dailyReportUsDto.setPeopleHospitalized(dailyReportUsDto2.getPeopleHospitalized());
-                dailyReportUsDto.setMortalityRate(dailyReportUsDto2.getMortalityRate());
-                dailyReportUsDto.setTestingRate(dailyReportUsDto2.getTestingRate());
-                dailyReportUsDto.setHospitalizationRate(dailyReportUsDto2.getHospitalizationRate());
+                dailyReportUsDto.setProvince(dailyReportUsDtoIterate.getProvince());
+                dailyReportUsDto.setCountry(dailyReportUsDtoIterate.getCountry());
+                dailyReportUsDto.setLastUpdate(dailyReportUsDtoIterate.getLastUpdate());
+                dailyReportUsDto.setConfirmed(dailyReportUsDtoIterate.getConfirmed());
+                dailyReportUsDto.setRecovered(dailyReportUsDtoIterate.getRecovered());
+                dailyReportUsDto.setDeaths(dailyReportUsDtoIterate.getDeaths());
+                dailyReportUsDto.setActive(dailyReportUsDtoIterate.getActive());
+                dailyReportUsDto.setIncidentRate(dailyReportUsDtoIterate.getIncidentRate());
+                dailyReportUsDto.setPeopleTested(dailyReportUsDtoIterate.getPeopleTested());
+                dailyReportUsDto.setPeopleHospitalized(dailyReportUsDtoIterate.getPeopleHospitalized());
+                dailyReportUsDto.setMortalityRate(dailyReportUsDtoIterate.getMortalityRate());
+                dailyReportUsDto.setTestingRate(dailyReportUsDtoIterate.getTestingRate());
+                dailyReportUsDto.setHospitalizationRate(dailyReportUsDtoIterate.getHospitalizationRate());
                 dailyReportUsDtoList.add(dailyReportUsDto);
-             }
+            }
             log.debug("Add all daily reports US to list");
         } catch (Exception e) {
             log.warn("Occurred an exception while reading csv US from github {}", e.getMessage());

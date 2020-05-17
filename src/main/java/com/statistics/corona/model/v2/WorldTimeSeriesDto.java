@@ -14,19 +14,7 @@ public class WorldTimeSeriesDto {
     boolean inProgress;
 
     public WorldTimeSeriesDto() {
-    }
-
-    public WorldTimeSeriesDto(String lastUpdate, String date, int confirmed, int recovered, int deaths, int active, int newConfirmed, int newRecovered, int newDeaths, boolean inProgress) {
-        this.lastUpdate = lastUpdate;
-        this.date = date;
-        this.confirmed = confirmed;
-        this.recovered = recovered;
-        this.deaths = deaths;
-        this.active = active;
-        this.newConfirmed = newConfirmed;
-        this.newRecovered = newRecovered;
-        this.newDeaths = newDeaths;
-        this.inProgress = inProgress;
+        //Always needed an empty constructor
     }
 
     public String getLastUpdate() {

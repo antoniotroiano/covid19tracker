@@ -1,9 +1,9 @@
 package com.statistics.corona.service.v2.csv;
 
-import com.statistics.corona.model.v2.TimeSeriesDto;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
+import com.statistics.corona.model.v2.TimeSeriesDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,7 +65,11 @@ public class ReadTimeSeriesCSV {
 
     public List<String> readCountryName() {
         log.debug("Invoke read country of CSV from github");
-        return readConfirmedCsv().stream().map(TimeSeriesDto::getCountry).distinct().collect(Collectors.toList());
+        return readConfirmedCsv()
+                .stream()
+                .map(TimeSeriesDto::getCountry)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     private List<TimeSeriesDto> readTimeSeriesCSV(URL url) {

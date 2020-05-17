@@ -3,7 +3,6 @@ package com.statistics.corona.controller.v2;
 import com.statistics.corona.model.v2.WorldTimeSeriesDto;
 import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.v2.TimeSeriesService;
-import com.statistics.corona.service.v2.json.ReadJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -11,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,19 +20,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WorldTimeSeriesController {
 
-    private final ReadJSON readJSON;
     private final TimeSeriesService timeSeriesService;
     private final DateFormat dateFormat;
 
     @GetMapping
-    public String showWorldTimeSeries(Model model) throws IOException {
+    public String showWorldTimeSeries(Model model) {
         log.info("Invoke v2 controller show time series world");
         model.addAttribute("worldTimeSeriesDto", new WorldTimeSeriesDto());
 
         List<String> allCountries = timeSeriesService.getCountry();
         model.addAttribute("listCountries", allCountries);
 
-        List<WorldTimeSeriesDto> worldTimeSeriesDtoList = readJSON.readWorldValues();
+        List<WorldTimeSeriesDto> worldTimeSeriesDtoList = timeSeriesService.getAllValuesWorld();
         if (worldTimeSeriesDtoList.isEmpty()) {
             model.addAttribute("noDataForWorldTimeSeries",
                     "No data available for world time series. Please try again later.");
@@ -50,7 +47,6 @@ public class WorldTimeSeriesController {
         String time = dateFormat.formatLastUpdateToTime(latestDataWorld.getLastUpdate());
         model.addAttribute("latestDataWorld", latestDataWorld);
         model.addAttribute("lastUpdate", date + " " + time + "h");
-
 
         List<Integer> listConfirmed = worldTimeSeriesDtoList
                 .stream()

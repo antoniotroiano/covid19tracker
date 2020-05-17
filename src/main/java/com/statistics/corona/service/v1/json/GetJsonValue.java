@@ -157,7 +157,6 @@ public class GetJsonValue {
         return summaryToday;
     }
 
-    //https://api.covid19api.com/dayone/country/{country}
     public SummaryToday getDataForSelectedCountry(String country) throws IOException {
         log.info("Invoke get data for selected country {}", country);
         SummaryToday summaryToday = new SummaryToday();
@@ -183,7 +182,6 @@ public class GetJsonValue {
         return summaryToday;
     }
 
-    //https://api.covid19api.com/dayone/country/{germany}
     public List<SummaryToday> getDataDayOneTotalSelectedCountry(String country) {
         log.info("Invoke get data of day one for selected country {}", country);
         List<SummaryToday> summaryTodayList = new ArrayList<>();

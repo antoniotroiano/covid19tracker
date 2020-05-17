@@ -37,23 +37,6 @@ public class CountryDetailsDto {
         this.casesPerMillionPopulation = countryDetailsDto.getCasesPerMillionPopulation();
     }
 
-    public CountryDetailsDto(String country, String code, int population, String lastUpdate, int todayDeaths, int todayConfirmed, int deaths, int confirmed, int recovered, int critical, Double deathRate, Double recoveryRate, Double recoveredVSDeathRatio, Integer casesPerMillionPopulation) {
-        this.country = country;
-        this.code = code;
-        this.population = population;
-        this.lastUpdate = lastUpdate;
-        this.todayDeaths = todayDeaths;
-        this.todayConfirmed = todayConfirmed;
-        this.deaths = deaths;
-        this.confirmed = confirmed;
-        this.recovered = recovered;
-        this.critical = critical;
-        this.deathRate = deathRate;
-        this.recoveryRate = recoveryRate;
-        this.recoveredVSDeathRatio = recoveredVSDeathRatio;
-        this.casesPerMillionPopulation = casesPerMillionPopulation;
-    }
-
     public String getCountry() {
         return country;
     }
