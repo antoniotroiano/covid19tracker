@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" name="sirmodel">
     <Properties>
-        <Property name="log-path">logs/</Property>
+        <Property name="log-path">logsV2/</Property>
     </Properties>
     <Appenders>
         <!-- File Appender-->

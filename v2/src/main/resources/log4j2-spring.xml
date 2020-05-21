@@ -24,15 +24,6 @@
             </Policies>
         </RollingFile>
 
-        <RollingFile name="repository-log" fileName="${log-path}/repository/repository.log"
-                     filePattern="${log-path}/repository/repository-%d{yyyy-MM-dd}.log">
-            <PatternLayout
-                    pattern="%-5p | %d{dd-MM HH:mm:ss,SSS} | [%X{mdc.traceId}] | [%-16t] | %-5p %-45.45c (%-3L) - %m%n"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-            </Policies>
-        </RollingFile>
-
         <RollingFile name="service-log" fileName="${log-path}/service/service.log"
                      filePattern="${log-path}/service/service-%d{yyyy-MM-dd}.log">
             <PatternLayout>
@@ -56,9 +47,6 @@
         </Logger>
         <Logger name="com.valtech.statistics.controller" level="info" additivity="false">
             <appender-ref ref="controller-log" level="info"/>
-        </Logger>
-        <Logger name="com.valtech.statistics.repository" level="info" additivity="false">
-            <appender-ref ref="controller.repository-log" level="info"/>
         </Logger>
         <Logger name="com.valtech.statistics.service" level="info" additivity="false">
             <appender-ref ref="service-log" level="info"/>
