@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>SIR-Model</title>
+    <link href="css/mystyles.css" rel="stylesheet" th:href="@{/css/mystyles.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+    <script th:src="@{/js/charts.js}"></script>
+    <script th:src="@{/js/statistic-script.js}"></script>
+    <script th:inline="javascript">
+        getCountry(country);
+    </script>
+    <style>
+        .dropdown {
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            padding-top: 0em;
+            display: none;
+            position: absolute;
+            overflow: auto;
+            z-index: 1;
+            max-height: 20em;
+        }
+
+        .dropdown-content a {
+            padding-right: 0em;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <section class="section">
+        <div class="columns is-mobile is-centered">
+            <div class="column">
+                <div class="title is-3 has-text-centered">SIR-Model for pandemic</div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column">
+                <div class="buttons is-centered">
+                    <a class="button is-small is-link is-rounded" href="/covid19" type="submit">Go to home</a>
+                </div>
+                <div class="buttons is-centered">
+                    <div class="dropdown">
+                        <button class="button is-link is-rounded" onclick="dropDown()">Select country
+                        </button>
+                        <div class="dropdown-content" id="inputDropdown">
+                            <input class="input" id="dropDown" onkeyup="filterFunction()"
+                                   placeholder="Search for country.." type="text">
+                            <div th:each="countries : ${listCountries}">
+                                <a class="dropdown-item"
+                                   th:onclick="/*<![CDATA[*/ getCountry(/*[[${countries}]]*/) /*]]>*/"
+                                   th:text="${countries}"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-4-tablet">
+                <form class="is-centered" method="post" th:action="@{/sir-model/newCalculation}" th:object="${values}">
+                    <div class="field">
+                        <label class="label">Transmission rate:</label>
+                        <label for="transmissionRate"></label>
+                    </div>
+                    <div class="field">
+                        <input class="input is-small is-rounded" id="transmissionRate"
+                               th:field="*{transmissionRate}" type="text">
+                    </div>
+                    <div class="field">
+                        <lable class="label">Recovery rate:</lable>
+                        <label for="recoveryRate"></label>
+                    </div>
+                    <div class="field">
+                        <input class="input is-small is-rounded" id="recoveryRate" th:field="*{recoveryRate}"
+                               type="text">
+                    </div>
+                    <div class="buttons is-centered">
+                        <button class="button is-small is-warning is-rounded" type="submit">Send</button>
+                    </div>
+                </form>
+            </div>
+            <div class="column is-3-tablet is-pulled-left">
+                <div class="field">
+                    <div class="is-text">Chart transmission rate:</div>
+                </div>
+                <label class="label" th:text="${transmissionRate}" type="text"></label>
+                <div class="field">
+                    <div class="is-text">Chart recovery rate:</div>
+                </div>
+                <label class="label" th:text="${recoveryRate}" type="text"></label>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd box">
+                <canvas id="sirModel"></canvas>
+            </div>
+        </div>
+    </section>
+</div>
+<script th:inline="javascript">
+    let sirModelCanvas = document.getElementById('sirModel');
+    /*<![CDATA[*/
+    let sus = /*[[${resultSusceptible}]]*/ '';
+    let inf = /*[[${resultInfected}]]*/ '';
+    let rec = /*[[${resultRecovered}]]*/ '';
+    /*]]>*/
+
+    sirModelChart(sirModelCanvas, sus, inf, rec);
+</script>
+</body>
+</html>

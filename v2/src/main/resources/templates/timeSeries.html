@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="/img/bar-chart-outline.svg" rel="icon" type="image/svg">
+    <title th:text="${title}"></title>
+    <link href="css/mystyles.css" rel="stylesheet" th:href="@{/css/mystyles.css}">
+    <link href="css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
+    <link href="css/toggle-switch.css" rel="stylesheet" th:href="@{/css/toggle-switch.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+    <script th:src="@{/js/charts.js}"></script>
+    <script th:src="@{/js/statistic-script.js}"></script>
+    <script th:inline="javascript">
+        getCountryV2(country);
+    </script>
+</head>
+<body>
+<div class="container">
+    <section class="section">
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <div class="title is-3 has-text-centered">Daily data of COVID-19 for <span
+                        th:text="${selectedCountry}"></span></div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <div class="buttons is-centered">
+                    <a class="button is-small is-link is-rounded" href="/v2/covid19" type="submit">Go to home</a>
+                    <a class="button is-small is-link is-rounded" href="/v2/sir" type="submit">Go to SIR-Model</a>
+                    <a class="button is-small is-link is-rounded" id="loadingUpdate"
+                       onclick="loading('loadingUpdate')"
+                       th:href="@{/v2/covid19/timeSeries/{country}(country = ${selectedCountry})}">Update data for&nbsp;<span
+                            th:text="${selectedCountry}"></span></a>
+                </div>
+                <div class="buttons is-centered">
+                    <div class="dropdown">
+                        <button class="button is-link is-rounded" onclick="dropDownButton()">Select country
+                        </button>
+                        <div class="dropdown-content" id="dropDownCountry">
+                            <input class="input" id="dropDownInput" onkeyup="filterFunction()"
+                                   placeholder="Search for country ..." type="text">
+                            <div th:each="countries : ${listCountries}">
+                                <a class="dropdown-item"
+                                   th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${countries}]]*/) /*]]>*/"
+                                   th:text="${countries}"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-tablet is-12-desktop is-10-widescreen is-9-fullhd">
+                <div class="has-text-centered is-size-5" th:if="${noDataForThisCountry}"></div>
+                <div class="tile is-ancestor">
+                    <div class="tile is-horizontal">
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-info">
+                                <span class="icon is-pulled-right"><img alt="checkmark"
+                                                                        src="/img/checkmark-outline.svg"></span>
+                                <div class="is-size-5">Confirmed</div>
+                                <div class="is-size-6"
+                                     th:text="${countryDetails.getConfirmed() == 0} ? ${'No value!'}
+                                         : ${#numbers.formatInteger(countryDetails.getConfirmed(),3,'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${countryDetails.getTodayConfirmed() != 0}
+                                     AND ${countryDetails.getTodayConfirmed() != countryDetails.getConfirmed()}
+                                     AND ${(countryDetails.getConfirmed() - confirmedYesterday) > 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayConfirmed(), 3, 'POINT')}"></div>
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-success">
+                                <span class="icon is-pulled-right"><img alt="fitness"
+                                                                        src="/img/fitness-outline.svg"></span>
+                                <div class="is-size-5">Recovered</div>
+                                <div class="is-size-6"
+                                     th:text="${countryDetails.getRecovered() == 0} ? ${'No value!'}
+                                         : ${#numbers.formatInteger(countryDetails.getRecovered(),3,'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${(countryDetails.getRecovered() - recoveredYesterday) != 0}
+                                     AND ${(countryDetails.getRecovered() - recoveredYesterday) != countryDetails.getRecovered()}
+                                     AND ${(countryDetails.getRecovered() - recoveredYesterday) > 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getRecovered() - recoveredYesterday, 3, 'POINT')}"></div>
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-danger">
+                                <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
+                                <div class="is-size-5">Deaths</div>
+                                <div class="is-size-6"
+                                     th:text="${countryDetails.getDeaths() == 0} ? ${'No value!'}
+                                         : ${#numbers.formatInteger(countryDetails.getDeaths(),3,'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${countryDetails.getTodayDeaths() != 0}
+                                     AND ${countryDetails.getTodayDeaths() != countryDetails.getDeaths()}
+                                     AND ${(countryDetails.getDeaths() - deathsYesterday) > 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayDeaths(), 3, 'POINT')}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-ancestor">
+                    <div class="tile is-horizontal">
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-warning">
+                                <span class="icon is-pulled-right"><img alt="medikit"
+                                                                        src="/img/medkit-outline.svg"></span>
+                                <div class="is-size-5">Active cases</div>
+                                <div class="is-size-6"
+                                     th:text="${#numbers.formatInteger(countryDetails.getConfirmed()
+                                     - countryDetails.getDeaths() - countryDetails.getRecovered(), 3, 'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${((countryDetails.getConfirmed() - countryDetails.getDeaths() - countryDetails.getRecovered())
+                                     - (confirmedYesterday - deathsYesterday - recoveredYesterday)) >= 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger((countryDetails.getConfirmed()
+                                     - countryDetails.getDeaths() - countryDetails.getRecovered())
+                                     - (confirmedYesterday - deathsYesterday - recoveredYesterday), 3, 'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${((countryDetails.getConfirmed() - countryDetails.getDeaths() - countryDetails.getRecovered())
+                                     - (confirmedYesterday - deathsYesterday - recoveredYesterday)) < 0}"
+                                     th:text="'- ' + ${#numbers.formatInteger(inverted, 3, 'POINT')}"
+                                     th:with="inverted=${-((countryDetails.getConfirmed() - countryDetails.getDeaths()
+                                     - countryDetails.getRecovered()) - (confirmedYesterday - deathsYesterday - recoveredYesterday))}"></div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-5">Critical</div>
+                                <div class="is-size-6"
+                                     th:text="${#numbers.formatInteger(countryDetails.getCritical(), 3, 'POINT')}"></div>
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-light">
+                                <span class="icon is-pulled-right"><img alt="analytics"
+                                                                        src="/img/analytics-outline.svg"></span>
+                                <div class="is-size-5">Rate</div>
+                                <div class="is-size-7 is-pulled-right tag is-danger"
+                                     th:text="${#numbers.formatDecimal(countryDetails.getDeathRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                <div class="is-size-6">Death rate:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-7 is-pulled-right tag is-success"
+                                     th:text="${#numbers.formatDecimal(countryDetails.getRecoveryRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                <div class="is-size-6">Recovery rate:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-7 is-pulled-right tag is-warning"
+                                     th:text="${#numbers.formatDecimal(countryDetails.getRecoveredVSDeathRatio(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                <div class="is-size-6">Recovery vs death rate:</div>
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-light">
+                                <span class="icon is-pulled-right"><img alt="analytics"
+                                                                        src="/img/analytics-outline.svg"></span>
+                                <div class="is-size-5">Data</div>
+                                <div class="is-size-6 is-pulled-right"
+                                     th:text="${#numbers.formatInteger(countryDetails.getPopulation(), 3, 'POINT')}"></div>
+                                <div class="is-size-6">Population:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-6 is-pulled-right"
+                                     th:text="${#numbers.formatInteger(countryDetails.getCasesPerMillionPopulation(), 3, 'POINT')}"></div>
+                                <div class="is-size-6">Cases per mill.:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-6 is-pulled-right" th:text="${date}"></div>
+                                <div class="is-size-6">Updated:</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <div class="buttons has-addons is-centered">
+                    <a class="button is-small is-rounded is-info"
+                       th:href="@{/v2/covid19/timeSeries/{country}/details(country = ${selectedCountry})}"
+                       th:if="${moreDetailsAvailable}">Details for&nbsp;<span th:text="${selectedCountry}"></span></a>
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
+                <div class="switch-toggle switch-ios">
+                    <input checked id="bar" name="view" onclick="toggleToBarChart()" type="radio">
+                    <label class="is-size-7-mobile" for="bar" onclick="">Bar</label>
+                    <input id="line" name="view" onclick="toggleToLineChart()" type="radio">
+                    <label class="is-size-7-mobile" for="line" onclick="">Line</label>
+                    <input id="confirmed" name="view" onclick="toggleToConfirmed()" type="radio">
+                    <label class="is-size-7-mobile" for="confirmed" onclick="">Confirmed</label>
+                    <input id="recovered" name="view" onclick="toggleToRecovered()" type="radio">
+                    <label class="is-size-7-mobile" for="recovered" onclick="">Recovered</label>
+                    <input id="deaths" name="view" onclick="toggleToDeaths()" type="radio">
+                    <label class="is-size-7-mobile" for="deaths" onclick="">Deaths</label>
+                    <a></a>
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <div class="has-text-centered is-size-5" th:if="${noDataForTimeSeries}"
+                     th:text="${noDataForTimeSeries}"></div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <canvas class="box" id="canvasCountry"></canvas>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <br>
+                <div class="has-text-centered is-size-4">Daily trend of COVID-19 for <span
+                        th:text="${selectedCountry}"></span></div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <canvas class="box" id="confirmedOneDay"></canvas>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <canvas class="box" id="recoveredOneDay"></canvas>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <canvas class="box" id="deathsOneDay"></canvas>
+            </div>
+        </div>
+    </section>
+</div>
+<script th:inline="javascript">
+    let canvasCountry = document.getElementById('canvasCountry');
+    /*<![CDATA[*/
+    let country = /*[[${selectedCountry}]]*/ '';
+    let confirmedList = /*[[${confirmedList}]]*/ '';
+    let deathsList = /*[[${deathsList}]]*/ '';
+    let recoveredList = /*[[${recoveredList}]]*/ '';
+    let dates = /*[[${dateList}]]*/ '';
+    /*]]>*/
+
+    barLineChartAllValues(canvasCountry, dates, country, confirmedList, recoveredList, deathsList);
+
+    function toggleToBarChart() {
+        changeChart(canvasCountry, dates, country, confirmedList, recoveredList, deathsList, 'bar');
+    }
+
+    function toggleToLineChart() {
+        changeChart(canvasCountry, dates, country, confirmedList, recoveredList, deathsList, 'line');
+    }
+
+    function toggleToConfirmed() {
+        changeChart(canvasCountry, dates, 'Confirmed', confirmedList, recoveredList, deathsList)
+    }
+
+    function toggleToRecovered() {
+        changeChart(canvasCountry, dates, 'Recovered', confirmedList, recoveredList, deathsList);
+    }
+
+    function toggleToDeaths() {
+        changeChart(canvasCountry, dates, 'Deaths', confirmedList, recoveredList, deathsList);
+    }
+
+    /*<![CDATA[*/
+    let confirmedOneDay = /*[[${dailyTrendConfirmed}]]*/ '';
+    let recoveredOneDay = /*[[${dailyTrendRecovered}]]*/ '';
+    let deathsOneDay = /*[[${dailyTrendDeaths}]]*/ '';
+    let datesOneDay = /*[[${dateListPerDay}]]*/ '';
+    /*]]>*/
+
+    changedBarChartPerDay(document.getElementById('confirmedOneDay'), datesOneDay, confirmedOneDay, 'Confirmed');
+    changedBarChartPerDay(document.getElementById('recoveredOneDay'), datesOneDay, recoveredOneDay, 'Recovered');
+    changedBarChartPerDay(document.getElementById('deathsOneDay'), datesOneDay, deathsOneDay, 'Deaths');
+</script>
+</body>
+</html>
