@@ -1,0 +1,65 @@
+package com.statistics.corona.controller;
+
+import com.statistics.corona.service.DerivativeService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class SIRModelControllerTest {
+
+    private final Map<String, List<Double>> map = new HashMap<>();
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private DerivativeService derivativeService;
+
+    @InjectMocks
+    private SIRController sirModelController;
+
+    @BeforeEach
+    public void setUp() {
+
+        List<Double> susList = new ArrayList<>();
+        susList.add(1.0);
+
+        List<Double> infList = new ArrayList<>();
+        infList.add(1.0);
+
+        List<Double> reList = new ArrayList<>();
+        infList.add(1.0);
+
+        map.put("Susceptible", susList);
+        map.put("Infected", infList);
+        map.put("Recovered", reList);
+    }
+
+    @Test
+    public void showShowModel() throws Exception {
+        when(derivativeService.calculation(anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyInt()))
+                .thenReturn(map);
+
+       /* mockMvc.perform(get("/v1/sir-model"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Transmission rate:")))
+                .andExpect(content().string(containsString("Recovery rate:")));*/
+    }
+}
