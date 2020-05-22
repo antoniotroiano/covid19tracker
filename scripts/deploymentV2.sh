@@ -27,14 +27,15 @@ else
       git merge master
       git push
       echo "Starting building .jar package..."
+      cd v2
       mvn clean
       mvn package
-      if [ ! -f target/statistics-corona-$newVersion.jar ]; then
+      if [ ! -f v2/target/-$newVersion.jar ]; then
         echo "Something went wrong. Built .jar file not found!"
         :
       else
         echo "Copying .jar file to server..."
-        scp -i ~/.ssh/coronaKey.pem target/statistics-corona-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
+        scp -i ~/.ssh/coronaKey.pem v2/target/v2-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
         echo "Copied Docker file to server..."
         scp -i ~/.ssh/coronaKey.pem Dockerfile ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
         echo "Copied .jar file to server. Connecting to server..."
