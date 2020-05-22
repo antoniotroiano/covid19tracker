@@ -19,7 +19,6 @@ else
     read -p "Next step: merging files to deploy branch and deploying to server. Do you want continue? (y or n) " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-      #remove .old files before committing?
       git add .
       git commit -m "Deployment: Changed version to $newVersion"
       git push
