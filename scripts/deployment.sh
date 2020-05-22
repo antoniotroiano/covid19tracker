@@ -37,11 +37,10 @@ else
         echo "Copying .jar file to server..."
         scp -i ~/.ssh/coronaKey.pem target/v2-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
         echo "Copying docker file to server..."
+        cd ..
         scp -i ~/.ssh/coronaKey.pem Dockerfile ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
         echo "Copied .jar file and dockerfile to server. Connecting to server..."
-        ssh -i "~/.ssh/coronaKey.pem" ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com
-        /bin/bash
-<<EOF
+        ssh -i "~/.ssh/coronaKey.pem" ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com /bin/bash <<EOF
 cd ~/app/
 echo "Stopping statistics application and deleting old image..."
 docker stop statistics
