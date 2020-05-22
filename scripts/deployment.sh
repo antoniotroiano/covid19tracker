@@ -28,15 +28,18 @@ else
       git push
       echo "Starting building .jar package..."
       mvn package
-      if [ ! -f target/statistics-corona-$newVersion.jar ]; then
+      if [ ! -f v2/target/v2-$newVersion.jar ]; then
         echo "Something went wrong. Built .jar file not found!"
+        git checkout master
         :
       else
         echo "Copying .jar file to server..."
-        scp -i ~/.ssh/coronaKey.pem target/statistics-corona-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
-        echo "Copied .jar file to server. Connecting to server..."
+        scp -i ~/.ssh/coronaKey.pem v2/target/v2-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
+        echo "Copying docker file to server..."
+        scp -i ~/.ssh/coronaKey.pem Dockerfile ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
+        echo "Copied .jar file and dockerfile to server. Connecting to server..."
         ssh -i "~/.ssh/coronaKey.pem" ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com
-/bin/bash
+        /bin/bash
 <<EOF
 cd ~/app/
 echo "Stopping statistics application and deleting old image..."
