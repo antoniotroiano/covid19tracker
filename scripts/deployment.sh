@@ -29,13 +29,13 @@ else
       cd v2
       mvn clean
       mvn package
-      if [ ! -f v2/target/v2-$newVersion.jar ]; then
+      if [ ! -f target/v2-$newVersion.jar ]; then
         echo "Something went wrong. Built .jar file not found!"
         git checkout master
         :
       else
         echo "Copying .jar file to server..."
-        scp -i ~/.ssh/coronaKey.pem v2/target/v2-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
+        scp -i ~/.ssh/coronaKey.pem target/v2-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
         echo "Copying docker file to server..."
         scp -i ~/.ssh/coronaKey.pem Dockerfile ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
         echo "Copied .jar file and dockerfile to server. Connecting to server..."
