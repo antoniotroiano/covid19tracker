@@ -6,7 +6,7 @@
 
     <groupId>org.valtech</groupId>
     <artifactId>statistics-corona</artifactId>
-    <version>2.0.8-SNAPSHOT</version>
+    <version>${revision}</version>
     <modules>
         <module>v1</module>
         <module>v2</module>
@@ -20,6 +20,7 @@
     </parent>
 
     <properties>
+        <revision>2.0.3-SNAPSHOT</revision>
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.source>11</maven.compiler.source>
         <spring.data.version>2.2.3.RELEASE</spring.data.version>

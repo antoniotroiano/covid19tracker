@@ -9,7 +9,7 @@ else
   echo "Old version of statistics application is: $(tput setaf 1) $oldVersion $(tput setaf 7)"
   echo "Please enter the new version number (e.g. 1.1.0-SNAPSHOT)"
   read newVersion
-  sed -i.old -e 's/\<version\>'$oldVersion'\<\/version\>/\<version\>'$newVersion'\<\/version\>/g' pom.xml
+  sed -i.old -e 's/\<revision\>'$oldVersion'\<\/revision\>/\<revision\>'$newVersion'\<\/revision\>/g' pom.xml
   if grep -q $oldVersion "pom.xml"; then
     echo "Replacing version number failed. (Old version: $(tput setaf 1)$oldVersion$(tput setaf 7), new version: $(tput setaf 1)$newVersion$(tput setaf 7).) Aborting script..."
     git checkout .
