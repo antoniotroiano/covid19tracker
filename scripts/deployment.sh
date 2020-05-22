@@ -27,6 +27,8 @@ else
       git merge master
       git push
       echo "Starting building .jar package..."
+      cd v2
+      mvn clean
       mvn package
       if [ ! -f v2/target/v2-$newVersion.jar ]; then
         echo "Something went wrong. Built .jar file not found!"
