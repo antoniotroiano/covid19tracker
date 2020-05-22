@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 cd ..
 echo "$(tput setaf 7)------------------Statistic COVID-19 deployment started------------------"
 if [[ $(git status --porcelain) ]]; then
@@ -19,7 +20,6 @@ else
     read -p "Next step: merging files to deploy branch and deploying to server. Do you want continue? (y or n) " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-      #remove .old files before committing?
       git add .
       git commit -m "Deployment: Changed version to $newVersion"
       git push
@@ -27,6 +27,7 @@ else
       git merge master
       git push
       echo "Starting building .jar package..."
+      mvn clean
       mvn package
       if [ ! -f target/statistics-corona-$newVersion.jar ]; then
         echo "Something went wrong. Built .jar file not found!"
@@ -34,9 +35,11 @@ else
       else
         echo "Copying .jar file to server..."
         scp -i ~/.ssh/coronaKey.pem target/statistics-corona-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
+        echo "Copied Docker file to server..."
+        scp -i ~/.ssh/coronaKey.pem Dockerfile ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
         echo "Copied .jar file to server. Connecting to server..."
         ssh -i "~/.ssh/coronaKey.pem" ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com
-/bin/bash
+        /bin/bash
 <<EOF
 cd ~/app/
 echo "Stopping statistics application and deleting old image..."
