@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@DisplayName("TimeSeriesDto tests")
 public class TimeSeriesDtoTest {
 
     private final TimeSeriesDto timeSeriesDto = new TimeSeriesDto();

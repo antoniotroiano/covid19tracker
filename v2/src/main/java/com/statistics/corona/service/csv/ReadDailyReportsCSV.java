@@ -25,15 +25,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReadDailyReportsCSV {
 
-    public List<DailyReportDto> readDailyReportsCSV() {
-        log.debug("Invoke read daily CSV from github.");
-        List<DailyReportDto> dailyReportDtoList = new ArrayList<>();
-
+    public URL getURL(String stringURL) {
         URL url = null;
         try {
             LocalDate yesterdayDate = LocalDate.now().minusDays(1);
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-            url = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/" + yesterdayDate.format(dtf) + ".csv");
+            url = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/" + stringURL + yesterdayDate.format(dtf) + ".csv");
 
             HttpURLConnection huc = (HttpURLConnection) url.openConnection();
             huc.setRequestMethod("GET");
@@ -43,14 +40,23 @@ public class ReadDailyReportsCSV {
                 LocalDate beforeYesterday = LocalDate.now().minusDays(2);
                 url = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/" + beforeYesterday.format(dtf) + ".csv");
                 log.warn("No new csv. Returned last one {}", beforeYesterday);
+                return url;
             }
-            log.debug("Returned url with daily reports od yesterday {}", yesterdayDate);
+            log.debug("Returned url with daily reports of yesterday {}", yesterdayDate);
+            return url;
         } catch (Exception e) {
             log.warn("Occurred an exception during getting csv url {}", e.getMessage());
+            return url;
         }
+    }
 
-        assert url != null;
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+    public List<DailyReportDto> readDailyReportsCSV() {
+        log.debug("Invoke read daily CSV from github.");
+        List<DailyReportDto> dailyReportDtoList = new ArrayList<>();
+
+        URL newURL = getURL("csse_covid_19_daily_reports/");
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(newURL.openStream()));
              CSVReader reader = new CSVReaderBuilder(in)
                      .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS)
                      .withSkipLines(1)
@@ -85,28 +91,9 @@ public class ReadDailyReportsCSV {
         log.debug("Invoke read daily CSV US from github.");
         List<DailyReportUsDto> dailyReportUsDtoList = new ArrayList<>();
 
-        URL url = null;
-        try {
-            LocalDate yesterdayDate = LocalDate.now().minusDays(1);
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-            url = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/" + yesterdayDate.format(dtf) + ".csv");
+        URL newURL = getURL("csse_covid_19_daily_reports_us/");
 
-            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-            huc.setRequestMethod("GET");
-            huc.connect();
-            int statusCode = huc.getResponseCode();
-            if (statusCode != 200) {
-                LocalDate beforeYesterday = LocalDate.now().minusDays(2);
-                url = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/" + beforeYesterday.format(dtf) + ".csv");
-                log.warn("No new csv US. Returned last one {}", beforeYesterday);
-            }
-            log.debug("Returned url with daily reports od yesterday {}", yesterdayDate);
-        } catch (Exception e) {
-            log.warn("Occurred an exception during getting csv US url {}", e.getMessage());
-        }
-
-        assert url != null;
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(newURL.openStream()));
              CSVReader reader = new CSVReaderBuilder(in)
                      .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES)
                      .withSkipLines(1)

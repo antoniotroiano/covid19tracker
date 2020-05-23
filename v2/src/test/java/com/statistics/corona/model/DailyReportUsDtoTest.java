@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@DisplayName("DailyReportUsDto tests")
 public class DailyReportUsDtoTest {
 
     private final DailyReportUsDto dailyReportUsDto = new DailyReportUsDto();
