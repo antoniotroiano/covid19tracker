@@ -1,8 +1,6 @@
 package com.statistics.corona.service;
 
 import com.statistics.corona.model.TimeSeriesDto;
-import com.statistics.corona.service.TimeSeriesDetailsService;
-import com.statistics.corona.service.TimeSeriesService;
 import com.statistics.corona.service.csv.ReadDailyReportsCSV;
 import com.statistics.corona.service.csv.ReadTimeSeriesCSV;
 import org.junit.jupiter.api.Test;
@@ -61,8 +59,8 @@ public class ReaderCSVApacheTest {
 
         for (int j = 0; j < result.get(0).size(); j++) {
             int sum = 0;
-            for (int k = 0; k < result.size(); k++) {
-                sum += result.get(k).get(j);
+            for (List<Integer> integers : result) {
+                sum += integers.get(j);
             }
             finalResult.add(sum);
         }
@@ -104,17 +102,13 @@ public class ReaderCSVApacheTest {
     }
 
     @Test
-    public void testEvery2Value(){
+    public void testEvery2Value() {
         TimeSeriesService timeSeriesService = new TimeSeriesService();
         List<Integer> test = timeSeriesService
                 .getEverySecondValue(timeSeriesService.mapFinalResultToMap(timeSeriesService.getValuesSelectedCountry("Germany")).get("confirmedResult"));
         List<Integer> testAll = timeSeriesService.mapFinalResultToMap(timeSeriesService.getValuesSelectedCountry("Germany")).get("confirmedResult");
         System.out.println(test.size());
         System.out.println(testAll.size());
-
-        /*List<String> dates = timeSeriesService
-                .getEverySecondDate("Germany");
-        System.out.println(dates.size());*/
 
         Set<String> getOneObject = timeSeriesService.getValuesSelectedCountry("Germany").get("confirmedList").stream().map(TimeSeriesDto::new).findFirst().get().getDataMap().keySet();
         System.out.println(getOneObject.size());
@@ -128,10 +122,8 @@ public class ReaderCSVApacheTest {
 
     @Test
     public void getSumOfCountry() {
-
         TimeSeriesDetailsService timeSeriesDetailsService = new TimeSeriesDetailsService();
 
         timeSeriesDetailsService.getAllCountries();
-
     }
 }

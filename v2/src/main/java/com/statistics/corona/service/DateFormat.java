@@ -19,13 +19,6 @@ public class DateFormat {
         return outputFormatter.format(date);
     }
 
-    public String formatLastUpdateToDateDayOne(String lastUpdate) {
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.GERMAN);
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.GERMAN);
-        LocalDate date = LocalDate.parse(lastUpdate, inputFormatter);
-        return outputFormatter.format(date);
-    }
-
     public String formatLastUpdateToTime(String lastUpdate) {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.GERMAN);
         DateTimeFormatter outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm", Locale.GERMAN);
