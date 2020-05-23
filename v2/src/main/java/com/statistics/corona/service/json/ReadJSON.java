@@ -42,7 +42,8 @@ public class ReadJSON {
         return bld.toString().substring(0, bld.length() - 3);
     }
 
-    //Todo: Return only the JSONArray to a worldService and build the list in the service.
+    //Todo: Return only the JSONArray to a worldService and build the list in the service. Also better for testing.
+    //ToDo: Handel the IO Exception
     public List<TimeSeriesWorldDto> readWorldValues() throws IOException {
         log.debug("Invoke read world time series of JSON");
         List<TimeSeriesWorldDto> allValuesWorld = new ArrayList<>();
@@ -124,20 +125,6 @@ public class ReadJSON {
                         .getJSONObject(CALCULATED).optInt("cases_per_million_population", 0));
             }
         }
-
-        /*if (countryDetailsDto.getCountry() == null) {
-            countryDetailsDto.setCountry(country);
-            countryDetailsDto.setCode("");
-            countryDetailsDto.setPopulation(0);
-            countryDetailsDto.setTodayDeaths(0);
-            countryDetailsDto.setTodayConfirmed(0);
-            countryDetailsDto.setCritical(0);
-            countryDetailsDto.setDeathRate(0.0);
-            countryDetailsDto.setRecoveryRate(0.0);
-            countryDetailsDto.setRecoveredVSDeathRatio(0.0);
-            countryDetailsDto.setCasesPerMillionPopulation(0);
-        }*/
-
         log.debug("Returned details for {}", country);
         return countryDetailsDto;
     }
