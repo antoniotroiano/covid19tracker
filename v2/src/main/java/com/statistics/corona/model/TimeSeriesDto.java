@@ -11,12 +11,6 @@ public class TimeSeriesDto {
     public TimeSeriesDto() {
     }
 
-    public TimeSeriesDto(String province, String country, LinkedHashMap<String, Integer> dataMap) {
-        this.province = province;
-        this.country = country;
-        this.dataMap = dataMap;
-    }
-
     public TimeSeriesDto(TimeSeriesDto timeSeriesDto) {
         this.province = timeSeriesDto.getProvince();
         this.country = timeSeriesDto.getCountry();
@@ -49,10 +43,10 @@ public class TimeSeriesDto {
 
     @Override
     public String toString() {
-        return "TimeSeriesConfirmed{" +
+        return "TimeSeriesDto{" +
                 "province='" + province + '\'' +
                 ", country='" + country + '\'' +
-                ", confirmed=" + dataMap +
+                ", dataMap=" + dataMap +
                 '}';
     }
 }

@@ -141,7 +141,7 @@ public class DailyReportUsDto {
 
     @Override
     public String toString() {
-        return "DailyReportUs{" +
+        return "DailyReportUsDto{" +
                 "province='" + province + '\'' +
                 ", country='" + country + '\'' +
                 ", lastUpdate='" + lastUpdate + '\'' +
