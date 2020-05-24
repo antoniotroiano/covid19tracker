@@ -4,18 +4,18 @@ public class CountryDetailsDto {
 
     String country;
     String code;
-    Integer population;
+    int population;
     String lastUpdate;
-    Integer todayDeaths;
-    Integer todayConfirmed;
-    Integer deaths;
-    Integer confirmed;
-    Integer recovered;
-    Integer critical;
-    Double deathRate;
-    Double recoveryRate;
-    Double recoveredVSDeathRatio;
-    Integer casesPerMillionPopulation;
+    int todayDeaths;
+    int todayConfirmed;
+    int deaths;
+    int confirmed;
+    int recovered;
+    int critical;
+    double deathRate;
+    double recoveryRate;
+    double recoveredVSDeathRatio;
+    int casesPerMillionPopulation;
 
     public CountryDetailsDto() {
     }
@@ -53,11 +53,11 @@ public class CountryDetailsDto {
         this.code = code;
     }
 
-    public Integer getPopulation() {
+    public int getPopulation() {
         return population;
     }
 
-    public void setPopulation(Integer population) {
+    public void setPopulation(int population) {
         this.population = population;
     }
 
@@ -69,83 +69,83 @@ public class CountryDetailsDto {
         this.lastUpdate = lastUpdate;
     }
 
-    public Integer getTodayDeaths() {
+    public int getTodayDeaths() {
         return todayDeaths;
     }
 
-    public void setTodayDeaths(Integer todayDeaths) {
+    public void setTodayDeaths(int todayDeaths) {
         this.todayDeaths = todayDeaths;
     }
 
-    public Integer getTodayConfirmed() {
+    public int getTodayConfirmed() {
         return todayConfirmed;
     }
 
-    public void setTodayConfirmed(Integer todayConfirmed) {
+    public void setTodayConfirmed(int todayConfirmed) {
         this.todayConfirmed = todayConfirmed;
     }
 
-    public Integer getDeaths() {
+    public int getDeaths() {
         return deaths;
     }
 
-    public void setDeaths(Integer deaths) {
+    public void setDeaths(int deaths) {
         this.deaths = deaths;
     }
 
-    public Integer getConfirmed() {
+    public int getConfirmed() {
         return confirmed;
     }
 
-    public void setConfirmed(Integer confirmed) {
+    public void setConfirmed(int confirmed) {
         this.confirmed = confirmed;
     }
 
-    public Integer getRecovered() {
+    public int getRecovered() {
         return recovered;
     }
 
-    public void setRecovered(Integer recovered) {
+    public void setRecovered(int recovered) {
         this.recovered = recovered;
     }
 
-    public Integer getCritical() {
+    public int getCritical() {
         return critical;
     }
 
-    public void setCritical(Integer critical) {
+    public void setCritical(int critical) {
         this.critical = critical;
     }
 
-    public Double getDeathRate() {
+    public double getDeathRate() {
         return deathRate;
     }
 
-    public void setDeathRate(Double deathRate) {
+    public void setDeathRate(double deathRate) {
         this.deathRate = deathRate;
     }
 
-    public Double getRecoveryRate() {
+    public double getRecoveryRate() {
         return recoveryRate;
     }
 
-    public void setRecoveryRate(Double recoveryRate) {
+    public void setRecoveryRate(double recoveryRate) {
         this.recoveryRate = recoveryRate;
     }
 
-    public Double getRecoveredVSDeathRatio() {
+    public double getRecoveredVSDeathRatio() {
         return recoveredVSDeathRatio;
     }
 
-    public void setRecoveredVSDeathRatio(Double recoveredVSDeathRatio) {
+    public void setRecoveredVSDeathRatio(double recoveredVSDeathRatio) {
         this.recoveredVSDeathRatio = recoveredVSDeathRatio;
     }
 
-    public Integer getCasesPerMillionPopulation() {
+    public int getCasesPerMillionPopulation() {
         return casesPerMillionPopulation;
     }
 
-    public void setCasesPerMillionPopulation(Integer casesPerMillionPopulation) {
+    public void setCasesPerMillionPopulation(int casesPerMillionPopulation) {
         this.casesPerMillionPopulation = casesPerMillionPopulation;
     }
 

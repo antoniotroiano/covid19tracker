@@ -54,7 +54,10 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-12-tablet is-12-desktop is-10-widescreen is-9-fullhd">
-                <div class="has-text-centered is-size-5" th:if="${noDataForThisCountry}"></div>
+                <div class="has-text-centered is-size-5" th:if="${noDataForThisCountry}">No dataset available at the
+                    moment!
+                </div>
+                <br>
                 <div class="tile is-ancestor">
                     <div class="tile is-horizontal">
                         <div class="tile is-parent">
@@ -63,13 +66,13 @@
                                                                         src="/img/checkmark-outline.svg"></span>
                                 <div class="is-size-5">Confirmed</div>
                                 <div class="is-size-6"
-                                     th:text="${countryDetails.getConfirmed() == 0} ? ${'No value!'}
-                                         : ${#numbers.formatInteger(countryDetails.getConfirmed(),3,'POINT')}"></div>
+                                     th:text="${countryDetails.get().getConfirmed() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryDetails.get().getConfirmed(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${countryDetails.getTodayConfirmed() != 0}
-                                     AND ${countryDetails.getTodayConfirmed() != countryDetails.getConfirmed()}
-                                     AND ${(countryDetails.getConfirmed() - confirmedYesterday) > 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayConfirmed(), 3, 'POINT')}"></div>
+                                     th:if="${countryDetails.get().getTodayConfirmed() != 0}
+                                     AND ${countryDetails.get().getTodayConfirmed() != countryDetails.get().getConfirmed()}
+                                     AND ${(countryDetails.get().getConfirmed() - confirmedYesterday) > 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.get().getTodayConfirmed(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -78,13 +81,13 @@
                                                                         src="/img/fitness-outline.svg"></span>
                                 <div class="is-size-5">Recovered</div>
                                 <div class="is-size-6"
-                                     th:text="${countryDetails.getRecovered() == 0} ? ${'No value!'}
-                                         : ${#numbers.formatInteger(countryDetails.getRecovered(),3,'POINT')}"></div>
+                                     th:text="${countryDetails.get().getRecovered() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryDetails?.get()?.getRecovered(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${(countryDetails.getRecovered() - recoveredYesterday) != 0}
-                                     AND ${(countryDetails.getRecovered() - recoveredYesterday) != countryDetails.getRecovered()}
-                                     AND ${(countryDetails.getRecovered() - recoveredYesterday) > 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getRecovered() - recoveredYesterday, 3, 'POINT')}"></div>
+                                     th:if="${(countryDetails.get().getRecovered()) != 0}
+                                     AND ${(countryDetails.get().getRecovered() - recoveredYesterday) != countryDetails.get().getRecovered()}
+                                     AND ${(countryDetails.get().getRecovered() - recoveredYesterday) > 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.get().getRecovered() - recoveredYesterday, 3, 'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -92,13 +95,13 @@
                                 <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
                                 <div class="is-size-5">Deaths</div>
                                 <div class="is-size-6"
-                                     th:text="${countryDetails.getDeaths() == 0} ? ${'No value!'}
-                                         : ${#numbers.formatInteger(countryDetails.getDeaths(),3,'POINT')}"></div>
+                                     th:text="${countryDetails.get().getDeaths() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryDetails.get().getDeaths(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${countryDetails.getTodayDeaths() != 0}
-                                     AND ${countryDetails.getTodayDeaths() != countryDetails.getDeaths()}
-                                     AND ${(countryDetails.getDeaths() - deathsYesterday) > 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayDeaths(), 3, 'POINT')}"></div>
+                                     th:if="${countryDetails.get().getTodayDeaths() != 0}
+                                     AND ${countryDetails.get().getTodayDeaths() != countryDetails.get().getDeaths()}
+                                     AND ${(countryDetails.get().getDeaths() - deathsYesterday) > 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails?.get()?.getTodayDeaths(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                     </div>
@@ -111,24 +114,31 @@
                                                                         src="/img/medkit-outline.svg"></span>
                                 <div class="is-size-5">Active cases</div>
                                 <div class="is-size-6"
-                                     th:text="${#numbers.formatInteger(countryDetails.getConfirmed()
-                                     - countryDetails.getDeaths() - countryDetails.getRecovered(), 3, 'POINT')}"></div>
+                                     th:text="${countryDetails.get().getConfirmed() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryDetails.get().getConfirmed()
+                                     - countryDetails.get().getDeaths() - countryDetails.get().getRecovered(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${((countryDetails.getConfirmed() - countryDetails.getDeaths() - countryDetails.getRecovered())
+                                     th:if="${countryDetails.get().getConfirmed() == 0} ? ${'No value'}
+                                         : ${((countryDetails.get().getConfirmed() - countryDetails.get().getDeaths() - countryDetails.get().getRecovered())
                                      - (confirmedYesterday - deathsYesterday - recoveredYesterday)) >= 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger((countryDetails.getConfirmed()
-                                     - countryDetails.getDeaths() - countryDetails.getRecovered())
+                                     th:text="${countryDetails.get().getConfirmed() == 0} ? ${'No value'}
+                                         : '+ ' + ${#numbers.formatInteger((countryDetails.get().getConfirmed()
+                                     - countryDetails.get().getDeaths() - countryDetails.get().getRecovered())
                                      - (confirmedYesterday - deathsYesterday - recoveredYesterday), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${((countryDetails.getConfirmed() - countryDetails.getDeaths() - countryDetails.getRecovered())
+                                     th:if="${countryDetails.get().getConfirmed() == 0} ? ${'No value'}
+                                         : ${((countryDetails.get().getConfirmed() - countryDetails.get().getDeaths() - countryDetails.get().getRecovered())
                                      - (confirmedYesterday - deathsYesterday - recoveredYesterday)) < 0}"
-                                     th:text="'- ' + ${#numbers.formatInteger(inverted, 3, 'POINT')}"
-                                     th:with="inverted=${-((countryDetails.getConfirmed() - countryDetails.getDeaths()
-                                     - countryDetails.getRecovered()) - (confirmedYesterday - deathsYesterday - recoveredYesterday))}"></div>
+                                     th:text="${countryDetails.get().getConfirmed() == 0} ? ${'No value'}
+                                         : '- ' + ${#numbers.formatInteger(inverted, 3, 'POINT')}"
+                                     th:with="inverted=${countryDetails.get().getConfirmed() == 0} ? ${0}
+                                         : ${-((countryDetails?.get()?.getConfirmed() - countryDetails.get().getDeaths()
+                                     - countryDetails.get().getRecovered()) - (confirmedYesterday - deathsYesterday - recoveredYesterday))}"></div>
                                 <hr class="dropdown-divider">
                                 <div class="is-size-5">Critical</div>
                                 <div class="is-size-6"
-                                     th:text="${#numbers.formatInteger(countryDetails.getCritical(), 3, 'POINT')}"></div>
+                                     th:text="${countryDetails.get().getCritical() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryDetails.get().getCritical(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -137,16 +147,14 @@
                                                                         src="/img/analytics-outline.svg"></span>
                                 <div class="is-size-5">Rate</div>
                                 <div class="is-size-7 is-pulled-right tag is-danger"
-                                     th:text="${#numbers.formatDecimal(countryDetails.getDeathRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                     th:text="${countryDetails.get().getDeathRate() == 0} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryDetails.get().getDeathRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                 <div class="is-size-6">Death rate:</div>
                                 <hr class="dropdown-divider">
                                 <div class="is-size-7 is-pulled-right tag is-success"
-                                     th:text="${#numbers.formatDecimal(countryDetails.getRecoveryRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                     th:text="${countryDetails.get().getRecoveryRate() == 0} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryDetails.get().getRecoveryRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                 <div class="is-size-6">Recovery rate:</div>
-                                <hr class="dropdown-divider">
-                                <div class="is-size-7 is-pulled-right tag is-warning"
-                                     th:text="${#numbers.formatDecimal(countryDetails.getRecoveredVSDeathRatio(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                                <div class="is-size-6">Recovery vs death rate:</div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -155,14 +163,17 @@
                                                                         src="/img/analytics-outline.svg"></span>
                                 <div class="is-size-5">Data</div>
                                 <div class="is-size-6 is-pulled-right"
-                                     th:text="${#numbers.formatInteger(countryDetails.getPopulation(), 3, 'POINT')}"></div>
+                                     th:text="${countryDetails.get().getPopulation() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryDetails.get().getPopulation(), 3, 'POINT')}"></div>
                                 <div class="is-size-6">Population:</div>
                                 <hr class="dropdown-divider">
                                 <div class="is-size-6 is-pulled-right"
-                                     th:text="${#numbers.formatInteger(countryDetails.getCasesPerMillionPopulation(), 3, 'POINT')}"></div>
+                                     th:text="${countryDetails.get().getCasesPerMillionPopulation() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryDetails.get().getCasesPerMillionPopulation(), 3, 'POINT')}"></div>
                                 <div class="is-size-6">Cases per mill.:</div>
                                 <hr class="dropdown-divider">
-                                <div class="is-size-6 is-pulled-right" th:text="${date}"></div>
+                                <div class="is-size-6 is-pulled-right"
+                                     th:text="${date == ' '} ? ${'No value'} : ${date}"></div>
                                 <div class="is-size-6">Updated:</div>
                             </div>
                         </div>
@@ -198,8 +209,9 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <div class="has-text-centered is-size-5" th:if="${noDataForTimeSeries}"
-                     th:text="${noDataForTimeSeries}"></div>
+                <div class="has-text-centered is-size-5" th:if="${noDataForThisCountry}">No dataset available at the
+                    moment!
+                </div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">

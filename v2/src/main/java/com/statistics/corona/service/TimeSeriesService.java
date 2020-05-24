@@ -52,6 +52,7 @@ public class TimeSeriesService {
         return allValues;
     }
 
+    //ToDo: Null check!
     public Map<String, List<Integer>> mapFinalResultToMap(Map<String, List<TimeSeriesDto>> getAllValuesSelectedCountry) {
         Map<String, List<Integer>> mapFinalResult = new HashMap<>();
 
@@ -70,6 +71,7 @@ public class TimeSeriesService {
         return values;
     }
 
+    //ToDo: Null check!
     private List<List<Integer>> interimResult(List<TimeSeriesDto> dataList) {
         log.debug("Invoke interim result");
         List<List<Integer>> interimResultList = new ArrayList<>();
@@ -82,6 +84,7 @@ public class TimeSeriesService {
         return interimResultList;
     }
 
+    //ToDo: Null check!
     private List<Integer> generateFinalResult(List<List<Integer>> interimResult) {
         log.debug("Invoke final result");
         List<Integer> finalResult = new ArrayList<>();
@@ -98,6 +101,10 @@ public class TimeSeriesService {
 
     public List<Integer> getOneDayValues(List<Integer> values) {
         log.debug("Invoke get one day values of {}", values);
+        if (values == null) {
+            log.warn("Values is null for getOneDayValues");
+            return new ArrayList<>();
+        }
         List<Integer> oneDayValues = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
             int sumPerDay = 0;
@@ -118,8 +125,12 @@ public class TimeSeriesService {
 
     public int getLastValues(List<Integer> lastValue) {
         log.debug("Invoke get last value of list {}", lastValue);
-        long count = lastValue.size();
         int lastValueInt = 0;
+        if (lastValue == null) {
+            log.warn("Values is null for getLastValues");
+            return lastValueInt;
+        }
+        long count = lastValue.size();
         Optional<Integer> optionalValue = lastValue.stream().skip(count - 1).findFirst();
         if (optionalValue.isPresent()) {
             lastValueInt = optionalValue.get();
@@ -127,14 +138,15 @@ public class TimeSeriesService {
         return lastValueInt;
     }
 
-    public CountryDetailsDto getDetailsForCountry(String country) {
+    public Optional<CountryDetailsDto> getDetailsForCountry(String country) {
         log.debug("Invoke get details for country {}", country);
         try {
             log.debug("Returned details for country {}", country);
-            return readJSON.readDetailsForCountry(country);
+            CountryDetailsDto countryDetailsDto = readJSON.readDetailsForCountry(country);
+            return Optional.of(countryDetailsDto);
         } catch (Exception e) {
             log.warn("Failed get details for country {}: {}", country, e.getMessage());
-            return new CountryDetailsDto();
+            return Optional.of(new CountryDetailsDto());
         }
     }
 
@@ -144,6 +156,10 @@ public class TimeSeriesService {
     }
 
     public List<Integer> getEverySecondValue(List<Integer> values) {
+        if (values == null) {
+            log.warn("Values is null for getEverySecondValue");
+            return new ArrayList<>();
+        }
         return IntStream.range(0, values.size())
                 .filter(n -> n % 2 == 0)
                 .mapToObj(values::get)

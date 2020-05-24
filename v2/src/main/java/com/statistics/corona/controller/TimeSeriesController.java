@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,49 +48,63 @@ public class TimeSeriesController {
         model.addAttribute(SELECTED_COUNTRY, country);
 
         List<String> allCountries = timeSeriesService.getCountry();
+        if (allCountries.isEmpty()) {
+            model.addAttribute("lisCountries", new ArrayList<>());
+        }
         model.addAttribute("listCountries", allCountries);
 
-        CountryDetailsDto countryDetailsDto = timeSeriesService.getDetailsForCountry(country);
-        if (countryDetailsDto.getCountry() == null) {
-            model.addAttribute(NO_DATA, "No dataset at the moment for " + country + "!");
+        Optional<CountryDetailsDto> countryDetailsDto = timeSeriesService.getDetailsForCountry(country);
+        if (countryDetailsDto.isEmpty()) {
+            model.addAttribute("countryDetails", Optional.of(new CountryDetailsDto()));
+            model.addAttribute(NO_DATA, true);
             return TIME_SERIES;
         }
         model.addAttribute("countryDetails", countryDetailsDto);
-        String date = dateFormat.formatLastUpdateToDate(countryDetailsDto.getLastUpdate());
-        String time = dateFormat.formatLastUpdateToTime(countryDetailsDto.getLastUpdate());
+        String date = dateFormat.formatLastUpdateToDate(countryDetailsDto.get().getLastUpdate());
+        String time = dateFormat.formatLastUpdateToTime(countryDetailsDto.get().getLastUpdate());
         model.addAttribute("date", date + " " + time + "h");
 
         Map<String, List<TimeSeriesDto>> getAllValuesSelectedCountry = timeSeriesService.getValuesSelectedCountry(country);
-        if (getAllValuesSelectedCountry.isEmpty()) {
-            model.addAttribute(NO_DATA, "No dataset for " + country + ". Please try again later.");
-            log.info("No data for the country {}", country);
-            return TIME_SERIES;
-        }
+        if (!getAllValuesSelectedCountry.isEmpty()) {
+            Optional<TimeSeriesDto> getOneObject = timeSeriesService.getValuesSelectedCountry(country).get(CONFIRMED_LIST).stream()
+                    .map(TimeSeriesDto::new)
+                    .findFirst();
+            if (getOneObject.isPresent()) {
+                Map<String, List<Integer>> finalResult = timeSeriesService.mapFinalResultToMap(getAllValuesSelectedCountry);
+                if (finalResult.isEmpty()) {
+                    getBaseData(model, new HashMap<>(), new ArrayList<>());
+                    model.addAttribute("NO_DATA", true);
+                    log.warn("No data for time series found, for selected country {}", country);
+                    return TIME_SERIES;
+                }
 
-        Optional<TimeSeriesDto> getOneObject = getAllValuesSelectedCountry.get(CONFIRMED_LIST).stream().map(TimeSeriesDto::new).findFirst();
-        if (getOneObject.isPresent()) {
-            Map<String, List<Integer>> finalResult = timeSeriesService.mapFinalResultToMap(getAllValuesSelectedCountry);
-            if (finalResult.isEmpty()) {
-                model.addAttribute("noDataForTimeSeries", "Sorry no data found for time series. Please try again later.");
-                log.warn("No data for time series found, for selected country {}", country);
-                return TIME_SERIES;
-            }
+                List<String> datesList = new ArrayList<>(getOneObject.get().getDataMap().keySet());
+                if (datesList.isEmpty()) {
+                    getBaseData(model, new HashMap<>(), new ArrayList<>());
+                    model.addAttribute(NO_DATA, true);
+                    log.info("No dates for the country {} available", country);
+                    return TIME_SERIES;
+                }
 
-            List<String> datesList = new ArrayList<>(getOneObject.get().getDataMap().keySet());
-
-            List<DailyReportDto> valuesCountries = timeSeriesDetailsService.getAllDetailsProvince(country);
-            if (!valuesCountries.isEmpty() && valuesCountries.stream().filter(c -> !c.getCountry().isEmpty()).count() > 1) {
-                model.addAttribute("moreDetailsAvailable", true);
+                List<DailyReportDto> valuesCountries = timeSeriesDetailsService.getAllDetailsProvince(country);
+                if (!valuesCountries.isEmpty() && valuesCountries.stream().filter(c -> !c.getCountry().isEmpty()).count() > 1) {
+                    model.addAttribute("moreDetailsAvailable", true);
+                    getBaseData(model, finalResult, datesList);
+                    log.info("Get data for selected country {}, with extra details", country);
+                    return TIME_SERIES;
+                }
                 getBaseData(model, finalResult, datesList);
-                log.info("Get data for selected country {}, with extra details", country);
+                log.info("Get data for selected country {}", country);
                 return TIME_SERIES;
             }
-            getBaseData(model, finalResult, datesList);
-            log.info("Get data for selected country {}", country);
+            getBaseData(model, new HashMap<>(), new ArrayList<>());
+            model.addAttribute(NO_DATA, true);
+            log.warn("Something getting wrong {}", country);
             return TIME_SERIES;
         }
-        model.addAttribute(NO_DATA, "Something getting wrong please try again later");
-        log.warn("Something getting wrong {}", country);
+        getBaseData(model, new HashMap<>(), new ArrayList<>());
+        model.addAttribute(NO_DATA, true);
+        log.info("No data for the country {}", country);
         return TIME_SERIES;
     }
 
