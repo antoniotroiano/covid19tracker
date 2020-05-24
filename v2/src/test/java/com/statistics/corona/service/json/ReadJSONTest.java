@@ -12,6 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@DisplayName("ReadJSON tests")
 public class ReadJSONTest {
 
     private final ReadJSON readJSON = new ReadJSON();

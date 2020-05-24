@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TimeSeriesDetailsService {
 
-    private static final ReadDailyReportsCSV readDailyReportCSV = new ReadDailyReportsCSV();
+    private final ReadDailyReportsCSV readDailyReportCSV = new ReadDailyReportsCSV();
 
     public List<DailyReportDto> getAllDetailsProvince(String country) {
         log.debug("Invoke get details for province of selected country {}", country);

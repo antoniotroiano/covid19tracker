@@ -28,11 +28,6 @@ public class ReadDailyReportsCSVTests {
         assertThat(dailyReportDtoList).isNotEmpty();
         assertThat(dailyReportUsDtoList).isNotEmpty();
         assertThat(dailyReportUsDtoList.get(50).getProvince()).isEqualTo("Utah");
-        assertThat(dailyReportDtoList.get(3280).getCountry()).isEqualTo("Fiji");
-
-        /*ReadDailyReportsCSV readDailyReportsCSV = mock(ReadDailyReportsCSV.class);
-        when(readDailyReportsCSV.readDailyReportsCSV()).thenReturn(dailyReportDtoList);
-        assertThat(readDailyReportsCSV.readDailyReportsCSV()).isEqualTo(dailyReportDtoList);*/
     }
 
     @Test

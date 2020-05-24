@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@DisplayName("DateFormat tests")
 public class DateFormatTest {
 
     private final DateFormat dateFormat = new DateFormat();

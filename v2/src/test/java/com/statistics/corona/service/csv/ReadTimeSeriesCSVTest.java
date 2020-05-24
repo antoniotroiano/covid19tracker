@@ -10,6 +10,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@DisplayName("ReadTimeSeriesCSV tests")
 public class ReadTimeSeriesCSVTest {
 
     private final ReadTimeSeriesCSV readTimeSeriesCSV = new ReadTimeSeriesCSV();

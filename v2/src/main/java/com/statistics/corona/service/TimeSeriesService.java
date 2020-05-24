@@ -22,7 +22,7 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class TimeSeriesService {
 
-    private static final ReadTimeSeriesCSV readTimeSeriesCSV = new ReadTimeSeriesCSV();
+    private final ReadTimeSeriesCSV readTimeSeriesCSV = new ReadTimeSeriesCSV();
     private final ReadJSON readJSON = new ReadJSON();
     private final List<TimeSeriesDto> confirmedAllList = readTimeSeriesCSV.readConfirmedCsv();
     private final List<TimeSeriesDto> recoveredAllList = readTimeSeriesCSV.readRecoveredCsv();
@@ -61,7 +61,6 @@ public class TimeSeriesService {
         return mapFinalResult;
     }
 
-    //ToDo: Only usage in tests
     public List<Integer> mapResultToList(List<TimeSeriesDto> dataList) {
         List<Integer> values = new ArrayList<>();
         for (TimeSeriesDto timeSeriesDto : dataList) {
