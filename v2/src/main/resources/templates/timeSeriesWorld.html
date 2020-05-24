@@ -50,7 +50,10 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-12-tablet is-11-desktop is-10-widescreen is-9-fullhd">
-                <div class="has-text-centered is-size-5" th:if="${noDataForWorldTimeSeries}"></div>
+                <div class="has-text-centered is-size-5" th:if="${noDataForWorldTimeSeries}">No data available for world
+                    time series. Please try again later.
+                </div>
+                <br>
                 <div class="tile is-ancestor">
                     <div class="tile is-horizontal">
                         <div class="tile is-parent">
@@ -59,7 +62,7 @@
                                                                         src="/img/checkmark-outline.svg"></span>
                                 <div class="is-size-5">Confirmed</div>
                                 <div class="is-size-6"
-                                     th:text="${latestDataWorld.getConfirmed() == 0} ? ${'No value, please try again later!'}
+                                     th:text="${latestDataWorld.getConfirmed() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(latestDataWorld.getConfirmed(),3,'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${latestDataWorld.getNewConfirmed() != 0}"
@@ -72,7 +75,7 @@
                                                                         src="/img/fitness-outline.svg"></span>
                                 <div class="is-size-5">Recovered</div>
                                 <div class="is-size-6"
-                                     th:text="${latestDataWorld.getRecovered() == 0} ? ${'No value, please try again later!'}
+                                     th:text="${latestDataWorld.getRecovered() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(latestDataWorld.getRecovered(),3,'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${latestDataWorld.getNewRecovered() != 0}"
@@ -84,11 +87,11 @@
                                 <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
                                 <div class="is-size-5">Deaths</div>
                                 <div class="is-size-6"
-                                     th:text="${latestDataWorld.getDeaths() == 0} ? ${'No value, please try again later!'}
+                                     th:text="${latestDataWorld.getDeaths() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(latestDataWorld.getDeaths(),3,'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${latestDataWorld.getNewDeaths() != 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNewRecovered(),3,'POINT')}"></div>
+                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getDeaths(),3,'POINT')}"></div>
                             </div>
                         </div>
                     </div>
@@ -100,8 +103,10 @@
                                 <span class="icon is-pulled-right"><img alt="medkit"
                                                                         src="/img/medkit-outline.svg"></span>
                                 <div class="is-size-5">Active cases</div>
+                                <!--Minus Plus zum Vortag wie bei time series -->
                                 <div class="is-size-6"
-                                     th:text="${#numbers.formatInteger(latestDataWorld.getActive(),3,'POINT')}"></div>
+                                     th:text="${latestDataWorld.getActive() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(latestDataWorld.getActive(),3,'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -109,7 +114,8 @@
                                 <span class="icon is-pulled-right"><img alt="analytics"
                                                                         src="/img/analytics-outline.svg"></span>
                                 <div class="is-size-5">Last update</div>
-                                <div class="is-size-6" th:text="${lastUpdate}"></div>
+                                <div class="is-size-6" th:text="${latestDataWorld.getLastUpdate() == null} ? ${'No value'}
+                                         : ${lastUpdate}"></div>
                             </div>
                         </div>
                     </div>
@@ -148,7 +154,9 @@
                     <button class="button is-rounded btn" id="buttonActive">Active cases</button>
                     <button class="button is-rounded btn" id="buttonDeaths">Deaths</button>
                 </div>
-
+                <div class="has-text-centered is-size-5" th:if="${noValuesAllCountries}">No values for all countries
+                    available!
+                </div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">

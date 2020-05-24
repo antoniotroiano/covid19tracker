@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -34,12 +35,15 @@ public class TimeSeriesWorldController {
         model.addAttribute("worldTimeSeriesDto", new TimeSeriesWorldDto());
 
         List<String> allCountries = timeSeriesService.getCountry();
+        if (allCountries.isEmpty()) {
+            model.addAttribute("listCountries", new ArrayList<>());
+        }
         model.addAttribute("listCountries", allCountries);
 
         List<TimeSeriesWorldDto> timeSeriesWorldDtoList = timeSeriesService.getAllValuesWorld();
         if (timeSeriesWorldDtoList.isEmpty()) {
-            model.addAttribute("noDataForWorldTimeSeries",
-                    "No data available for world time series. Please try again later.");
+            model.addAttribute("latestDataWorld", new TimeSeriesWorldDto());
+            model.addAttribute("noDataForWorldTimeSeries", true);
             log.warn("No data available for world time series");
             return TIME_SERIES;
         }
@@ -98,7 +102,7 @@ public class TimeSeriesWorldController {
         model.addAttribute("dailyReportDto", new DailyReportDto());
         List<DailyReportDto> allValues = timeSeriesDetailsService.getAllCountries();
         if (allValues.isEmpty()) {
-            model.addAttribute("noValues", true);
+            model.addAttribute("noValuesAllCountries", true);
             log.warn("No values available for all countries");
             return TIME_SERIES;
         }
