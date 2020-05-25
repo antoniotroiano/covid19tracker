@@ -26,6 +26,7 @@ else
       git merge master
       git push
       echo "Starting building .jar package..."
+      # shellcheck disable=SC2164
       cd v2
       mvn clean
       mvn package
