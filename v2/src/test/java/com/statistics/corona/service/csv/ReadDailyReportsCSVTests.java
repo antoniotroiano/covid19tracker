@@ -23,11 +23,10 @@ public class ReadDailyReportsCSVTests {
     @DisplayName("Read the daily report CSV and returned list with daily reports DTOs")
     public void readDailyReportsCSV() {
         List<DailyReportDto> dailyReportDtoList = readDailyReportsCSV.readDailyReportsCSV();
-        List<DailyReportUsDto> dailyReportUsDtoList = readDailyReportsCSV.readDailyReportUs();
-
         assertThat(dailyReportDtoList).isNotEmpty();
+
+        List<DailyReportUsDto> dailyReportUsDtoList = readDailyReportsCSV.readDailyReportUs();
         assertThat(dailyReportUsDtoList).isNotEmpty();
-        assertThat(dailyReportUsDtoList.get(50).getProvince()).isEqualTo("Utah");
     }
 
     @Test

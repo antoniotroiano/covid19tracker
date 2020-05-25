@@ -90,7 +90,7 @@ public class TimeSeriesWorldControllerTest {
     @Test
     @DisplayName("Show time series page of world")
     public void showTimeSeriesWorld() throws Exception {
-        mockMvc.perform(get("/v2/covid19"))
+        mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
 
     }
@@ -100,7 +100,7 @@ public class TimeSeriesWorldControllerTest {
     public void showTimeSeriesWorld_withEmptyListCountryName() throws Exception {
         when(timeSeriesService.getCountry()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/v2/covid19"))
+        mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
     }
 
@@ -109,7 +109,7 @@ public class TimeSeriesWorldControllerTest {
     public void showTimeSeriesWorld_withEmptyListWorldValues() throws Exception {
         when(timeSeriesService.getAllValuesWorld()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/v2/covid19"))
+        mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
     }
 
@@ -118,7 +118,7 @@ public class TimeSeriesWorldControllerTest {
     public void showTimeSeriesWorld_withEmptyListOfAllCountryValues() throws Exception {
         when(timeSeriesDetailsService.getAllCountries()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/v2/covid19"))
+        mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
     }
 }

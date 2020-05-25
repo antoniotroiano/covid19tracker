@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,26 +23,24 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class TimeSeriesService {
 
-    private final ReadTimeSeriesCSV readTimeSeriesCSV = new ReadTimeSeriesCSV();
-    private final ReadJSON readJSON = new ReadJSON();
-    private final List<TimeSeriesDto> confirmedAllList = readTimeSeriesCSV.readConfirmedCsv();
-    private final List<TimeSeriesDto> recoveredAllList = readTimeSeriesCSV.readRecoveredCsv();
-    private final List<TimeSeriesDto> deathsAllList = readTimeSeriesCSV.readDeathsCsv();
+    private final ReadTimeSeriesCSV readTimeSeriesCSV;
+    private final ReadJSON readJSON;
 
+    //ToDo: Null check!
     public Map<String, List<TimeSeriesDto>> getValuesSelectedCountry(String country) {
         Map<String, List<TimeSeriesDto>> allValues = new HashMap<>();
 
-        List<TimeSeriesDto> confirmedListSelectedCountry = confirmedAllList
+        List<TimeSeriesDto> confirmedListSelectedCountry = readTimeSeriesCSV.readConfirmedCsv()
                 .stream()
                 .filter(c -> c.getCountry().equals(country))
                 .collect(Collectors.toList());
 
-        List<TimeSeriesDto> recoveredListSelectedCountry = recoveredAllList
+        List<TimeSeriesDto> recoveredListSelectedCountry = readTimeSeriesCSV.readRecoveredCsv()
                 .stream()
                 .filter(c -> c.getCountry().equals(country))
                 .collect(Collectors.toList());
 
-        List<TimeSeriesDto> deathsListSelectedCountry = deathsAllList
+        List<TimeSeriesDto> deathsListSelectedCountry = readTimeSeriesCSV.readDeathsCsv()
                 .stream()
                 .filter(c -> c.getCountry().equals(country))
                 .collect(Collectors.toList());
@@ -63,11 +62,17 @@ public class TimeSeriesService {
     }
 
     public List<Integer> mapResultToList(List<TimeSeriesDto> dataList) {
+        log.debug("Invoke map result ti list");
         List<Integer> values = new ArrayList<>();
+        if (dataList.isEmpty()) {
+            log.warn("The data list with timeSeriesDto is empty, Returned empty integer list");
+            return values;
+        }
         for (TimeSeriesDto timeSeriesDto : dataList) {
             values = new ArrayList<>(timeSeriesDto.getDataMap()
                     .values());
         }
+        log.debug("Returned list with results in a list");
         return values;
     }
 
@@ -101,9 +106,9 @@ public class TimeSeriesService {
 
     public List<Integer> getOneDayValues(List<Integer> values) {
         log.debug("Invoke get one day values of {}", values);
-        if (values == null) {
+        if (values.isEmpty()) {
             log.warn("Values is null for getOneDayValues");
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
         List<Integer> oneDayValues = new ArrayList<>();
         for (int i = 0; i < values.size(); i++) {
@@ -126,7 +131,7 @@ public class TimeSeriesService {
     public int getLastValues(List<Integer> lastValue) {
         log.debug("Invoke get last value of list {}", lastValue);
         int lastValueInt = 0;
-        if (lastValue == null) {
+        if (lastValue.isEmpty()) {
             log.warn("Values is null for getLastValues");
             return lastValueInt;
         }
@@ -151,14 +156,21 @@ public class TimeSeriesService {
     }
 
     public List<String> getCountry() {
-        log.debug("Returned list with all country names.");
-        return readTimeSeriesCSV.readCountryName();
+        log.debug("Invoke get all country names");
+        List<String> allCountries = readTimeSeriesCSV.readCountryName();
+        if (allCountries.isEmpty()) {
+            log.warn("No country names available");
+            return allCountries;
+        }
+        log.debug("Returned list with all country names");
+        return allCountries;
     }
 
     public List<Integer> getEverySecondValue(List<Integer> values) {
-        if (values == null) {
-            log.warn("Values is null for getEverySecondValue");
-            return new ArrayList<>();
+        log.debug("Invoke get every second value");
+        if (values.isEmpty()) {
+            log.warn("Values is null or empty for getEverySecondValue");
+            return Collections.emptyList();
         }
         return IntStream.range(0, values.size())
                 .filter(n -> n % 2 == 0)
@@ -167,6 +179,11 @@ public class TimeSeriesService {
     }
 
     public List<String> getEverySecondDate(List<String> dates) {
+        log.debug("Invoke get every second date");
+        if (dates.isEmpty()) {
+            log.warn("Date is null or empty for getEverySecondDate");
+            return Collections.emptyList();
+        }
         return IntStream.range(0, dates.size())
                 .filter(n -> n % 2 == 0)
                 .mapToObj(dates::get).collect(Collectors.toList());
@@ -177,7 +194,7 @@ public class TimeSeriesService {
         List<TimeSeriesWorldDto> timeSeriesWorldDtoList = new ArrayList<>();
         try {
             timeSeriesWorldDtoList = readJSON.readWorldValues();
-            if (!timeSeriesWorldDtoList.isEmpty()) {
+            if (timeSeriesWorldDtoList.isEmpty()) {
                 log.warn("No data available for world time series");
                 return timeSeriesWorldDtoList;
             }

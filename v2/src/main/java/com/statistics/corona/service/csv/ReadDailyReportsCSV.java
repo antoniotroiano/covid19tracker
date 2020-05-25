@@ -91,9 +91,29 @@ public class ReadDailyReportsCSV {
         log.debug("Invoke read daily CSV US from github.");
         List<DailyReportUsDto> dailyReportUsDtoList = new ArrayList<>();
 
-        URL newURL = getURL("csse_covid_19_daily_reports_us/");
+        //ToDo: Auslagern der URL Überprüfung führt zu einem Fehler ab 00:00. Eventuell wegen yesterday date
+        URL url = null;
+        try {
+            LocalDate yesterdayDate = LocalDate.now().minusDays(1);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+            url = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/" + yesterdayDate.format(dtf) + ".csv");
 
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(newURL.openStream()));
+            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+            huc.setRequestMethod("GET");
+            huc.connect();
+            int statusCode = huc.getResponseCode();
+            if (statusCode != 200) {
+                LocalDate beforeYesterday = LocalDate.now().minusDays(2);
+                url = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/" + beforeYesterday.format(dtf) + ".csv");
+                log.warn("No new csv US. Returned last one {}", beforeYesterday);
+            }
+            log.debug("Returned url with daily reports od yesterday {}", yesterdayDate);
+        } catch (Exception e) {
+            log.warn("Occurred an exception during getting csv US url {}", e.getMessage());
+        }
+
+        assert url != null;
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
              CSVReader reader = new CSVReaderBuilder(in)
                      .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES)
                      .withSkipLines(1)

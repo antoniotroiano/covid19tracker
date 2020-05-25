@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
-@RequestMapping("v2/covid19")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class TimeSeriesWorldController {
 
@@ -97,7 +97,7 @@ public class TimeSeriesWorldController {
                 .collect(Collectors.toList());
         Collections.reverse(listDates);
         model.addAttribute("dateTimeSeries", timeSeriesService.getEverySecondDate(listDates));
-        log.info("Returned world values");
+        log.debug("Returned world values");
 
         model.addAttribute("dailyReportDto", new DailyReportDto());
         List<DailyReportDto> allValues = timeSeriesDetailsService.getAllCountries();
@@ -121,7 +121,7 @@ public class TimeSeriesWorldController {
                 .sorted(Comparator.comparing(DailyReportDto::getDeaths)
                         .reversed())
                 .collect(Collectors.toList()));
-        log.info("Returned all values of all countries");
+        log.debug("Returned all values of all countries");
         return TIME_SERIES;
     }
 }

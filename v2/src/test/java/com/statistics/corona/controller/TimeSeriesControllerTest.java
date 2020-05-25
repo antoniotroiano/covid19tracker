@@ -2,6 +2,7 @@ package com.statistics.corona.controller;
 
 import com.statistics.corona.model.CountryDetailsDto;
 import com.statistics.corona.model.DailyReportDto;
+import com.statistics.corona.model.DailyReportUsDto;
 import com.statistics.corona.model.TimeSeriesDto;
 import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.TimeSeriesDetailsService;
@@ -23,6 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -34,6 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayName("TimeSeriesController tests")
 public class TimeSeriesControllerTest {
+
+    private final List<DailyReportDto> dailyReportDtoList = new ArrayList<>();
 
     @Autowired
     private MockMvc mockMvc;
@@ -85,8 +90,18 @@ public class TimeSeriesControllerTest {
         dailyReportDto.setActive(100);
         dailyReportDto.setCombinedKey("Hessen, Germany");
 
-        List<DailyReportDto> dailyReportDtoList = new ArrayList<>();
+        DailyReportDto dailyReportDto2 = new DailyReportDto();
+        dailyReportDto2.setProvince("Bayern");
+        dailyReportDto2.setCountry("Germany");
+        dailyReportDto2.setLastUpdate("2020-05-24 02:32:43");
+        dailyReportDto2.setConfirmed(100);
+        dailyReportDto2.setDeaths(100);
+        dailyReportDto2.setRecovered(100);
+        dailyReportDto2.setActive(100);
+        dailyReportDto2.setCombinedKey("Bayern, Germany");
+
         dailyReportDtoList.add(dailyReportDto);
+        dailyReportDtoList.add(dailyReportDto2);
 
         when(timeSeriesService.getCountry()).thenReturn(countries);
         when(dateFormat.formatLastUpdateToDate(anyString())).thenReturn("0000.00.00");
@@ -94,6 +109,15 @@ public class TimeSeriesControllerTest {
         when(timeSeriesService.getDetailsForCountry(anyString())).thenReturn(Optional.of(germany));
         when(timeSeriesService.getValuesSelectedCountry(anyString())).thenReturn(listGermany);
         when(timeSeriesService.mapFinalResultToMap(anyMap())).thenReturn(finalResult);
+    }
+
+    @Test
+    @DisplayName("Empty list with all country names")
+    public void showTimeSeries_withEmptyListOfAllCountryNames() throws Exception {
+        when(timeSeriesService.getCountry()).thenReturn(new ArrayList<>());
+
+        mockMvc.perform(get("/v2/covid19/timeSeries/{country}", "Germany"))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -131,6 +155,15 @@ public class TimeSeriesControllerTest {
     }
 
     @Test
+    @DisplayName("Show time series page of a selected country with list of details of province")
+    public void showTimeSeries_listOfDetailsProvince() throws Exception {
+        when(timeSeriesDetailsService.getAllDetailsProvince(anyString())).thenReturn(dailyReportDtoList);
+
+        mockMvc.perform(get("/v2/covid19/timeSeries/{country}", "Germany"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     @DisplayName("Show time series page of a selected country with empty list of details of province")
     public void showTimeSeries_emptyListOfDetailsProvince() throws Exception {
         when(timeSeriesDetailsService.getAllDetailsProvince(anyString())).thenReturn(Collections.emptyList());
@@ -140,11 +173,47 @@ public class TimeSeriesControllerTest {
     }
 
     @Test
-    @DisplayName("Empty list with all country names")
-    public void showTimeSeries_withEmptyListOfAllCountryNames() throws Exception {
-        when(timeSeriesService.getCountry()).thenReturn(new ArrayList<>());
+    @DisplayName("Show details for province of US")
+    public void showDetailsForProvinceOfUs() throws Exception {
+        DailyReportUsDto dailyReportUsDto = new DailyReportUsDto();
+        dailyReportUsDto.setProvince("New York");
+        dailyReportUsDto.setCountry("US");
+        dailyReportUsDto.setLastUpdate("2020-05-24 02:32:43");
+        dailyReportUsDto.setConfirmed(100);
+        dailyReportUsDto.setDeaths(100);
+        dailyReportUsDto.setRecovered(100);
+        dailyReportUsDto.setActive(10.0);
+        List<DailyReportUsDto> dailyReportUsDtoList = Stream.of(dailyReportUsDto).collect(Collectors.toList());
+        when(timeSeriesDetailsService.getAllDailyProvinceUs()).thenReturn(dailyReportUsDtoList);
 
-        mockMvc.perform(get("/v2/covid19/timeSeries/{country}", "Germany"))
+        mockMvc.perform(get("/v2/covid19/timeSeries/{country}/details", "US"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Show empty list for province of US")
+    public void showEmptyListForProvinceOfUs() throws Exception {
+        when(timeSeriesDetailsService.getAllDailyProvinceUs()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/v2/covid19/timeSeries/{country}/details", "US"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Show details for province of selected country")
+    public void showDetailsForProvinceOfSelectedCountry() throws Exception {
+        when(timeSeriesDetailsService.getAllDetailsProvince(anyString())).thenReturn(dailyReportDtoList);
+
+        mockMvc.perform(get("/v2/covid19/timeSeries/{country}/details", "Germany"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Show empty details list for province of selected country")
+    public void showEmptyDetailsListForProvinceOfSelectedCountry() throws Exception {
+        when(timeSeriesDetailsService.getAllDetailsProvince(anyString())).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/v2/covid19/timeSeries/{country}/details", "Germany"))
                 .andExpect(status().isOk());
     }
 }

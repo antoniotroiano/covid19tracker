@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TimeSeriesDetailsService {
 
-    private final ReadDailyReportsCSV readDailyReportCSV = new ReadDailyReportsCSV();
+    private final ReadDailyReportsCSV readDailyReportCSV;
 
     public List<DailyReportDto> getAllDetailsProvince(String country) {
         log.debug("Invoke get details for province of selected country {}", country);
@@ -59,7 +59,7 @@ public class TimeSeriesDetailsService {
         List<DailyReportDto> allCountryValues = new ArrayList<>();
 
         List<String> countryWithProvince = Arrays.asList("US", "Italy", "Canada", "Spain", "United Kingdom", "China",
-                "Netherlands", "Australia", "Germany", "Denmark", "France");
+                "Netherlands", "Australia", "Germany", "Denmark", "France", "Brazil", "Chile", "Japan", "Mexico");
 
         for (String country : countryWithProvince) {
             DailyReportDto dailyReportDto = new DailyReportDto();

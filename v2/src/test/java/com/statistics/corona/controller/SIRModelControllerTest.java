@@ -2,8 +2,8 @@ package com.statistics.corona.controller;
 
 import com.statistics.corona.service.DerivativeService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +19,12 @@ import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DisplayName("SIRModelController tests")
 public class SIRModelControllerTest {
 
     private final Map<String, List<Double>> map = new HashMap<>();
@@ -31,9 +34,6 @@ public class SIRModelControllerTest {
 
     @MockBean
     private DerivativeService derivativeService;
-
-    @InjectMocks
-    private SIRController sirModelController;
 
     @BeforeEach
     public void setUp() {
@@ -53,13 +53,22 @@ public class SIRModelControllerTest {
     }
 
     @Test
-    public void showShowModel() throws Exception {
+    @DisplayName("Show sir-model with init values")
+    public void showSIRModel() throws Exception {
         when(derivativeService.calculation(anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyInt()))
                 .thenReturn(map);
 
-       /* mockMvc.perform(get("/v1/sir-model"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Transmission rate:")))
-                .andExpect(content().string(containsString("Recovery rate:")));*/
+        mockMvc.perform(get("/v2/sir"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Show sir-model with new calculation")
+    public void showNewCalculation() throws Exception {
+        when(derivativeService.calculation(anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyInt()))
+                .thenReturn(map);
+
+        mockMvc.perform(post("/v2/sir/newCalculation"))
+                .andExpect(status().isOk());
     }
 }

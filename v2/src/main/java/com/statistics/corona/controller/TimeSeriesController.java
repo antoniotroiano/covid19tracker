@@ -82,7 +82,7 @@ public class TimeSeriesController {
                 if (datesList.isEmpty()) {
                     getBaseData(model, new HashMap<>(), new ArrayList<>());
                     model.addAttribute(NO_DATA, true);
-                    log.info("No dates for the country {} available", country);
+                    log.warn("No dates for the country {} available", country);
                     return TIME_SERIES;
                 }
 
@@ -90,11 +90,11 @@ public class TimeSeriesController {
                 if (!valuesCountries.isEmpty() && valuesCountries.stream().filter(c -> !c.getCountry().isEmpty()).count() > 1) {
                     model.addAttribute("moreDetailsAvailable", true);
                     getBaseData(model, finalResult, datesList);
-                    log.info("Get data for selected country {}, with extra details", country);
+                    log.warn("Get data for selected country {}, with extra details", country);
                     return TIME_SERIES;
                 }
                 getBaseData(model, finalResult, datesList);
-                log.info("Get data for selected country {}", country);
+                log.debug("Get data for selected country {}", country);
                 return TIME_SERIES;
             }
             getBaseData(model, new HashMap<>(), new ArrayList<>());
@@ -104,7 +104,7 @@ public class TimeSeriesController {
         }
         getBaseData(model, new HashMap<>(), new ArrayList<>());
         model.addAttribute(NO_DATA, true);
-        log.info("No data for the country {}", country);
+        log.debug("No data for the country {}", country);
         return TIME_SERIES;
     }
 
@@ -116,7 +116,7 @@ public class TimeSeriesController {
             if (!allValuesProvinceUs.isEmpty()) {
                 createBaseDataDetailsUS(country, model);
                 model.addAttribute("allValuesProvinceUS", allValuesProvinceUs);
-                log.info("Returned all data of province for US");
+                log.debug("Returned all data of province for US");
                 return "timeSeriesDetailsUs";
             }
             createBaseDataDetailsUS(country, model);
@@ -128,7 +128,7 @@ public class TimeSeriesController {
         if (!allValuesProvince.isEmpty()) {
             createBaseDataDetails(country, model);
             model.addAttribute("allValuesProvince", allValuesProvince);
-            log.info("Returned all data of province for selected country {}", country);
+            log.debug("Returned all data of province for selected country {}", country);
             return "timeSeriesDetails";
         }
         createBaseDataDetails(country, model);
