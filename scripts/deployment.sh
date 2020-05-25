@@ -45,6 +45,7 @@ cd ~/app/
 echo "Stopping statistics application and deleting old image..."
 docker stop statistics
 docker rm statistics
+rm v2-$oldVersion.jar
 echo "Stopped and deleted old statistics-corona application. Starting new version..."
 docker build -f Dockerfile -t statistics .
 docker run --name statistics -d -p 8080:8080 statistics
