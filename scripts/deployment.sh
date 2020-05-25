@@ -47,7 +47,7 @@ docker stop statistics
 docker rm statistics
 echo "Stopped and deleted old statistics-corona application. Starting new version..."
 docker build -f Dockerfile -t statistics .
-docker run -d -p 8080:8080 statistics
+docker run --name statistics -d -p 8080:8080 statistics
 echo "New version of statistics application is starting. Please wait some seconds..."
 exit
 EOF
