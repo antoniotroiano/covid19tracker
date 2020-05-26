@@ -1,0 +1,16 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent {label 'building_agent'}
+
+    stages {
+
+        stage('Copy artifact to target machine and restart') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: "28f5a28e-af8a-4096-ad72-7e620e4eb0f2", keyFileVariable: 'keyfile')]) {
+                    sh 'ssh -o "StrictHostKeyChecking=no" -i $keyfile root@decgn-pr-teamlead-webservice.DE.valtech.com touch TestFile.txt'
+                }
+            }
+        }
+    }
+}
