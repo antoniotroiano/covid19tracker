@@ -9,7 +9,7 @@ else
   echo "Old version of statistics application is: $(tput setaf 1) $oldVersion $(tput setaf 7)"
   echo "Please enter the new version number (e.g. 1.1.0-SNAPSHOT)"
   read newVersion
-  sed -i.old -e 's/\<revision\>'$oldVersion'\<\/revision\>/\<revision\>'$newVersion'\<\/revision\>/g' pom.xml
+  sed -i.old -e 's/\<version\>'$oldVersion'\<\/version\>/\<version\>'$newVersion'\<\/version\>/g' pom.xml
   if grep -q $oldVersion "pom.xml"; then
     echo "Replacing version number failed. (Old version: $(tput setaf 1)$oldVersion$(tput setaf 7), new version: $(tput setaf 1)$newVersion$(tput setaf 7).) Aborting script..."
     git checkout .
@@ -26,16 +26,15 @@ else
       git merge master
       git push
       echo "Starting building .jar package..."
-      cd v2
       mvn clean
       mvn package
-      if [ ! -f target/v2-$newVersion.jar ]; then
+      if [ ! -f target/statistics-corona-$newVersion.jar ]; then
         echo "Something went wrong. Built .jar file not found!"
         git checkout master
         :
       else
         echo "Copying .jar file to server..."
-        scp -i ~/.ssh/coronaKey.pem target/v2-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
+        scp -i ~/.ssh/coronaKey.pem target/statistics-corona-$newVersion.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
         echo "Copying docker file to server..."
         cd ..
         scp -i ~/.ssh/coronaKey.pem Dockerfile ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/
@@ -45,7 +44,7 @@ cd ~/app/
 echo "Stopping statistics application and deleting old image..."
 docker stop statistics
 docker rm statistics
-rm v2-$oldVersion.jar
+rm statistics-corona-$oldVersion.jar
 echo "Stopped and deleted old statistics-corona application. Starting new version..."
 docker build -f Dockerfile -t statistics .
 docker run --name statistics -d -p 8080:8080 statistics
