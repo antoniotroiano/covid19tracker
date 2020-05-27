@@ -32,5 +32,4 @@ build/
 
 #logs
 logs/
-logsV2/
 .DS_Store

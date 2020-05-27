@@ -1,14 +1,42 @@
 #!/usr/bin/env groovy
 
 pipeline {
-    agent {label 'building_agent'}
-
+    agent none
     stages {
-
-        stage('Copy artifact to target machine and restart') {
+        stage('checkout project') {
+            agent any
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: "28f5a28e-af8a-4096-ad72-7e620e4eb0f2", keyFileVariable: 'keyfile')]) {
-                    sh 'ssh -o "StrictHostKeyChecking=no" -i $keyfile root@decgn-pr-teamlead-webservice.DE.valtech.com touch TestFile.txt'
+                git branch: 'master', credentialsId: 'GitCredentials', url: 'https://github.com/antoniotroiano/statistics.git'
+            }
+        }
+        stage('build artifact + tests') {
+            agent {
+                docker {
+                    image 'maven:3.6.3-jdk-11-slim'
+                    args '-v /root/.m2:/root/.m2'
+                }
+            }
+            steps {
+                withMaven(
+                        maven: 'Maven 3.6.x') {
+                    sh 'mvn -B -DskipTests clean package'
+                    sh 'mvn test'
+                }
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('connect to server') {
+            agent any
+            steps {
+                sshagent(credentials: ['ssh-key-corona']) {
+                    sh 'scp -o StrictHostKeyChecking=no scripts/docker-start.sh scripts/docker-stop.sh Dockerfile ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/'
+                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com sh ./app/docker-stop.sh'
+                    sh 'scp -o StrictHostKeyChecking=no target/*.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/'
+                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com sh ./app/docker-start.sh'
                 }
             }
         }
