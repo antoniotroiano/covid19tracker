@@ -33,21 +33,10 @@ pipeline {
             agent any
             steps {
                 sshagent(credentials: ['ssh-key-corona']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com'
-                    sh 'scp -o StrictHostKeyChecking=no -i target/*.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/'
-                    echo 'Test output'
-                }
-            }
-        }
-    }
-}
-pipeline {
-        stage('Connect to server / run docker') {
-            steps {
-                sshagent(credentials: ['aws-key']) {
-                    sh 'scp -o StrictHostKeyChecking=no -i $aws-key target/statistics-corona-*.jar scripts/docker.sh Dockerfile ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/'
-                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com'
-                    sh ''
+                    sh 'scp -o StrictHostKeyChecking=no scripts/docker-start.sh scripts/docker-stop.sh Dockerfile ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/'
+                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com sh ./app/docker-stop.sh'
+                    sh 'scp -o StrictHostKeyChecking=no target/*.jar ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com:app/'
+                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-122-233-6.eu-central-1.compute.amazonaws.com sh ./app/docker-start.sh'
                 }
             }
         }
