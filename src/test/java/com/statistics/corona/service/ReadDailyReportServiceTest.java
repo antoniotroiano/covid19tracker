@@ -1,6 +1,5 @@
 package com.statistics.corona.service;
 
-import com.statistics.corona.model.CountryDetailsDto;
 import com.statistics.corona.model.DailyReportDto;
 import com.statistics.corona.model.DailyReportUsDto;
 import com.statistics.corona.service.csv.ReadDailyReportsCSV;
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -22,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @DisplayName("TimeSeriesDetailsService tests")
-public class TimeSeriesDetailsServiceTest {
+public class ReadDailyReportServiceTest {
 
     private final List<DailyReportDto> dailyReportDtoList = new ArrayList<>();
     private final List<DailyReportUsDto> dailyReportUsDtoList = new ArrayList<>();
@@ -30,7 +28,7 @@ public class TimeSeriesDetailsServiceTest {
     private final ReadDailyReportsCSV readDailyReportsCSV = mock(ReadDailyReportsCSV.class);
 
     @InjectMocks
-    private TimeSeriesDetailsService timeSeriesDetailsService;
+    private ReadDailyReportService readDailyReportService;
 
     @BeforeEach
     public void setUp() {
@@ -181,8 +179,8 @@ public class TimeSeriesDetailsServiceTest {
         List<DailyReportDto> dailyReportDtoList = Stream.of(dailyReportDto).collect(Collectors.toList());
         when(readDailyReportsCSV.readDailyReportsCSV()).thenReturn(dailyReportDtoList);
 
-        assertThat(timeSeriesDetailsService.getAllDetailsProvince("Germany")).isNotEmpty();
-        assertThat(timeSeriesDetailsService.getAllDetailsProvince("Germany")).isEqualTo(dailyReportDtoList);
+        assertThat(readDailyReportService.getDailyDetailsOfProvince("Germany")).isNotEmpty();
+        assertThat(readDailyReportService.getDailyDetailsOfProvince("Germany")).isEqualTo(dailyReportDtoList);
     }
 
     @Test
@@ -190,7 +188,7 @@ public class TimeSeriesDetailsServiceTest {
     public void getAllDetailsProvince_withEmptyList() {
         when(readDailyReportsCSV.readDailyReportsCSV()).thenReturn(new ArrayList<>());
 
-        assertThat(timeSeriesDetailsService.getAllDetailsProvince("Germany")).isEmpty();
+        assertThat(readDailyReportService.getDailyDetailsOfProvince("Germany")).isEmpty();
     }
 
     @Test
@@ -198,8 +196,8 @@ public class TimeSeriesDetailsServiceTest {
     public void getAllDetailsProvinceUS() {
         when(readDailyReportsCSV.readDailyReportUs()).thenReturn(dailyReportUsDtoList);
 
-        assertThat(timeSeriesDetailsService.getAllDailyProvinceUs()).isNotEmpty();
-        assertThat(timeSeriesDetailsService.getAllDailyProvinceUs()).isEqualTo(dailyReportUsDtoList);
+        assertThat(readDailyReportService.getDailyDetailsProvinceUs()).isNotEmpty();
+        assertThat(readDailyReportService.getDailyDetailsProvinceUs()).isEqualTo(dailyReportUsDtoList);
     }
 
     @Test
@@ -207,7 +205,7 @@ public class TimeSeriesDetailsServiceTest {
     public void getAllDetailsProvinceUS_withEmptyList() {
         when(readDailyReportsCSV.readDailyReportUs()).thenReturn(new ArrayList<>());
 
-        assertThat(timeSeriesDetailsService.getAllDailyProvinceUs()).isEmpty();
+        assertThat(readDailyReportService.getDailyDetailsProvinceUs()).isEmpty();
     }
 
     @Test
@@ -221,8 +219,8 @@ public class TimeSeriesDetailsServiceTest {
         dailyReportDto.setDeaths(0);
         dailyReportDto.setRecovered(0);
         dailyReportDto.setCountry("Germany");
-        assertThat(timeSeriesDetailsService.getAllCountries()).isNotEmpty();
-        assertThat(timeSeriesDetailsService.getAllCountries().get(8).getCountry()).contains(dailyReportDto.getCountry());
+        assertThat(readDailyReportService.getAllCountryValues()).isNotEmpty();
+        assertThat(readDailyReportService.getAllCountryValues().get(8).getCountry()).contains(dailyReportDto.getCountry());
     }
 
     @Test
@@ -230,6 +228,6 @@ public class TimeSeriesDetailsServiceTest {
     public void getAllCountries_withEmptyList() {
         when(readDailyReportsCSV.readDailyReportsCSV()).thenReturn(new ArrayList<>());
 
-        assertThat(timeSeriesDetailsService.getAllCountries()).isEmpty();
+        assertThat(readDailyReportService.getAllCountryValues()).isEmpty();
     }
 }

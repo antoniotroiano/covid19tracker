@@ -21,13 +21,13 @@
     <section class="section">
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <div class="title is-3 has-text-centered">Daily data of COVID-19 worldwide</div>
+                <div class="title is-3 has-text-centered">COVID-19 worldwide</div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons is-mobile is-centered">
-                    <a class="button is-small is-link is-rounded" href="/v2/sir" type="submit">Go to SIR-Model</a>
+                    <a class="button is-small is-link is-rounded" href="/sir" type="submit">Go to SIR-Model</a>
                     <a class="button is-small is-link is-rounded" href="/" id="loadingUpdate"
                        onclick="loading('loadingUpdate')">Manual update world</a>
                 </div>
@@ -161,8 +161,6 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-9-mobile is-5-tablet is-5-desktop is-4-widescreen is-3-fullhd">
-                <!--<input class="input" id="inputList" onkeyup="filterListFunction()" placeholder="Search for country ..."
-                       type="text">-->
                 <div class="buttons has-addons-centered is-centered">
                     <div id="listTotal">
                         <div th:each="dailyReportDto : ${totalTable}">

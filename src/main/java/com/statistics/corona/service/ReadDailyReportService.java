@@ -12,16 +12,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class TimeSeriesDetailsService {
+public class ReadDailyReportService {
 
     private final ReadDailyReportsCSV readDailyReportCSV;
 
-    public List<DailyReportDto> getAllDetailsProvince(String country) {
+    public List<DailyReportDto> getDailyDetailsOfProvince(String country) {
         log.debug("Invoke get details for province of selected country {}", country);
         List<DailyReportDto> allDailyReports = readDailyReportCSV.readDailyReportsCSV();
         if (allDailyReports.isEmpty()) {
@@ -38,7 +39,7 @@ public class TimeSeriesDetailsService {
         return allValuesSelectedCountry;
     }
 
-    public List<DailyReportUsDto> getAllDailyProvinceUs() {
+    public List<DailyReportUsDto> getDailyDetailsProvinceUs() {
         log.debug("Invoke get details for province of US");
         List<DailyReportUsDto> allDailyReportsUs = readDailyReportCSV.readDailyReportUs();
         if (allDailyReportsUs.isEmpty()) {
@@ -49,8 +50,8 @@ public class TimeSeriesDetailsService {
         return allDailyReportsUs;
     }
 
-    public List<DailyReportDto> getAllCountries() {
-        log.debug("Invoke get details for all countries");
+    public List<DailyReportDto> getAllCountryValues() {
+        log.debug("Invoke get all details for all countries");
         List<DailyReportDto> allDailyReports = readDailyReportCSV.readDailyReportsCSV();
         if (allDailyReports.isEmpty()) {
             log.warn("No values available for all counties.");
@@ -64,10 +65,10 @@ public class TimeSeriesDetailsService {
         for (String country : countryWithProvince) {
             DailyReportDto dailyReportDto = new DailyReportDto();
             dailyReportDto.setCountry(country);
-            dailyReportDto.setConfirmed(getSumValues(getAllValuesCountry(allDailyReports, country)).get("sumConfirmed"));
-            dailyReportDto.setRecovered(getSumValues(getAllValuesCountry(allDailyReports, country)).get("sumRecovered"));
-            dailyReportDto.setDeaths(getSumValues(getAllValuesCountry(allDailyReports, country)).get("sumDeaths"));
-            dailyReportDto.setActive(getSumValues(getAllValuesCountry(allDailyReports, country)).get("sumActive"));
+            dailyReportDto.setConfirmed(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumConfirmed"));
+            dailyReportDto.setRecovered(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumRecovered"));
+            dailyReportDto.setDeaths(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumDeaths"));
+            dailyReportDto.setActive(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumActive"));
             allCountryValues.add(dailyReportDto);
         }
 
@@ -80,7 +81,7 @@ public class TimeSeriesDetailsService {
         return allCountryValues;
     }
 
-    private List<DailyReportDto> getAllValuesCountry(List<DailyReportDto> dailyReportDtoList, String country) {
+    private List<DailyReportDto> getAllValuesGivenCountry(List<DailyReportDto> dailyReportDtoList, String country) {
         log.debug("Invoke get all values of given country");
         return dailyReportDtoList.stream()
                 .filter(c -> c.getCountry().equals(country))
@@ -107,5 +108,20 @@ public class TimeSeriesDetailsService {
                 .mapToInt(DailyReportDto::getActive)
                 .sum());
         return sumValues;
+    }
+
+    public Optional<DailyReportDto> getProvinceDetails(String province) {
+        log.debug("Invoke get details for selected province {}", province);
+        Optional<DailyReportDto> dailyReportDto = readDailyReportCSV.readDailyReportsCSV()
+                .stream()
+                .filter(p -> p.getProvince().equals(province))
+                .findFirst();
+
+        if (dailyReportDto.isPresent()) {
+            log.debug("Returned dto for selected province {}", province);
+            return dailyReportDto;
+        }
+        log.warn("No values for dto available of {}", province);
+        return dailyReportDto;
     }
 }

@@ -26,6 +26,20 @@ public class DateFormat {
         return outputFormatterTime.format(time);
     }
 
+    public String formatLastUpdateToDateDaily(String lastUpdate) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.GERMAN);
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.GERMAN);
+        LocalDate date = LocalDate.parse(lastUpdate, inputFormatter);
+        return outputFormatter.format(date);
+    }
+
+    public String formatLastUpdateToTimeDaily(String lastUpdate) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.GERMAN);
+        DateTimeFormatter outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm", Locale.GERMAN);
+        LocalTime time = LocalTime.parse(lastUpdate, inputFormatter);
+        return outputFormatterTime.format(time);
+    }
+
     public String formatDate(String date) {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.GERMAN);
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.GERMAN);

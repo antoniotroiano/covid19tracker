@@ -78,6 +78,8 @@ public class ReadDailyReportsCSV {
                 dailyReportDto.setDeaths(dailyReportDtoIterate.getDeaths());
                 dailyReportDto.setActive(dailyReportDtoIterate.getActive());
                 dailyReportDto.setCombinedKey(dailyReportDtoIterate.getCombinedKey());
+                dailyReportDto.setIncidenceRate(dailyReportDtoIterate.getIncidenceRate());
+                dailyReportDto.setCaseFatalityRatio(dailyReportDtoIterate.getCaseFatalityRatio());
                 dailyReportDtoList.add(dailyReportDto);
             }
             log.debug("Add all daily reports to list");

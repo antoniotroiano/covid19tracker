@@ -16,7 +16,7 @@ import java.util.List;
 
 @Controller
 @Slf4j
-@RequestMapping("v2/sir")
+@RequestMapping("sir")
 @RequiredArgsConstructor
 public class SIRController {
 
@@ -27,7 +27,7 @@ public class SIRController {
     @GetMapping
     public String showSIRModel(SIRModel sirModel, Model model) {
         log.info("Invoke v2 sir-model");
-        List<String> allCountries = timeSeriesService.getCountry();
+        List<String> allCountries = timeSeriesService.getCountryNames();
         model.addAttribute("listCountries", allCountries);
 
         SIRModel sirModelInit = new SIRModel();

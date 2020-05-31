@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -26,38 +27,60 @@ public class TimeSeriesService {
     private final ReadTimeSeriesCSV readTimeSeriesCSV;
     private final ReadJSON readJSON;
 
-    //ToDo: Null check!
     public Map<String, List<TimeSeriesDto>> getValuesSelectedCountry(String country) {
+        log.debug("Invoke get all values from time series csv for {}", country);
         Map<String, List<TimeSeriesDto>> allValues = new HashMap<>();
 
-        List<TimeSeriesDto> confirmedListSelectedCountry = readTimeSeriesCSV.readConfirmedCsv()
+        List<TimeSeriesDto> confirmedListCountry = readTimeSeriesCSV.readConfirmedCsv()
                 .stream()
                 .filter(c -> c.getCountry().equals(country))
                 .collect(Collectors.toList());
 
-        List<TimeSeriesDto> recoveredListSelectedCountry = readTimeSeriesCSV.readRecoveredCsv()
+        List<TimeSeriesDto> recoveredListCountry = readTimeSeriesCSV.readRecoveredCsv()
                 .stream()
                 .filter(c -> c.getCountry().equals(country))
                 .collect(Collectors.toList());
 
-        List<TimeSeriesDto> deathsListSelectedCountry = readTimeSeriesCSV.readDeathsCsv()
+        List<TimeSeriesDto> deathsListCountry = readTimeSeriesCSV.readDeathsCsv()
                 .stream()
                 .filter(c -> c.getCountry().equals(country))
                 .collect(Collectors.toList());
 
-        allValues.put("confirmedList", confirmedListSelectedCountry);
-        allValues.put("recoveredList", recoveredListSelectedCountry);
-        allValues.put("deathsList", deathsListSelectedCountry);
+        if (confirmedListCountry.isEmpty()) {
+            allValues.put("confirmedList", confirmedListCountry);
+        }
+        if (recoveredListCountry.isEmpty()) {
+            allValues.put("recoveredList", recoveredListCountry);
+        }
+        if (deathsListCountry.isEmpty()) {
+            allValues.put("deathsList", deathsListCountry);
+        }
+        allValues.put("confirmedList", confirmedListCountry);
+        allValues.put("recoveredList", recoveredListCountry);
+        allValues.put("deathsList", deathsListCountry);
         return allValues;
     }
 
-    //ToDo: Null check!
-    public Map<String, List<Integer>> mapFinalResultToMap(Map<String, List<TimeSeriesDto>> getAllValuesSelectedCountry) {
+    public Map<String, List<Integer>> mapFinalResultToMap(Map<String, List<TimeSeriesDto>> allValuesOfCountry) {
+        log.debug("Invoke get final result of all values in a map");
         Map<String, List<Integer>> mapFinalResult = new HashMap<>();
 
-        mapFinalResult.put("confirmedResult", generateFinalResult(interimResult(getAllValuesSelectedCountry.get("confirmedList"))));
-        mapFinalResult.put("recoveredResult", generateFinalResult(interimResult(getAllValuesSelectedCountry.get("recoveredList"))));
-        mapFinalResult.put("deathsResult", generateFinalResult(interimResult(getAllValuesSelectedCountry.get("deathsList"))));
+        List<Integer> confirmedResult = generateFinalResult(interimResult(allValuesOfCountry.get("confirmedList")));
+        if (confirmedResult.isEmpty()) {
+            mapFinalResult.put("confirmedResult", confirmedResult);
+        }
+        List<Integer> recoveredResult = generateFinalResult(interimResult(allValuesOfCountry.get("recoveredList")));
+        if (recoveredResult.isEmpty()) {
+            mapFinalResult.put("recoveredResult", recoveredResult);
+        }
+        List<Integer> deathsResult = generateFinalResult(interimResult(allValuesOfCountry.get("deathsList")));
+        if (deathsResult.isEmpty()) {
+            mapFinalResult.put("deathsResult", deathsResult);
+        }
+
+        mapFinalResult.put("confirmedResult", confirmedResult);
+        mapFinalResult.put("recoveredResult", recoveredResult);
+        mapFinalResult.put("deathsResult", deathsResult);
         return mapFinalResult;
     }
 
@@ -76,10 +99,13 @@ public class TimeSeriesService {
         return values;
     }
 
-    //ToDo: Null check!
     private List<List<Integer>> interimResult(List<TimeSeriesDto> dataList) {
         log.debug("Invoke interim result");
         List<List<Integer>> interimResultList = new ArrayList<>();
+        if (dataList.isEmpty()) {
+            log.warn("The list with data is empty. No calculation for interim result");
+            return interimResultList;
+        }
         for (TimeSeriesDto timeSeriesDto : dataList) {
             List<Integer> values = new ArrayList<>(timeSeriesDto.getDataMap()
                     .values());
@@ -89,10 +115,13 @@ public class TimeSeriesService {
         return interimResultList;
     }
 
-    //ToDo: Null check!
     private List<Integer> generateFinalResult(List<List<Integer>> interimResult) {
         log.debug("Invoke final result");
         List<Integer> finalResult = new ArrayList<>();
+        if (interimResult.isEmpty()) {
+            log.debug("The interim result list is empty. No calculation for final result");
+            return finalResult;
+        }
         for (int j = 0; j < interimResult.get(0).size(); j++) {
             int sum = 0;
             for (List<Integer> integers : interimResult) {
@@ -128,21 +157,45 @@ public class TimeSeriesService {
         return oneDayValues;
     }
 
-    public int getLastValues(List<Integer> lastValue) {
-        log.debug("Invoke get last value of list {}", lastValue);
+    public int getLastValue(List<Integer> values) {
+        log.debug("Invoke get last value of list {}", values);
         int lastValueInt = 0;
-        if (lastValue.isEmpty()) {
+        if (values.isEmpty()) {
             log.warn("Values is null for getLastValues");
             return lastValueInt;
         }
-        long count = lastValue.size();
-        Optional<Integer> optionalValue = lastValue.stream().skip(count - 1).findFirst();
+        long count = values.size();
+        Optional<Integer> optionalValue = values.stream().skip(count - 1).findFirst();
         if (optionalValue.isPresent()) {
             lastValueInt = optionalValue.get();
         }
         return lastValueInt;
     }
 
+    public List<Integer> getEverySecondValue(List<Integer> values) {
+        log.debug("Invoke get every second value");
+        if (values.isEmpty()) {
+            log.warn("Values list is null or empty for getEverySecondValue");
+            return Collections.emptyList();
+        }
+        return IntStream.range(0, values.size())
+                .filter(n -> n % 2 == 0)
+                .mapToObj(values::get)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getEverySecondDate(List<String> dates) {
+        log.debug("Invoke get every second date");
+        if (dates.isEmpty()) {
+            log.warn("Date list is null or empty for getEverySecondDate");
+            return Collections.emptyList();
+        }
+        return IntStream.range(0, dates.size())
+                .filter(n -> n % 2 == 0)
+                .mapToObj(dates::get).collect(Collectors.toList());
+    }
+
+    //ToDo: Auslagern?
     public Optional<CountryDetailsDto> getDetailsForCountry(String country) {
         log.debug("Invoke get details for country {}", country);
         try {
@@ -155,7 +208,7 @@ public class TimeSeriesService {
         }
     }
 
-    public List<String> getCountry() {
+    public List<String> getCountryNames() {
         log.debug("Invoke get all country names");
         List<String> allCountries = readTimeSeriesCSV.readCountryName();
         if (allCountries.isEmpty()) {
@@ -166,29 +219,7 @@ public class TimeSeriesService {
         return allCountries;
     }
 
-    public List<Integer> getEverySecondValue(List<Integer> values) {
-        log.debug("Invoke get every second value");
-        if (values.isEmpty()) {
-            log.warn("Values is null or empty for getEverySecondValue");
-            return Collections.emptyList();
-        }
-        return IntStream.range(0, values.size())
-                .filter(n -> n % 2 == 0)
-                .mapToObj(values::get)
-                .collect(Collectors.toList());
-    }
-
-    public List<String> getEverySecondDate(List<String> dates) {
-        log.debug("Invoke get every second date");
-        if (dates.isEmpty()) {
-            log.warn("Date is null or empty for getEverySecondDate");
-            return Collections.emptyList();
-        }
-        return IntStream.range(0, dates.size())
-                .filter(n -> n % 2 == 0)
-                .mapToObj(dates::get).collect(Collectors.toList());
-    }
-
+    //ToDo: Auslagern?
     public List<TimeSeriesWorldDto> getAllValuesWorld() {
         log.debug("Invoke get all values of world");
         List<TimeSeriesWorldDto> timeSeriesWorldDtoList = new ArrayList<>();
@@ -204,5 +235,34 @@ public class TimeSeriesService {
             log.warn("Failed get data of world time series: {}", e.getMessage());
             return timeSeriesWorldDtoList;
         }
+    }
+
+    public Map<String, List<TimeSeriesDto>> getProvinceValues(String country, String province) {
+        log.debug("Invoke get province values");
+        Map<String, List<TimeSeriesDto>> allValuesProvince = new HashMap<>();
+        Map<String, List<TimeSeriesDto>> getAllValuesCountry = getValuesSelectedCountry(country);
+        if (getAllValuesCountry.isEmpty()) {
+            log.warn("Map is empty for get all values of selected country {}", country);
+            return allValuesProvince;
+        }
+
+        List<String> withProvinceNoTimeSeries = Arrays.asList("Canada", "United Kingdom", "China", "Netherlands",
+                "Australia", "Denmark", "France");
+
+        if (withProvinceNoTimeSeries.contains(country)) {
+            allValuesProvince.put("confirmedList", getAllValuesCountry.get("confirmedList")
+                    .stream()
+                    .filter(p -> p.getProvince().equals(province))
+                    .collect(Collectors.toList()));
+            allValuesProvince.put("recoveredList", getAllValuesCountry.get("recoveredList")
+                    .stream()
+                    .filter(p -> p.getProvince().equals(province))
+                    .collect(Collectors.toList()));
+            allValuesProvince.put("deathsList", getAllValuesCountry.get("deathsList")
+                    .stream()
+                    .filter(p -> p.getProvince().equals(province))
+                    .collect(Collectors.toList()));
+        }
+        return allValuesProvince;
     }
 }

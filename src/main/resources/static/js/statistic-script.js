@@ -26,42 +26,19 @@ function filterFunction() {
     }
 }
 
-/*Filter for list*/
-/*function filterListFunction() {
-    let input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("inputList");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("listTotal");
-    tr = table.getElementsByTagName("div");
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("div")[0];
-        if (td) {
-            txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-}*/
-
 /*Get selected country*/
-function getCountry(country) {
-    document.location.replace("/covid19/daily/" + country);
-}
-
 function getCountryV2(country) {
-    document.location.replace("/v2/covid19/timeSeries/" + country);
+    document.location.replace("/covid19/timeSeries/country/" + country);
 }
 
 /*Modal with bulma for all country without US*/
-function openModal(region, confirmed, recovered, deaths, active) {
+function openModal(province, region, confirmed, recovered, deaths, active) {
     let $activeElement = undefined;
 
     $(function () {
         $(".modal-bulma").click(function () {
             $activeElement = $(this);
+            $("#province").text($activeElement.data(province));
             $("#region").text($activeElement.data(region));
             $("#confirmed").text($activeElement.data(confirmed));
             $("#recovered").text($activeElement.data(recovered));

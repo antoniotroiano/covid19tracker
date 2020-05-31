@@ -20,9 +20,26 @@ public class DailyReportDto {
     Integer active;
     @CsvBindByPosition(position = 11)
     String combinedKey;
+    @CsvBindByPosition(position = 12)
+    Double incidenceRate;
+    @CsvBindByPosition(position = 13)
+    Double caseFatalityRatio;
 
     public DailyReportDto() {
         //Always needed an empty constructor
+    }
+
+    public DailyReportDto(DailyReportDto dailyReportDto) {
+        this.province = dailyReportDto.getProvince();
+        this.country = dailyReportDto.getCountry();
+        this.lastUpdate = dailyReportDto.getLastUpdate();
+        this.confirmed = dailyReportDto.getConfirmed();
+        this.deaths = dailyReportDto.getDeaths();
+        this.recovered = dailyReportDto.getRecovered();
+        this.active = dailyReportDto.getActive();
+        this.combinedKey = dailyReportDto.getCombinedKey();
+        this.incidenceRate = dailyReportDto.getIncidenceRate();
+        this.caseFatalityRatio = dailyReportDto.getCaseFatalityRatio();
     }
 
     public String getProvince() {
@@ -89,6 +106,22 @@ public class DailyReportDto {
         this.combinedKey = combinedKey;
     }
 
+    public Double getIncidenceRate() {
+        return incidenceRate;
+    }
+
+    public void setIncidenceRate(Double incidenceRate) {
+        this.incidenceRate = incidenceRate;
+    }
+
+    public Double getCaseFatalityRatio() {
+        return caseFatalityRatio;
+    }
+
+    public void setCaseFatalityRatio(Double caseFatalityRatio) {
+        this.caseFatalityRatio = caseFatalityRatio;
+    }
+
     @Override
     public String toString() {
         return "DailyReportDto{" +
@@ -96,10 +129,12 @@ public class DailyReportDto {
                 ", country='" + country + '\'' +
                 ", lastUpdate='" + lastUpdate + '\'' +
                 ", confirmed=" + confirmed +
-                ", recovered=" + recovered +
                 ", deaths=" + deaths +
+                ", recovered=" + recovered +
                 ", active=" + active +
                 ", combinedKey='" + combinedKey + '\'' +
+                ", incidenceRate=" + incidenceRate +
+                ", caseFatalityRatio=" + caseFatalityRatio +
                 '}';
     }
 }

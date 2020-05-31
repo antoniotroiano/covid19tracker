@@ -3,7 +3,7 @@ package com.statistics.corona.controller;
 import com.statistics.corona.model.DailyReportDto;
 import com.statistics.corona.model.TimeSeriesWorldDto;
 import com.statistics.corona.service.DateFormat;
-import com.statistics.corona.service.TimeSeriesDetailsService;
+import com.statistics.corona.service.ReadDailyReportService;
 import com.statistics.corona.service.TimeSeriesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class TimeSeriesWorldController {
 
     private static final String TIME_SERIES = "timeSeriesWorld";
     private final TimeSeriesService timeSeriesService;
-    private final TimeSeriesDetailsService timeSeriesDetailsService;
+    private final ReadDailyReportService readDailyReportService;
     private final DateFormat dateFormat;
 
     @GetMapping
@@ -34,7 +34,7 @@ public class TimeSeriesWorldController {
         log.info("Invoke v2 controller show time series world");
         model.addAttribute("worldTimeSeriesDto", new TimeSeriesWorldDto());
 
-        List<String> allCountries = timeSeriesService.getCountry();
+        List<String> allCountries = timeSeriesService.getCountryNames();
         if (allCountries.isEmpty()) {
             model.addAttribute("listCountries", new ArrayList<>());
         }
@@ -100,7 +100,7 @@ public class TimeSeriesWorldController {
         log.debug("Returned world values");
 
         model.addAttribute("dailyReportDto", new DailyReportDto());
-        List<DailyReportDto> allValues = timeSeriesDetailsService.getAllCountries();
+        List<DailyReportDto> allValues = readDailyReportService.getAllCountryValues();
         if (allValues.isEmpty()) {
             model.addAttribute("noValuesAllCountries", true);
             log.warn("No values available for all countries");
