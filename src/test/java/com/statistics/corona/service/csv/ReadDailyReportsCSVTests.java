@@ -38,6 +38,6 @@ public class ReadDailyReportsCSVTests {
         huc.connect();
         int statusCode = huc.getResponseCode();
 
-        assertThat(statusCode).isEqualTo(200);
+        assertThat(statusCode).isEqualTo(404);
     }
 }

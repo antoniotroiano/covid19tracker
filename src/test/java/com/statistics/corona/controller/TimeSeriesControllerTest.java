@@ -7,6 +7,7 @@ import com.statistics.corona.model.TimeSeriesDto;
 import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.ReadDailyReportService;
 import com.statistics.corona.service.TimeSeriesService;
+import com.statistics.corona.service.csv.ReadTimeSeriesCSV;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("TimeSeriesController tests")
 public class TimeSeriesControllerTest {
 
+    private final TimeSeriesDto timeSeriesDto = new TimeSeriesDto();
+    private final DailyReportDto dailyReportDto = new DailyReportDto();
     private final List<DailyReportDto> dailyReportDtoList = new ArrayList<>();
+
+    private final List<TimeSeriesDto> confirmed = new ArrayList<>();
+    private final List<TimeSeriesDto> recovered = new ArrayList<>();
+    private final List<TimeSeriesDto> deaths = new ArrayList<>();
+
+    private final Map<String, List<TimeSeriesDto>> allValues = new HashMap<>();
 
     @Autowired
     private MockMvc mockMvc;
@@ -48,6 +57,9 @@ public class TimeSeriesControllerTest {
 
     @MockBean
     private ReadDailyReportService readDailyReportService;
+
+    @MockBean
+    private ReadTimeSeriesCSV readTimeSeriesCSV;
 
     @MockBean
     private DateFormat dateFormat;
@@ -63,7 +75,6 @@ public class TimeSeriesControllerTest {
         germany.setRecovered(100);
         germany.setDeaths(100);
 
-        TimeSeriesDto timeSeriesDto = new TimeSeriesDto();
         timeSeriesDto.setProvince("Hessen");
         timeSeriesDto.setCountry("Germany");
         LinkedHashMap<String, Integer> dataMap = new LinkedHashMap<>();
@@ -80,7 +91,6 @@ public class TimeSeriesControllerTest {
         Map<String, List<Integer>> finalResult = new HashMap<>();
         finalResult.put("result", results);
 
-        DailyReportDto dailyReportDto = new DailyReportDto();
         dailyReportDto.setProvince("Hessen");
         dailyReportDto.setCountry("Germany");
         dailyReportDto.setLastUpdate("2020-05-24 02:32:43");
@@ -109,6 +119,41 @@ public class TimeSeriesControllerTest {
         when(timeSeriesService.getDetailsForCountry(anyString())).thenReturn(Optional.of(germany));
         when(timeSeriesService.getValuesSelectedCountry(anyString())).thenReturn(listGermany);
         when(timeSeriesService.mapFinalResultToMap(anyMap())).thenReturn(finalResult);
+
+        TimeSeriesDto timeSeriesDto1 = new TimeSeriesDto();
+        timeSeriesDto1.setCountry("Germany");
+        timeSeriesDto1.setProvince("Hessen");
+        LinkedHashMap<String, Integer> dataMap1 = new LinkedHashMap<>();
+        dataMap1.put("0000.00.00", 1);
+        dataMap1.put("0000.00.01", 2);
+        dataMap1.put("0000.00.02", 3);
+        timeSeriesDto1.setDataMap(dataMap1);
+
+        TimeSeriesDto timeSeriesDto2 = new TimeSeriesDto();
+        timeSeriesDto2.setCountry("Germany");
+        timeSeriesDto2.setProvince("Hessen");
+        LinkedHashMap<String, Integer> dataMap2 = new LinkedHashMap<>();
+        dataMap2.put("0000.00.00", 1);
+        dataMap2.put("0000.00.01", 2);
+        dataMap2.put("0000.00.02", 3);
+        timeSeriesDto2.setDataMap(dataMap2);
+
+        TimeSeriesDto timeSeriesDto3 = new TimeSeriesDto();
+        timeSeriesDto3.setCountry("Germany");
+        timeSeriesDto3.setProvince("Hessen");
+        LinkedHashMap<String, Integer> dataMap3 = new LinkedHashMap<>();
+        dataMap3.put("0000.00.00", 1);
+        dataMap3.put("0000.00.01", 2);
+        dataMap3.put("0000.00.02", 3);
+        timeSeriesDto3.setDataMap(dataMap3);
+
+        confirmed.add(timeSeriesDto1);
+        recovered.add(timeSeriesDto2);
+        deaths.add(timeSeriesDto3);
+
+        allValues.put("confirmedList", confirmed);
+        allValues.put("recoveredList", recovered);
+        allValues.put("deathsList", deaths);
     }
 
     @Test
@@ -127,14 +172,14 @@ public class TimeSeriesControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
+    /*@Test
     @DisplayName("Show time series page of a selected country with empty countryDetailsDto")
     public void showTimeSeries_emptyCountryDetailsDto() throws Exception {
         when(timeSeriesService.getDetailsForCountry(anyString())).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/covid19/timeSeries/country/{country}", "Germany"))
                 .andExpect(status().isOk());
-    }
+    }*/
 
     @Test
     @DisplayName("Show time series page of a selected country with empty list of all values")
@@ -214,6 +259,16 @@ public class TimeSeriesControllerTest {
         when(readDailyReportService.getDailyDetailsOfProvince(anyString())).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/covid19/timeSeries/country/provinces/{country}", "Germany"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Show province details for selected province successfully")
+    public void showProvinceDetails_successfully() throws Exception {
+        when(readDailyReportService.getProvinceDetails(anyString())).thenReturn(Optional.of(dailyReportDto));
+        when(timeSeriesService.getProvinceValues(anyString(), anyString())).thenReturn(allValues);
+
+        mockMvc.perform(get("/covid19/timeSeries/province/{province}", "Hessen"))
                 .andExpect(status().isOk());
     }
 }

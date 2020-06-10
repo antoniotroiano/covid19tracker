@@ -35,6 +35,22 @@ public class DailyReportUsDto {
         //Always needed an empty constructor
     }
 
+    public DailyReportUsDto(DailyReportUsDto dailyReportUsDto) {
+        this.province = dailyReportUsDto.getProvince();
+        this.country = dailyReportUsDto.getCountry();
+        this.lastUpdate = dailyReportUsDto.getLastUpdate();
+        this.confirmed = dailyReportUsDto.getConfirmed();
+        this.deaths = dailyReportUsDto.getDeaths();
+        this.recovered = dailyReportUsDto.getRecovered();
+        this.active = dailyReportUsDto.getActive();
+        this.incidentRate = dailyReportUsDto.getIncidentRate();
+        this.peopleTested = dailyReportUsDto.getPeopleTested();
+        this.peopleHospitalized = dailyReportUsDto.getPeopleHospitalized();
+        this.mortalityRate = dailyReportUsDto.getMortalityRate();
+        this.testingRate = dailyReportUsDto.getTestingRate();
+        this.hospitalizationRate = dailyReportUsDto.getHospitalizationRate();
+    }
+
     public String getProvince() {
         return province;
     }

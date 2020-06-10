@@ -5,7 +5,7 @@
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="/img/bar-chart-outline.svg" rel="icon" type="image/svg">
     <title th:text="${title}"></title>
-    <link href="css/mystyles.css" rel="stylesheet" th:href="@{/css/mystyles.css}">
+    <link href="css/myStyles.css" rel="stylesheet" th:href="@{/css/myStyles.css}">
     <link href="css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
     <link href="css/toggle-switch.css" rel="stylesheet" th:href="@{/css/toggle-switch.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
@@ -105,7 +105,7 @@
                                 <hr class="dropdown-divider">
                                 <div class="is-size-6 is-pulled-right"
                                      th:text="${date == null} ? ${'No value'} : ${date}"></div>
-                                <div class="is-size-6">Updated:</div>
+                                <div class="is-size-5">Updated:</div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -186,8 +186,8 @@
     /*<![CDATA[*/
     let country = /*[[${selectedProvince}]]*/ '';
     let confirmedList = /*[[${confirmedList}]]*/ '';
-    let deathsList = /*[[${recoveredList}]]*/ '';
-    let recoveredList = /*[[${deathsList}]]*/ '';
+    let deathsList = /*[[${deathsList}]]*/ '';
+    let recoveredList = /*[[${recoveredList}]]*/ '';
     let dates = /*[[${dateList}]]*/ '';
     /*]]>*/
 

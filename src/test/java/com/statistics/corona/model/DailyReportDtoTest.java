@@ -23,19 +23,24 @@ public class DailyReportDtoTest {
         dailyReportDto.setRecovered(100);
         dailyReportDto.setActive(100);
         dailyReportDto.setCombinedKey("HESS, Germany");
+        dailyReportDto.setIncidenceRate(1.0);
+        dailyReportDto.setCaseFatalityRatio(10.0);
     }
 
     @Test
     @DisplayName("Test getter and setter of dailyReportDto")
     public void getterSetter() {
-        assertThat(dailyReportDto.getProvince()).isEqualTo("Hessen");
-        assertThat(dailyReportDto.getCountry()).isEqualTo("Germany");
-        assertThat(dailyReportDto.getLastUpdate()).isEqualTo("0000.00.00");
-        assertThat(dailyReportDto.getConfirmed()).isEqualTo(100);
-        assertThat(dailyReportDto.getDeaths()).isEqualTo(100);
-        assertThat(dailyReportDto.getRecovered()).isEqualTo(100);
-        assertThat(dailyReportDto.getActive()).isEqualTo(100);
-        assertThat(dailyReportDto.getCombinedKey()).isEqualTo("HESS, Germany");
+        DailyReportDto dailyReportDtoMapping= new DailyReportDto(dailyReportDto);
+        assertThat(dailyReportDtoMapping.getProvince()).isEqualTo("Hessen");
+        assertThat(dailyReportDtoMapping.getCountry()).isEqualTo("Germany");
+        assertThat(dailyReportDtoMapping.getLastUpdate()).isEqualTo("0000.00.00");
+        assertThat(dailyReportDtoMapping.getConfirmed()).isEqualTo(100);
+        assertThat(dailyReportDtoMapping.getDeaths()).isEqualTo(100);
+        assertThat(dailyReportDtoMapping.getRecovered()).isEqualTo(100);
+        assertThat(dailyReportDtoMapping.getActive()).isEqualTo(100);
+        assertThat(dailyReportDtoMapping.getCombinedKey()).isEqualTo("HESS, Germany");
+        assertThat(dailyReportDtoMapping.getIncidenceRate()).isEqualTo(1.0);
+        assertThat(dailyReportDtoMapping.getCaseFatalityRatio()).isEqualTo(10.0);
     }
 
     @Test
@@ -46,9 +51,11 @@ public class DailyReportDtoTest {
                         "country='Germany', " +
                         "lastUpdate='0000.00.00', " +
                         "confirmed=100, " +
-                        "recovered=100, " +
                         "deaths=100, " +
+                        "recovered=100, " +
                         "active=100, " +
-                        "combinedKey='HESS, Germany'}");
+                        "combinedKey='HESS, Germany', " +
+                        "incidenceRate=1.0, " +
+                        "caseFatalityRatio=10.0}");
     }
 }

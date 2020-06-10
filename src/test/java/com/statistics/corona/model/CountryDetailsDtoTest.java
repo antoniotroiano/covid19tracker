@@ -21,13 +21,13 @@ public class CountryDetailsDtoTest {
         countryDetailsDto.setLastUpdate("0000.00.00");
         countryDetailsDto.setTodayDeaths(100);
         countryDetailsDto.setTodayConfirmed(100);
+        countryDetailsDto.setTodayRecovered(100);
         countryDetailsDto.setDeaths(100);
         countryDetailsDto.setConfirmed(100);
         countryDetailsDto.setRecovered(100);
         countryDetailsDto.setCritical(100);
         countryDetailsDto.setDeathRate(0.1);
         countryDetailsDto.setRecoveryRate(0.1);
-        countryDetailsDto.setRecoveredVSDeathRatio(0.1);
         countryDetailsDto.setCasesPerMillionPopulation(100);
     }
 
@@ -42,13 +42,13 @@ public class CountryDetailsDtoTest {
         assertThat(countryDetailsDtoMapping.getLastUpdate()).isEqualTo(countryDetailsDto.getLastUpdate());
         assertThat(countryDetailsDtoMapping.getTodayDeaths()).isEqualTo(countryDetailsDto.getTodayDeaths());
         assertThat(countryDetailsDtoMapping.getTodayConfirmed()).isEqualTo(countryDetailsDto.getTodayConfirmed());
+        assertThat(countryDetailsDtoMapping.getTodayRecovered()).isEqualTo(countryDetailsDto.getTodayRecovered());
         assertThat(countryDetailsDtoMapping.getDeaths()).isEqualTo(countryDetailsDto.getDeaths());
         assertThat(countryDetailsDtoMapping.getConfirmed()).isEqualTo(countryDetailsDto.getConfirmed());
         assertThat(countryDetailsDtoMapping.getRecovered()).isEqualTo(countryDetailsDto.getRecovered());
         assertThat(countryDetailsDtoMapping.getCritical()).isEqualTo(countryDetailsDto.getCritical());
         assertThat(countryDetailsDtoMapping.getDeathRate()).isEqualTo(countryDetailsDto.getDeathRate());
         assertThat(countryDetailsDtoMapping.getRecoveryRate()).isEqualTo(countryDetailsDto.getRecoveryRate());
-        assertThat(countryDetailsDtoMapping.getRecoveredVSDeathRatio()).isEqualTo(countryDetailsDto.getRecoveredVSDeathRatio());
         assertThat(countryDetailsDtoMapping.getCasesPerMillionPopulation()).isEqualTo(countryDetailsDto.getCasesPerMillionPopulation());
     }
 
@@ -62,13 +62,13 @@ public class CountryDetailsDtoTest {
                         "lastUpdate='0000.00.00', " +
                         "todayDeaths=100, " +
                         "todayConfirmed=100, " +
+                        "todayRecovered=100, " +
                         "deaths=100, " +
                         "confirmed=100, " +
                         "recovered=100, " +
                         "critical=100, " +
                         "deathRate=0.1, " +
                         "recoveryRate=0.1, " +
-                        "recoveredVSDeathRatio=0.1, " +
                         "casesPerMillionPopulation=100}");
     }
 }

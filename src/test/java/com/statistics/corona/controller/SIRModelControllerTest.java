@@ -58,7 +58,7 @@ public class SIRModelControllerTest {
         when(derivativeService.calculation(anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyInt()))
                 .thenReturn(map);
 
-        mockMvc.perform(get("/v2/sir"))
+        mockMvc.perform(get("/sir"))
                 .andExpect(status().isOk());
     }
 
@@ -68,7 +68,7 @@ public class SIRModelControllerTest {
         when(derivativeService.calculation(anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyInt()))
                 .thenReturn(map);
 
-        mockMvc.perform(post("/v2/sir/newCalculation"))
+        mockMvc.perform(post("/sir/newCalculation"))
                 .andExpect(status().isOk());
     }
 }

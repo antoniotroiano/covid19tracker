@@ -119,8 +119,6 @@ public class ReadJSON {
                         .getJSONObject(CALCULATED).optDouble("death_rate", 0.0));
                 countryDetailsDto.setRecoveryRate(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA)
                         .getJSONObject(CALCULATED).optDouble("recovery_rate", 0.0));
-                countryDetailsDto.setRecoveredVSDeathRatio(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA)
-                        .getJSONObject(CALCULATED).optDouble("recovered_vs_death_ratio", 0.0));
                 countryDetailsDto.setCasesPerMillionPopulation(jsonArray.getJSONObject(i).getJSONObject(LATEST_DATA)
                         .getJSONObject(CALCULATED).optInt("cases_per_million_population", 0));
             }

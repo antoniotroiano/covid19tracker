@@ -1,3 +1,15 @@
+@media screen and (min-width: 600px) {
+    .hide-on-big {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 601px) {
+    .hide-on-small {
+        display: none;
+    }
+}
+
 /*Dropdown country*/
 .toggle {
     display: none;

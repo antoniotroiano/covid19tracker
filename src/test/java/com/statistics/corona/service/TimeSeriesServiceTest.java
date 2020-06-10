@@ -208,21 +208,6 @@ public class TimeSeriesServiceTest {
     @Test
     @DisplayName("Test get value for a province")
     public void getAllValuesOfProvince() {
-        //Map<String, Optional<List<TimeSeriesDto>>> test = timeSeriesService.getProvinceValues("Australian Capital Territory");
-
-/*        ReadTimeSeriesCSV test3 = new ReadTimeSeriesCSV();
-        List<TimeSeriesDto> test2 = test3.readConfirmedCsv()
-                .stream()
-                .filter(p -> p.getProvince().equals("Queensland"))
-                .collect(Collectors.toList());
-
-        assertThat(!test2.isEmpty()).isTrue();*/
-
-/*        TimeSeriesService timeSeriesService1 = null;
-        List<TimeSeriesDto> test4 = timeSeriesService1.getValuesSelectedCountry("Australian Capital Territory").get("confirmedList");*/
-
-//        assertThat(!test4.isEmpty()).isTrue();
-        /*System.out.println(test.size());
-        System.out.println(test.get("confirmedList").get().size());*/
+        assertThat(timeSeriesService.getProvinceValues("Australia", "Queensland")).isNotEmpty();
     }
 }

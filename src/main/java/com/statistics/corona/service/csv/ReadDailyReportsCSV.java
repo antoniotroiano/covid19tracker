@@ -38,7 +38,7 @@ public class ReadDailyReportsCSV {
             int statusCode = huc.getResponseCode();
             if (statusCode != 200) {
                 LocalDate beforeYesterday = LocalDate.now().minusDays(2);
-                url = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/" + beforeYesterday.format(dtf) + ".csv");
+                url = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/" + stringURL + beforeYesterday.format(dtf) + ".csv");
                 log.warn("No new csv. Returned last one {}", beforeYesterday);
                 return url;
             }

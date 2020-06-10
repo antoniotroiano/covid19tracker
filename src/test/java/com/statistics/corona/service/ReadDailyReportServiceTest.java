@@ -11,10 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,6 +26,7 @@ public class ReadDailyReportServiceTest {
 
     private final List<DailyReportDto> dailyReportDtoList = new ArrayList<>();
     private final List<DailyReportUsDto> dailyReportUsDtoList = new ArrayList<>();
+    private final DailyReportDto dailyReportDto2 = new DailyReportDto();
 
     private final ReadDailyReportsCSV readDailyReportsCSV = mock(ReadDailyReportsCSV.class);
 
@@ -39,8 +42,9 @@ public class ReadDailyReportServiceTest {
         dailyReportDto.setDeaths(0);
         dailyReportDto.setActive(0);
 
-        DailyReportDto dailyReportDto2 = new DailyReportDto();
+
         dailyReportDto2.setCountry("Italy");
+        dailyReportDto2.setProvince("Lombardia");
         dailyReportDto2.setConfirmed(0);
         dailyReportDto2.setRecovered(0);
         dailyReportDto2.setDeaths(0);
@@ -229,5 +233,20 @@ public class ReadDailyReportServiceTest {
         when(readDailyReportsCSV.readDailyReportsCSV()).thenReturn(new ArrayList<>());
 
         assertThat(readDailyReportService.getAllCountryValues()).isEmpty();
+    }
+
+    /*@Test
+    @DisplayName("Test get all province details for selected province is success")
+    public void getProvinceDetails() {
+        when(readDailyReportsCSV.readDailyReportsCSV()).thenReturn(dailyReportDtoList);
+        Optional<DailyReportDto> testObject = readDailyReportService.getProvinceDetails("Lombardia");
+
+        assertThat(testObject).isEqualTo(Optional.of(dailyReportDto2));
+    }*/
+
+    @Test
+    @DisplayName("Test get all province details for selected province is empty")
+    public void getProvinceDetails_isEmpty() {
+        assertThat(readDailyReportService.getProvinceDetails("Lombardia")).isEmpty();
     }
 }

@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -250,18 +251,38 @@ public class TimeSeriesService {
                 "Australia", "Denmark", "France");
 
         if (withProvinceNoTimeSeries.contains(country)) {
-            allValuesProvince.put("confirmedList", getAllValuesCountry.get("confirmedList")
+            List<TimeSeriesDto> confirmedList = getAllValuesCountry.get("confirmedList")
                     .stream()
+                    .filter(p -> Objects.nonNull(p.getProvince()))
                     .filter(p -> p.getProvince().equals(province))
-                    .collect(Collectors.toList()));
-            allValuesProvince.put("recoveredList", getAllValuesCountry.get("recoveredList")
+                    .collect(Collectors.toList());
+            if (!confirmedList.isEmpty()) {
+                allValuesProvince.put("confirmedList", confirmedList);
+            } else {
+                allValuesProvince.put("confirmedList", new ArrayList<>());
+            }
+
+            List<TimeSeriesDto> recoveredList = getAllValuesCountry.get("recoveredList")
                     .stream()
+                    .filter(p -> Objects.nonNull(p.getProvince()))
                     .filter(p -> p.getProvince().equals(province))
-                    .collect(Collectors.toList()));
-            allValuesProvince.put("deathsList", getAllValuesCountry.get("deathsList")
+                    .collect(Collectors.toList());
+            if (!recoveredList.isEmpty()) {
+                allValuesProvince.put("recoveredList", recoveredList);
+            } else {
+                allValuesProvince.put("recoveredList", new ArrayList<>());
+            }
+
+            List<TimeSeriesDto> deathsList = getAllValuesCountry.get("deathsList")
                     .stream()
+                    .filter(p -> Objects.nonNull(p.getProvince()))
                     .filter(p -> p.getProvince().equals(province))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toList());
+            if (!deathsList.isEmpty()) {
+                allValuesProvince.put("deathsList", deathsList);
+            } else {
+                allValuesProvince.put("deathsList", new ArrayList<>());
+            }
         }
         return allValuesProvince;
     }

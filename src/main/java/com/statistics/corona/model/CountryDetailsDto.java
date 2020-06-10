@@ -8,13 +8,13 @@ public class CountryDetailsDto {
     String lastUpdate;
     int todayDeaths;
     int todayConfirmed;
+    int todayRecovered;
     int deaths;
     int confirmed;
     int recovered;
     int critical;
     double deathRate;
     double recoveryRate;
-    double recoveredVSDeathRatio;
     int casesPerMillionPopulation;
 
     public CountryDetailsDto() {
@@ -27,13 +27,13 @@ public class CountryDetailsDto {
         this.lastUpdate = countryDetailsDto.getLastUpdate();
         this.todayDeaths = countryDetailsDto.getTodayDeaths();
         this.todayConfirmed = countryDetailsDto.getTodayConfirmed();
+        this.todayRecovered = countryDetailsDto.getTodayRecovered();
         this.deaths = countryDetailsDto.getDeaths();
         this.confirmed = countryDetailsDto.getConfirmed();
         this.recovered = countryDetailsDto.getRecovered();
         this.critical = countryDetailsDto.getCritical();
         this.deathRate = countryDetailsDto.getDeathRate();
         this.recoveryRate = countryDetailsDto.getRecoveryRate();
-        this.recoveredVSDeathRatio = countryDetailsDto.getRecoveredVSDeathRatio();
         this.casesPerMillionPopulation = countryDetailsDto.getCasesPerMillionPopulation();
     }
 
@@ -85,6 +85,14 @@ public class CountryDetailsDto {
         this.todayConfirmed = todayConfirmed;
     }
 
+    public int getTodayRecovered() {
+        return todayRecovered;
+    }
+
+    public void setTodayRecovered(int todayRecovered) {
+        this.todayRecovered = todayRecovered;
+    }
+
     public int getDeaths() {
         return deaths;
     }
@@ -133,14 +141,6 @@ public class CountryDetailsDto {
         this.recoveryRate = recoveryRate;
     }
 
-    public double getRecoveredVSDeathRatio() {
-        return recoveredVSDeathRatio;
-    }
-
-    public void setRecoveredVSDeathRatio(double recoveredVSDeathRatio) {
-        this.recoveredVSDeathRatio = recoveredVSDeathRatio;
-    }
-
     public int getCasesPerMillionPopulation() {
         return casesPerMillionPopulation;
     }
@@ -158,13 +158,13 @@ public class CountryDetailsDto {
                 ", lastUpdate='" + lastUpdate + '\'' +
                 ", todayDeaths=" + todayDeaths +
                 ", todayConfirmed=" + todayConfirmed +
+                ", todayRecovered=" + todayRecovered +
                 ", deaths=" + deaths +
                 ", confirmed=" + confirmed +
                 ", recovered=" + recovered +
                 ", critical=" + critical +
                 ", deathRate=" + deathRate +
                 ", recoveryRate=" + recoveryRate +
-                ", recoveredVSDeathRatio=" + recoveredVSDeathRatio +
                 ", casesPerMillionPopulation=" + casesPerMillionPopulation +
                 '}';
     }

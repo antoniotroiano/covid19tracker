@@ -33,19 +33,20 @@ public class DailyReportUsDtoTest {
     @Test
     @DisplayName("Test getter and setter of dailyReportUsDto")
     public void getterSetter() {
-        assertThat(dailyReportUsDto.getProvince()).isEqualTo("New York");
-        assertThat(dailyReportUsDto.getCountry()).isEqualTo("US");
-        assertThat(dailyReportUsDto.getLastUpdate()).isEqualTo("0000.00.00");
-        assertThat(dailyReportUsDto.getConfirmed()).isEqualTo(100);
-        assertThat(dailyReportUsDto.getDeaths()).isEqualTo(100);
-        assertThat(dailyReportUsDto.getRecovered()).isEqualTo(100);
-        assertThat(dailyReportUsDto.getActive()).isEqualTo(0.1);
-        assertThat(dailyReportUsDto.getIncidentRate()).isEqualTo(0.1);
-        assertThat(dailyReportUsDto.getPeopleTested()).isEqualTo(100);
-        assertThat(dailyReportUsDto.getPeopleHospitalized()).isEqualTo(100);
-        assertThat(dailyReportUsDto.getMortalityRate()).isEqualTo(0.1);
-        assertThat(dailyReportUsDto.getTestingRate()).isEqualTo(0.1);
-        assertThat(dailyReportUsDto.getHospitalizationRate()).isEqualTo(0.1);
+        DailyReportUsDto dailyReportUsDtoMapping = new DailyReportUsDto(dailyReportUsDto);
+        assertThat(dailyReportUsDtoMapping.getProvince()).isEqualTo("New York");
+        assertThat(dailyReportUsDtoMapping.getCountry()).isEqualTo("US");
+        assertThat(dailyReportUsDtoMapping.getLastUpdate()).isEqualTo("0000.00.00");
+        assertThat(dailyReportUsDtoMapping.getConfirmed()).isEqualTo(100);
+        assertThat(dailyReportUsDtoMapping.getDeaths()).isEqualTo(100);
+        assertThat(dailyReportUsDtoMapping.getRecovered()).isEqualTo(100);
+        assertThat(dailyReportUsDtoMapping.getActive()).isEqualTo(0.1);
+        assertThat(dailyReportUsDtoMapping.getIncidentRate()).isEqualTo(0.1);
+        assertThat(dailyReportUsDtoMapping.getPeopleTested()).isEqualTo(100);
+        assertThat(dailyReportUsDtoMapping.getPeopleHospitalized()).isEqualTo(100);
+        assertThat(dailyReportUsDtoMapping.getMortalityRate()).isEqualTo(0.1);
+        assertThat(dailyReportUsDtoMapping.getTestingRate()).isEqualTo(0.1);
+        assertThat(dailyReportUsDtoMapping.getHospitalizationRate()).isEqualTo(0.1);
     }
 
     @Test
