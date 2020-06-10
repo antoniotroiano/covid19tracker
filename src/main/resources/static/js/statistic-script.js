@@ -32,7 +32,7 @@ function getCountryV2(country) {
 }
 
 /*Modal with bulma for all country without US*/
-function openModal(province, region, confirmed, recovered, deaths, active) {
+/*function openModal(province, region, confirmed, recovered, deaths, active) {
     let $activeElement = undefined;
 
     $(function () {
@@ -53,10 +53,10 @@ function openModal(province, region, confirmed, recovered, deaths, active) {
             $(".modal").removeClass("is-active");
         });
     });
-}
+}*/
 
 /*Modal with bulma for US*/
-function openModalUs(province, confirmed, recovered, deaths, active, incidentRate, peopleTested, peopleHospitalized, mortalityRate, testingRate, hospitalizationRate) {
+/*function openModalUs(province, confirmed, recovered, deaths, active, incidentRate, peopleTested, peopleHospitalized, mortalityRate, testingRate, hospitalizationRate) {
     let $activeElementUs = undefined;
 
     $(function () {
@@ -82,7 +82,7 @@ function openModalUs(province, confirmed, recovered, deaths, active, incidentRat
             $(".modal").removeClass("is-active");
         });
     });
-}
+}*/
 
 /*Active button*/
 $(function () {
