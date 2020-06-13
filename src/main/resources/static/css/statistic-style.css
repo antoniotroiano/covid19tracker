@@ -10,6 +10,18 @@
     }
 }
 
+@media screen and (min-width: 1220px) {
+    .hide-on-bigUS {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1221px) {
+    .hide-on-smallUS {
+        display: none;
+    }
+}
+
 /*Dropdown country*/
 .toggle {
     display: none;

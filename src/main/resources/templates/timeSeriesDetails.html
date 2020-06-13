@@ -23,8 +23,8 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons is-centered">
-                    <a class="button is-small is-link is-rounded" href="/" type="submit">Go to home</a>
-                    <a class="button is-small is-link is-rounded" href="/sir" type="submit">Go to SIR-Model</a>
+                    <a class="button is-small is-link is-rounded" href="/" type="submit">Home</a>
+                    <a class="button is-small is-link is-rounded" href="/sir" type="submit">SIR-Model</a>
                     <a class="button is-small is-link is-rounded"
                        th:href="@{/covid19/timeSeries/country/{country}(country = ${selectedCountry})}" type="submit">Go
                         back</a>
@@ -38,7 +38,45 @@
                 </div>
                 <br>
                 <div class="table-container buttons has-addons is-centered">
-                    <table class="table is-striped is-hoverable">
+                    <table class="table is-striped is-hoverable is-narrow hide-on-small">
+                        <thead>
+                        <tr>
+                            <th>Province</th>
+                            <th>Total cases</th>
+                            <th>Recovered</th>
+                            <th>Active</th>
+                            <th>Deaths</th>
+                            <th th:if="${timeSeriesAvailable}">More details</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="dailyReportDto : ${allValuesProvince}">
+                            <td th:text="${dailyReportDto.getProvince()}"></td>
+                            <td><span class="tag is-info"
+                                      th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
+                            </td>
+                            <td><span
+                                    class="tag is-success"
+                                    th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
+                            </td>
+                            <td><span
+                                    class="tag is-warning"
+                                    th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
+                            </td>
+                            <td><span
+                                    class="tag is-danger"
+                                    th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
+                            </td>
+                            <td>
+                                <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
+                                   th:href="@{/covid19/timeSeries/province/{province}(province=${dailyReportDto.getProvince()})}"
+                                   th:if="${timeSeriesAvailable}">More
+                                    details</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table class="table is-striped is-hoverable hide-on-big">
                         <thead>
                         <tr>
                             <th>Province state</th>
@@ -84,5 +122,16 @@
         </div>
     </section>
 </div>
+<footer class="footer">
+    <div class="columns is-mobile is-centered">
+        <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+            <div class="has-text-centered">Source JHU <a class="is-link" href="https://github.com/CSSEGISandData"
+                                                         target="_blank">github.com/CSSEGISandData</a>
+            </div>
+            <div class="has-text-centered">Contact: <a href="mailto:info@tracker-covid19.de">info (at)
+                tracker-covid19.de</a></div>
+        </div>
+    </div>
+</footer>
 </body>
 </html>
