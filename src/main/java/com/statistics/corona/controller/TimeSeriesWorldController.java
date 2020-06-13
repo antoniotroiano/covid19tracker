@@ -57,6 +57,13 @@ public class TimeSeriesWorldController {
         model.addAttribute("latestDataWorld", latestDataWorld);
         model.addAttribute("lastUpdate", date + " " + time + "h");
 
+        TimeSeriesWorldDto secondValueWorld = timeSeriesWorldDtoList
+                .stream()
+                .skip(1)
+                .findFirst()
+                .orElse(new TimeSeriesWorldDto());
+        model.addAttribute("secondValueWorld", secondValueWorld);
+
         List<Integer> listConfirmed = timeSeriesWorldDtoList
                 .stream()
                 .map(TimeSeriesWorldDto::getConfirmed)

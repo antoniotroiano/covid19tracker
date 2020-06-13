@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="/img/bar-chart-outline.svg" rel="icon" type="image/svg">
+    <title>COVID-19 - Data for worldwide</title>
+    <link href="css/myStyles.css" rel="stylesheet" th:href="@{/css/myStyles.css}">
+    <link href="css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
+    <link href="css/toggle-switch.css" rel="stylesheet" th:href="@{/css/toggle-switch.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+    <script crossorigin="anonymous" src="https://kit.fontawesome.com/6692742fb4.js"></script>
+    <script th:src="@{/js/charts.js}"></script>
+    <script th:src="@{/js/statistic-script.js}"></script>
+    <script th:inline="javascript">
+        getCountryV2(country);
+    </script>
+</head>
+<body>
+<div class="container">
+    <section class="section">
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <div class="title is-3 has-text-centered">COVID-19 symptoms and prevention</div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <div class="buttons is-mobile is-centered">
+                    <a class="button is-small is-link is-rounded" href="/" type="submit">Home</a>
+                    <a class="button is-small is-link is-rounded" href="/sir" type="submit">SIR-Model</a>
+                </div>
+                <div class="buttons is-centered">
+                    <div class="dropdown">
+                        <button class="button is-link is-rounded" onclick="dropDownButton()">Select country
+                        </button>
+                        <div class="dropdown-content" id="dropDownCountry">
+                            <input class="input" id="dropDownInput" onkeyup="filterFunction()"
+                                   placeholder="Search for country ..." type="text">
+                            <div th:each="countries : ${listCountries}">
+                                <a class="dropdown-item"
+                                   th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${countries}]]*/) /*]]>*/"
+                                   th:text="${countries}"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-tablet is-11-desktop is-10-widescreen is-9-fullhd">
+                <div class="title is-4">Most common symptoms</div>
+                <div class="tile is-ancestor is-horizontal">
+                    <div class="tile is-parent">
+                        <div class="tile is-child box"><span class="icon is-medium"><i
+                                class="fas fa-lg fa-temperature-high"></i></i></span> Fever</div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box"><span class="icon is-medium"><i
+                                class="fas fa-lg fa-head-side-cough"></i></span> Dry cough</div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box"><span class="icon is-medium"><i
+                                class="far fa-lg fa-meh"></i></span> Fatigue</div>
+                    </div>
+                </div>
+                <div class="title is-4">Severe symptoms</div>
+                <div class="tile is-ancestor is-horizontal">
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">Difficulty breathing or shortness of breath</div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">Pain or feeling of pressure in the chest area</div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">Loss of ability to speak or move</div>
+                    </div>
+                </div>
+                <div class="title is-4">Less common symptoms</div>
+                <div class="tile is-ancestor is-horizontal">
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">Body aches</div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">Sore throat</div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">diarrhea</div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">Conjunctivitis</div>
+                    </div>
+                </div>
+                <div class="tile is-ancestor is-horizontal">
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">a headache</div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">Loss of taste or smell</div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">Discoloration on fingers or toes or rash</div>
+                    </div>
+                </div>
+                <div class="title is-4">Prevention</div>
+                <div class="tile is-ancestor is-horizontal">
+                    <div class="tile is-parent">
+                        <div class="tile is-child box"><span class="icon is-medium"><i
+                                class="fas fa-lg fa-house-user"></i></span> Stay at home
+                        </div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box"><span class="icon is-medium"><i
+                                class="fas fa-lg fa-hands-wash"></i></span> Wash your hands frequently for 20 seconds
+                            with soap
+                        </div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box"><span class="icon is-medium"><i
+                                class="fas fa-lg fa-people-arrows"></i></span> Social distancing
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-ancestor is-horizontal">
+                    <div class="tile is-parent">
+                        <div class="tile is-child box"><span class="icon is-medium"><i
+                                class="fas fa-lg fa-head-side-mask"></i></span> Wear a mask
+                        </div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box"><span class="icon is-medium"><i class="fas fa-lg fa-user-md"></i></span>
+                            Contact a doctor if you have fever, cough, or difficulty
+                            breathing
+                        </div>
+                    </div>
+                    <div class="tile is-parent">
+                        <div class="tile is-child box"><span class="icon is-medium"><i
+                                class="fas fa-lg fa-house-user"></i></span> When you feel sick stay at home
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<footer class="footer">
+    <div class="columns is-mobile is-centered">
+        <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+            <div class="has-text-centered">Source JHU <a class="is-link" href="https://github.com/CSSEGISandData"
+                                                         target="_blank">github.com/CSSEGISandData</a>
+            </div>
+            <div class="has-text-centered">Contact: <a href="mailto:info@tracker-covid19.de">info (at)
+                tracker-covid19.de</a></div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
