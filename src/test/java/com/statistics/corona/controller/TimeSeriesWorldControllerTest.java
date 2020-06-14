@@ -104,14 +104,14 @@ public class TimeSeriesWorldControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
+    /*@Test
     @DisplayName("Show time series page of world with empty list of world values")
     public void showTimeSeriesWorld_withEmptyListWorldValues() throws Exception {
         when(timeSeriesService.getAllValuesWorld()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
-    }
+    }*/
 
     @Test
     @DisplayName("Show time series page of world with empty list of all country values")
