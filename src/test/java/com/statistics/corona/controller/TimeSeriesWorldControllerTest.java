@@ -2,9 +2,10 @@ package com.statistics.corona.controller;
 
 import com.statistics.corona.model.DailyReportDto;
 import com.statistics.corona.model.TimeSeriesWorldDto;
+import com.statistics.corona.service.TimeSeriesCountryService;
 import com.statistics.corona.service.DateFormat;
-import com.statistics.corona.service.ReadDailyReportService;
-import com.statistics.corona.service.TimeSeriesService;
+import com.statistics.corona.service.DailyReportService;
+import com.statistics.corona.service.TimeSeriesWorldService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,10 +35,13 @@ public class TimeSeriesWorldControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private TimeSeriesService timeSeriesService;
+    private TimeSeriesCountryService timeSeriesCountryService;
 
     @MockBean
-    private ReadDailyReportService readDailyReportService;
+    private TimeSeriesWorldService timeSeriesWorldService;
+
+    @MockBean
+    private DailyReportService dailyReportService;
 
     @MockBean
     private DateFormat dateFormat;
@@ -78,13 +82,13 @@ public class TimeSeriesWorldControllerTest {
         List<DailyReportDto> dailyReportDtoList = new ArrayList<>();
         dailyReportDtoList.add(dailyReportDto);
 
-        when(timeSeriesService.getCountryNames()).thenReturn(countries);
-        when(timeSeriesService.getAllValuesWorld()).thenReturn(timeSeriesWorldDtoList);
+        when(timeSeriesCountryService.getCountryNames()).thenReturn(countries);
+        when(timeSeriesWorldService.getAllValuesWorld()).thenReturn(timeSeriesWorldDtoList);
         when(dateFormat.formatLastUpdateToDate(anyString())).thenReturn("0000.00.00");
         when(dateFormat.formatLastUpdateToTime(anyString())).thenReturn("00:00");
-        when(timeSeriesService.getEverySecondValue(anyList())).thenReturn(valuesOfWorld);
-        when(timeSeriesService.getEverySecondDate(anyList())).thenReturn(dates);
-        when(readDailyReportService.getAllCountryValues()).thenReturn(dailyReportDtoList);
+        when(timeSeriesCountryService.getEverySecondValue(anyList())).thenReturn(valuesOfWorld);
+        when(timeSeriesCountryService.getEverySecondDate(anyList())).thenReturn(dates);
+        when(dailyReportService.getAllDailyCountryValues()).thenReturn(dailyReportDtoList);
     }
 
     @Test
@@ -98,7 +102,7 @@ public class TimeSeriesWorldControllerTest {
     @Test
     @DisplayName("Show time series page of world with empty list of country names")
     public void showTimeSeriesWorld_withEmptyListCountryName() throws Exception {
-        when(timeSeriesService.getCountryNames()).thenReturn(Collections.emptyList());
+        when(timeSeriesCountryService.getCountryNames()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
@@ -116,7 +120,7 @@ public class TimeSeriesWorldControllerTest {
     @Test
     @DisplayName("Show time series page of world with empty list of all country values")
     public void showTimeSeriesWorld_withEmptyListOfAllCountryValues() throws Exception {
-        when(readDailyReportService.getAllCountryValues()).thenReturn(Collections.emptyList());
+        when(dailyReportService.getAllDailyCountryValues()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk());

@@ -11,18 +11,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @DisplayName("TimeSeriesDetailsService tests")
-public class ReadDailyReportServiceTest {
+public class DailyReportServiceTest {
 
     private final List<DailyReportDto> dailyReportDtoList = new ArrayList<>();
     private final List<DailyReportUsDto> dailyReportUsDtoList = new ArrayList<>();
@@ -31,7 +29,7 @@ public class ReadDailyReportServiceTest {
     private final ReadDailyReportsCSV readDailyReportsCSV = mock(ReadDailyReportsCSV.class);
 
     @InjectMocks
-    private ReadDailyReportService readDailyReportService;
+    private DailyReportService dailyReportService;
 
     @BeforeEach
     public void setUp() {
@@ -183,8 +181,8 @@ public class ReadDailyReportServiceTest {
         List<DailyReportDto> dailyReportDtoList = Stream.of(dailyReportDto).collect(Collectors.toList());
         when(readDailyReportsCSV.readDailyReportsCSV()).thenReturn(dailyReportDtoList);
 
-        assertThat(readDailyReportService.getDailyDetailsOfProvince("Germany")).isNotEmpty();
-        assertThat(readDailyReportService.getDailyDetailsOfProvince("Germany")).isEqualTo(dailyReportDtoList);
+        assertThat(dailyReportService.getDailyDetailsOfProvince("Germany")).isNotEmpty();
+        assertThat(dailyReportService.getDailyDetailsOfProvince("Germany")).isEqualTo(dailyReportDtoList);
     }
 
     @Test
@@ -192,7 +190,7 @@ public class ReadDailyReportServiceTest {
     public void getAllDetailsProvince_withEmptyList() {
         when(readDailyReportsCSV.readDailyReportsCSV()).thenReturn(new ArrayList<>());
 
-        assertThat(readDailyReportService.getDailyDetailsOfProvince("Germany")).isEmpty();
+        assertThat(dailyReportService.getDailyDetailsOfProvince("Germany")).isEmpty();
     }
 
     @Test
@@ -200,8 +198,8 @@ public class ReadDailyReportServiceTest {
     public void getAllDetailsProvinceUS() {
         when(readDailyReportsCSV.readDailyReportUs()).thenReturn(dailyReportUsDtoList);
 
-        assertThat(readDailyReportService.getDailyDetailsProvinceUs()).isNotEmpty();
-        assertThat(readDailyReportService.getDailyDetailsProvinceUs()).isEqualTo(dailyReportUsDtoList);
+        assertThat(dailyReportService.getDailyDetailsProvinceUs()).isNotEmpty();
+        assertThat(dailyReportService.getDailyDetailsProvinceUs()).isEqualTo(dailyReportUsDtoList);
     }
 
     @Test
@@ -209,7 +207,7 @@ public class ReadDailyReportServiceTest {
     public void getAllDetailsProvinceUS_withEmptyList() {
         when(readDailyReportsCSV.readDailyReportUs()).thenReturn(new ArrayList<>());
 
-        assertThat(readDailyReportService.getDailyDetailsProvinceUs()).isEmpty();
+        assertThat(dailyReportService.getDailyDetailsProvinceUs()).isEmpty();
     }
 
     @Test
@@ -223,8 +221,8 @@ public class ReadDailyReportServiceTest {
         dailyReportDto.setDeaths(0);
         dailyReportDto.setRecovered(0);
         dailyReportDto.setCountry("Germany");
-        assertThat(readDailyReportService.getAllCountryValues()).isNotEmpty();
-        assertThat(readDailyReportService.getAllCountryValues().get(8).getCountry()).contains(dailyReportDto.getCountry());
+        assertThat(dailyReportService.getAllDailyCountryValues()).isNotEmpty();
+        assertThat(dailyReportService.getAllDailyCountryValues().get(8).getCountry()).contains(dailyReportDto.getCountry());
     }
 
     @Test
@@ -232,7 +230,7 @@ public class ReadDailyReportServiceTest {
     public void getAllCountries_withEmptyList() {
         when(readDailyReportsCSV.readDailyReportsCSV()).thenReturn(new ArrayList<>());
 
-        assertThat(readDailyReportService.getAllCountryValues()).isEmpty();
+        assertThat(dailyReportService.getAllDailyCountryValues()).isEmpty();
     }
 
     /*@Test
@@ -247,6 +245,6 @@ public class ReadDailyReportServiceTest {
     @Test
     @DisplayName("Test get all province details for selected province is empty")
     public void getProvinceDetails_isEmpty() {
-        assertThat(readDailyReportService.getProvinceDetails("Lombardia")).isEmpty();
+        assertThat(dailyReportService.getProvinceDetails("Lombardia")).isEmpty();
     }
 }

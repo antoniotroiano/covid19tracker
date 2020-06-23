@@ -1,12 +1,15 @@
 package com.statistics.corona.service;
 
+import com.statistics.corona.model.CountryDetailsDto;
 import com.statistics.corona.model.DailyReportDto;
 import com.statistics.corona.model.DailyReportUsDto;
+import com.statistics.corona.model.DistrictDto;
 import com.statistics.corona.service.csv.ReadDailyReportsCSV;
-import lombok.RequiredArgsConstructor;
+import com.statistics.corona.service.json.ReadJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,10 +20,27 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
-public class ReadDailyReportService {
+public class DailyReportService {
 
     private final ReadDailyReportsCSV readDailyReportCSV;
+    private final ReadJSON readJSON;
+
+    public DailyReportService(ReadDailyReportsCSV readDailyReportCSV, ReadJSON readJSON) {
+        this.readDailyReportCSV = readDailyReportCSV;
+        this.readJSON = readJSON;
+    }
+
+    public Optional<CountryDetailsDto> getDetailsForCountry(String country) {
+        log.debug("Invoke get details for country {}", country);
+        try {
+            log.debug("Returned details for country {}", country);
+            CountryDetailsDto countryDetailsDto = readJSON.newReadDetailsCountry(country);
+            return Optional.of(countryDetailsDto);
+        } catch (Exception e) {
+            log.warn("Failed get details for country {}: {}", country, e.getMessage());
+            return Optional.of(new CountryDetailsDto());
+        }
+    }
 
     public List<DailyReportDto> getDailyDetailsOfProvince(String country) {
         log.debug("Invoke get details for province of selected country {}", country);
@@ -50,7 +70,19 @@ public class ReadDailyReportService {
         return allDailyReportsUs;
     }
 
-    public List<DailyReportDto> getAllCountryValues() {
+    public List<DistrictDto> getDistrictValues(String code) {
+        log.debug("Invoke get district values of {}", code);
+        try {
+            List<DistrictDto> districtDtoList = readJSON.readDistrictsValues(code);
+            log.debug("Returned list with all district values of {}", code);
+            return districtDtoList;
+        } catch (IOException e) {
+            log.warn("Failed get all district values, with message: {}", e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public List<DailyReportDto> getAllDailyCountryValues() {
         log.debug("Invoke get all details for all countries");
         List<DailyReportDto> allDailyReports = readDailyReportCSV.readDailyReportsCSV();
         if (allDailyReports.isEmpty()) {
@@ -60,7 +92,8 @@ public class ReadDailyReportService {
         List<DailyReportDto> allCountryValues = new ArrayList<>();
 
         List<String> countryWithProvince = Arrays.asList("US", "Italy", "Canada", "Spain", "United Kingdom", "China",
-                "Netherlands", "Australia", "Germany", "Denmark", "France", "Brazil", "Chile", "Japan", "Mexico");
+                "Netherlands", "Australia", "Germany", "Denmark", "France", "Brazil", "Chile", "Japan", "Mexico", "Peru",
+                "Russia", "Colombia", "India", "Pakistan", "Ukraine", "Sweden");
 
         for (String country : countryWithProvince) {
             DailyReportDto dailyReportDto = new DailyReportDto();

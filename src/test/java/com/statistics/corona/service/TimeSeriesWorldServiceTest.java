@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @DisplayName("TimeSeriesService tests")
-public class TimeSeriesServiceTest {
+public class TimeSeriesWorldServiceTest {
 
     private final List<TimeSeriesDto> confirmed = new ArrayList<>();
     private final List<TimeSeriesDto> recovered = new ArrayList<>();
@@ -45,7 +45,13 @@ public class TimeSeriesServiceTest {
     private ReadJSON readJSON;
 
     @InjectMocks
-    private TimeSeriesService timeSeriesService;
+    private TimeSeriesCountryService timeSeriesCountryService;
+
+    @InjectMocks
+    private TimeSeriesWorldService timeSeriesWorldService;
+
+    @InjectMocks
+    private DailyReportService dailyReportService;
 
     @BeforeEach
     public void setUp() {
@@ -92,8 +98,8 @@ public class TimeSeriesServiceTest {
         when(readTimeSeriesCSV.readRecoveredCsv()).thenReturn(recovered);
         when(readTimeSeriesCSV.readDeathsCsv()).thenReturn(deaths);
 
-        assertThat(timeSeriesService.getValuesSelectedCountry("Germany")).isNotEmpty();
-        assertThat(timeSeriesService.getValuesSelectedCountry("Germany")).isEqualTo(allValues);
+        assertThat(timeSeriesCountryService.getCountryTSValues("Germany")).isNotEmpty();
+        assertThat(timeSeriesCountryService.getCountryTSValues("Germany")).isEqualTo(allValues);
     }
 
     @Test
@@ -108,31 +114,23 @@ public class TimeSeriesServiceTest {
         when(readTimeSeriesCSV.readRecoveredCsv()).thenReturn(recovered);
         when(readTimeSeriesCSV.readDeathsCsv()).thenReturn(deaths);
 
-        assertThat(timeSeriesService.mapFinalResultToMap(allValues)).isNotEmpty();
-        assertThat(timeSeriesService.mapFinalResultToMap(allValues)).isEqualTo(finalResult);
-    }
-
-    @Test
-    @DisplayName("Test get list with result by given data list and test with an empty data list")
-    public void mapResultToList() {
-        List<Integer> mapResultToList = Stream.of(1, 2, 3).collect(Collectors.toList());
-        assertThat(timeSeriesService.mapResultToList(confirmed)).isEqualTo(mapResultToList);
-        assertThat(timeSeriesService.mapResultToList(Collections.emptyList())).isEmpty();
+        assertThat(timeSeriesCountryService.generateFinalTSResult(allValues)).isNotEmpty();
+        assertThat(timeSeriesCountryService.generateFinalTSResult(allValues)).isEqualTo(finalResult);
     }
 
     @Test
     @DisplayName("Test get one day values, excepted no empty list, a result and an empty list")
     public void getOneDayValues() {
-        assertThat(timeSeriesService.getOneDayValues(values)).isNotEmpty();
-        assertThat(timeSeriesService.getOneDayValues(values)).contains(2);
-        assertThat(timeSeriesService.getOneDayValues(Collections.emptyList())).isEmpty();
+        assertThat(timeSeriesCountryService.getOneDayValues(values)).isNotEmpty();
+        assertThat(timeSeriesCountryService.getOneDayValues(values)).contains(2);
+        assertThat(timeSeriesCountryService.getOneDayValues(Collections.emptyList())).isEmpty();
     }
 
     @Test
     @DisplayName("Test get last value of the list and an empty list")
     public void getLastValues() {
-        assertThat(timeSeriesService.getLastValue(values)).isEqualTo(9);
-        assertThat(timeSeriesService.getLastValue(Collections.emptyList())).isEqualTo(0);
+        assertThat(timeSeriesCountryService.getLastValue(values)).isEqualTo(9);
+        assertThat(timeSeriesCountryService.getLastValue(Collections.emptyList())).isEqualTo(0);
     }
 
     @Test
@@ -144,10 +142,10 @@ public class TimeSeriesServiceTest {
         countryDetailsDto.setConfirmed(100);
         countryDetailsDto.setRecovered(100);
         countryDetailsDto.setDeaths(100);
-        when(readJSON.readDetailsForCountry(anyString())).thenReturn(countryDetailsDto);
+        when(readJSON.newReadDetailsCountry(anyString())).thenReturn(countryDetailsDto);
 
-        assertThat(timeSeriesService.getDetailsForCountry("Germany")).isNotNull();
-        assertThat(timeSeriesService.getDetailsForCountry("Germany")).isEqualTo(Optional.of(countryDetailsDto));
+        assertThat(dailyReportService.getDetailsForCountry("Germany")).isNotNull();
+        assertThat(dailyReportService.getDetailsForCountry("Germany")).isEqualTo(Optional.of(countryDetailsDto));
     }
 
     @Test
@@ -155,28 +153,28 @@ public class TimeSeriesServiceTest {
     public void getCountry() {
         when(readTimeSeriesCSV.readCountryName()).thenReturn(Arrays.asList("France", "Spain"));
 
-        assertThat(timeSeriesService.getCountryNames()).isNotEmpty();
-        assertThat(timeSeriesService.getCountryNames()).contains("France");
+        assertThat(timeSeriesCountryService.getCountryNames()).isNotEmpty();
+        assertThat(timeSeriesCountryService.getCountryNames()).contains("France");
 
         when(readTimeSeriesCSV.readCountryName()).thenReturn(Collections.emptyList());
 
-        assertThat(timeSeriesService.getCountryNames()).isEmpty();
+        assertThat(timeSeriesCountryService.getCountryNames()).isEmpty();
     }
 
     @Test
     @DisplayName("Test get every second value of the list and when the list is null or empty")
     public void getEverySecondValue() {
         List<Integer> values = Arrays.asList(1, 3, 5, 7, 8, 19, 3, 9);
-        assertThat(timeSeriesService.getEverySecondValue(values)).isNotEmpty();
-        assertThat(timeSeriesService.getEverySecondValue(Collections.emptyList())).isEmpty();
+        assertThat(timeSeriesCountryService.getEverySecondValue(values)).isNotEmpty();
+        assertThat(timeSeriesCountryService.getEverySecondValue(Collections.emptyList())).isEmpty();
     }
 
     @Test
     @DisplayName("Test get every second date of the list and returned an empty list")
     public void getEverySecondDate() {
         List<String> values = Arrays.asList("0000.00.00", "0000.00.00", "0000.00.00", "0000.00.00", "0000.00.00");
-        assertThat(timeSeriesService.getEverySecondDate(values)).isNotEmpty();
-        assertThat(timeSeriesService.getEverySecondDate(Collections.emptyList())).isEmpty();
+        assertThat(timeSeriesCountryService.getEverySecondDate(values)).isNotEmpty();
+        assertThat(timeSeriesCountryService.getEverySecondDate(Collections.emptyList())).isEmpty();
     }
 
     @Test
@@ -198,16 +196,16 @@ public class TimeSeriesServiceTest {
 
         when(readJSON.readWorldValues()).thenReturn(timeSeriesWorldDtoList);
 
-        assertThat(timeSeriesService.getAllValuesWorld()).isNotEmpty();
+        assertThat(timeSeriesWorldService.getAllValuesWorld()).isNotEmpty();
 
         when(readJSON.readWorldValues()).thenReturn(Collections.emptyList());
 
-        assertThat(timeSeriesService.getAllValuesWorld()).isEmpty();
+        assertThat(timeSeriesWorldService.getAllValuesWorld()).isEmpty();
     }
 
     @Test
     @DisplayName("Test get value for a province")
     public void getAllValuesOfProvince() {
-        assertThat(timeSeriesService.getProvinceValues("Australia", "Queensland")).isNotEmpty();
+        assertThat(timeSeriesCountryService.getProvinceTSValues("Australia", "Queensland")).isNotEmpty();
     }
 }

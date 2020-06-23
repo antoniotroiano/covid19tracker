@@ -1,6 +1,6 @@
 package com.statistics.corona.controller;
 
-import com.statistics.corona.service.TimeSeriesService;
+import com.statistics.corona.service.TimeSeriesCountryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +25,13 @@ public class SymptomsControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private TimeSeriesService timeSeriesService;
+    private TimeSeriesCountryService timeSeriesCountryService;
 
     @Test
     @DisplayName("Show symptoms and prevention page successfully")
     public void showSymptomsPage() throws Exception {
         List<String> countries = Arrays.asList("Germany", "France");
-        when(timeSeriesService.getCountryNames()).thenReturn(countries);
+        when(timeSeriesCountryService.getCountryNames()).thenReturn(countries);
 
         mockMvc.perform(get("/covid19/symptoms"))
                 .andExpect(status().isOk());

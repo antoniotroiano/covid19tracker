@@ -1,8 +1,8 @@
 let backgroundColor = 'rgb(147,190,234, 0.6)';
 let borderColor = 'rgb(13,23,234)';
 let hoverBackgroundColor = 'rgb(147,190,234, 0.7)';
-let typeChart = 'bar';
-let booleanStacked = true;
+let typeChart = 'line';
+let booleanStacked = false;
 let barChart;
 
 /*Toggle between charts*/

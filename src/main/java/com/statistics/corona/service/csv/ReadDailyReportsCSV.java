@@ -7,7 +7,6 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.statistics.corona.model.DailyReportDto;
 import com.statistics.corona.model.DailyReportUsDto;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,6 @@ import java.util.List;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class ReadDailyReportsCSV {
 
     public URL getURL(String stringURL) {

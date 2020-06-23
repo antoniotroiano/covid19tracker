@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class ReadTimeSeriesCSV {
 
     public List<TimeSeriesDto> readConfirmedCsv() {

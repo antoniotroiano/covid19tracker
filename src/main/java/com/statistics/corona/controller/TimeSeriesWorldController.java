@@ -2,9 +2,10 @@ package com.statistics.corona.controller;
 
 import com.statistics.corona.model.DailyReportDto;
 import com.statistics.corona.model.TimeSeriesWorldDto;
+import com.statistics.corona.service.TimeSeriesCountryService;
 import com.statistics.corona.service.DateFormat;
-import com.statistics.corona.service.ReadDailyReportService;
-import com.statistics.corona.service.TimeSeriesService;
+import com.statistics.corona.service.DailyReportService;
+import com.statistics.corona.service.TimeSeriesWorldService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,8 +26,9 @@ import java.util.stream.Collectors;
 public class TimeSeriesWorldController {
 
     private static final String TIME_SERIES = "timeSeriesWorld";
-    private final TimeSeriesService timeSeriesService;
-    private final ReadDailyReportService readDailyReportService;
+    private final TimeSeriesWorldService timeSeriesWorldService;
+    private final TimeSeriesCountryService timeSeriesCountryService;
+    private final DailyReportService dailyReportService;
     private final DateFormat dateFormat;
 
     @GetMapping
@@ -34,13 +36,13 @@ public class TimeSeriesWorldController {
         log.info("Invoke v2 controller show time series world");
         model.addAttribute("worldTimeSeriesDto", new TimeSeriesWorldDto());
 
-        List<String> allCountries = timeSeriesService.getCountryNames();
+        List<String> allCountries = timeSeriesCountryService.getCountryNames();
         if (allCountries.isEmpty()) {
             model.addAttribute("listCountries", new ArrayList<>());
         }
         model.addAttribute("listCountries", allCountries);
 
-        List<TimeSeriesWorldDto> timeSeriesWorldDtoList = timeSeriesService.getAllValuesWorld();
+        List<TimeSeriesWorldDto> timeSeriesWorldDtoList = timeSeriesWorldService.getAllValuesWorld();
         if (timeSeriesWorldDtoList.isEmpty()) {
             model.addAttribute("latestDataWorld", new TimeSeriesWorldDto());
             model.addAttribute("noDataForWorldTimeSeries", true);
@@ -69,19 +71,19 @@ public class TimeSeriesWorldController {
                 .map(TimeSeriesWorldDto::getConfirmed)
                 .collect(Collectors.toList());
         Collections.reverse(listConfirmed);
-        model.addAttribute("confirmed", timeSeriesService.getEverySecondValue(listConfirmed));
+        model.addAttribute("confirmed", timeSeriesCountryService.getEverySecondValue(listConfirmed));
         List<Integer> listRecovered = timeSeriesWorldDtoList
                 .stream()
                 .map(TimeSeriesWorldDto::getRecovered)
                 .collect(Collectors.toList());
         Collections.reverse(listRecovered);
-        model.addAttribute("recovered", timeSeriesService.getEverySecondValue(listRecovered));
+        model.addAttribute("recovered", timeSeriesCountryService.getEverySecondValue(listRecovered));
         List<Integer> listDeaths = timeSeriesWorldDtoList
                 .stream()
                 .map(TimeSeriesWorldDto::getDeaths)
                 .collect(Collectors.toList());
         Collections.reverse(listDeaths);
-        model.addAttribute("deaths", timeSeriesService.getEverySecondValue(listDeaths));
+        model.addAttribute("deaths", timeSeriesCountryService.getEverySecondValue(listDeaths));
         model.addAttribute("active", timeSeriesWorldDtoList
                 .stream()
                 .map(TimeSeriesWorldDto::getActive)
@@ -103,11 +105,11 @@ public class TimeSeriesWorldController {
                 .map(TimeSeriesWorldDto::getDate)
                 .collect(Collectors.toList());
         Collections.reverse(listDates);
-        model.addAttribute("dateTimeSeries", timeSeriesService.getEverySecondDate(listDates));
+        model.addAttribute("dateTimeSeries", timeSeriesCountryService.getEverySecondDate(listDates));
         log.debug("Returned world values");
 
         model.addAttribute("dailyReportDto", new DailyReportDto());
-        List<DailyReportDto> allValues = readDailyReportService.getAllCountryValues();
+        List<DailyReportDto> allValues = dailyReportService.getAllDailyCountryValues();
         if (allValues.isEmpty()) {
             model.addAttribute("noValuesAllCountries", true);
             log.warn("No values available for all countries");

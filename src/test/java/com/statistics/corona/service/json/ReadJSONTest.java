@@ -28,12 +28,12 @@ public class ReadJSONTest {
     @Test
     @DisplayName("Test read details for a given country of json object/array")
     public void readDetailsForCountry() throws IOException {
-        CountryDetailsDto countryDetailsDtoUS = readJSON.readDetailsForCountry("US");
-        CountryDetailsDto countryDetailsDtoCongo = readJSON.readDetailsForCountry("Congo (Brazzaville)");
-        CountryDetailsDto countryDetailsDtoKorea = readJSON.readDetailsForCountry("Korea, South");
-        CountryDetailsDto countryDetailsDtoSVG = readJSON.readDetailsForCountry("Saint Vincent and the Grenadines");
-        CountryDetailsDto countryDetailsDtoTaiwan = readJSON.readDetailsForCountry("Taiwan*");
-        CountryDetailsDto countryDetailsDtoUK = readJSON.readDetailsForCountry("United Kingdom");
+        CountryDetailsDto countryDetailsDtoUS = readJSON.newReadDetailsCountry("US");
+        CountryDetailsDto countryDetailsDtoCongo = readJSON.newReadDetailsCountry("Congo (Brazzaville)");
+        CountryDetailsDto countryDetailsDtoKorea = readJSON.newReadDetailsCountry("Korea, South");
+        CountryDetailsDto countryDetailsDtoSVG = readJSON.newReadDetailsCountry("Saint Vincent and the Grenadines");
+        CountryDetailsDto countryDetailsDtoTaiwan = readJSON.newReadDetailsCountry("Taiwan*");
+        CountryDetailsDto countryDetailsDtoUK = readJSON.newReadDetailsCountry("United Kingdom");
 
 
         assertThat(countryDetailsDtoUS).isNotNull();

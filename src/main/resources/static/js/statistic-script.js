@@ -26,6 +26,85 @@ function filterFunction() {
     }
 }
 
+/*Search fields for tables*/
+function searchFunctionProvince() {
+    let input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("searchProvince");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("provinceTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+function searchFunctionProvinceMobile() {
+    let input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("searchProvinceMobile");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("provinceTableMobile");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+function searchFunctionDistrict() {
+    let input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("searchDistrict");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("districtTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+function searchFunctionDistrictMobile() {
+    let input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("searchDistrictMobile");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("districtTableMobile");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+
+
 /*Get selected country*/
 function getCountryV2(country) {
     document.location.replace("/covid19/timeSeries/country/" + country);

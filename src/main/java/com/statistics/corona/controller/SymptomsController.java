@@ -1,6 +1,6 @@
 package com.statistics.corona.controller;
 
-import com.statistics.corona.service.TimeSeriesService;
+import com.statistics.corona.service.TimeSeriesCountryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,12 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SymptomsController {
 
-    private final TimeSeriesService timeSeriesService;
+    private final TimeSeriesCountryService timeSeriesCountryService;
 
     @GetMapping
     public String showSymptoms(Model model) {
         log.info("Invoke get symptoms of covid19");
-        List<String> allCountries = timeSeriesService.getCountryNames();
+        List<String> allCountries = timeSeriesCountryService.getCountryNames();
         if (allCountries.isEmpty()) {
             model.addAttribute("listCountries", new ArrayList<>());
         }

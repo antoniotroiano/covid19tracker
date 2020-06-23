@@ -3,11 +3,11 @@ package com.statistics.corona.controller;
 import com.statistics.corona.model.CountryDetailsDto;
 import com.statistics.corona.model.DailyReportDto;
 import com.statistics.corona.model.DailyReportUsDto;
+import com.statistics.corona.model.DistrictDto;
 import com.statistics.corona.model.TimeSeriesDto;
+import com.statistics.corona.service.DailyReportService;
 import com.statistics.corona.service.DateFormat;
-import com.statistics.corona.service.ReadDailyReportService;
-import com.statistics.corona.service.TimeSeriesService;
-import lombok.RequiredArgsConstructor;
+import com.statistics.corona.service.TimeSeriesCountryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +25,6 @@ import java.util.Optional;
 @Controller
 @Slf4j
 @RequestMapping("covid19/timeSeries")
-@RequiredArgsConstructor
 public class TimeSeriesController {
 
     private static final String TIME_SERIES = "timeSeries";
@@ -37,13 +36,18 @@ public class TimeSeriesController {
     private static final String RECOVERED_LIST = "recoveredList";
     private static final String DEATHS_LIST = "deathsList";
     private static final String SELECTED_COUNTRY = "selectedCountry";
-    private static final String LIST_COUNTRIES = "listCountries";
     private static final String TITLE = "title";
     private static final String NO_DATA = "noDataForThisCountry";
     private static final String NO_DATA_PROVINCE = "noDataForProvince";
-    private final TimeSeriesService timeSeriesService;
-    private final ReadDailyReportService readDailyReportService;
+    private final TimeSeriesCountryService timeSeriesCountryService;
+    private final DailyReportService dailyReportService;
     private final DateFormat dateFormat;
+
+    public TimeSeriesController(TimeSeriesCountryService timeSeriesCountryService, DailyReportService dailyReportService, DateFormat dateFormat) {
+        this.timeSeriesCountryService = timeSeriesCountryService;
+        this.dailyReportService = dailyReportService;
+        this.dateFormat = dateFormat;
+    }
 
     @GetMapping("/country/{country}")
     public String showTimeSeries(@PathVariable("country") String country, Model model) {
@@ -54,23 +58,20 @@ public class TimeSeriesController {
         model.addAttribute(TITLE, "COVID-19 - Data for " + country);
         model.addAttribute(SELECTED_COUNTRY, country);
 
-        List<String> allCountries = timeSeriesService.getCountryNames();
-        if (allCountries.isEmpty()) {
-            model.addAttribute(LIST_COUNTRIES, new ArrayList<>());
-        }
-        model.addAttribute(LIST_COUNTRIES, allCountries);
+        getCountryNames(model);
 
-        Optional<CountryDetailsDto> countryDetailsDto = timeSeriesService.getDetailsForCountry(country);
+        Optional<CountryDetailsDto> countryDetailsDto = dailyReportService.getDetailsForCountry(country);
         if (countryDetailsDto.isEmpty()) {
             model.addAttribute("countryDetails", new CountryDetailsDto());
             model.addAttribute(NO_DATA, true);
+        } else {
+            model.addAttribute("countryDetails", new CountryDetailsDto(countryDetailsDto.get()));
+            String date = dateFormat.formatLastUpdateToDate(countryDetailsDto.get().getLastUpdate());
+            String time = dateFormat.formatLastUpdateToTime(countryDetailsDto.get().getLastUpdate());
+            model.addAttribute("date", date + " " + time + "h");
         }
-        model.addAttribute("countryDetails", new CountryDetailsDto(countryDetailsDto.get()));
-        String date = dateFormat.formatLastUpdateToDate(countryDetailsDto.get().getLastUpdate());
-        String time = dateFormat.formatLastUpdateToTime(countryDetailsDto.get().getLastUpdate());
-        model.addAttribute("date", date + " " + time + "h");
 
-        Optional<DailyReportDto> dailyReportDto = readDailyReportService.getAllCountryValues()
+        Optional<DailyReportDto> dailyReportDto = dailyReportService.getAllDailyCountryValues()
                 .stream()
                 .filter(c -> c.getCountry().equals(country))
                 .findFirst();
@@ -80,38 +81,38 @@ public class TimeSeriesController {
             model.addAttribute("dailyReport", new DailyReportDto());
         }
 
-        Map<String, List<TimeSeriesDto>> getAllValuesSelectedCountry = timeSeriesService.getValuesSelectedCountry(country);
-        if (!getAllValuesSelectedCountry.isEmpty()) {
-            Optional<TimeSeriesDto> getOneObject = getAllValuesSelectedCountry.get(CONFIRMED_LIST).stream()
+        Map<String, List<TimeSeriesDto>> getCountryTSValues = timeSeriesCountryService.getCountryTSValues(country);
+        if (!getCountryTSValues.isEmpty()) {
+            Optional<TimeSeriesDto> getOneObject = getCountryTSValues.get(CONFIRMED_LIST).stream()
                     .map(TimeSeriesDto::new)
                     .findFirst();
             if (getOneObject.isPresent()) {
-                Map<String, List<Integer>> finalResult = timeSeriesService.mapFinalResultToMap(getAllValuesSelectedCountry);
+                List<String> datesList = new ArrayList<>(getOneObject.get().getDataMap().keySet());
+                Map<String, List<Integer>> finalResult = timeSeriesCountryService.generateFinalTSResult(getCountryTSValues);
                 if (finalResult.isEmpty()) {
-                    getBaseData(model, new HashMap<>(), new ArrayList<>());
+                    getBaseData(model, new CountryDetailsDto(), new HashMap<>(), new ArrayList<>());
                     model.addAttribute(NO_DATA, true);
                     log.warn("No data for time series found, for selected country {}", country);
                     return TIME_SERIES;
                 }
-                List<String> datesList = new ArrayList<>(getOneObject.get().getDataMap().keySet());
 
-                List<DailyReportDto> valuesCountries = readDailyReportService.getDailyDetailsOfProvince(country);
+                List<DailyReportDto> valuesCountries = dailyReportService.getDailyDetailsOfProvince(country);
                 if (!valuesCountries.isEmpty() && valuesCountries.stream().filter(c -> !c.getCountry().isEmpty()).count() > 1) {
                     model.addAttribute("moreDetailsAvailable", true);
-                    getBaseData(model, finalResult, datesList);
+                    getBaseData(model, countryDetailsDto.get(), finalResult, datesList);
                     log.warn("Get data for selected country {}, with extra details", country);
                     return TIME_SERIES;
                 }
-                getBaseData(model, finalResult, datesList);
+                getBaseData(model, countryDetailsDto.get(), finalResult, datesList);
                 log.debug("Get data for selected country {}", country);
                 return TIME_SERIES;
             }
-            getBaseData(model, new HashMap<>(), new ArrayList<>());
+            getBaseData(model, new CountryDetailsDto(), new HashMap<>(), new ArrayList<>());
             model.addAttribute(NO_DATA, true);
             log.warn("Something getting wrong {}", country);
             return TIME_SERIES;
         }
-        getBaseData(model, new HashMap<>(), new ArrayList<>());
+        getBaseData(model, new CountryDetailsDto(), new HashMap<>(), new ArrayList<>());
         model.addAttribute(NO_DATA, true);
         log.debug("No data for the country {}", country);
         return TIME_SERIES;
@@ -121,7 +122,7 @@ public class TimeSeriesController {
     public String showDetailsOfSelectedCountry(@PathVariable("country") String country, Model model) {
         log.info("Invoke controller show list of province for {}", country);
         if (country.equals("US")) {
-            List<DailyReportUsDto> allValuesProvinceUs = readDailyReportService.getDailyDetailsProvinceUs();
+            List<DailyReportUsDto> allValuesProvinceUs = dailyReportService.getDailyDetailsProvinceUs();
             if (!allValuesProvinceUs.isEmpty()) {
                 createBaseDataDetailsUS(country, model);
                 model.addAttribute("allValuesProvinceUS", allValuesProvinceUs);
@@ -133,7 +134,7 @@ public class TimeSeriesController {
             log.warn("No values for province of US available");
             return "timeSeriesDetailsUs";
         }
-        List<DailyReportDto> allValuesProvince = readDailyReportService.getDailyDetailsOfProvince(country);
+        List<DailyReportDto> allValuesProvince = dailyReportService.getDailyDetailsOfProvince(country);
         if (!allValuesProvince.isEmpty()) {
             List<String> withProvinceNoTimeSeries = Arrays.asList("Canada", "United Kingdom", "China", "Netherlands",
                     "Australia", "Denmark", "France");
@@ -142,6 +143,14 @@ public class TimeSeriesController {
             }
             createBaseDataDetails(country, model);
             model.addAttribute("allValuesProvince", allValuesProvince);
+            Optional<CountryDetailsDto> countryDetailsDto = dailyReportService.getDetailsForCountry(country);
+            if (countryDetailsDto.isPresent()) {
+                List<DistrictDto> districtDtoList = dailyReportService.getDistrictValues(countryDetailsDto.get().getCode());
+                if (!districtDtoList.isEmpty()) {
+                    model.addAttribute("districtDto", new DistrictDto());
+                    model.addAttribute("districtValues", districtDtoList);
+                }
+            }
             log.debug("Returned all data of province for selected country {}", country);
             return "timeSeriesDetails";
         }
@@ -157,13 +166,9 @@ public class TimeSeriesController {
         model.addAttribute("timeSeriesDto", new TimeSeriesDto());
         model.addAttribute(TITLE, province);
 
-        List<String> allCountries = timeSeriesService.getCountryNames();
-        if (allCountries.isEmpty()) {
-            model.addAttribute(LIST_COUNTRIES, new ArrayList<>());
-        }
-        model.addAttribute(LIST_COUNTRIES, allCountries);
+        getCountryNames(model);
 
-        Optional<DailyReportDto> selectedProvince = readDailyReportService.getProvinceDetails(province);
+        Optional<DailyReportDto> selectedProvince = dailyReportService.getProvinceDetails(province);
         if (selectedProvince.isPresent()) {
             model.addAttribute("selectedProvince", province);
             model.addAttribute("provinceDetails", new DailyReportDto(selectedProvince.get()));
@@ -171,13 +176,13 @@ public class TimeSeriesController {
             String time = dateFormat.formatLastUpdateToTimeDaily(selectedProvince.get().getLastUpdate());
             model.addAttribute("date", date + " " + time + "h");
 
-            Map<String, List<TimeSeriesDto>> provinceValues = timeSeriesService
-                    .getProvinceValues(selectedProvince.get().getCountry(), province);
+            Map<String, List<TimeSeriesDto>> provinceValues = timeSeriesCountryService
+                    .getProvinceTSValues(selectedProvince.get().getCountry(), province);
             if (provinceValues.isEmpty()) {
                 model.addAttribute(NO_DATA_PROVINCE, true);
             }
 
-            Map<String, List<TimeSeriesDto>> getMapOfProvinceValues = timeSeriesService.getProvinceValues(selectedProvince.get().getCountry(), province);
+            Map<String, List<TimeSeriesDto>> getMapOfProvinceValues = timeSeriesCountryService.getProvinceTSValues(selectedProvince.get().getCountry(), province);
             Optional<TimeSeriesDto> getOneObject = getMapOfProvinceValues.get(CONFIRMED_LIST)
                     .stream()
                     .map(TimeSeriesDto::new)
@@ -185,7 +190,7 @@ public class TimeSeriesController {
             if (getOneObject.isPresent()) {
                 List<String> datesList = new ArrayList<>(getOneObject.get().getDataMap().keySet());
                 model.addAttribute("dateList", datesList);
-                getBaseData(model, timeSeriesService.mapFinalResultToMap(provinceValues), datesList);
+                getBaseData(model, new CountryDetailsDto(), timeSeriesCountryService.generateFinalTSResult(provinceValues), datesList);
                 log.debug("Return all values for selected province {}", province);
                 return TIME_SERIES_PROVINCE;
             }
@@ -199,19 +204,28 @@ public class TimeSeriesController {
         return TIME_SERIES_PROVINCE;
     }
 
-    private void getBaseData(Model model, Map<String, List<Integer>> result, List<String> datesList) {
-        model.addAttribute("confirmedYesterday", timeSeriesService.getLastValue(result.get(CONFIRMED_RESULT)));
-        model.addAttribute("recoveredYesterday", timeSeriesService.getLastValue(result.get(RECOVERED_RESULT)));
-        model.addAttribute("deathsYesterday", timeSeriesService.getLastValue(result.get(DEATHS_RESULT)));
+    private void getBaseData(Model model, CountryDetailsDto countryDetailsDto, Map<String, List<Integer>> result, List<String> datesList) {
+        int activeCasesToday = countryDetailsDto.getConfirmed() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
+        model.addAttribute("activeCasesToday", activeCasesToday);
 
-        model.addAttribute(CONFIRMED_LIST, timeSeriesService.getEverySecondValue(result.get(CONFIRMED_RESULT)));
-        model.addAttribute(RECOVERED_LIST, timeSeriesService.getEverySecondValue(result.get(RECOVERED_RESULT)));
-        model.addAttribute(DEATHS_LIST, timeSeriesService.getEverySecondValue(result.get(DEATHS_RESULT)));
-        model.addAttribute("dateList", timeSeriesService.getEverySecondDate(datesList));
+        int confirmedYesterday = timeSeriesCountryService.getLastValue(result.get(CONFIRMED_RESULT));
+        int recoveredYesterday = timeSeriesCountryService.getLastValue(result.get(RECOVERED_RESULT));
+        int deathsYesterday = timeSeriesCountryService.getLastValue(result.get(DEATHS_RESULT));
+        int activeCasesYesterday = confirmedYesterday - recoveredYesterday - deathsYesterday;
+        model.addAttribute("differenceActiveCases", (activeCasesToday - activeCasesYesterday));
 
-        model.addAttribute("dailyTrendConfirmed", timeSeriesService.getOneDayValues(result.get(CONFIRMED_RESULT)));
-        model.addAttribute("dailyTrendRecovered", timeSeriesService.getOneDayValues(result.get(RECOVERED_RESULT)));
-        model.addAttribute("dailyTrendDeaths", timeSeriesService.getOneDayValues(result.get(DEATHS_RESULT)));
+        model.addAttribute("confirmedYesterday", confirmedYesterday);
+        model.addAttribute("recoveredYesterday", recoveredYesterday);
+        model.addAttribute("deathsYesterday", deathsYesterday);
+
+        model.addAttribute(CONFIRMED_LIST, timeSeriesCountryService.getEverySecondValue(result.get(CONFIRMED_RESULT)));
+        model.addAttribute(RECOVERED_LIST, timeSeriesCountryService.getEverySecondValue(result.get(RECOVERED_RESULT)));
+        model.addAttribute(DEATHS_LIST, timeSeriesCountryService.getEverySecondValue(result.get(DEATHS_RESULT)));
+        model.addAttribute("dateList", timeSeriesCountryService.getEverySecondDate(datesList));
+
+        model.addAttribute("dailyTrendConfirmed", timeSeriesCountryService.getOneDayValues(result.get(CONFIRMED_RESULT)));
+        model.addAttribute("dailyTrendRecovered", timeSeriesCountryService.getOneDayValues(result.get(RECOVERED_RESULT)));
+        model.addAttribute("dailyTrendDeaths", timeSeriesCountryService.getOneDayValues(result.get(DEATHS_RESULT)));
         model.addAttribute("dateListPerDay", datesList);
     }
 
@@ -225,5 +239,13 @@ public class TimeSeriesController {
         model.addAttribute("dailyReportUsDto", new DailyReportUsDto());
         model.addAttribute(TITLE, "COVID-19 - Details for US");
         model.addAttribute(SELECTED_COUNTRY, country);
+    }
+
+    private void getCountryNames(Model model) {
+        List<String> allCountries = timeSeriesCountryService.getCountryNames();
+        if (allCountries.isEmpty()) {
+            model.addAttribute("listCountries", new ArrayList<>());
+        }
+        model.addAttribute("listCountries", allCountries);
     }
 }
