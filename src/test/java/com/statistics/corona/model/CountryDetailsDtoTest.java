@@ -60,6 +60,7 @@ public class CountryDetailsDtoTest {
                         "critical=100, " +
                         "deathRate=0.1, " +
                         "recoveryRate=0.1, " +
-                        "casesPerOneHundred=100}");
+                        "casesPerOneHundred=100, " +
+                        "deathsPerOneHundred=0}");
     }
 }
