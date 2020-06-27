@@ -138,7 +138,7 @@ public class TimeSeriesWorldServiceTest {
     public void getDetailsForCountry() throws IOException {
         CountryDetailsDto countryDetailsDto = new CountryDetailsDto();
         countryDetailsDto.setCountry("Germany");
-        countryDetailsDto.setCode("DE");
+        //countryDetailsDto.setCode("DE");
         countryDetailsDto.setConfirmed(100);
         countryDetailsDto.setRecovered(100);
         countryDetailsDto.setDeaths(100);

@@ -2,14 +2,29 @@ package com.statistics.corona.model;
 
 public class CountryDetailsDto {
 
+    long lastUpdate;
     String country;
     String code;
-    int population;
-    String lastUpdate;
-    int deaths;
     int confirmed;
+    int todayConfirmed;
+    int deaths;
+    int todayDeaths;
     int recovered;
+    int todayRecovered;
+    int active;
     int critical;
+    int casesPerOneMillion;
+    int deathsPerOneMillion;
+    int tests;
+    int testsPerOneMillion;
+    int population;
+    String continent;
+    int oneCasePerPeople;
+    int oneDeathPerPeople;
+    int oneTestPerPeople;
+    double activePerOneMillion;
+    double recoveredPerOneMillion;
+    double criticalPerOneMillion;
     double deathRate;
     double recoveryRate;
     int casesPerOneHundred;
@@ -19,18 +34,41 @@ public class CountryDetailsDto {
     }
 
     public CountryDetailsDto(CountryDetailsDto countryDetailsDto) {
+        this.lastUpdate = countryDetailsDto.getLastUpdate();
         this.country = countryDetailsDto.getCountry();
         this.code = countryDetailsDto.getCode();
-        this.population = countryDetailsDto.getPopulation();
-        this.lastUpdate = countryDetailsDto.getLastUpdate();
-        this.deaths = countryDetailsDto.getDeaths();
         this.confirmed = countryDetailsDto.getConfirmed();
+        this.todayConfirmed = countryDetailsDto.getTodayConfirmed();
+        this.deaths = countryDetailsDto.getDeaths();
+        this.todayDeaths = countryDetailsDto.getTodayDeaths();
         this.recovered = countryDetailsDto.getRecovered();
+        this.todayRecovered = countryDetailsDto.getTodayRecovered();
+        this.active = countryDetailsDto.getActive();
         this.critical = countryDetailsDto.getCritical();
+        this.casesPerOneMillion = countryDetailsDto.getCasesPerOneMillion();
+        this.deathsPerOneMillion = countryDetailsDto.getDeathsPerOneMillion();
+        this.tests = countryDetailsDto.getTests();
+        this.testsPerOneMillion = countryDetailsDto.getTestsPerOneMillion();
+        this.population = countryDetailsDto.getPopulation();
+        this.continent = countryDetailsDto.getContinent();
+        this.oneCasePerPeople = countryDetailsDto.getOneCasePerPeople();
+        this.oneDeathPerPeople = countryDetailsDto.getOneDeathPerPeople();
+        this.oneTestPerPeople = countryDetailsDto.getOneTestPerPeople();
+        this.activePerOneMillion = countryDetailsDto.getActivePerOneMillion();
+        this.recoveredPerOneMillion = countryDetailsDto.getRecoveredPerOneMillion();
+        this.criticalPerOneMillion = countryDetailsDto.getCriticalPerOneMillion();
         this.deathRate = countryDetailsDto.getDeathRate();
         this.recoveryRate = countryDetailsDto.getRecoveryRate();
         this.casesPerOneHundred = countryDetailsDto.getCasesPerOneHundred();
         this.deathsPerOneHundred = countryDetailsDto.getDeathsPerOneHundred();
+    }
+
+    public long getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(long lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public String getCountry() {
@@ -49,20 +87,20 @@ public class CountryDetailsDto {
         this.code = code;
     }
 
-    public int getPopulation() {
-        return population;
+    public int getConfirmed() {
+        return confirmed;
     }
 
-    public void setPopulation(int population) {
-        this.population = population;
+    public void setConfirmed(int confirmed) {
+        this.confirmed = confirmed;
     }
 
-    public String getLastUpdate() {
-        return lastUpdate;
+    public int getTodayConfirmed() {
+        return todayConfirmed;
     }
 
-    public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public void setTodayConfirmed(int todayConfirmed) {
+        this.todayConfirmed = todayConfirmed;
     }
 
     public int getDeaths() {
@@ -73,12 +111,12 @@ public class CountryDetailsDto {
         this.deaths = deaths;
     }
 
-    public int getConfirmed() {
-        return confirmed;
+    public int getTodayDeaths() {
+        return todayDeaths;
     }
 
-    public void setConfirmed(int confirmed) {
-        this.confirmed = confirmed;
+    public void setTodayDeaths(int todayDeaths) {
+        this.todayDeaths = todayDeaths;
     }
 
     public int getRecovered() {
@@ -89,12 +127,124 @@ public class CountryDetailsDto {
         this.recovered = recovered;
     }
 
+    public int getTodayRecovered() {
+        return todayRecovered;
+    }
+
+    public void setTodayRecovered(int todayRecovered) {
+        this.todayRecovered = todayRecovered;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
     public int getCritical() {
         return critical;
     }
 
     public void setCritical(int critical) {
         this.critical = critical;
+    }
+
+    public int getCasesPerOneMillion() {
+        return casesPerOneMillion;
+    }
+
+    public void setCasesPerOneMillion(int casesPerOneMillion) {
+        this.casesPerOneMillion = casesPerOneMillion;
+    }
+
+    public int getDeathsPerOneMillion() {
+        return deathsPerOneMillion;
+    }
+
+    public void setDeathsPerOneMillion(int deathsPerOneMillion) {
+        this.deathsPerOneMillion = deathsPerOneMillion;
+    }
+
+    public int getTests() {
+        return tests;
+    }
+
+    public void setTests(int tests) {
+        this.tests = tests;
+    }
+
+    public int getTestsPerOneMillion() {
+        return testsPerOneMillion;
+    }
+
+    public void setTestsPerOneMillion(int testsPerOneMillion) {
+        this.testsPerOneMillion = testsPerOneMillion;
+    }
+
+    public int getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(int population) {
+        this.population = population;
+    }
+
+    public String getContinent() {
+        return continent;
+    }
+
+    public void setContinent(String continent) {
+        this.continent = continent;
+    }
+
+    public int getOneCasePerPeople() {
+        return oneCasePerPeople;
+    }
+
+    public void setOneCasePerPeople(int oneCasePerPeople) {
+        this.oneCasePerPeople = oneCasePerPeople;
+    }
+
+    public int getOneDeathPerPeople() {
+        return oneDeathPerPeople;
+    }
+
+    public void setOneDeathPerPeople(int oneDeathPerPeople) {
+        this.oneDeathPerPeople = oneDeathPerPeople;
+    }
+
+    public int getOneTestPerPeople() {
+        return oneTestPerPeople;
+    }
+
+    public void setOneTestPerPeople(int oneTestPerPeople) {
+        this.oneTestPerPeople = oneTestPerPeople;
+    }
+
+    public double getActivePerOneMillion() {
+        return activePerOneMillion;
+    }
+
+    public void setActivePerOneMillion(double activePerOneMillion) {
+        this.activePerOneMillion = activePerOneMillion;
+    }
+
+    public double getRecoveredPerOneMillion() {
+        return recoveredPerOneMillion;
+    }
+
+    public void setRecoveredPerOneMillion(double recoveredPerOneMillion) {
+        this.recoveredPerOneMillion = recoveredPerOneMillion;
+    }
+
+    public double getCriticalPerOneMillion() {
+        return criticalPerOneMillion;
+    }
+
+    public void setCriticalPerOneMillion(double criticalPerOneMillion) {
+        this.criticalPerOneMillion = criticalPerOneMillion;
     }
 
     public double getDeathRate() {
@@ -132,14 +282,29 @@ public class CountryDetailsDto {
     @Override
     public String toString() {
         return "CountryDetailsDto{" +
-                "country='" + country + '\'' +
+                "lastUpdate=" + lastUpdate +
+                ", country='" + country + '\'' +
                 ", code='" + code + '\'' +
-                ", population=" + population +
-                ", lastUpdate='" + lastUpdate + '\'' +
-                ", deaths=" + deaths +
                 ", confirmed=" + confirmed +
+                ", todayConfirmed=" + todayConfirmed +
+                ", deaths=" + deaths +
+                ", todayDeaths=" + todayDeaths +
                 ", recovered=" + recovered +
+                ", todayRecovered=" + todayRecovered +
+                ", active=" + active +
                 ", critical=" + critical +
+                ", casesPerOneMillion=" + casesPerOneMillion +
+                ", deathsPerOneMillion=" + deathsPerOneMillion +
+                ", tests=" + tests +
+                ", testsPerOneMillion=" + testsPerOneMillion +
+                ", population=" + population +
+                ", continent='" + continent + '\'' +
+                ", oneCasePerPeople=" + oneCasePerPeople +
+                ", oneDeathPerPeople=" + oneDeathPerPeople +
+                ", oneTestPerPeople=" + oneTestPerPeople +
+                ", activePerOneMillion=" + activePerOneMillion +
+                ", recoveredPerOneMillion=" + recoveredPerOneMillion +
+                ", criticalPerOneMillion=" + criticalPerOneMillion +
                 ", deathRate=" + deathRate +
                 ", recoveryRate=" + recoveryRate +
                 ", casesPerOneHundred=" + casesPerOneHundred +

@@ -24,6 +24,8 @@ public class ReadJSON {
     private static final String RECOVERED = "recovered";
     private static final String LATEST_DATA = "latest_data";
     private static final String CALCULATED = "calculated";
+    private static final String COUNTRY_CODE = "country_code";
+    private static final String NO_NAME = "no_name";
     private final DateFormat dateFormat = new DateFormat();
 
     private JSONObject getJSONObject(String url) throws IOException {
@@ -62,23 +64,45 @@ public class ReadJSON {
         log.debug("Invoke get country details for {}", country);
         CountryDetailsDto countryDetailsDto = new CountryDetailsDto();
 
-        if (country.equals("Congo (Brazzaville)") || country.equals("Congo (Kinshasa)")) {
-            country = "Congo";
+        if (country.equals("Korea, South")) {
+            country = "South Korea";
         }
         if (country.equals("Taiwan*")) {
             country = "Taiwan";
         }
 
-        JSONObject jsonObject = getJSONObject("https://www.trackcorona.live/api/countries");
-        JSONArray jsonArray = jsonObject.getJSONArray("data");
+        JSONObject jsonObjectFirst = getJSONObject("https://covid19.mathdro.id/api/countries/" + country);
+        countryDetailsDto.setConfirmed(jsonObjectFirst.getJSONObject(CONFIRMED).optInt("value", 0));
+        countryDetailsDto.setRecovered(jsonObjectFirst.getJSONObject(RECOVERED).optInt("value", 0));
+        countryDetailsDto.setDeaths(jsonObjectFirst.getJSONObject("deaths").optInt("value", 0));
+
+        JSONObject jsonObject = getJSONObject("https://corona.lmao.ninja/v2/countries/" + country);
+        countryDetailsDto.setLastUpdate(jsonObject.optLong("updated", 0));
+        countryDetailsDto.setCountry(jsonObject.optString("country", NO_NAME));
+        countryDetailsDto.setTodayConfirmed(jsonObject.optInt("todayCases", 0));
+        countryDetailsDto.setTodayDeaths(jsonObject.optInt("todayDeaths", 0));
+        countryDetailsDto.setTodayRecovered(jsonObject.optInt("todayRecovered", 0));
+        countryDetailsDto.setActive(jsonObject.optInt("active", 0));
+        countryDetailsDto.setCritical(jsonObject.optInt("critical", 0));
+        countryDetailsDto.setCasesPerOneMillion(jsonObject.optInt("casesPerOneMillion", 0));
+        countryDetailsDto.setDeathsPerOneMillion(jsonObject.optInt("deathsPerOneMillion", 0));
+        countryDetailsDto.setTests(jsonObject.optInt("tests", 0));
+        countryDetailsDto.setTestsPerOneMillion(jsonObject.optInt("testsPerOneMillion", 0));
+        countryDetailsDto.setPopulation(jsonObject.optInt("population", 0));
+        countryDetailsDto.setContinent(jsonObject.optString("continent", NO_NAME));
+        countryDetailsDto.setOneCasePerPeople(jsonObject.optInt("oneCasePerPeople", 0));
+        countryDetailsDto.setOneDeathPerPeople(jsonObject.optInt("oneDeathPerPeople", 0));
+        countryDetailsDto.setOneTestPerPeople(jsonObject.optInt("oneTestPerPeople", 0));
+        countryDetailsDto.setActivePerOneMillion(jsonObject.optDouble("activePerOneMillion", 0.0));
+        countryDetailsDto.setRecoveredPerOneMillion(jsonObject.optDouble("recoveredPerOneMillion", 0.0));
+        countryDetailsDto.setCriticalPerOneMillion(jsonObject.optDouble("criticalPerOneMillion", 0.0));
+
+        JSONObject jsonObjectSecond = getJSONObject("https://www.trackcorona.live/api/countries");
+        JSONArray jsonArray = jsonObjectSecond.getJSONArray("data");
         country = checkCountryName(country);
         for (int i = 0; i < jsonArray.length(); i++) {
             if (jsonArray.getJSONObject(i).getString("location").contains(country)) {
-                countryDetailsDto.setCountry(jsonArray.getJSONObject(i).optString("location", "Empty"));
-                countryDetailsDto.setCode(jsonArray.getJSONObject(i).optString("country_code", "Empty"));
-                countryDetailsDto.setConfirmed(jsonArray.getJSONObject(i).optInt(CONFIRMED, 0));
-                countryDetailsDto.setDeaths(jsonArray.getJSONObject(i).optInt("dead", 0));
-                countryDetailsDto.setRecovered(jsonArray.getJSONObject(i).optInt(RECOVERED, 0));
+                countryDetailsDto.setCode(jsonArray.getJSONObject(i).optString(COUNTRY_CODE, NO_NAME));
             }
         }
 
@@ -87,16 +111,13 @@ public class ReadJSON {
         country = checkCountryNameSecond(country);
         for (int i = 0; i < jsonArrayExtension.length(); i++) {
             if (jsonArrayExtension.getJSONObject(i).getString("name").equals(country)) {
-                countryDetailsDto.setPopulation(jsonArrayExtension.getJSONObject(i).optInt("population", 0));
-                countryDetailsDto.setLastUpdate(jsonArrayExtension.getJSONObject(i).optString("updated_at", "2000-01-01T00:00:00.000Z"));
-                countryDetailsDto.setCritical(jsonArrayExtension.getJSONObject(i).getJSONObject(LATEST_DATA)
-                        .optInt("critical", 0));
                 countryDetailsDto.setDeathRate(jsonArrayExtension.getJSONObject(i).getJSONObject(LATEST_DATA)
                         .getJSONObject(CALCULATED).optDouble("death_rate", 0.0));
                 countryDetailsDto.setRecoveryRate(jsonArrayExtension.getJSONObject(i).getJSONObject(LATEST_DATA)
                         .getJSONObject(CALCULATED).optDouble("recovery_rate", 0.0));
             }
         }
+
         double casesPerOneHundred = ((double) countryDetailsDto.getConfirmed() / (double) countryDetailsDto.getPopulation()) * 100000;
         countryDetailsDto.setCasesPerOneHundred((int) casesPerOneHundred);
         double deathsPerOneHundred = ((double) countryDetailsDto.getDeaths() / (double) countryDetailsDto.getPopulation()) * 100000;
@@ -108,9 +129,6 @@ public class ReadJSON {
     private String checkCountryName(String country) {
         if (country.equals("US")) {
             return "United States";
-        }
-        if (country.equals("Korea, South")) {
-            return "South Korea";
         }
         if (country.equals("St. Vincent Grenadines")) {
             return "Saint Vincent Grenadines";
@@ -125,11 +143,14 @@ public class ReadJSON {
         if (country.equals("South Korea")) {
             return "S. Korea";
         }
-        if (country.equals("Saint Vincent and the Grenadines")) { //Brauche ich das noch?
-            return "Saint Vincent Grenadines";
-        }
         if (country.equals("United Kingdom")) {
             return "UK";
+        }
+        if (country.equals("Congo (Brazzaville)") || country.equals("Congo (Kinshasa)")) {
+            return "Congo";
+        }
+        if (country.equals("Taiwan*")) {
+            return "Taiwan";
         }
         return country;
     }
@@ -141,17 +162,17 @@ public class ReadJSON {
         JSONObject jsonObject = getJSONObject("https://www.trackcorona.live/api/cities");
         JSONArray jsonArray = jsonObject.getJSONArray("data");
         for (int i = 0; i < jsonArray.length(); i++) {
-            if (jsonArray.getJSONObject(i).getString("country_code").equals(code)) {
+            if (jsonArray.getJSONObject(i).getString(COUNTRY_CODE).equals(code)) {
                 DistrictDto districtDto = new DistrictDto();
-                districtDto.setLocation(jsonArray.getJSONObject(i).optString("location", "Empty"));
-                districtDto.setCode(jsonArray.getJSONObject(i).optString("country_code", "Empty"));
+                districtDto.setLocation(jsonArray.getJSONObject(i).optString("location", NO_NAME));
+                districtDto.setCode(jsonArray.getJSONObject(i).optString(COUNTRY_CODE, NO_NAME));
                 districtDto.setConfirmed(jsonArray.getJSONObject(i).optInt(CONFIRMED, 0));
                 districtDto.setDead(jsonArray.getJSONObject(i).optInt("dead", 0));
                 districtDto.setRecovered(jsonArray.getJSONObject(i).optInt(RECOVERED, 0));
                 districtDto.setVelocityConfirmed(jsonArray.getJSONObject(i).optInt("velocity_confirmed", 0));
                 districtDto.setVelocityDead(jsonArray.getJSONObject(i).optInt("velocity_dead", 0));
                 districtDto.setVelocityRecovered(jsonArray.getJSONObject(i).optInt("velocity_recovered", 0));
-                districtDto.setLastUpdate(jsonArray.getJSONObject(i).optString("updated", "Empty"));
+                districtDto.setLastUpdate(jsonArray.getJSONObject(i).optString("updated", NO_NAME));
                 districtDtoList.add(districtDto);
             }
         }

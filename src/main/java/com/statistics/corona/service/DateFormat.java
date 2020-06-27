@@ -2,8 +2,10 @@ package com.statistics.corona.service;
 
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -45,5 +47,12 @@ public class DateFormat {
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.GERMAN);
         LocalDate dates = LocalDate.parse(date, inputFormatter);
         return outputFormatter.format(dates);
+    }
+
+    public String formatUnixToDate(long unixTime) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy HH:mm", Locale.GERMAN);
+        return Instant.ofEpochMilli(unixTime)
+                .atZone(ZoneId.of("GMT+1"))
+                .format(inputFormatter);
     }
 }

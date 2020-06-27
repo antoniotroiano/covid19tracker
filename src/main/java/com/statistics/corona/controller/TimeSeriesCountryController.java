@@ -25,7 +25,7 @@ import java.util.Optional;
 @Controller
 @Slf4j
 @RequestMapping("covid19/timeSeries")
-public class TimeSeriesController {
+public class TimeSeriesCountryController {
 
     private static final String TIME_SERIES = "timeSeries";
     private static final String TIME_SERIES_PROVINCE = "timeSeriesProvince";
@@ -43,7 +43,7 @@ public class TimeSeriesController {
     private final DailyReportService dailyReportService;
     private final DateFormat dateFormat;
 
-    public TimeSeriesController(TimeSeriesCountryService timeSeriesCountryService, DailyReportService dailyReportService, DateFormat dateFormat) {
+    public TimeSeriesCountryController(TimeSeriesCountryService timeSeriesCountryService, DailyReportService dailyReportService, DateFormat dateFormat) {
         this.timeSeriesCountryService = timeSeriesCountryService;
         this.dailyReportService = dailyReportService;
         this.dateFormat = dateFormat;
@@ -66,9 +66,8 @@ public class TimeSeriesController {
             model.addAttribute(NO_DATA, true);
         } else {
             model.addAttribute("countryDetails", new CountryDetailsDto(countryDetailsDto.get()));
-            String date = dateFormat.formatLastUpdateToDate(countryDetailsDto.get().getLastUpdate());
-            String time = dateFormat.formatLastUpdateToTime(countryDetailsDto.get().getLastUpdate());
-            model.addAttribute("date", date + " " + time + "h");
+            String date = dateFormat.formatUnixToDate(countryDetailsDto.get().getLastUpdate());
+            model.addAttribute("date", date);
         }
 
         Optional<DailyReportDto> dailyReportDto = dailyReportService.getAllDailyCountryValues()
@@ -205,14 +204,14 @@ public class TimeSeriesController {
     }
 
     private void getBaseData(Model model, CountryDetailsDto countryDetailsDto, Map<String, List<Integer>> result, List<String> datesList) {
-        int activeCasesToday = countryDetailsDto.getConfirmed() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
-        model.addAttribute("activeCasesToday", activeCasesToday);
+        int activeCases = countryDetailsDto.getConfirmed() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
+        model.addAttribute("activeCases", activeCases);
 
         int confirmedYesterday = timeSeriesCountryService.getLastValue(result.get(CONFIRMED_RESULT));
         int recoveredYesterday = timeSeriesCountryService.getLastValue(result.get(RECOVERED_RESULT));
         int deathsYesterday = timeSeriesCountryService.getLastValue(result.get(DEATHS_RESULT));
         int activeCasesYesterday = confirmedYesterday - recoveredYesterday - deathsYesterday;
-        model.addAttribute("differenceActiveCases", (activeCasesToday - activeCasesYesterday));
+        model.addAttribute("differenceActiveCases", (activeCases - activeCasesYesterday));
 
         model.addAttribute("confirmedYesterday", confirmedYesterday);
         model.addAttribute("recoveredYesterday", recoveredYesterday);

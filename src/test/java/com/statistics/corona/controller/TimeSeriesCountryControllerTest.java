@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("TimeSeriesController tests")
-public class TimeSeriesControllerTest {
+public class TimeSeriesCountryControllerTest {
 
     private final TimeSeriesDto timeSeriesDto = new TimeSeriesDto();
     private final DailyReportDto dailyReportDto = new DailyReportDto();
@@ -70,7 +70,7 @@ public class TimeSeriesControllerTest {
 
         CountryDetailsDto germany = new CountryDetailsDto();
         germany.setCountry("Germany");
-        germany.setCode("DE");
+        //germany.setCode("DE");
         germany.setConfirmed(100);
         germany.setRecovered(100);
         germany.setDeaths(100);

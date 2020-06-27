@@ -70,7 +70,7 @@
                                          : ${#numbers.formatInteger(countryDetails.getConfirmed(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${countryDetails.getConfirmed() != null}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getConfirmed() - confirmedYesterday, 3, 'POINT')}"></div>
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayConfirmed(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -83,7 +83,7 @@
                                          : ${#numbers.formatInteger(countryDetails.getRecovered(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${(countryDetails.getRecovered()) != null}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getRecovered() - recoveredYesterday, 3, 'POINT')}"></div>
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayRecovered(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -95,7 +95,7 @@
                                          : ${#numbers.formatInteger(countryDetails.getDeaths(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${countryDetails.getDeaths() != null}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getDeaths() - deathsYesterday, 3, 'POINT')}"></div>
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayDeaths(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                     </div>
@@ -108,19 +108,19 @@
                                                                         src="/img/medkit-outline.svg"></span>
                                 <div class="is-size-5">Active cases</div>
                                 <div class="is-size-6"
-                                     th:text="${activeCasesToday == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(activeCasesToday, 3, 'POINT')}"></div>
+                                     th:text="${activeCases == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(activeCases, 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${differenceActiveCases == null} ? ${'No value'}
+                                     th:if="${differenceActiveCases == 0} ? ${'No value'}
                                          : ${(differenceActiveCases) >= 0}"
-                                     th:text="${differenceActiveCases == null} ? ${'No value'}
+                                     th:text="${differenceActiveCases == 0} ? ${'No value'}
                                          : '+ ' + ${#numbers.formatInteger(differenceActiveCases, 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${differenceActiveCases == null} ? ${'No value'}
+                                     th:if="${differenceActiveCases == 0} ? ${'No value'}
                                          : ${(differenceActiveCases) < 0}"
-                                     th:text="${differenceActiveCases == null} ? ${'No value'}
+                                     th:text="${differenceActiveCases == 0} ? ${'No value'}
                                          : '- ' + ${#numbers.formatInteger(inverted, 3, 'POINT')}"
-                                     th:with="inverted=${differenceActiveCases == null} ? ${0}
+                                     th:with="inverted=${differenceActiveCases == 0} ? ${0}
                                          : ${-(differenceActiveCases)}"></div>
                                 <hr class="dropdown-divider">
                                 <div class="is-size-5">Critical</div>

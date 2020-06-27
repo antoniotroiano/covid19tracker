@@ -16,9 +16,9 @@ public class CountryDetailsDtoTest {
     @BeforeEach
     public void setUp() {
         countryDetailsDto.setCountry("Germany");
-        countryDetailsDto.setCode("DE");
+        //countryDetailsDto.setCode("DE");
         countryDetailsDto.setPopulation(83000000);
-        countryDetailsDto.setLastUpdate("0000.00.00");
+        //countryDetailsDto.setLastUpdate("0000.00.00");
         countryDetailsDto.setDeaths(100);
         countryDetailsDto.setConfirmed(100);
         countryDetailsDto.setRecovered(100);
@@ -34,7 +34,7 @@ public class CountryDetailsDtoTest {
         CountryDetailsDto countryDetailsDtoMapping = new CountryDetailsDto(countryDetailsDto);
 
         assertThat(countryDetailsDtoMapping.getCountry()).isEqualTo(countryDetailsDto.getCountry());
-        assertThat(countryDetailsDtoMapping.getCode()).isEqualTo(countryDetailsDto.getCode());
+        //assertThat(countryDetailsDtoMapping.getCode()).isEqualTo(countryDetailsDto.getCode());
         assertThat(countryDetailsDtoMapping.getPopulation()).isEqualTo(countryDetailsDto.getPopulation());
         assertThat(countryDetailsDtoMapping.getLastUpdate()).isEqualTo(countryDetailsDto.getLastUpdate());
         assertThat(countryDetailsDtoMapping.getDeaths()).isEqualTo(countryDetailsDto.getDeaths());
