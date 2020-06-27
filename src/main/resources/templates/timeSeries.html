@@ -127,6 +127,15 @@
                                 <div class="is-size-6"
                                      th:text="${countryDetails.getCritical() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDetails.getCritical(), 3, 'POINT')}"></div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-7 is-pulled-right tag is-warning"
+                                     th:text="${countryDetails.getCriticalPerOneMillion() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryDetails.getCriticalPerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
+                                <div class="is-size-6">Critical per one mil.:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-6 is-pulled-right"
+                                     th:text="${date == null} ? ${'No value'} : ${date}"></div>
+                                <div class="is-size-6">Updated:</div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -148,6 +157,16 @@
                                      th:text="${dailyReport.getIncidenceRate() == null} ? ${'No value'}
                                          : ${#numbers.formatDecimal(dailyReport.getIncidenceRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                 <div class="is-size-6">Incidence rate:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-7 is-pulled-right tag is-warning"
+                                     th:text="${countryDetails.getActivePerOneMillion() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryDetails.getActivePerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
+                                <div class="is-size-6">Active per one mil.:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-7 is-pulled-right tag is-success"
+                                     th:text="${countryDetails.getRecoveredPerOneMillion() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryDetails.getRecoveredPerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
+                                <div class="is-size-6">Recovered per one mil.:</div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -171,8 +190,14 @@
                                 <div class="is-size-6">Deaths per 100.000:</div>
                                 <hr class="dropdown-divider">
                                 <div class="is-size-6 is-pulled-right"
-                                     th:text="${date == null} ? ${'No value'} : ${date}"></div>
-                                <div class="is-size-6">Updated:</div>
+                                     th:text="${countryDetails.getTests() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryDetails.getTests(), 3, 'POINT')}"></div>
+                                <div class="is-size-6">Tests all:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-6 is-pulled-right"
+                                     th:text="${countryDetails.getTestsPerOneMillion() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryDetails.getTestsPerOneMillion(), 3, 'POINT')}"></div>
+                                <div class="is-size-6">Tests per one mil.:</div>
                             </div>
                         </div>
                     </div>
