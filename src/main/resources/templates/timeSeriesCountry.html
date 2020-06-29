@@ -128,7 +128,7 @@
                                      th:text="${countryDetails.getCritical() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDetails.getCritical(), 3, 'POINT')}"></div>
                                 <hr class="dropdown-divider">
-                                <div class="is-size-7 is-pulled-right tag is-warning"
+                                <div class="is-size-6 is-pulled-right tag is-warning"
                                      th:text="${countryDetails.getCriticalPerOneMillion() == null} ? ${'No value'}
                                          : ${#numbers.formatDecimal(countryDetails.getCriticalPerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
                                 <div class="is-size-6">Critical per one mil.:</div>
@@ -208,7 +208,7 @@
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons has-addons is-centered">
                     <a class="button is-rounded is-info"
-                       th:href="@{/covid19/timeSeries/country/provinces/{country}(country = ${selectedCountry})}"
+                       th:href="@{/covid19/timeSeries/country/provinces/{country}/{code}(country = ${selectedCountry}, code = ${selectedCode})}"
                        th:if="${moreDetailsAvailable}">Province for&nbsp;<span th:text="${selectedCountry}"></span></a>
                 </div>
             </div>
@@ -284,29 +284,29 @@
     let confirmedList = /*[[${confirmedList}]]*/ '';
     let deathsList = /*[[${deathsList}]]*/ '';
     let recoveredList = /*[[${recoveredList}]]*/ '';
-    let dates = /*[[${dateList}]]*/ '';
+    let datesList = /*[[${dateList}]]*/ '';
     /*]]>*/
 
-    barLineChartAllValues(canvasCountry, dates, label, confirmedList, recoveredList, deathsList);
+    barLineChartAllValues(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList);
 
     function toggleToBarChart() {
-        changeChart(canvasCountry, dates, label, confirmedList, recoveredList, deathsList, 'bar');
+        changeChart(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList, 'bar');
     }
 
     function toggleToLineChart() {
-        changeChart(canvasCountry, dates, label, confirmedList, recoveredList, deathsList, 'line');
+        changeChart(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList, 'line');
     }
 
     function toggleToConfirmed() {
-        changeChart(canvasCountry, dates, 'Confirmed', confirmedList, recoveredList, deathsList)
+        changeChart(canvasCountry, datesList, 'Confirmed', confirmedList, recoveredList, deathsList)
     }
 
     function toggleToRecovered() {
-        changeChart(canvasCountry, dates, 'Recovered', confirmedList, recoveredList, deathsList);
+        changeChart(canvasCountry, datesList, 'Recovered', confirmedList, recoveredList, deathsList);
     }
 
     function toggleToDeaths() {
-        changeChart(canvasCountry, dates, 'Deaths', confirmedList, recoveredList, deathsList);
+        changeChart(canvasCountry, datesList, 'Deaths', confirmedList, recoveredList, deathsList);
     }
 
     /*<![CDATA[*/

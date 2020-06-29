@@ -4,7 +4,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.statistics.corona.model.TimeSeriesDto;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +23,13 @@ import java.util.stream.Collectors;
 public class ReadTimeSeriesCSV {
 
     public List<TimeSeriesDto> readConfirmedCsv() {
-        log.debug("Invoke read Confirmed time series CSV from github");
+        log.debug("Invoke read confirmed time series CSV from github");
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
             URL confirmed = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
             timeSeriesDtoList = readTimeSeriesCSV(confirmed);
         } catch (Exception e) {
-            log.warn("Occurred an exception while reading confirmed csv from github {}", e.getMessage());
+            log.warn("Occurred an exception while reading confirmed CSV from github {}", e.getMessage());
         }
         log.debug("Returned time series list with all confirmed values");
         return timeSeriesDtoList;
@@ -43,7 +42,7 @@ public class ReadTimeSeriesCSV {
             URL recovered = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
             timeSeriesDtoList = readTimeSeriesCSV(recovered);
         } catch (Exception e) {
-            log.warn("Occurred an exception while reading recovered csv from github {}", e.getMessage());
+            log.warn("Occurred an exception while reading recovered CSV from github {}", e.getMessage());
         }
         log.debug("Returned time series list with all recovered values");
         return timeSeriesDtoList;
@@ -56,9 +55,35 @@ public class ReadTimeSeriesCSV {
             URL deaths = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
             timeSeriesDtoList = readTimeSeriesCSV(deaths);
         } catch (Exception e) {
-            log.warn("Occurred an exception while reading deaths csv from github {}", e.getMessage());
+            log.warn("Occurred an exception while reading deaths CSV from github {}", e.getMessage());
         }
         log.debug("Returned time series list with all deaths values");
+        return timeSeriesDtoList;
+    }
+
+    public List<TimeSeriesDto> readUsConfirmedCsv() {
+        log.debug("Invoke read us confirmed time series CSV from github");
+        List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
+        try {
+            URL confirmed = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv");
+            timeSeriesDtoList = readTimeSeriesUsConfirmedCSV(confirmed);
+        } catch (Exception e) {
+            log.warn("Occurred an exception while reading us confirmed CSV from github {}", e.getMessage());
+        }
+        log.debug("Returned time series list with all us confirmed values");
+        return timeSeriesDtoList;
+    }
+
+    public List<TimeSeriesDto> readUsDeathsCsv() {
+        log.debug("Invoke read us deaths time series CSV from github");
+        List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
+        try {
+            URL deaths = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv");
+            timeSeriesDtoList = readTimeSeriesUsDeathsCSV(deaths);
+        } catch (Exception e) {
+            log.warn("Occurred an exception while reading us deaths CSV from github {}", e.getMessage());
+        }
+        log.debug("Returned time series list with all us deaths values");
         return timeSeriesDtoList;
     }
 
@@ -72,7 +97,7 @@ public class ReadTimeSeriesCSV {
     }
 
     private List<TimeSeriesDto> readTimeSeriesCSV(URL url) {
-        log.debug("Invoke read CSV from github");
+        log.debug("Invoke read time series from CSV on github");
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
 
         try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -103,7 +128,86 @@ public class ReadTimeSeriesCSV {
             }
             log.debug("Add all time series object to list");
         } catch (Exception e) {
-            log.warn("Occurred an exception while reading csv from github {}", e.getMessage());
+            log.warn("Occurred an exception while reading csv on github {}", e.getMessage());
+        }
+        return timeSeriesDtoList;
+    }
+
+    private List<TimeSeriesDto> readTimeSeriesUsConfirmedCSV(URL url) {
+        log.debug("Invoke read time series of us confirmed from CSV on github");
+        List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+             CSVReader reader = new CSVReaderBuilder(in)
+                     .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS)
+                     .withSkipLines(1)
+                     .build()) {
+
+            LocalDate startDate = LocalDate.of(2020, 01, 22);
+            LocalDate date;
+            String[] record;
+
+            while ((record = reader.readNext()) != null) {
+                TimeSeriesDto timeSeriesDto = new TimeSeriesDto();
+                LinkedHashMap<String, Integer> mapValues = new LinkedHashMap<>();
+                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy", Locale.GERMAN);
+
+                date = startDate;
+                timeSeriesDto.setDistrict(record[5]);
+                timeSeriesDto.setProvince(record[6]);
+                timeSeriesDto.setCountry(record[7]);
+                timeSeriesDto.setCombinedKey(record[10]);
+                for (int i = 11; i < record.length; i++) {
+                    String formattedDate = date.format(outputFormatter);
+                    mapValues.put(formattedDate, Integer.parseInt(record[i]));
+                    date = date.plusDays(1);
+                }
+                timeSeriesDto.setDataMap(mapValues);
+                timeSeriesDtoList.add(timeSeriesDto);
+            }
+            log.debug("Add all time series object of us confirmed to list");
+        } catch (Exception e) {
+            log.warn("Occurred an exception while reading CSV for us confirmed on github {}", e.getMessage());
+        }
+        return timeSeriesDtoList;
+    }
+
+    private List<TimeSeriesDto> readTimeSeriesUsDeathsCSV(URL url) {
+        log.debug("Invoke read time series of us deaths from CSV on github");
+        List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+             CSVReader reader = new CSVReaderBuilder(in)
+                     .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS)
+                     .withSkipLines(1)
+                     .build()) {
+
+            LocalDate startDate = LocalDate.of(2020, 01, 22);
+            LocalDate date;
+            String[] record;
+
+            while ((record = reader.readNext()) != null) {
+                TimeSeriesDto timeSeriesDto = new TimeSeriesDto();
+                LinkedHashMap<String, Integer> mapValues = new LinkedHashMap<>();
+                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy", Locale.GERMAN);
+
+                date = startDate;
+                timeSeriesDto.setDistrict(record[5]);
+                timeSeriesDto.setProvince(record[6]);
+                timeSeriesDto.setCountry(record[7]);
+                timeSeriesDto.setCombinedKey(record[10]);
+                timeSeriesDto.setPopulation(Integer.parseInt(record[11]));
+                for (int i = 12; i < record.length; i++) {
+                    String formattedDate = date.format(outputFormatter);
+                    mapValues.put(formattedDate, Integer.parseInt(record[i]));
+                    date = date.plusDays(1);
+                }
+                timeSeriesDto.setDataMap(mapValues);
+                timeSeriesDtoList.add(timeSeriesDto);
+            }
+            log.debug("Add all time series object of us deaths to list");
+        } catch (Exception e) {
+            log.warn("Occurred an exception while reading CSV for us deaths on github {}", e.getMessage());
         }
         return timeSeriesDtoList;
     }

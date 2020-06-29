@@ -4,17 +4,31 @@ import java.util.LinkedHashMap;
 
 public class TimeSeriesDto {
 
+    String district;
     String province;
     String country;
+    String combinedKey;
+    int population;
     LinkedHashMap<String, Integer> dataMap;
 
     public TimeSeriesDto() {
     }
 
     public TimeSeriesDto(TimeSeriesDto timeSeriesDto) {
+        this.district = timeSeriesDto.getDistrict();
         this.province = timeSeriesDto.getProvince();
         this.country = timeSeriesDto.getCountry();
+        this.combinedKey = timeSeriesDto.getCombinedKey();
+        this.population = timeSeriesDto.getPopulation();
         this.dataMap = timeSeriesDto.getDataMap();
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     public String getProvince() {
@@ -33,6 +47,22 @@ public class TimeSeriesDto {
         this.country = country;
     }
 
+    public String getCombinedKey() {
+        return combinedKey;
+    }
+
+    public void setCombinedKey(String combinedKey) {
+        this.combinedKey = combinedKey;
+    }
+
+    public int getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(int population) {
+        this.population = population;
+    }
+
     public LinkedHashMap<String, Integer> getDataMap() {
         return dataMap;
     }
@@ -44,8 +74,11 @@ public class TimeSeriesDto {
     @Override
     public String toString() {
         return "TimeSeriesDto{" +
-                "province='" + province + '\'' +
+                "district='" + district + '\'' +
+                ", province='" + province + '\'' +
                 ", country='" + country + '\'' +
+                ", combinedKey='" + combinedKey + '\'' +
+                ", population='" + population + '\'' +
                 ", dataMap=" + dataMap +
                 '}';
     }

@@ -103,8 +103,6 @@ function searchFunctionDistrictMobile() {
     }
 }
 
-
-
 /*Get selected country*/
 function getCountryV2(country) {
     document.location.replace("/covid19/timeSeries/country/" + country);

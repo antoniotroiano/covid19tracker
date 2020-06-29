@@ -67,15 +67,15 @@ public class TimeSeriesCountryService {
         log.debug("Invoke get final result of all values in a map");
         Map<String, List<Integer>> mapFinalResult = new HashMap<>();
 
-        List<Integer> confirmedResult = generateFinalResult(interimResult(allValuesOfCountry.get(CONFIRMED_LIST)));
+        List<Integer> confirmedResult = finalResult(interimResult(allValuesOfCountry.get(CONFIRMED_LIST)));
         if (confirmedResult.isEmpty()) {
             mapFinalResult.put("confirmedResult", confirmedResult);
         }
-        List<Integer> recoveredResult = generateFinalResult(interimResult(allValuesOfCountry.get(RECOVERED_LIST)));
+        List<Integer> recoveredResult = finalResult(interimResult(allValuesOfCountry.get(RECOVERED_LIST)));
         if (recoveredResult.isEmpty()) {
             mapFinalResult.put("recoveredResult", recoveredResult);
         }
-        List<Integer> deathsResult = generateFinalResult(interimResult(allValuesOfCountry.get(DEATHS_LIST)));
+        List<Integer> deathsResult = finalResult(interimResult(allValuesOfCountry.get(DEATHS_LIST)));
         if (deathsResult.isEmpty()) {
             mapFinalResult.put("deathsResult", deathsResult);
         }
@@ -102,10 +102,10 @@ public class TimeSeriesCountryService {
         return interimResultList;
     }
 
-    private List<Integer> generateFinalResult(List<List<Integer>> interimResult) {
+    private List<Integer> finalResult(List<List<Integer>> interimResult) {
         log.debug("Invoke final result");
         List<Integer> finalResult = new ArrayList<>();
-        if (interimResult.isEmpty()) {
+        if (interimResult == null || interimResult.isEmpty()) {
             log.debug("The interim result list is empty. No calculation for final result");
             return finalResult;
         }
@@ -122,7 +122,7 @@ public class TimeSeriesCountryService {
 
     public List<Integer> getOneDayValues(List<Integer> values) {
         log.debug("Invoke get one day values of {}", values);
-        if (values.isEmpty()) {
+        if (values == null || values.isEmpty()) {
             log.warn("Values is null for getOneDayValues");
             return Collections.emptyList();
         }
@@ -147,7 +147,7 @@ public class TimeSeriesCountryService {
     public int getLastValue(List<Integer> values) {
         log.debug("Invoke get last value of list {}", values);
         int lastValueInt = 0;
-        if (values.isEmpty()) {
+        if (values == null || values.isEmpty()) {
             log.warn("Values is null for getLastValues");
             return lastValueInt;
         }
@@ -161,7 +161,7 @@ public class TimeSeriesCountryService {
 
     public List<Integer> getEverySecondValue(List<Integer> values) {
         log.debug("Invoke get every second value");
-        if (values.isEmpty()) {
+        if (values == null || values.isEmpty()) {
             log.warn("Values list is null or empty for getEverySecondValue");
             return Collections.emptyList();
         }
@@ -173,7 +173,7 @@ public class TimeSeriesCountryService {
 
     public List<String> getEverySecondDate(List<String> dates) {
         log.debug("Invoke get every second date");
-        if (dates.isEmpty()) {
+        if (dates == null || dates.isEmpty()) {
             log.warn("Date list is null or empty for getEverySecondDate");
             return Collections.emptyList();
         }
@@ -214,15 +214,58 @@ public class TimeSeriesCountryService {
     }
 
     private void getValues(String province, Map<String, List<TimeSeriesDto>> allValuesProvince, Map<String, List<TimeSeriesDto>> getAllValuesCountry, String key) {
-        List<TimeSeriesDto> confirmedList = getAllValuesCountry.get(key)
+        List<TimeSeriesDto> timeSeriesDtoList = getAllValuesCountry.get(key)
                 .stream()
                 .filter(p -> Objects.nonNull(p.getProvince()))
                 .filter(p -> p.getProvince().equals(province))
                 .collect(Collectors.toList());
-        if (!confirmedList.isEmpty()) {
-            allValuesProvince.put(key, confirmedList);
+        if (!timeSeriesDtoList.isEmpty()) {
+            allValuesProvince.put(key, timeSeriesDtoList);
         } else {
             allValuesProvince.put(key, new ArrayList<>());
         }
+    }
+
+    public Map<String, List<TimeSeriesDto>> getUsProvinceTSValues(String province) {
+        log.debug("Invoke get all values for us province {}", province);
+        Map<String, List<TimeSeriesDto>> allValues = new HashMap<>();
+
+        List<TimeSeriesDto> confirmedListCountry = readTimeSeriesCSV.readUsConfirmedCsv()
+                .stream()
+                .filter(c -> c.getProvince().equals(province))
+                .collect(Collectors.toList());
+
+        List<TimeSeriesDto> deathsListCountry = readTimeSeriesCSV.readUsDeathsCsv()
+                .stream()
+                .filter(c -> c.getProvince().equals(province))
+                .collect(Collectors.toList());
+
+        if (confirmedListCountry.isEmpty()) {
+            allValues.put(CONFIRMED_LIST, confirmedListCountry);
+        }
+        if (deathsListCountry.isEmpty()) {
+            allValues.put(DEATHS_LIST, deathsListCountry);
+        }
+        allValues.put(CONFIRMED_LIST, confirmedListCountry);
+        allValues.put(DEATHS_LIST, deathsListCountry);
+        return allValues;
+    }
+
+    public Map<String, List<Integer>> generateUsFinalTSResult(Map<String, List<TimeSeriesDto>> allValuesOfUsProvince) {
+        log.debug("Invoke get final result of all values in a map for us");
+        Map<String, List<Integer>> mapUsFinalResult = new HashMap<>();
+
+        List<Integer> confirmedResult = finalResult(interimResult(allValuesOfUsProvince.get(CONFIRMED_LIST)));
+        if (confirmedResult.isEmpty()) {
+            mapUsFinalResult.put("confirmedResult", confirmedResult);
+        }
+        List<Integer> deathsResult = finalResult(interimResult(allValuesOfUsProvince.get(DEATHS_LIST)));
+        if (deathsResult.isEmpty()) {
+            mapUsFinalResult.put("deathsResult", deathsResult);
+        }
+
+        mapUsFinalResult.put("confirmedResult", confirmedResult);
+        mapUsFinalResult.put("deathsResult", deathsResult);
+        return mapUsFinalResult;
     }
 }

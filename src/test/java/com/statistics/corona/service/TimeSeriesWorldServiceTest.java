@@ -142,10 +142,10 @@ public class TimeSeriesWorldServiceTest {
         countryDetailsDto.setConfirmed(100);
         countryDetailsDto.setRecovered(100);
         countryDetailsDto.setDeaths(100);
-        when(readJSON.newReadDetailsCountry(anyString())).thenReturn(countryDetailsDto);
+        when(readJSON.readCountryValues(anyString())).thenReturn(countryDetailsDto);
 
-        assertThat(dailyReportService.getDetailsForCountry("Germany")).isNotNull();
-        assertThat(dailyReportService.getDetailsForCountry("Germany")).isEqualTo(Optional.of(countryDetailsDto));
+        assertThat(dailyReportService.getCountryValues("Germany")).isNotNull();
+        assertThat(dailyReportService.getCountryValues("Germany")).isEqualTo(Optional.of(countryDetailsDto));
     }
 
     @Test

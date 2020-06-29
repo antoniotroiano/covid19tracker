@@ -176,7 +176,7 @@ function barChartSelectedCountry(canvas, dates, label, listData) {
                         display: true
                     },
                     ticks: {
-                        userCallback: function (value, index, values) {
+                        userCallback: function (value) {
                             value = value.toString();
                             value = value.split(/(?=(?:...)*$)/);
                             value = value.join('.');
@@ -269,7 +269,7 @@ function barChartSelectedCountryPerDay(canvasPerDay, datesPerDay, labelPerDay, l
                         display: true
                     },
                     ticks: {
-                        userCallback: function (value, index, values) {
+                        userCallback: function (value) {
                             value = value.toString();
                             value = value.split(/(?=(?:...)*$)/);
                             value = value.join('.');

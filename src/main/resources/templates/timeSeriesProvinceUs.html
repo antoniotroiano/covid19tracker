@@ -22,7 +22,7 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="title is-3 has-text-centered">COVID-19 <span
-                        th:text="${selectedProvince}"></span>, <span th:text="${provinceDetails.getCountry()}"></span>
+                        th:text="${selectedProvince}"></span>, <span th:text="${dailyReportUsDto.getCountry()}"></span>
                 </div>
             </div>
         </div>
@@ -31,10 +31,10 @@
                 <div class="buttons is-centered">
                     <a class="button is-small is-link is-rounded" href="/" type="submit">Home</a>
                     <a class="button is-small is-link is-rounded" href="/sir" type="submit">SIR-Model</a>
-                    <a class="button is-small is-link is-rounded"
-                       th:href="@{/covid19/timeSeries/{country}(country = ${provinceDetails.getCountry()})}"
-                       type="submit">Back</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/symptoms">Symptoms</a>
+                    <a class="button is-small is-link is-rounded"
+                       th:href="@{/covid19/timeSeries/country/provinces/{country}/us(country = ${dailyReportUsDto.getCountry()})}"
+                       type="submit">Back</a>
                 </div>
                 <div class="buttons is-centered">
                     <div class="dropdown">
@@ -67,8 +67,8 @@
                                                                         src="/img/checkmark-outline.svg"></span>
                                 <div class="is-size-5">Confirmed</div>
                                 <div class="is-size-6"
-                                     th:text="${provinceDetails.getConfirmed() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(provinceDetails.getConfirmed(), 3, 'POINT')}"></div>
+                                     th:text="${dailyReportUsDto.getConfirmed() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(dailyReportUsDto.getConfirmed(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -77,8 +77,8 @@
                                                                         src="/img/fitness-outline.svg"></span>
                                 <div class="is-size-5">Recovered</div>
                                 <div class="is-size-6"
-                                     th:text="${provinceDetails.getRecovered() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(provinceDetails.getRecovered(), 3, 'POINT')}"></div>
+                                     th:text="${dailyReportUsDto.getRecovered() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(dailyReportUsDto.getRecovered(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -86,8 +86,8 @@
                                 <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
                                 <div class="is-size-5">Deaths</div>
                                 <div class="is-size-6"
-                                     th:text="${provinceDetails.getDeaths() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(provinceDetails.getDeaths(), 3, 'POINT')}"></div>
+                                     th:text="${dailyReportUsDto.getDeaths() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(dailyReportUsDto.getDeaths(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                     </div>
@@ -100,12 +100,8 @@
                                                                         src="/img/medkit-outline.svg"></span>
                                 <div class="is-size-5">Active cases</div>
                                 <div class="is-size-6"
-                                     th:text="${provinceDetails.getActive() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(provinceDetails.getActive(), 3, 'POINT')}"></div>
-                                <hr class="dropdown-divider">
-                                <div class="is-size-6 is-pulled-right"
-                                     th:text="${date == null} ? ${'No value'} : ${date}"></div>
-                                <div class="is-size-5">Updated:</div>
+                                     th:text="${dailyReportUsDto.getActive() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(dailyReportUsDto.getActive(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -113,15 +109,50 @@
                                 <span class="icon is-pulled-right"><img alt="analytics"
                                                                         src="/img/analytics-outline.svg"></span>
                                 <div class="is-size-5">Rate</div>
-                                <div class="is-size-7 is-pulled-right tag is-danger"
-                                     th:text="${provinceDetails.getIncidenceRate() == null} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(provinceDetails.getIncidenceRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                <div class="is-size-7 is-pulled-right tag is-warning"
+                                     th:text="${dailyReportUsDto.getIncidentRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(dailyReportUsDto.getIncidentRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                 <div class="is-size-6">Incidence rate:</div>
                                 <hr class="dropdown-divider">
-                                <div class="is-size-7 is-pulled-right tag is-success"
-                                     th:text="${provinceDetails.getCaseFatalityRatio() == null} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(provinceDetails.getCaseFatalityRatio(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                                <div class="is-size-6">Confirmed per 100.000:</div>
+                                <div class="is-size-7 is-pulled-right tag is-danger"
+                                     th:text="${dailyReportUsDto.getMortalityRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(dailyReportUsDto.getMortalityRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                <div class="is-size-6">Mortality rate:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-7 is-pulled-right tag is-info"
+                                     th:text="${dailyReportUsDto.getTestingRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(dailyReportUsDto.getTestingRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                <div class="is-size-6">Testing rate:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-7 is-pulled-right tag is-warning"
+                                     th:text="${dailyReportUsDto.getHospitalizationRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(dailyReportUsDto.getHospitalizationRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                <div class="is-size-6">Hospitalization rate:</div>
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child notification is-light">
+                                <span class="icon is-pulled-right"><img alt="analytics"
+                                                                        src="/img/analytics-outline.svg"></span>
+                                <div class="is-size-5">Data</div>
+                                <div class="is-size-6 is-pulled-right tag"
+                                     th:text="${population == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(population, 3, 'POINT')}"></div>
+                                <div class="is-size-6">Population:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-6 is-pulled-right tag"
+                                     th:text="${dailyReportUsDto.getPeopleTested() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(dailyReportUsDto.getPeopleTested(), 3, 'POINT')}"></div>
+                                <div class="is-size-6">People tested:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-6 is-pulled-right tag"
+                                     th:text="${dailyReportUsDto.getPeopleHospitalized() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(dailyReportUsDto.getPeopleHospitalized(), 3, 'POINT')}"></div>
+                                <div class="is-size-6">People hospitalized:</div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-6 is-pulled-right"
+                                     th:text="${date == null} ? ${'No value'} : ${date}"></div>
+                                <div class="is-size-6">Updated:</div>
                             </div>
                         </div>
                     </div>
@@ -131,14 +162,12 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
                 <div class="switch-toggle switch-ios">
-                    <input checked id="bar" name="view" onclick="toggleToBarChart()" type="radio">
-                    <label class="is-size-7-mobile" for="bar" onclick="">Bar</label>
-                    <input id="line" name="view" onclick="toggleToLineChart()" type="radio">
+                    <input checked id="line" name="view" onclick="toggleToLineChart()" type="radio">
                     <label class="is-size-7-mobile" for="line" onclick="">Line</label>
+                    <input id="bar" name="view" onclick="toggleToBarChart()" type="radio">
+                    <label class="is-size-7-mobile" for="bar" onclick="">Bar</label>
                     <input id="confirmed" name="view" onclick="toggleToConfirmed()" type="radio">
                     <label class="is-size-7-mobile" for="confirmed" onclick="">Confirmed</label>
-                    <input id="recovered" name="view" onclick="toggleToRecovered()" type="radio">
-                    <label class="is-size-7-mobile" for="recovered" onclick="">Recovered</label>
                     <input id="deaths" name="view" onclick="toggleToDeaths()" type="radio">
                     <label class="is-size-7-mobile" for="deaths" onclick="">Deaths</label>
                     <a></a>
@@ -171,11 +200,6 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <canvas class="box" id="recoveredOneDay"></canvas>
-            </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <canvas class="box" id="deathsOneDay"></canvas>
             </div>
         </div>
@@ -195,44 +219,38 @@
 <script th:inline="javascript">
     let canvasCountry = document.getElementById('canvasCountry');
     /*<![CDATA[*/
-    let country = /*[[${selectedProvince}]]*/ '';
+    let label = /*[[${selectedProvince}]]*/ '';
     let confirmedList = /*[[${confirmedList}]]*/ '';
-    let deathsList = /*[[${recoveredList}]]*/ '';
-    let recoveredList = /*[[${deathsList}]]*/ '';
-    let dates = /*[[${dateList}]]*/ '';
+    let deathsList = /*[[${deathsList}]]*/ '';
+    let recoveredList = /*[[${recoveredList}]]*/ '';
+    let datesList = /*[[${dateList}]]*/ '';
     /*]]>*/
 
-    barLineChartAllValues(canvasCountry, dates, country, confirmedList, recoveredList, deathsList);
+    barLineChartAllValues(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList);
 
     function toggleToBarChart() {
-        changeChart(canvasCountry, dates, country, confirmedList, recoveredList, deathsList, 'bar');
+        changeChart(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList, 'bar');
     }
 
     function toggleToLineChart() {
-        changeChart(canvasCountry, dates, country, confirmedList, recoveredList, deathsList, 'line');
+        changeChart(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList, 'line');
     }
 
     function toggleToConfirmed() {
-        changeChart(canvasCountry, dates, 'Confirmed', confirmedList, recoveredList, deathsList)
-    }
-
-    function toggleToRecovered() {
-        changeChart(canvasCountry, dates, 'Recovered', confirmedList, recoveredList, deathsList);
+        changeChart(canvasCountry, datesList, 'Confirmed', confirmedList, recoveredList, deathsList)
     }
 
     function toggleToDeaths() {
-        changeChart(canvasCountry, dates, 'Deaths', confirmedList, recoveredList, deathsList);
+        changeChart(canvasCountry, datesList, 'Deaths', confirmedList, recoveredList, deathsList);
     }
 
     /*<![CDATA[*/
     let confirmedOneDay = /*[[${dailyTrendConfirmed}]]*/ '';
-    let recoveredOneDay = /*[[${dailyTrendRecovered}]]*/ '';
     let deathsOneDay = /*[[${dailyTrendDeaths}]]*/ '';
     let datesOneDay = /*[[${dateListPerDay}]]*/ '';
     /*]]>*/
 
     changedBarChartPerDay(document.getElementById('confirmedOneDay'), datesOneDay, confirmedOneDay, 'Confirmed');
-    changedBarChartPerDay(document.getElementById('recoveredOneDay'), datesOneDay, recoveredOneDay, 'Recovered');
     changedBarChartPerDay(document.getElementById('deathsOneDay'), datesOneDay, deathsOneDay, 'Deaths');
 </script>
 </body>

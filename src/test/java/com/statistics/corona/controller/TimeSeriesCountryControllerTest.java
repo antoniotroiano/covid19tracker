@@ -116,7 +116,7 @@ public class TimeSeriesCountryControllerTest {
         when(timeSeriesCountryService.getCountryNames()).thenReturn(countries);
         when(dateFormat.formatLastUpdateToDate(anyString())).thenReturn("0000.00.00");
         when(dateFormat.formatLastUpdateToTime(anyString())).thenReturn("00:00");
-        when(dailyReportService.getDetailsForCountry(anyString())).thenReturn(Optional.of(germany));
+        when(dailyReportService.getCountryValues(anyString())).thenReturn(Optional.of(germany));
         when(timeSeriesCountryService.getCountryTSValues(anyString())).thenReturn(listGermany);
         when(timeSeriesCountryService.generateFinalTSResult(anyMap())).thenReturn(finalResult);
 

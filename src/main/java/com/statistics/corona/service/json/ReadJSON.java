@@ -6,12 +6,14 @@ import com.statistics.corona.model.TimeSeriesWorldDto;
 import com.statistics.corona.service.DateFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.json.HTTP;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +24,12 @@ public class ReadJSON {
 
     private static final String CONFIRMED = "confirmed";
     private static final String RECOVERED = "recovered";
+    private static final String DEATHS = "deaths";
     private static final String LATEST_DATA = "latest_data";
     private static final String CALCULATED = "calculated";
     private static final String COUNTRY_CODE = "country_code";
+    private static final String LOCATION = "location";
+    private static final String VALUE = "value";
     private static final String NO_NAME = "no_name";
     private final DateFormat dateFormat = new DateFormat();
 
@@ -32,8 +37,6 @@ public class ReadJSON {
         return new JSONObject(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
     }
 
-    //Todo: Return only the JSONArray to a worldService and build the list in the service. Also better for testing.
-    //ToDo: Handel the IO Exception
     public List<TimeSeriesWorldDto> readWorldValues() throws IOException {
         log.debug("Invoke read world time series of JSON");
         List<TimeSeriesWorldDto> allValuesWorld = new ArrayList<>();
@@ -46,7 +49,7 @@ public class ReadJSON {
             timeSeriesWorldDto.setDate(dateFormat.formatDate(jsonArrayWorld.getJSONObject(i).optString("date", "2000-01-01")));
             timeSeriesWorldDto.setConfirmed(jsonArrayWorld.getJSONObject(i).optInt(CONFIRMED, 0));
             timeSeriesWorldDto.setRecovered(jsonArrayWorld.getJSONObject(i).optInt(RECOVERED, 0));
-            timeSeriesWorldDto.setDeaths(jsonArrayWorld.getJSONObject(i).optInt("deaths", 0));
+            timeSeriesWorldDto.setDeaths(jsonArrayWorld.getJSONObject(i).optInt(DEATHS, 0));
             timeSeriesWorldDto.setActive(jsonArrayWorld.getJSONObject(i).optInt("active", 0));
             timeSeriesWorldDto.setNewConfirmed(jsonArrayWorld.getJSONObject(i).optInt("new_confirmed", 0));
             timeSeriesWorldDto.setNewRecovered(jsonArrayWorld.getJSONObject(i).optInt("new_recovered", 0));
@@ -60,7 +63,7 @@ public class ReadJSON {
         return allValuesWorld;
     }
 
-    public CountryDetailsDto newReadDetailsCountry(String country) throws IOException {
+    public CountryDetailsDto readCountryValues(String country) throws IOException {
         log.debug("Invoke get country details for {}", country);
         CountryDetailsDto countryDetailsDto = new CountryDetailsDto();
 
@@ -71,10 +74,11 @@ public class ReadJSON {
             country = "Taiwan";
         }
 
-        JSONObject jsonObjectFirst = getJSONObject("https://covid19.mathdro.id/api/countries/" + country);
-        countryDetailsDto.setConfirmed(jsonObjectFirst.getJSONObject(CONFIRMED).optInt("value", 0));
-        countryDetailsDto.setRecovered(jsonObjectFirst.getJSONObject(RECOVERED).optInt("value", 0));
-        countryDetailsDto.setDeaths(jsonObjectFirst.getJSONObject("deaths").optInt("value", 0));
+        JSONObject jsonObjectFirst = getJSONObject("https://covid19.mathdro.id/api/countries/" +
+                URLEncoder.encode(country, StandardCharsets.UTF_8).replace("+", "%20"));
+        countryDetailsDto.setConfirmed(jsonObjectFirst.getJSONObject(CONFIRMED).optInt(VALUE, 0));
+        countryDetailsDto.setRecovered(jsonObjectFirst.getJSONObject(RECOVERED).optInt(VALUE, 0));
+        countryDetailsDto.setDeaths(jsonObjectFirst.getJSONObject(DEATHS).optInt(VALUE, 0));
 
         JSONObject jsonObject = getJSONObject("https://corona.lmao.ninja/v2/countries/" + country);
         countryDetailsDto.setLastUpdate(jsonObject.optLong("updated", 0));
@@ -101,7 +105,7 @@ public class ReadJSON {
         JSONArray jsonArray = jsonObjectSecond.getJSONArray("data");
         country = checkCountryName(country);
         for (int i = 0; i < jsonArray.length(); i++) {
-            if (jsonArray.getJSONObject(i).getString("location").contains(country)) {
+            if (jsonArray.getJSONObject(i).getString(LOCATION).contains(country)) {
                 countryDetailsDto.setCode(jsonArray.getJSONObject(i).optString(COUNTRY_CODE, NO_NAME));
             }
         }
@@ -164,7 +168,7 @@ public class ReadJSON {
         for (int i = 0; i < jsonArray.length(); i++) {
             if (jsonArray.getJSONObject(i).getString(COUNTRY_CODE).equals(code)) {
                 DistrictDto districtDto = new DistrictDto();
-                districtDto.setLocation(jsonArray.getJSONObject(i).optString("location", NO_NAME));
+                districtDto.setLocation(jsonArray.getJSONObject(i).optString(LOCATION, NO_NAME));
                 districtDto.setCode(jsonArray.getJSONObject(i).optString(COUNTRY_CODE, NO_NAME));
                 districtDto.setConfirmed(jsonArray.getJSONObject(i).optInt(CONFIRMED, 0));
                 districtDto.setDead(jsonArray.getJSONObject(i).optInt("dead", 0));

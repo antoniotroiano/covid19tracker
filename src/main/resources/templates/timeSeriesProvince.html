@@ -31,10 +31,10 @@
                 <div class="buttons is-centered">
                     <a class="button is-small is-link is-rounded" href="/" type="submit">Home</a>
                     <a class="button is-small is-link is-rounded" href="/sir" type="submit">SIR-Model</a>
+                    <a class="button is-small is-link is-rounded" href="/covid19/symptoms">Symptoms</a>
                     <a class="button is-small is-link is-rounded"
                        th:href="@{/covid19/timeSeries/{country}(country = ${provinceDetails.getCountry()})}"
                        type="submit">Back</a>
-                    <a class="button is-small is-link is-rounded" href="/covid19/symptoms">Symptoms</a>
                 </div>
                 <div class="buttons is-centered">
                     <div class="dropdown">
@@ -199,29 +199,29 @@
     let confirmedList = /*[[${confirmedList}]]*/ '';
     let deathsList = /*[[${deathsList}]]*/ '';
     let recoveredList = /*[[${recoveredList}]]*/ '';
-    let dates = /*[[${dateList}]]*/ '';
+    let datesList = /*[[${dateList}]]*/ '';
     /*]]>*/
 
-    barLineChartAllValues(canvasCountry, dates, country, confirmedList, recoveredList, deathsList);
+    barLineChartAllValues(canvasCountry, datesList, country, confirmedList, recoveredList, deathsList);
 
     function toggleToBarChart() {
-        changeChart(canvasCountry, dates, country, confirmedList, recoveredList, deathsList, 'bar');
+        changeChart(canvasCountry, datesList, country, confirmedList, recoveredList, deathsList, 'bar');
     }
 
     function toggleToLineChart() {
-        changeChart(canvasCountry, dates, country, confirmedList, recoveredList, deathsList, 'line');
+        changeChart(canvasCountry, datesList, country, confirmedList, recoveredList, deathsList, 'line');
     }
 
     function toggleToConfirmed() {
-        changeChart(canvasCountry, dates, 'Confirmed', confirmedList, recoveredList, deathsList)
+        changeChart(canvasCountry, datesList, 'Confirmed', confirmedList, recoveredList, deathsList)
     }
 
     function toggleToRecovered() {
-        changeChart(canvasCountry, dates, 'Recovered', confirmedList, recoveredList, deathsList);
+        changeChart(canvasCountry, datesList, 'Recovered', confirmedList, recoveredList, deathsList);
     }
 
     function toggleToDeaths() {
-        changeChart(canvasCountry, dates, 'Deaths', confirmedList, recoveredList, deathsList);
+        changeChart(canvasCountry, datesList, 'Deaths', confirmedList, recoveredList, deathsList);
     }
 
     /*<![CDATA[*/
