@@ -6,7 +6,7 @@
 
     <groupId>com.statistics</groupId>
     <artifactId>statistics-corona</artifactId>
-    <version>3.1.1-SNAPSHOT</version>
+    <version>3.1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
