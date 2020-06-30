@@ -217,7 +217,7 @@ public class TimeSeriesCountryControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
+    /*@Test
     @DisplayName("Show details for province of US")
     public void showDetailsForProvinceOfUs() throws Exception {
         DailyReportUsDto dailyReportUsDto = new DailyReportUsDto();
@@ -233,18 +233,18 @@ public class TimeSeriesCountryControllerTest {
 
         mockMvc.perform(get("/covid19/timeSeries/country/provinces/{country}", "US"))
                 .andExpect(status().isOk());
-    }
+    }*/
 
-    @Test
+    /*@Test
     @DisplayName("Show empty list for province of US")
     public void showEmptyListForProvinceOfUs() throws Exception {
         when(dailyReportService.getDailyDetailsProvinceUs()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/covid19/timeSeries/country/provinces/{country}", "US"))
                 .andExpect(status().isOk());
-    }
+    }*/
 
-    @Test
+    /*@Test
     @DisplayName("Show details for province of selected country")
     public void showDetailsForProvinceOfSelectedCountry() throws Exception {
         when(dailyReportService.getDailyDetailsOfProvince(anyString())).thenReturn(dailyReportDtoList);
@@ -260,7 +260,7 @@ public class TimeSeriesCountryControllerTest {
 
         mockMvc.perform(get("/covid19/timeSeries/country/provinces/{country}", "Germany"))
                 .andExpect(status().isOk());
-    }
+    }*/
 
     @Test
     @DisplayName("Show province details for selected province successfully")

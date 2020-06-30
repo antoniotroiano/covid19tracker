@@ -159,14 +159,14 @@ public class ReadJSON {
         return country;
     }
 
-    public List<DistrictDto> readDistrictsValues(String code) throws IOException {
-        log.debug("Invoke get district values of {}", code);
+    public List<DistrictDto> readDistrictsValues() throws IOException {
+        log.debug("Invoke get district values of ");
         List<DistrictDto> districtDtoList = new ArrayList<>();
 
         JSONObject jsonObject = getJSONObject("https://www.trackcorona.live/api/cities");
         JSONArray jsonArray = jsonObject.getJSONArray("data");
         for (int i = 0; i < jsonArray.length(); i++) {
-            if (jsonArray.getJSONObject(i).getString(COUNTRY_CODE).equals(code)) {
+            //if (jsonArray.getJSONObject(i).getString(COUNTRY_CODE).equals(code)) {
                 DistrictDto districtDto = new DistrictDto();
                 districtDto.setLocation(jsonArray.getJSONObject(i).optString(LOCATION, NO_NAME));
                 districtDto.setCode(jsonArray.getJSONObject(i).optString(COUNTRY_CODE, NO_NAME));
@@ -178,9 +178,9 @@ public class ReadJSON {
                 districtDto.setVelocityRecovered(jsonArray.getJSONObject(i).optInt("velocity_recovered", 0));
                 districtDto.setLastUpdate(jsonArray.getJSONObject(i).optString("updated", NO_NAME));
                 districtDtoList.add(districtDto);
-            }
+            //}
         }
-        log.debug("Return list with all district values of {}", code);
+        log.debug("Return list with all district values of ");
         return districtDtoList;
     }
 }

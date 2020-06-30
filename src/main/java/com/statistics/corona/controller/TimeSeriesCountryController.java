@@ -9,6 +9,7 @@ import com.statistics.corona.service.DailyReportService;
 import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.TimeSeriesCountryService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -264,10 +265,15 @@ public class TimeSeriesCountryController {
         model.addAttribute("listCountries", allCountries);
     }
 
-    private void getDistrictValues(Model model, String code) {
-        List<DistrictDto> districtDtoList = dailyReportService.getDistrictValues(code);
-        if (!districtDtoList.isEmpty()) {
-            model.addAttribute("districtValues", districtDtoList);
+    @Async
+    public void getDistrictValues(Model model, String code) {
+        List<DistrictDto> districtDtoList = dailyReportService.getDistrictValues();
+        List<DistrictDto> districtDtoListSelectedDistrict = districtDtoList
+                .stream()
+                .filter(c -> c.getCode().equals(code))
+                .collect(Collectors.toList());
+        if (!districtDtoListSelectedDistrict.isEmpty()) {
+            model.addAttribute("districtValues", districtDtoListSelectedDistrict);
         }
     }
 }

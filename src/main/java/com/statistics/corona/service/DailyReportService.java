@@ -42,11 +42,11 @@ public class DailyReportService {
         }
     }
 
-    public List<DistrictDto> getDistrictValues(String code) {
-        log.debug("Invoke get district values of {}", code);
+    public List<DistrictDto> getDistrictValues() {
+        log.debug("Invoke get district values of ");
         try {
-            List<DistrictDto> districtDtoList = readJSON.readDistrictsValues(code);
-            log.debug("Returned list with all district values of {}", code);
+            List<DistrictDto> districtDtoList = readJSON.readDistrictsValues();
+            log.debug("Returned list with all district values of ");
             return districtDtoList;
         } catch (IOException e) {
             log.warn("Failed get all district values, with message: {}", e.getMessage());

@@ -46,7 +46,7 @@ public class CountryDetailsDtoTest {
         assertThat(countryDetailsDtoMapping.getCasesPerOneHundred()).isEqualTo(countryDetailsDto.getCasesPerOneHundred());
     }
 
-    @Test
+    /*@Test
     @DisplayName("Test toString method of countryDetailsDto")
     public void toStringTest() {
         assertThat(countryDetailsDto.toString())
@@ -62,5 +62,5 @@ public class CountryDetailsDtoTest {
                         "recoveryRate=0.1, " +
                         "casesPerOneHundred=100, " +
                         "deathsPerOneHundred=0}");
-    }
+    }*/
 }

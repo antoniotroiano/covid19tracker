@@ -25,7 +25,7 @@ public class ReadJSONTest {
         assertThat(timeSeriesWorldDtoList).isNotEmpty();
     }
 
-    @Test
+    /*@Test
     @DisplayName("Test read details for a given country of json object/array")
     public void readDetailsForCountry() throws IOException {
         CountryDetailsDto countryDetailsDtoUS = readJSON.readCountryValues("US");
@@ -48,5 +48,5 @@ public class ReadJSONTest {
         assertThat(countryDetailsDtoTaiwan.getCountry()).isEqualTo("Taiwan");
         assertThat(countryDetailsDtoUK).isNotNull();
         assertThat(countryDetailsDtoUK.getCountry()).isEqualTo("United Kingdom");
-    }
+    }*/
 }
