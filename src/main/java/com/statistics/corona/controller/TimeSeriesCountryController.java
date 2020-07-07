@@ -275,5 +275,6 @@ public class TimeSeriesCountryController {
         if (!districtDtoListSelectedDistrict.isEmpty()) {
             model.addAttribute("districtValues", districtDtoListSelectedDistrict);
         }
+        //Add handling when empty
     }
 }
