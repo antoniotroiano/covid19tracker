@@ -2,7 +2,7 @@ package com.statistics.corona.model;
 
 public class TimeSeriesWorldDto {
 
-    String lastUpdate;
+    String updated_at;
     String date;
     int confirmed;
     int recovered;
@@ -11,18 +11,18 @@ public class TimeSeriesWorldDto {
     int newConfirmed;
     int newRecovered;
     int newDeaths;
-    boolean inProgress;
+    boolean is_in_progress;
 
     public TimeSeriesWorldDto() {
         //Always needed an empty constructor
     }
 
-    public String getLastUpdate() {
-        return lastUpdate;
+    public String getUpdated_at() {
+        return updated_at;
     }
 
-    public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
     }
 
     public String getDate() {
@@ -89,18 +89,18 @@ public class TimeSeriesWorldDto {
         this.newDeaths = newDeaths;
     }
 
-    public boolean isInProgress() {
-        return inProgress;
+    public boolean isIs_in_progress() {
+        return is_in_progress;
     }
 
-    public void setInProgress(boolean inProgress) {
-        this.inProgress = inProgress;
+    public void setIs_in_progress(boolean is_in_progress) {
+        this.is_in_progress = is_in_progress;
     }
 
     @Override
     public String toString() {
         return "WorldTimeSeriesDto{" +
-                "lastUpdate='" + lastUpdate + '\'' +
+                "updated_at='" + updated_at + '\'' +
                 ", date='" + date + '\'' +
                 ", confirmed=" + confirmed +
                 ", recovered=" + recovered +
@@ -109,7 +109,7 @@ public class TimeSeriesWorldDto {
                 ", newConfirmed=" + newConfirmed +
                 ", newRecovered=" + newRecovered +
                 ", newDeaths=" + newDeaths +
-                ", inProgress=" + inProgress +
+                ", is_in_progress=" + is_in_progress +
                 '}';
     }
 }

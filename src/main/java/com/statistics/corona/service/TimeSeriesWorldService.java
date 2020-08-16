@@ -22,7 +22,7 @@ public class TimeSeriesWorldService {
         log.debug("Invoke get all values of world");
         List<TimeSeriesWorldDto> timeSeriesWorldDtoList = new ArrayList<>();
         try {
-            timeSeriesWorldDtoList = readJSON.readWorldValues();
+            timeSeriesWorldDtoList = readJSON.readWorldValuesOfJson();
             if (timeSeriesWorldDtoList.isEmpty()) {
                 log.warn("No data available for world time series");
                 return timeSeriesWorldDtoList;

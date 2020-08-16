@@ -70,7 +70,7 @@ public class TimeSeriesCountryController {
         Optional<CountryDetailsDto> countryDetailsDto = dailyReportService.getCountryValues(country);
         if (countryDetailsDto.isPresent()) {
             model.addAttribute("countryDetails", new CountryDetailsDto(countryDetailsDto.get()));
-            String date = dateFormat.formatUnixToDate(countryDetailsDto.get().getLastUpdate());
+            String date = dateFormat.formatUnixToDate(countryDetailsDto.get().getUpdated());
             model.addAttribute("date", date);
 
             Optional<DailyReportDto> dailyReportDto = dailyReportService.getAllDailyCountryValues()
@@ -224,7 +224,7 @@ public class TimeSeriesCountryController {
     }
 
     private void getBaseData(Model model, CountryDetailsDto countryDetailsDto, Map<String, List<Integer>> result, List<String> datesList) {
-        model.addAttribute("selectedCode", countryDetailsDto.getCode());
+        model.addAttribute("selectedCode", countryDetailsDto.getDataObjectCountryInfo().getIso2());
         int activeCases = countryDetailsDto.getConfirmed() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
         model.addAttribute("activeCases", activeCases);
 
@@ -270,11 +270,11 @@ public class TimeSeriesCountryController {
         List<DistrictDto> districtDtoList = dailyReportService.getDistrictValues();
         List<DistrictDto> districtDtoListSelectedDistrict = districtDtoList
                 .stream()
-                .filter(c -> c.getCode().equals(code))
+                .filter(c -> c.getCountry_code().equals(code))
                 .collect(Collectors.toList());
         if (!districtDtoListSelectedDistrict.isEmpty()) {
             model.addAttribute("districtValues", districtDtoListSelectedDistrict);
         }
-        //Add handling when empty
+        //ToDo: Add handling when empty
     }
 }

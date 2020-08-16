@@ -54,10 +54,10 @@ public class TimeSeriesWorldController {
                 .stream()
                 .findFirst()
                 .orElse(new TimeSeriesWorldDto());
-        String date = dateFormat.formatLastUpdateToDate(latestDataWorld.getLastUpdate());
-        String time = dateFormat.formatLastUpdateToTime(latestDataWorld.getLastUpdate());
+        String date = dateFormat.formatLastUpdateToDate(latestDataWorld.getUpdated_at());
+        String time = dateFormat.formatLastUpdateToTime(latestDataWorld.getUpdated_at());
         model.addAttribute("latestDataWorld", latestDataWorld);
-        model.addAttribute("lastUpdate", date + " " + time + "h");
+        model.addAttribute("lastUpdate", date + " " + time + " h");
 
         TimeSeriesWorldDto secondValueWorld = timeSeriesWorldDtoList
                 .stream()

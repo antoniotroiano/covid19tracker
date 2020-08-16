@@ -3,29 +3,29 @@ package com.statistics.corona.model;
 public class DistrictDto {
 
     String location;
-    String code;
+    String country_code;
     int confirmed;
     int dead;
     int recovered;
-    int velocityConfirmed;
-    int velocityDead;
-    int velocityRecovered;
-    String lastUpdate;
+    int velocity_confirmed;
+    int velocity_dead;
+    int velocity_recovered;
+    String updated;
 
     public DistrictDto() {
 
     }
 
-    public DistrictDto(String location, String code, int confirmed, int dead, int recovered, int velocityConfirmed, int velocityDead, int velocityRecovered, String lastUpdate) {
+    public DistrictDto(String location, String country_code, int confirmed, int dead, int recovered, int velocity_confirmed, int velocity_dead, int velocity_recovered, String updated) {
         this.location = location;
-        this.code = code;
+        this.country_code = country_code;
         this.confirmed = confirmed;
         this.dead = dead;
         this.recovered = recovered;
-        this.velocityConfirmed = velocityConfirmed;
-        this.velocityDead = velocityDead;
-        this.velocityRecovered = velocityRecovered;
-        this.lastUpdate = lastUpdate;
+        this.velocity_confirmed = velocity_confirmed;
+        this.velocity_dead = velocity_dead;
+        this.velocity_recovered = velocity_recovered;
+        this.updated = updated;
     }
 
     public String getLocation() {
@@ -36,12 +36,12 @@ public class DistrictDto {
         this.location = location;
     }
 
-    public String getCode() {
-        return code;
+    public String getCountry_code() {
+        return country_code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
     }
 
     public int getConfirmed() {
@@ -68,50 +68,50 @@ public class DistrictDto {
         this.recovered = recovered;
     }
 
-    public int getVelocityConfirmed() {
-        return velocityConfirmed;
+    public int getVelocity_confirmed() {
+        return velocity_confirmed;
     }
 
-    public void setVelocityConfirmed(int velocityConfirmed) {
-        this.velocityConfirmed = velocityConfirmed;
+    public void setVelocity_confirmed(int velocity_confirmed) {
+        this.velocity_confirmed = velocity_confirmed;
     }
 
-    public int getVelocityDead() {
-        return velocityDead;
+    public int getVelocity_dead() {
+        return velocity_dead;
     }
 
-    public void setVelocityDead(int velocityDead) {
-        this.velocityDead = velocityDead;
+    public void setVelocity_dead(int velocity_dead) {
+        this.velocity_dead = velocity_dead;
     }
 
-    public int getVelocityRecovered() {
-        return velocityRecovered;
+    public int getVelocity_recovered() {
+        return velocity_recovered;
     }
 
-    public void setVelocityRecovered(int velocityRecovered) {
-        this.velocityRecovered = velocityRecovered;
+    public void setVelocity_recovered(int velocity_recovered) {
+        this.velocity_recovered = velocity_recovered;
     }
 
-    public String getLastUpdate() {
-        return lastUpdate;
+    public String getUpdated() {
+        return updated;
     }
 
-    public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public void setUpdated(String updated) {
+        this.updated = updated;
     }
 
     @Override
     public String toString() {
         return "DistrictDto{" +
                 "location='" + location + '\'' +
-                ", code='" + code + '\'' +
+                ", country_code='" + country_code + '\'' +
                 ", confirmed=" + confirmed +
                 ", dead=" + dead +
                 ", recovered=" + recovered +
-                ", velocityConfirmed=" + velocityConfirmed +
-                ", velocityDead=" + velocityDead +
-                ", velocityRecovered=" + velocityRecovered +
-                ", lastUpdate='" + lastUpdate + '\'' +
+                ", velocityConfirmed=" + velocity_confirmed +
+                ", velocityDead=" + velocity_dead +
+                ", velocityRecovered=" + velocity_recovered +
+                ", updated='" + updated + '\'' +
                 '}';
     }
 }

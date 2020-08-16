@@ -20,7 +20,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <postgresql.version>42.2.5</postgresql.version>
         <opencsv.version>5.1</opencsv.version>
-        <json.version>20190722</json.version>
+        <json.version>20200518</json.version>
         <commons-io.version>2.6</commons-io.version>
         <lombok.version>1.18.10</lombok.version>
         <commons-math3.version>3.6.1</commons-math3.version>
@@ -81,6 +81,13 @@
             <artifactId>json</artifactId>
             <version>${json.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.11.2</version>
+        </dependency>
+
 
         <dependency>
             <groupId>commons-io</groupId>

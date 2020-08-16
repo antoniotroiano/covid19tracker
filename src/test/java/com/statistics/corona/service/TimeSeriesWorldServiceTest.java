@@ -142,7 +142,7 @@ public class TimeSeriesWorldServiceTest {
         countryDetailsDto.setConfirmed(100);
         countryDetailsDto.setRecovered(100);
         countryDetailsDto.setDeaths(100);
-        when(readJSON.readCountryValues(anyString())).thenReturn(countryDetailsDto);
+        when(readJSON.readCountryValuesOfJson(anyString())).thenReturn(countryDetailsDto);
 
         assertThat(dailyReportService.getCountryValues("Germany")).isNotNull();
         assertThat(dailyReportService.getCountryValues("Germany")).isEqualTo(Optional.of(countryDetailsDto));
@@ -181,7 +181,7 @@ public class TimeSeriesWorldServiceTest {
     @DisplayName("Test get all values of world and test empty list returned")
     public void getAllValuesWorld() throws IOException {
         TimeSeriesWorldDto timeSeriesWorldDto = new TimeSeriesWorldDto();
-        timeSeriesWorldDto.setLastUpdate("0000.00.00");
+        timeSeriesWorldDto.setUpdated_at("0000.00.00");
         timeSeriesWorldDto.setDate("0000.00.00");
         timeSeriesWorldDto.setConfirmed(100);
         timeSeriesWorldDto.setRecovered(100);
@@ -190,15 +190,15 @@ public class TimeSeriesWorldServiceTest {
         timeSeriesWorldDto.setNewConfirmed(100);
         timeSeriesWorldDto.setNewRecovered(100);
         timeSeriesWorldDto.setNewDeaths(100);
-        timeSeriesWorldDto.setInProgress(true);
+        timeSeriesWorldDto.setIs_in_progress(true);
 
         List<TimeSeriesWorldDto> timeSeriesWorldDtoList = Stream.of(timeSeriesWorldDto).collect(Collectors.toList());
 
-        when(readJSON.readWorldValues()).thenReturn(timeSeriesWorldDtoList);
+        when(readJSON.readWorldValuesOfJson()).thenReturn(timeSeriesWorldDtoList);
 
         assertThat(timeSeriesWorldService.getAllValuesWorld()).isNotEmpty();
 
-        when(readJSON.readWorldValues()).thenReturn(Collections.emptyList());
+        when(readJSON.readWorldValuesOfJson()).thenReturn(Collections.emptyList());
 
         assertThat(timeSeriesWorldService.getAllValuesWorld()).isEmpty();
     }

@@ -15,7 +15,7 @@ public class TimeSeriesWorldDtoTest {
 
     @BeforeEach
     public void setUp() {
-        timeSeriesWorldDto.setLastUpdate("0000.00.00");
+        timeSeriesWorldDto.setUpdated_at("0000.00.00");
         timeSeriesWorldDto.setDate("0000.00.00");
         timeSeriesWorldDto.setConfirmed(100);
         timeSeriesWorldDto.setRecovered(100);
@@ -24,13 +24,13 @@ public class TimeSeriesWorldDtoTest {
         timeSeriesWorldDto.setNewConfirmed(100);
         timeSeriesWorldDto.setNewRecovered(100);
         timeSeriesWorldDto.setNewDeaths(100);
-        timeSeriesWorldDto.setInProgress(true);
+        timeSeriesWorldDto.setIs_in_progress(true);
     }
 
     @Test
     @DisplayName("Test getter and setter of timeSeriesWorldDto")
     public void getterSetter() {
-        assertThat(timeSeriesWorldDto.getLastUpdate()).isEqualTo("0000.00.00");
+        assertThat(timeSeriesWorldDto.getUpdated_at()).isEqualTo("0000.00.00");
         assertThat(timeSeriesWorldDto.getDate()).isEqualTo("0000.00.00");
         assertThat(timeSeriesWorldDto.getConfirmed()).isEqualTo(100);
         assertThat(timeSeriesWorldDto.getRecovered()).isEqualTo(100);
@@ -39,14 +39,14 @@ public class TimeSeriesWorldDtoTest {
         assertThat(timeSeriesWorldDto.getNewConfirmed()).isEqualTo(100);
         assertThat(timeSeriesWorldDto.getNewRecovered()).isEqualTo(100);
         assertThat(timeSeriesWorldDto.getNewDeaths()).isEqualTo(100);
-        assertThat(timeSeriesWorldDto.isInProgress()).isTrue();
+        assertThat(timeSeriesWorldDto.isIs_in_progress()).isTrue();
     }
 
     @Test
     @DisplayName("Test toString method of timeSeriesWorldDto")
     public void toStringTest() {
         assertThat(timeSeriesWorldDto.toString())
-                .isEqualTo("WorldTimeSeriesDto{lastUpdate='0000.00.00', " +
+                .isEqualTo("WorldTimeSeriesDto{updated_at='0000.00.00', " +
                         "date='0000.00.00', " +
                         "confirmed=100, " +
                         "recovered=100, " +
@@ -55,6 +55,6 @@ public class TimeSeriesWorldDtoTest {
                         "newConfirmed=100, " +
                         "newRecovered=100, " +
                         "newDeaths=100, " +
-                        "inProgress=true}");
+                        "is_in_progress=true}");
     }
 }

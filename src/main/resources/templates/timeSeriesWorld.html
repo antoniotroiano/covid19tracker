@@ -128,7 +128,7 @@
                             <div class="is-size-6">Deaths rate:</div>
                             <hr class="dropdown-divider">
                             <div class="is-size-5">Last update</div>
-                            <div class="is-size-6" th:text="${latestDataWorld.getLastUpdate() == null} ? ${'No value'}
+                            <div class="is-size-6" th:text="${latestDataWorld.getUpdated_at() == null} ? ${'No value'}
                                          : ${lastUpdate}"></div>
                         </div>
                     </div>

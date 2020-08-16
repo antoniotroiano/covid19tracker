@@ -36,7 +36,7 @@ public class CountryDetailsDtoTest {
         assertThat(countryDetailsDtoMapping.getCountry()).isEqualTo(countryDetailsDto.getCountry());
         //assertThat(countryDetailsDtoMapping.getCode()).isEqualTo(countryDetailsDto.getCode());
         assertThat(countryDetailsDtoMapping.getPopulation()).isEqualTo(countryDetailsDto.getPopulation());
-        assertThat(countryDetailsDtoMapping.getLastUpdate()).isEqualTo(countryDetailsDto.getLastUpdate());
+        assertThat(countryDetailsDtoMapping.getUpdated()).isEqualTo(countryDetailsDto.getUpdated());
         assertThat(countryDetailsDtoMapping.getDeaths()).isEqualTo(countryDetailsDto.getDeaths());
         assertThat(countryDetailsDtoMapping.getConfirmed()).isEqualTo(countryDetailsDto.getConfirmed());
         assertThat(countryDetailsDtoMapping.getRecovered()).isEqualTo(countryDetailsDto.getRecovered());

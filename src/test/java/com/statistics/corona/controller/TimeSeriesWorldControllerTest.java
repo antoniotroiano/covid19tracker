@@ -59,9 +59,9 @@ public class TimeSeriesWorldControllerTest {
         timeSeriesWorldDto.setDeaths(100);
         timeSeriesWorldDto.setNewDeaths(1);
         timeSeriesWorldDto.setActive(100);
-        timeSeriesWorldDto.setInProgress(false);
+        timeSeriesWorldDto.setIs_in_progress(false);
         timeSeriesWorldDto.setDate("0000.00.00");
-        timeSeriesWorldDto.setLastUpdate("0000.00.00");
+        timeSeriesWorldDto.setUpdated_at("0000.00.00");
 
         List<TimeSeriesWorldDto> timeSeriesWorldDtoList = new ArrayList<>();
         timeSeriesWorldDtoList.add(timeSeriesWorldDto);

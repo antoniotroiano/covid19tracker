@@ -33,7 +33,7 @@ public class DailyReportService {
     public Optional<CountryDetailsDto> getCountryValues(String country) {
         log.debug("Invoke get details for country {}", country);
         try {
-            CountryDetailsDto countryDetailsDto = readJSON.readCountryValues(country);
+            CountryDetailsDto countryDetailsDto = readJSON.readCountryValuesOfJson(country);
             log.debug("Returned details for country {}", country);
             return Optional.of(countryDetailsDto);
         } catch (Exception e) {
@@ -44,14 +44,9 @@ public class DailyReportService {
 
     public List<DistrictDto> getDistrictValues() {
         log.debug("Invoke get district values of ");
-        try {
-            List<DistrictDto> districtDtoList = readJSON.readDistrictsValues();
-            log.debug("Returned list with all district values of ");
-            return districtDtoList;
-        } catch (IOException e) {
-            log.warn("Failed get all district values, with message: {}", e.getMessage());
-            return new ArrayList<>();
-        }
+        List<DistrictDto> districtDtoList = readJSON.readDistrictsValues();
+        log.debug("Returned list with all district values of ");
+        return districtDtoList;
     }
 
     public List<DailyReportDto> getDailyDetailsOfProvince(String country) {

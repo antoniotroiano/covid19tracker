@@ -1,10 +1,13 @@
 package com.statistics.corona.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CountryDetailsDto {
 
-    long lastUpdate;
+    long updated;
     String country;
-    String code;
+    @JsonProperty("countryInfo")
+    DataObjectCountryInfo dataObjectCountryInfo;
     int confirmed;
     int todayConfirmed;
     int deaths;
@@ -34,9 +37,9 @@ public class CountryDetailsDto {
     }
 
     public CountryDetailsDto(CountryDetailsDto countryDetailsDto) {
-        this.lastUpdate = countryDetailsDto.getLastUpdate();
+        this.updated = countryDetailsDto.getUpdated();
         this.country = countryDetailsDto.getCountry();
-        this.code = countryDetailsDto.getCode();
+        this.dataObjectCountryInfo = countryDetailsDto.getDataObjectCountryInfo();
         this.confirmed = countryDetailsDto.getConfirmed();
         this.todayConfirmed = countryDetailsDto.getTodayConfirmed();
         this.deaths = countryDetailsDto.getDeaths();
@@ -63,12 +66,12 @@ public class CountryDetailsDto {
         this.deathsPerOneHundred = countryDetailsDto.getDeathsPerOneHundred();
     }
 
-    public long getLastUpdate() {
-        return lastUpdate;
+    public long getUpdated() {
+        return updated;
     }
 
-    public void setLastUpdate(long lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public void setUpdated(long updated) {
+        this.updated = updated;
     }
 
     public String getCountry() {
@@ -79,12 +82,12 @@ public class CountryDetailsDto {
         this.country = country;
     }
 
-    public String getCode() {
-        return code;
+    public DataObjectCountryInfo getDataObjectCountryInfo() {
+        return dataObjectCountryInfo;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setDataObjectCountryInfo(DataObjectCountryInfo dataObjectCountryInfo) {
+        this.dataObjectCountryInfo = dataObjectCountryInfo;
     }
 
     public int getConfirmed() {
@@ -282,9 +285,9 @@ public class CountryDetailsDto {
     @Override
     public String toString() {
         return "CountryDetailsDto{" +
-                "lastUpdate=" + lastUpdate +
+                "updated=" + updated +
                 ", country='" + country + '\'' +
-                ", code='" + code + '\'' +
+                ", dataObjectCountryInfo='" + dataObjectCountryInfo + '\'' +
                 ", confirmed=" + confirmed +
                 ", todayConfirmed=" + todayConfirmed +
                 ", deaths=" + deaths +

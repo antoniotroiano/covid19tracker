@@ -1,13 +1,19 @@
 package com.statistics.corona.service.json;
 
 import com.statistics.corona.model.CountryDetailsDto;
+import com.statistics.corona.model.DataObject;
+import com.statistics.corona.model.DataObjectCountry;
+import com.statistics.corona.model.DataObjectDistrict;
+import com.statistics.corona.model.DistrictDto;
 import com.statistics.corona.model.TimeSeriesWorldDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,9 +26,59 @@ public class ReadJSONTest {
     @Test
     @DisplayName("Test read values for world of json object/array")
     public void readWorldValues() throws IOException {
-        List<TimeSeriesWorldDto> timeSeriesWorldDtoList = readJSON.readWorldValues();
+        List<TimeSeriesWorldDto> timeSeriesWorldDtoList = readJSON.readWorldValuesOfJson();
 
         assertThat(timeSeriesWorldDtoList).isNotEmpty();
+    }
+
+    @Test
+    public void testJacksonJson() throws IOException {
+        /*ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+        URL url = new URL("https://corona-api.com/timeline");
+
+        List<TimeSeriesWorldDto> timeSeriesWorldDto = objectMapper.readValue(url, new TypeReference<>() {
+        });*/
+
+        RestTemplate restTemplate = new RestTemplate();
+        List<TimeSeriesWorldDto> countries = Objects.requireNonNull(restTemplate.getForObject("https://corona-api.com/timeline", DataObject.class)).getTimeSeriesWorldDtoList();
+
+        System.out.println(countries.get(0));
+        System.out.println(countries.get(1));
+        System.out.println(countries.get(206));
+        System.out.println(countries.get(206).getUpdated_at());
+    }
+
+    @Test
+    public void testJacksonJson2() {
+        RestTemplate restTemplate = new RestTemplate();
+        List<DistrictDto> countries = Objects.requireNonNull(restTemplate
+                .getForObject("https://www.trackcorona.live/api/cities", DataObjectDistrict.class))
+                .getDistrictDtoList();
+
+        System.out.println(countries.get(0));
+        System.out.println(countries.get(1));
+        System.out.println(countries.get(206));
+        System.out.println(countries.get(206).getUpdated());
+    }
+
+    @Test
+    public void testJacksonJson3() {
+        RestTemplate restTemplate = new RestTemplate();
+        CountryDetailsDto countries = restTemplate
+                .getForObject("https://corona.lmao.ninja/v2/countries/Germany", CountryDetailsDto.class);
+
+        RestTemplate restTemplate2 = new RestTemplate();
+        DataObjectCountry countries2 = restTemplate2.getForObject("https://covid19.mathdro.id/api/countries/Germany", DataObjectCountry.class);
+
+
+        countries.setConfirmed(countries2.getDataValueConfirmed().getValue());
+        countries.setRecovered(countries2.getDataValueRecovered().getValue());
+        countries.setDeaths(countries2.getDataValueDeaths().getValue());
+        System.out.println(countries);
+/*        System.out.println(countries.get(1));
+        System.out.println(countries.get(206));
+        System.out.println(countries.get(206).getUpdated());*/
     }
 
     /*@Test
