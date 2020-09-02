@@ -66,8 +66,8 @@
                                      th:text="${latestDataWorld.getConfirmed() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(latestDataWorld.getConfirmed(),3,'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${latestDataWorld.getNewConfirmed() != 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNewConfirmed(),3,'POINT')}"></div>
+                                     th:if="${latestDataWorld.getNew_confirmed() != 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNew_confirmed(),3,'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -79,8 +79,8 @@
                                      th:text="${latestDataWorld.getRecovered() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(latestDataWorld.getRecovered(),3,'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${latestDataWorld.getNewRecovered() != 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNewRecovered(),3,'POINT')}"></div>
+                                     th:if="${latestDataWorld.getNew_recovered() != 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNew_recovered(),3,'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -91,8 +91,8 @@
                                      th:text="${latestDataWorld.getDeaths() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(latestDataWorld.getDeaths(),3,'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${latestDataWorld.getNewDeaths() != 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNewDeaths(),3,'POINT')}"></div>
+                                     th:if="${latestDataWorld.getNew_deaths() != 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNew_deaths(),3,'POINT')}"></div>
                             </div>
                         </div>
                     </div>
@@ -114,6 +114,10 @@
                                      th:if="${latestDataWorld.getActive() - secondValueWorld.getActive() < 0}"
                                      th:text="'- ' + ${#numbers.formatInteger(inverted,3,'POINT')}"
                                      th:with="inverted=${-(latestDataWorld.getActive() - secondValueWorld.getActive())}"></div>
+                                <hr class="dropdown-divider">
+                                <div class="is-size-5">Last update</div>
+                                <div class="is-size-6" th:text="${latestDataWorld.getUpdated_at() == null} ? ${'No value'}
+                                         : ${lastUpdate}"></div>
                             </div>
                         </div>
                     </div>
@@ -127,9 +131,10 @@
                                          : ${#numbers.formatDecimal(deathsRate, 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                             <div class="is-size-6">Deaths rate:</div>
                             <hr class="dropdown-divider">
-                            <div class="is-size-5">Last update</div>
-                            <div class="is-size-6" th:text="${latestDataWorld.getUpdated_at() == null} ? ${'No value'}
-                                         : ${lastUpdate}"></div>
+                            <div class="is-size-7 is-pulled-right tag is-success"
+                                 th:text="${recoveryRate == 0} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(recoveryRate, 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                            <div class="is-size-6">Recovery rate:</div>
                         </div>
                     </div>
                 </div>

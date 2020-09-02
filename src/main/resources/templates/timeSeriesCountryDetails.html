@@ -34,8 +34,7 @@
                 </div>
                 <div class="buttons is-centered">
                     <div class="dropdown">
-                        <button class="button is-link is-rounded" onclick="dropDownButton()">Select country
-                        </button>
+                        <button class="button is-link is-rounded" onclick="dropDownButton()">Select country</button>
                         <div class="dropdown-content" id="dropDownCountry">
                             <input class="input" id="dropDownInput" onkeyup="filterFunction()"
                                    placeholder="Search for country ..." type="text">
@@ -51,8 +50,7 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <div class="has-text-centered is-size-5" th:if="${noDetailsProvince}"
-                     th:text="${noDetailsProvince}">No values for province available
+                <div class="has-text-centered is-size-5" th:if="${noDetailsProvince}">No values for province available
                 </div>
                 <br>
                 <div class="column is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd hide-on-small">
@@ -81,7 +79,7 @@
                             <th>Recovered</th>
                             <th>Active</th>
                             <th>Deaths</th>
-                            <th th:if="${timeSeriesAvailable}">More details</th>
+                            <th th:if="${timeSeriesAvailable}">Details</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -173,6 +171,9 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <br>
+                <div class="has-text-centered is-size-5" th:if="${noDistrictValues}">No values for districts available
                 </div>
                 <br>
                 <div class="column is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd hide-on-small">

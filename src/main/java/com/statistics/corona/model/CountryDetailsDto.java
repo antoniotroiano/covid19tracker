@@ -1,6 +1,7 @@
 package com.statistics.corona.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.statistics.corona.model.data.DataObjectCountryInfo;
 
 public class CountryDetailsDto {
 

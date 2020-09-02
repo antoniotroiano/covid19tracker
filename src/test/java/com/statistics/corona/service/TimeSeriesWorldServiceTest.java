@@ -3,8 +3,8 @@ package com.statistics.corona.service;
 import com.statistics.corona.model.CountryDetailsDto;
 import com.statistics.corona.model.TimeSeriesDto;
 import com.statistics.corona.model.TimeSeriesWorldDto;
-import com.statistics.corona.service.csv.ReadTimeSeriesCSV;
-import com.statistics.corona.service.json.ReadJSON;
+import com.statistics.corona.service.csv.CsvUtilsTimeSeries;
+import com.statistics.corona.service.json.JsonUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,10 +39,10 @@ public class TimeSeriesWorldServiceTest {
     private final List<Integer> values = Arrays.asList(1, 3, 5, 7, 8, 19, 3, 9);
 
     @Mock
-    private ReadTimeSeriesCSV readTimeSeriesCSV;
+    private CsvUtilsTimeSeries csvUtilsTimeSeries;
 
     @Mock
-    private ReadJSON readJSON;
+    private JsonUtils jsonUtils;
 
     @InjectMocks
     private TimeSeriesCountryService timeSeriesCountryService;
@@ -94,12 +94,12 @@ public class TimeSeriesWorldServiceTest {
     @Test
     @DisplayName("Get all values of selected country")
     public void getAllValuesCountry() {
-        when(readTimeSeriesCSV.readConfirmedCsv()).thenReturn(confirmed);
-        when(readTimeSeriesCSV.readRecoveredCsv()).thenReturn(recovered);
-        when(readTimeSeriesCSV.readDeathsCsv()).thenReturn(deaths);
+        when(csvUtilsTimeSeries.readConfirmedCsv()).thenReturn(confirmed);
+        when(csvUtilsTimeSeries.readRecoveredCsv()).thenReturn(recovered);
+        when(csvUtilsTimeSeries.readDeathsCsv()).thenReturn(deaths);
 
-        assertThat(timeSeriesCountryService.getCountryTSValues("Germany")).isNotEmpty();
-        assertThat(timeSeriesCountryService.getCountryTSValues("Germany")).isEqualTo(allValues);
+        assertThat(timeSeriesCountryService.getTSValuesForOneCountry("Germany")).isNotEmpty();
+        assertThat(timeSeriesCountryService.getTSValuesForOneCountry("Germany")).isEqualTo(allValues);
     }
 
     @Test
@@ -110,9 +110,9 @@ public class TimeSeriesWorldServiceTest {
         finalResult.put("recoveredResult", Arrays.asList(1, 2, 3));
         finalResult.put("deathsResult", Arrays.asList(1, 2, 3));
 
-        when(readTimeSeriesCSV.readConfirmedCsv()).thenReturn(confirmed);
-        when(readTimeSeriesCSV.readRecoveredCsv()).thenReturn(recovered);
-        when(readTimeSeriesCSV.readDeathsCsv()).thenReturn(deaths);
+        when(csvUtilsTimeSeries.readConfirmedCsv()).thenReturn(confirmed);
+        when(csvUtilsTimeSeries.readRecoveredCsv()).thenReturn(recovered);
+        when(csvUtilsTimeSeries.readDeathsCsv()).thenReturn(deaths);
 
         assertThat(timeSeriesCountryService.generateFinalTSResult(allValues)).isNotEmpty();
         assertThat(timeSeriesCountryService.generateFinalTSResult(allValues)).isEqualTo(finalResult);
@@ -142,21 +142,21 @@ public class TimeSeriesWorldServiceTest {
         countryDetailsDto.setConfirmed(100);
         countryDetailsDto.setRecovered(100);
         countryDetailsDto.setDeaths(100);
-        when(readJSON.readCountryValuesOfJson(anyString())).thenReturn(countryDetailsDto);
+        when(jsonUtils.readCountryValuesOfJson(anyString())).thenReturn(countryDetailsDto);
 
-        assertThat(dailyReportService.getCountryValues("Germany")).isNotNull();
-        assertThat(dailyReportService.getCountryValues("Germany")).isEqualTo(Optional.of(countryDetailsDto));
+        assertThat(dailyReportService.getSelectedCountryValues("Germany")).isNotNull();
+        assertThat(dailyReportService.getSelectedCountryValues("Germany")).isEqualTo(Optional.of(countryDetailsDto));
     }
 
     @Test
     @DisplayName("Test get all countries of csv as list and test the list is empty")
     public void getCountry() {
-        when(readTimeSeriesCSV.readCountryName()).thenReturn(Arrays.asList("France", "Spain"));
+        when(csvUtilsTimeSeries.readCountryName()).thenReturn(Arrays.asList("France", "Spain"));
 
         assertThat(timeSeriesCountryService.getCountryNames()).isNotEmpty();
         assertThat(timeSeriesCountryService.getCountryNames()).contains("France");
 
-        when(readTimeSeriesCSV.readCountryName()).thenReturn(Collections.emptyList());
+        when(csvUtilsTimeSeries.readCountryName()).thenReturn(Collections.emptyList());
 
         assertThat(timeSeriesCountryService.getCountryNames()).isEmpty();
     }
@@ -187,18 +187,18 @@ public class TimeSeriesWorldServiceTest {
         timeSeriesWorldDto.setRecovered(100);
         timeSeriesWorldDto.setDeaths(100);
         timeSeriesWorldDto.setActive(100);
-        timeSeriesWorldDto.setNewConfirmed(100);
-        timeSeriesWorldDto.setNewRecovered(100);
-        timeSeriesWorldDto.setNewDeaths(100);
+        timeSeriesWorldDto.setNew_confirmed(100);
+        timeSeriesWorldDto.setNew_recovered(100);
+        timeSeriesWorldDto.setNew_deaths(100);
         timeSeriesWorldDto.setIs_in_progress(true);
 
         List<TimeSeriesWorldDto> timeSeriesWorldDtoList = Stream.of(timeSeriesWorldDto).collect(Collectors.toList());
 
-        when(readJSON.readWorldValuesOfJson()).thenReturn(timeSeriesWorldDtoList);
+        when(jsonUtils.readWorldValuesOfJson()).thenReturn(timeSeriesWorldDtoList);
 
         assertThat(timeSeriesWorldService.getAllValuesWorld()).isNotEmpty();
 
-        when(readJSON.readWorldValuesOfJson()).thenReturn(Collections.emptyList());
+        when(jsonUtils.readWorldValuesOfJson()).thenReturn(Collections.emptyList());
 
         assertThat(timeSeriesWorldService.getAllValuesWorld()).isEmpty();
     }
@@ -206,6 +206,6 @@ public class TimeSeriesWorldServiceTest {
     @Test
     @DisplayName("Test get value for a province")
     public void getAllValuesOfProvince() {
-        assertThat(timeSeriesCountryService.getProvinceTSValues("Australia", "Queensland")).isNotEmpty();
+        //assertThat(timeSeriesCountryService.getProvinceTSValues("Australia", "Queensland")).isNotEmpty();
     }
 }

@@ -1,6 +1,7 @@
-package com.statistics.corona.model;
+package com.statistics.corona.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.statistics.corona.model.TimeSeriesWorldDto;
 
 import java.util.List;
 

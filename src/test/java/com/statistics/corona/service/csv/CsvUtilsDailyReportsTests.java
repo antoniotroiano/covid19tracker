@@ -15,24 +15,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @DisplayName("ReadDailyReportsCSV tests")
-public class ReadDailyReportsCSVTests {
+public class CsvUtilsDailyReportsTests {
 
-    private final ReadDailyReportsCSV readDailyReportsCSV = new ReadDailyReportsCSV();
+    private final CsvUtilsDailyReports csvUtilsDailyReports = new CsvUtilsDailyReports();
 
     @Test
     @DisplayName("Read the daily report CSV and returned list with daily reports DTOs")
     public void readDailyReportsCSV() {
-        List<DailyReportDto> dailyReportDtoList = readDailyReportsCSV.readDailyReportsCSV();
+        List<DailyReportDto> dailyReportDtoList = csvUtilsDailyReports.readDailyReportsCSV();
         assertThat(dailyReportDtoList).isNotEmpty();
 
-        List<DailyReportUsDto> dailyReportUsDtoList = readDailyReportsCSV.readDailyReportUs();
+        List<DailyReportUsDto> dailyReportUsDtoList = csvUtilsDailyReports.readDailyReportUsCSV();
         assertThat(dailyReportUsDtoList).isNotEmpty();
     }
 
     @Test
     @DisplayName("Check URL")
     public void checkURL() throws IOException {
-        URL url = readDailyReportsCSV.getURL("");
+        URL url = csvUtilsDailyReports.getURL();
         HttpURLConnection huc = (HttpURLConnection) url.openConnection();
         huc.setRequestMethod("GET");
         huc.connect();

@@ -1,4 +1,4 @@
-package com.statistics.corona.model;
+package com.statistics.corona.model.data;
 
 public class DataValue {
 

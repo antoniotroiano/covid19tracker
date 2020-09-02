@@ -21,9 +21,9 @@ public class TimeSeriesWorldDtoTest {
         timeSeriesWorldDto.setRecovered(100);
         timeSeriesWorldDto.setDeaths(100);
         timeSeriesWorldDto.setActive(100);
-        timeSeriesWorldDto.setNewConfirmed(100);
-        timeSeriesWorldDto.setNewRecovered(100);
-        timeSeriesWorldDto.setNewDeaths(100);
+        timeSeriesWorldDto.setNew_confirmed(100);
+        timeSeriesWorldDto.setNew_recovered(100);
+        timeSeriesWorldDto.setNew_deaths(100);
         timeSeriesWorldDto.setIs_in_progress(true);
     }
 
@@ -36,9 +36,9 @@ public class TimeSeriesWorldDtoTest {
         assertThat(timeSeriesWorldDto.getRecovered()).isEqualTo(100);
         assertThat(timeSeriesWorldDto.getDeaths()).isEqualTo(100);
         assertThat(timeSeriesWorldDto.getActive()).isEqualTo(100);
-        assertThat(timeSeriesWorldDto.getNewConfirmed()).isEqualTo(100);
-        assertThat(timeSeriesWorldDto.getNewRecovered()).isEqualTo(100);
-        assertThat(timeSeriesWorldDto.getNewDeaths()).isEqualTo(100);
+        assertThat(timeSeriesWorldDto.getNew_confirmed()).isEqualTo(100);
+        assertThat(timeSeriesWorldDto.getNew_recovered()).isEqualTo(100);
+        assertThat(timeSeriesWorldDto.getNew_deaths()).isEqualTo(100);
         assertThat(timeSeriesWorldDto.isIs_in_progress()).isTrue();
     }
 

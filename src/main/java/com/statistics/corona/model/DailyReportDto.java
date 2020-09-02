@@ -4,6 +4,10 @@ import com.opencsv.bean.CsvBindByPosition;
 
 public class DailyReportDto {
 
+    @CsvBindByPosition(position = 0)
+    Integer fips;
+    @CsvBindByPosition(position = 1)
+    String admin2;
     @CsvBindByPosition(position = 2)
     String province;
     @CsvBindByPosition(position = 3)
@@ -30,6 +34,8 @@ public class DailyReportDto {
     }
 
     public DailyReportDto(DailyReportDto dailyReportDto) {
+        this.fips = dailyReportDto.getFips();
+        this.admin2 = dailyReportDto.getAdmin2();
         this.province = dailyReportDto.getProvince();
         this.country = dailyReportDto.getCountry();
         this.lastUpdate = dailyReportDto.getLastUpdate();
@@ -40,6 +46,22 @@ public class DailyReportDto {
         this.combinedKey = dailyReportDto.getCombinedKey();
         this.incidenceRate = dailyReportDto.getIncidenceRate();
         this.caseFatalityRatio = dailyReportDto.getCaseFatalityRatio();
+    }
+
+    public Integer getFips() {
+        return fips;
+    }
+
+    public void setFips(Integer fips) {
+        this.fips = fips;
+    }
+
+    public String getAdmin2() {
+        return admin2;
+    }
+
+    public void setAdmin2(String admin2) {
+        this.admin2 = admin2;
     }
 
     public String getProvince() {
@@ -125,7 +147,9 @@ public class DailyReportDto {
     @Override
     public String toString() {
         return "DailyReportDto{" +
-                "province='" + province + '\'' +
+                "fips=" + fips +
+                ", admin2='" + admin2 + '\'' +
+                ", province='" + province + '\'' +
                 ", country='" + country + '\'' +
                 ", lastUpdate='" + lastUpdate + '\'' +
                 ", confirmed=" + confirmed +

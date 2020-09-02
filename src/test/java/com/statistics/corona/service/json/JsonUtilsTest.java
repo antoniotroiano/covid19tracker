@@ -1,9 +1,9 @@
 package com.statistics.corona.service.json;
 
 import com.statistics.corona.model.CountryDetailsDto;
-import com.statistics.corona.model.DataObject;
-import com.statistics.corona.model.DataObjectCountry;
-import com.statistics.corona.model.DataObjectDistrict;
+import com.statistics.corona.model.data.DataObject;
+import com.statistics.corona.model.data.DataObjectCountry;
+import com.statistics.corona.model.data.DataObjectDistrict;
 import com.statistics.corona.model.DistrictDto;
 import com.statistics.corona.model.TimeSeriesWorldDto;
 import org.junit.jupiter.api.DisplayName;
@@ -19,14 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @DisplayName("ReadJSON tests")
-public class ReadJSONTest {
+public class JsonUtilsTest {
 
-    private final ReadJSON readJSON = new ReadJSON();
+    private final JsonUtils jsonUtils = new JsonUtils();
 
     @Test
     @DisplayName("Test read values for world of json object/array")
     public void readWorldValues() throws IOException {
-        List<TimeSeriesWorldDto> timeSeriesWorldDtoList = readJSON.readWorldValuesOfJson();
+        List<TimeSeriesWorldDto> timeSeriesWorldDtoList = jsonUtils.readWorldValuesOfJson();
 
         assertThat(timeSeriesWorldDtoList).isNotEmpty();
     }
@@ -66,16 +66,16 @@ public class ReadJSONTest {
     public void testJacksonJson3() {
         RestTemplate restTemplate = new RestTemplate();
         CountryDetailsDto countries = restTemplate
-                .getForObject("https://corona.lmao.ninja/v2/countries/Germany", CountryDetailsDto.class);
+                .getForObject("https://corona.lmao.ninja/v2/countries/Australia", CountryDetailsDto.class);
 
         RestTemplate restTemplate2 = new RestTemplate();
-        DataObjectCountry countries2 = restTemplate2.getForObject("https://covid19.mathdro.id/api/countries/Germany", DataObjectCountry.class);
-
+        DataObjectCountry countries2 = restTemplate2.getForObject("https://covid19.mathdro.id/api/countries/Australia", DataObjectCountry.class);
 
         countries.setConfirmed(countries2.getDataValueConfirmed().getValue());
         countries.setRecovered(countries2.getDataValueRecovered().getValue());
         countries.setDeaths(countries2.getDataValueDeaths().getValue());
         System.out.println(countries);
+        System.out.println(countries.getDataObjectCountryInfo().getIso2());
 /*        System.out.println(countries.get(1));
         System.out.println(countries.get(206));
         System.out.println(countries.get(206).getUpdated());*/

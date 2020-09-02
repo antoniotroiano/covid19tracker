@@ -8,9 +8,9 @@ public class TimeSeriesWorldDto {
     int recovered;
     int deaths;
     int active;
-    int newConfirmed;
-    int newRecovered;
-    int newDeaths;
+    int new_confirmed;
+    int new_recovered;
+    int new_deaths;
     boolean is_in_progress;
 
     public TimeSeriesWorldDto() {
@@ -65,28 +65,28 @@ public class TimeSeriesWorldDto {
         this.active = active;
     }
 
-    public int getNewConfirmed() {
-        return newConfirmed;
+    public int getNew_confirmed() {
+        return new_confirmed;
     }
 
-    public void setNewConfirmed(int newConfirmed) {
-        this.newConfirmed = newConfirmed;
+    public void setNew_confirmed(int new_confirmed) {
+        this.new_confirmed = new_confirmed;
     }
 
-    public int getNewRecovered() {
-        return newRecovered;
+    public int getNew_recovered() {
+        return new_recovered;
     }
 
-    public void setNewRecovered(int newRecovered) {
-        this.newRecovered = newRecovered;
+    public void setNew_recovered(int new_recovered) {
+        this.new_recovered = new_recovered;
     }
 
-    public int getNewDeaths() {
-        return newDeaths;
+    public int getNew_deaths() {
+        return new_deaths;
     }
 
-    public void setNewDeaths(int newDeaths) {
-        this.newDeaths = newDeaths;
+    public void setNew_deaths(int new_deaths) {
+        this.new_deaths = new_deaths;
     }
 
     public boolean isIs_in_progress() {
@@ -106,9 +106,9 @@ public class TimeSeriesWorldDto {
                 ", recovered=" + recovered +
                 ", deaths=" + deaths +
                 ", active=" + active +
-                ", newConfirmed=" + newConfirmed +
-                ", newRecovered=" + newRecovered +
-                ", newDeaths=" + newDeaths +
+                ", new_confirmed=" + new_confirmed +
+                ", new_recovered=" + new_recovered +
+                ", new_deaths=" + new_deaths +
                 ", is_in_progress=" + is_in_progress +
                 '}';
     }

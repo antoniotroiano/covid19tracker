@@ -15,15 +15,15 @@ public class DailyReportUsDto {
     @CsvBindByPosition(position = 6)
     Integer deaths;
     @CsvBindByPosition(position = 7)
-    Integer recovered;
+    Double recovered;
     @CsvBindByPosition(position = 8)
     Double active;
     @CsvBindByPosition(position = 10)
     Double incidentRate;
     @CsvBindByPosition(position = 11)
-    Integer peopleTested;
+    Double peopleTested;
     @CsvBindByPosition(position = 12)
-    Integer peopleHospitalized;
+    Double peopleHospitalized;
     @CsvBindByPosition(position = 13)
     Double mortalityRate;
     @CsvBindByPosition(position = 16)
@@ -91,11 +91,11 @@ public class DailyReportUsDto {
         this.deaths = deaths;
     }
 
-    public Integer getRecovered() {
+    public Double getRecovered() {
         return recovered;
     }
 
-    public void setRecovered(Integer recovered) {
+    public void setRecovered(Double recovered) {
         this.recovered = recovered;
     }
 
@@ -115,19 +115,19 @@ public class DailyReportUsDto {
         this.incidentRate = incidentRate;
     }
 
-    public Integer getPeopleTested() {
+    public Double getPeopleTested() {
         return peopleTested;
     }
 
-    public void setPeopleTested(Integer peopleTested) {
+    public void setPeopleTested(Double peopleTested) {
         this.peopleTested = peopleTested;
     }
 
-    public Integer getPeopleHospitalized() {
+    public Double getPeopleHospitalized() {
         return peopleHospitalized;
     }
 
-    public void setPeopleHospitalized(Integer peopleHospitalized) {
+    public void setPeopleHospitalized(Double peopleHospitalized) {
         this.peopleHospitalized = peopleHospitalized;
     }
 

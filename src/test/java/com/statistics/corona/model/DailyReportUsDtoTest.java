@@ -20,11 +20,11 @@ public class DailyReportUsDtoTest {
         dailyReportUsDto.setLastUpdate("0000.00.00");
         dailyReportUsDto.setConfirmed(100);
         dailyReportUsDto.setDeaths(100);
-        dailyReportUsDto.setRecovered(100);
+        dailyReportUsDto.setRecovered(100.0);
         dailyReportUsDto.setActive(0.1);
         dailyReportUsDto.setIncidentRate(0.1);
-        dailyReportUsDto.setPeopleTested(100);
-        dailyReportUsDto.setPeopleHospitalized(100);
+        dailyReportUsDto.setPeopleTested(100.0);
+        dailyReportUsDto.setPeopleHospitalized(100.0);
         dailyReportUsDto.setMortalityRate(0.1);
         dailyReportUsDto.setTestingRate(0.1);
         dailyReportUsDto.setHospitalizationRate(0.1);

@@ -2,12 +2,11 @@ package com.statistics.corona.controller;
 
 import com.statistics.corona.model.CountryDetailsDto;
 import com.statistics.corona.model.DailyReportDto;
-import com.statistics.corona.model.DailyReportUsDto;
 import com.statistics.corona.model.TimeSeriesDto;
 import com.statistics.corona.service.TimeSeriesCountryService;
 import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.DailyReportService;
-import com.statistics.corona.service.csv.ReadTimeSeriesCSV;
+import com.statistics.corona.service.csv.CsvUtilsTimeSeries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,8 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -59,7 +56,7 @@ public class TimeSeriesCountryControllerTest {
     private DailyReportService dailyReportService;
 
     @MockBean
-    private ReadTimeSeriesCSV readTimeSeriesCSV;
+    private CsvUtilsTimeSeries csvUtilsTimeSeries;
 
     @MockBean
     private DateFormat dateFormat;
@@ -116,8 +113,8 @@ public class TimeSeriesCountryControllerTest {
         when(timeSeriesCountryService.getCountryNames()).thenReturn(countries);
         when(dateFormat.formatLastUpdateToDate(anyString())).thenReturn("0000.00.00");
         when(dateFormat.formatLastUpdateToTime(anyString())).thenReturn("00:00");
-        when(dailyReportService.getCountryValues(anyString())).thenReturn(Optional.of(germany));
-        when(timeSeriesCountryService.getCountryTSValues(anyString())).thenReturn(listGermany);
+        when(dailyReportService.getSelectedCountryValues(anyString())).thenReturn(Optional.of(germany));
+        when(timeSeriesCountryService.getTSValuesForOneCountry(anyString())).thenReturn(listGermany);
         when(timeSeriesCountryService.generateFinalTSResult(anyMap())).thenReturn(finalResult);
 
         TimeSeriesDto timeSeriesDto1 = new TimeSeriesDto();
@@ -184,7 +181,7 @@ public class TimeSeriesCountryControllerTest {
     @Test
     @DisplayName("Show time series page of a selected country with empty list of all values")
     public void showTimeSeries_emptyGetValuesOfSelectedCountry() throws Exception {
-        when(timeSeriesCountryService.getCountryTSValues(anyString())).thenReturn(Collections.emptyMap());
+        when(timeSeriesCountryService.getTSValuesForOneCountry(anyString())).thenReturn(Collections.emptyMap());
 
         mockMvc.perform(get("/covid19/timeSeries/country/{country}", "Germany"))
                 .andExpect(status().isOk());
@@ -199,23 +196,23 @@ public class TimeSeriesCountryControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
+    /*@Test
     @DisplayName("Show time series page of a selected country with list of details of province")
     public void showTimeSeries_listOfDetailsProvince() throws Exception {
         when(dailyReportService.getDailyDetailsOfProvince(anyString())).thenReturn(dailyReportDtoList);
 
         mockMvc.perform(get("/covid19/timeSeries/country/{country}", "Germany"))
                 .andExpect(status().isOk());
-    }
+    }*/
 
-    @Test
+    /*@Test
     @DisplayName("Show time series page of a selected country with empty list of details of province")
     public void showTimeSeries_emptyListOfDetailsProvince() throws Exception {
         when(dailyReportService.getDailyDetailsOfProvince(anyString())).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/covid19/timeSeries/country/{country}", "Germany"))
                 .andExpect(status().isOk());
-    }
+    }*/
 
     /*@Test
     @DisplayName("Show details for province of US")
@@ -266,7 +263,7 @@ public class TimeSeriesCountryControllerTest {
     @DisplayName("Show province details for selected province successfully")
     public void showProvinceDetails_successfully() throws Exception {
         when(dailyReportService.getProvinceDetails(anyString())).thenReturn(Optional.of(dailyReportDto));
-        when(timeSeriesCountryService.getProvinceTSValues(anyString(), anyString())).thenReturn(allValues);
+        //when(timeSeriesCountryService.getProvinceTSValues(anyString(), anyString())).thenReturn(allValues);
 
         mockMvc.perform(get("/covid19/timeSeries/province/{province}", "Hessen"))
                 .andExpect(status().isOk());

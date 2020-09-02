@@ -20,13 +20,17 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class ReadTimeSeriesCSV {
+public class CsvUtilsTimeSeries {
+
+    private final DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy", Locale.GERMAN);
+    private final LocalDate startDate = LocalDate.of(2020, 01, 22);
 
     public List<TimeSeriesDto> readConfirmedCsv() {
         log.debug("Invoke read confirmed time series CSV from github");
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
-            URL confirmed = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
+            URL confirmed = new URL(
+                    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
             timeSeriesDtoList = readTimeSeriesCSV(confirmed);
         } catch (Exception e) {
             log.warn("Occurred an exception while reading confirmed CSV from github {}", e.getMessage());
@@ -39,7 +43,8 @@ public class ReadTimeSeriesCSV {
         log.debug("Invoke read recovered time series CSV from github");
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
-            URL recovered = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
+            URL recovered = new URL(
+                    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
             timeSeriesDtoList = readTimeSeriesCSV(recovered);
         } catch (Exception e) {
             log.warn("Occurred an exception while reading recovered CSV from github {}", e.getMessage());
@@ -52,7 +57,8 @@ public class ReadTimeSeriesCSV {
         log.debug("Invoke read deaths time series CSV from github");
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
-            URL deaths = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
+            URL deaths = new URL(
+                    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
             timeSeriesDtoList = readTimeSeriesCSV(deaths);
         } catch (Exception e) {
             log.warn("Occurred an exception while reading deaths CSV from github {}", e.getMessage());
@@ -65,7 +71,8 @@ public class ReadTimeSeriesCSV {
         log.debug("Invoke read us confirmed time series CSV from github");
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
-            URL confirmed = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv");
+            URL confirmed = new URL(
+                    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv");
             timeSeriesDtoList = readTimeSeriesUsConfirmedCSV(confirmed);
         } catch (Exception e) {
             log.warn("Occurred an exception while reading us confirmed CSV from github {}", e.getMessage());
@@ -78,7 +85,8 @@ public class ReadTimeSeriesCSV {
         log.debug("Invoke read us deaths time series CSV from github");
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
-            URL deaths = new URL("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv");
+            URL deaths = new URL(
+                    "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv");
             timeSeriesDtoList = readTimeSeriesUsDeathsCSV(deaths);
         } catch (Exception e) {
             log.warn("Occurred an exception while reading us deaths CSV from github {}", e.getMessage());
@@ -99,23 +107,16 @@ public class ReadTimeSeriesCSV {
     private List<TimeSeriesDto> readTimeSeriesCSV(URL url) {
         log.debug("Invoke read time series from CSV on github");
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
-
         try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
              CSVReader reader = new CSVReaderBuilder(in)
                      .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS)
                      .withSkipLines(1)
                      .build()) {
-
-            LocalDate startDate = LocalDate.of(2020, 01, 22);
-            LocalDate date;
             String[] record;
-
             while ((record = reader.readNext()) != null) {
                 TimeSeriesDto timeSeriesDto = new TimeSeriesDto();
                 LinkedHashMap<String, Integer> mapValues = new LinkedHashMap<>();
-                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy", Locale.GERMAN);
-
-                date = startDate;
+                LocalDate date = startDate;
                 timeSeriesDto.setProvince(record[0]);
                 timeSeriesDto.setCountry(record[1]);
                 for (int i = 4; i < record.length; i++) {
@@ -136,23 +137,16 @@ public class ReadTimeSeriesCSV {
     private List<TimeSeriesDto> readTimeSeriesUsConfirmedCSV(URL url) {
         log.debug("Invoke read time series of us confirmed from CSV on github");
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
-
         try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
              CSVReader reader = new CSVReaderBuilder(in)
                      .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS)
                      .withSkipLines(1)
                      .build()) {
-
-            LocalDate startDate = LocalDate.of(2020, 01, 22);
-            LocalDate date;
             String[] record;
-
             while ((record = reader.readNext()) != null) {
                 TimeSeriesDto timeSeriesDto = new TimeSeriesDto();
                 LinkedHashMap<String, Integer> mapValues = new LinkedHashMap<>();
-                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy", Locale.GERMAN);
-
-                date = startDate;
+                LocalDate date = startDate;
                 timeSeriesDto.setDistrict(record[5]);
                 timeSeriesDto.setProvince(record[6]);
                 timeSeriesDto.setCountry(record[7]);
@@ -175,23 +169,16 @@ public class ReadTimeSeriesCSV {
     private List<TimeSeriesDto> readTimeSeriesUsDeathsCSV(URL url) {
         log.debug("Invoke read time series of us deaths from CSV on github");
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
-
         try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
              CSVReader reader = new CSVReaderBuilder(in)
                      .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS)
                      .withSkipLines(1)
                      .build()) {
-
-            LocalDate startDate = LocalDate.of(2020, 01, 22);
-            LocalDate date;
             String[] record;
-
             while ((record = reader.readNext()) != null) {
                 TimeSeriesDto timeSeriesDto = new TimeSeriesDto();
                 LinkedHashMap<String, Integer> mapValues = new LinkedHashMap<>();
-                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy", Locale.GERMAN);
-
-                date = startDate;
+                LocalDate date = startDate;
                 timeSeriesDto.setDistrict(record[5]);
                 timeSeriesDto.setProvince(record[6]);
                 timeSeriesDto.setCountry(record[7]);

@@ -11,20 +11,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @DisplayName("Read time series CSV tests")
-public class ReadTimeSeriesCSVTest {
+public class CsvUtilsTimeSeriesTest {
 
-    private final ReadTimeSeriesCSV readTimeSeriesCSV = new ReadTimeSeriesCSV();
+    private final CsvUtilsTimeSeries csvUtilsTimeSeries = new CsvUtilsTimeSeries();
 
     @Test
     @DisplayName("Read all three time series csv")
     public void readTimeSeriesCSV() {
-        List<TimeSeriesDto> timeSeriesDtoListConfirmed = readTimeSeriesCSV.readConfirmedCsv();
+        List<TimeSeriesDto> timeSeriesDtoListConfirmed = csvUtilsTimeSeries.readConfirmedCsv();
         assertThat(timeSeriesDtoListConfirmed).isNotEmpty();
 
-        List<TimeSeriesDto> timeSeriesDtoListRecovery = readTimeSeriesCSV.readRecoveredCsv();
+        List<TimeSeriesDto> timeSeriesDtoListRecovery = csvUtilsTimeSeries.readRecoveredCsv();
         assertThat(timeSeriesDtoListRecovery).isNotEmpty();
 
-        List<TimeSeriesDto> timeSeriesDtoListDeaths = readTimeSeriesCSV.readDeathsCsv();
+        List<TimeSeriesDto> timeSeriesDtoListDeaths = csvUtilsTimeSeries.readDeathsCsv();
         assertThat(timeSeriesDtoListDeaths).isNotEmpty();
     }
 }

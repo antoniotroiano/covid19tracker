@@ -1,15 +1,16 @@
 package com.statistics.corona.service.json;
 
 import com.statistics.corona.model.CountryDetailsDto;
-import com.statistics.corona.model.DataObject;
-import com.statistics.corona.model.DataObjectCountry;
-import com.statistics.corona.model.DataObjectDistrict;
 import com.statistics.corona.model.DistrictDto;
 import com.statistics.corona.model.TimeSeriesWorldDto;
+import com.statistics.corona.model.data.DataObject;
+import com.statistics.corona.model.data.DataObjectCountry;
+import com.statistics.corona.model.data.DataObjectDistrict;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Objects;
 
 @Service
 @Slf4j
-public class ReadJSON {
+public class JsonUtils {
 
     public List<TimeSeriesWorldDto> readWorldValuesOfJson() {
         log.debug("Invoke read world time series of JSON");
@@ -37,19 +38,21 @@ public class ReadJSON {
         if (country.equals("Taiwan*")) {
             country = "Taiwan";
         }
-
+        if (country.equals("United Kingdom")) {
+            country = "UK";
+        }
         RestTemplate restTemplate = new RestTemplate();
-        CountryDetailsDto countryDetailsDto = Objects.requireNonNull(restTemplate
-                .getForObject("https://corona.lmao.ninja/v2/countries/" + country, CountryDetailsDto.class));
-
+        CountryDetailsDto countryDetailsDto = restTemplate
+                .getForObject("https://corona.lmao.ninja/v2/countries/" + country, CountryDetailsDto.class);
+        if (country.equals("UK")) {
+            country = "United Kingdom";
+        }
         RestTemplate restTemplate2 = new RestTemplate();
-        DataObjectCountry dataObjectCountry = Objects.requireNonNull(restTemplate2.getForObject("https://covid19.mathdro.id/api/countries/" +
-                URLEncoder.encode(country, StandardCharsets.UTF_8).replace("+", "%20"), DataObjectCountry.class));
-
+        DataObjectCountry dataObjectCountry = Objects.requireNonNull(restTemplate2
+                .getForObject("https://covid19.mathdro.id/api/countries/" + country, DataObjectCountry.class));
         countryDetailsDto.setConfirmed(dataObjectCountry.getDataValueConfirmed().getValue());
         countryDetailsDto.setRecovered(dataObjectCountry.getDataValueRecovered().getValue());
         countryDetailsDto.setDeaths(dataObjectCountry.getDataValueDeaths().getValue());
-
         double deathRate = ((double) countryDetailsDto.getDeaths() / (double) countryDetailsDto.getConfirmed()) * 100;
         countryDetailsDto.setDeathRate(deathRate);
         double recoveryRate = ((double) countryDetailsDto.getRecovered() / (double) countryDetailsDto.getConfirmed()) * 100;
@@ -58,7 +61,6 @@ public class ReadJSON {
         countryDetailsDto.setCasesPerOneHundred((int) casesPerOneHundred);
         double deathsPerOneHundred = ((double) countryDetailsDto.getDeaths() / (double) countryDetailsDto.getPopulation()) * 100000;
         countryDetailsDto.setDeathsPerOneHundred((int) deathsPerOneHundred);
-
         log.debug("Returned details for {}", country);
         return countryDetailsDto;
     }
@@ -71,5 +73,13 @@ public class ReadJSON {
                 .getDistrictDtoList();
         log.debug("Return list with all district values of ");
         return districtDtoList;
+    }
+
+    //debug wenn sich Daten ändern
+    //info in der Produktionseben, wenn sich was an den Datenfluss ändern
+
+    @PostConstruct
+    public void initialize() {
+        log.info("Test");
     }
 }

@@ -1,4 +1,4 @@
-package com.statistics.corona.model;
+package com.statistics.corona.model.data;
 
 public class DataObjectCountryInfo {
 
@@ -16,7 +16,7 @@ public class DataObjectCountryInfo {
     }
 
     public String getIso2() {
-        return iso2;
+        return iso2 != null ? iso2 : "NO";
     }
 
     public void setIso2(String iso2) {
