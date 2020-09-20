@@ -130,6 +130,17 @@ public class TimeSeriesWorldService {
         return listNewDeaths;
     }
 
+    public List<String> getListDates(List<TimeSeriesWorldDto> allValuesWorld) {
+        log.debug("Invoke get list with all dates");
+        List<String> listDates = allValuesWorld
+                .stream()
+                .map(TimeSeriesWorldDto::getDate)
+                .collect(Collectors.toList());
+        Collections.reverse(listDates);
+        log.info("Return list with all dates");
+        return listDates;
+    }
+
     public List<DailyReportDto> getEachCountriesConfirmedDescending(List<DailyReportDto> allCountryDailyReports) {
         log.debug("Get all countries confirmed cases descending");
         return allCountryDailyReports.stream()

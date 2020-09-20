@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,5 +108,13 @@ public class TimeSeriesProvinceService {
         mapUsFinalResult.put("deathsResult", deathsResult);
         log.info("Return all final result for us");
         return mapUsFinalResult;
+    }
+
+    public Optional<TimeSeriesDto> getLatestValueTimeSeries(Map<String, List<TimeSeriesDto>> provinceTSValues) {
+        log.debug("Invoke get latest value of time series for province");
+        return provinceTSValues.get(CONFIRMED_LIST)
+                .stream()
+                .map(TimeSeriesDto::new)
+                .findFirst();
     }
 }

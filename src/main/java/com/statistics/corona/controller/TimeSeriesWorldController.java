@@ -73,13 +73,7 @@ public class TimeSeriesWorldController {
         model.addAttribute("newConfirmed", timeSeriesWorldService.getNewConfirmedValueWorld(timeSeriesWorldDtoList));
         model.addAttribute("newRecovered", timeSeriesWorldService.getNewRecoveredValueWorld(timeSeriesWorldDtoList));
         model.addAttribute("newDeaths", timeSeriesWorldService.getNewDeathsValueWorld(timeSeriesWorldDtoList));
-
-        List<String> listDates = timeSeriesWorldDtoList
-                .stream()
-                .map(TimeSeriesWorldDto::getDate)
-                .collect(Collectors.toList());
-        Collections.reverse(listDates);
-        model.addAttribute("dateTimeSeries", timeSeriesCountryService.getEverySecondDate(listDates));
+        model.addAttribute("dateTimeSeries", timeSeriesCountryService.getEverySecondDate(timeSeriesWorldService.getListDates(timeSeriesWorldDtoList)));
 
         List<DailyReportDto> dailyReportServiceList = dailyReportService.getAllDailyReports();
         List<DailyReportDto> allValues = dailyReportService.getAllDailyCountryValuesCalculated(dailyReportServiceList);

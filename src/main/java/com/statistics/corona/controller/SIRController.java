@@ -1,8 +1,8 @@
 package com.statistics.corona.controller;
 
 import com.statistics.corona.model.SIRModel;
-import com.statistics.corona.service.TimeSeriesCountryService;
 import com.statistics.corona.service.DerivativeService;
+import com.statistics.corona.service.TimeSeriesCountryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

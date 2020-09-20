@@ -32,10 +32,7 @@ public class TimeSeriesProvinceController {
     private static final String TIME_SERIES_PROVINCE = "timeSeriesProvince";
     private static final String TIME_SERIES_US_PROVINCE = "timeSeriesProvinceUs";
     private static final String NO_DATA_PROVINCE = "noDataForProvince";
-    private static final String CONFIRMED_LIST = "confirmedList";
-    private static final String RECOVERED_LIST = "recoveredList";
     private static final String DEATHS_LIST = "deathsList";
-    private static final String TITLE = "title";
     private final TimeSeriesCountryService timeSeriesCountryService;
     private final TimeSeriesProvinceService timeSeriesProvinceService;
     private final DailyReportService dailyReportService;
@@ -62,22 +59,19 @@ public class TimeSeriesProvinceController {
             Map<String, List<TimeSeriesDto>> provinceTSValuesMap = timeSeriesProvinceService
                     .getProvinceTSValues(selectedProvince.get().getCountry(), province);
             if (!provinceTSValuesMap.isEmpty()) {
-                Optional<TimeSeriesDto> getlastTSValue = provinceTSValuesMap.get(CONFIRMED_LIST)
-                        .stream()
-                        .map(TimeSeriesDto::new)
-                        .findFirst();
+                Optional<TimeSeriesDto> getlastTSValue = timeSeriesProvinceService.getLatestValueTimeSeries(provinceTSValuesMap);
                 if (getlastTSValue.isPresent()) {
                     List<String> datesList = new ArrayList<>(getlastTSValue.get().getDataMap().keySet());
                     Map<String, List<Integer>> finalResultMap = timeSeriesCountryService.generateFinalTSResult(provinceTSValuesMap);
                     if (!finalResultMap.isEmpty()) {
-                        getBaseData(model, new CountryDetailsDto(), finalResultMap, datesList, province);
+                        getBaseDataProvince(model, new CountryDetailsDto(), finalResultMap, datesList, province);
                         log.debug("Return all values for selected province {}", province);
                         return TIME_SERIES_PROVINCE;
                     }
                 }
             }
         }
-        getBaseData(model, new CountryDetailsDto(), Collections.emptyMap(), Collections.emptyList(), province);
+        getBaseDataProvince(model, new CountryDetailsDto(), Collections.emptyMap(), Collections.emptyList(), province);
         model.addAttribute(NO_DATA_PROVINCE, true);
         log.warn("No values found for the province {}", province);
         return TIME_SERIES_PROVINCE;
@@ -96,9 +90,7 @@ public class TimeSeriesProvinceController {
             model.addAttribute("date", date + " " + time + "h");
             Map<String, List<TimeSeriesDto>> usProvinceTSValuesMap = timeSeriesProvinceService.getUsProvinceTSValues(usProvince);
             if (!usProvinceTSValuesMap.isEmpty()) {
-                Optional<TimeSeriesDto> getlastTSValue = usProvinceTSValuesMap.get(CONFIRMED_LIST).stream()
-                        .map(TimeSeriesDto::new)
-                        .findFirst();
+                Optional<TimeSeriesDto> getlastTSValue = timeSeriesProvinceService.getLatestValueTimeSeries(usProvinceTSValuesMap);
                 model.addAttribute("population", usProvinceTSValuesMap.get(DEATHS_LIST)
                         .stream()
                         .mapToInt(TimeSeriesDto::getPopulation)
@@ -107,35 +99,33 @@ public class TimeSeriesProvinceController {
                     List<String> datesList = new ArrayList<>(getlastTSValue.get().getDataMap().keySet());
                     Map<String, List<Integer>> finalResultMap = timeSeriesProvinceService.generateUsFinalTSResult(usProvinceTSValuesMap);
                     if (!finalResultMap.isEmpty()) {
-                        getBaseData(model, new CountryDetailsDto(), finalResultMap, datesList, usProvince);
+                        getBaseDataProvince(model, new CountryDetailsDto(), finalResultMap, datesList, usProvince);
                         log.debug("Return all values for selected us province {}", usProvince);
                         return TIME_SERIES_US_PROVINCE;
                     }
                 }
             }
         }
-        getBaseData(model, new CountryDetailsDto(), Collections.emptyMap(), Collections.emptyList(), usProvince);
+        getBaseDataProvince(model, new CountryDetailsDto(), Collections.emptyMap(), Collections.emptyList(), usProvince);
         model.addAttribute(NO_DATA_PROVINCE, true);
         log.warn("No object found with the province {}", usProvince);
         return TIME_SERIES_US_PROVINCE;
     }
 
-    private void getBaseData(Model model, CountryDetailsDto countryDetailsDto, Map<String, List<Integer>> result, List<String> datesList, String province) {
+    private void getBaseDataProvince(Model model, CountryDetailsDto countryDetailsDto, Map<String, List<Integer>> result, List<String> datesList, String province) {
+        int activeCasesProvince = countryDetailsDto.getConfirmed() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
         model.addAttribute("timeSeriesDto", new TimeSeriesDto());
-        model.addAttribute(TITLE, "COVID-19 - Details for " + province);
+        model.addAttribute("title", "COVID-19 - Details for " + province);
         model.addAttribute("selectedProvince", province);
+        model.addAttribute("activeCases", activeCasesProvince);
 
-        int activeCases = countryDetailsDto.getConfirmed() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
-        model.addAttribute("activeCases", activeCases);
+        int activeCasesYesterday = timeSeriesCountryService.getLastValue(result.get(CONFIRMED_RESULT)) -
+                timeSeriesCountryService.getLastValue(result.get(RECOVERED_RESULT)) -
+                timeSeriesCountryService.getLastValue(result.get(DEATHS_RESULT));
+        model.addAttribute("differenceActiveCases", (activeCasesProvince - activeCasesYesterday));
 
-        int confirmedYesterday = timeSeriesCountryService.getLastValue(result.get(CONFIRMED_RESULT));
-        int recoveredYesterday = timeSeriesCountryService.getLastValue(result.get(RECOVERED_RESULT));
-        int deathsYesterday = timeSeriesCountryService.getLastValue(result.get(DEATHS_RESULT));
-        int activeCasesYesterday = confirmedYesterday - recoveredYesterday - deathsYesterday;
-        model.addAttribute("differenceActiveCases", (activeCases - activeCasesYesterday));
-
-        model.addAttribute(CONFIRMED_LIST, timeSeriesCountryService.getEverySecondValue(result.get(CONFIRMED_RESULT)));
-        model.addAttribute(RECOVERED_LIST, timeSeriesCountryService.getEverySecondValue(result.get(RECOVERED_RESULT)));
+        model.addAttribute("confirmedList", timeSeriesCountryService.getEverySecondValue(result.get(CONFIRMED_RESULT)));
+        model.addAttribute("recoveredList", timeSeriesCountryService.getEverySecondValue(result.get(RECOVERED_RESULT)));
         model.addAttribute(DEATHS_LIST, timeSeriesCountryService.getEverySecondValue(result.get(DEATHS_RESULT)));
         model.addAttribute("dateList", timeSeriesCountryService.getEverySecondDate(datesList));
 

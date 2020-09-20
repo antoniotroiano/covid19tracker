@@ -13,19 +13,18 @@ public class DistrictDto {
     String updated;
 
     public DistrictDto() {
-
     }
 
-    public DistrictDto(String location, String country_code, int confirmed, int dead, int recovered, int velocity_confirmed, int velocity_dead, int velocity_recovered, String updated) {
-        this.location = location;
-        this.country_code = country_code;
-        this.confirmed = confirmed;
-        this.dead = dead;
-        this.recovered = recovered;
-        this.velocity_confirmed = velocity_confirmed;
-        this.velocity_dead = velocity_dead;
-        this.velocity_recovered = velocity_recovered;
-        this.updated = updated;
+    public DistrictDto(DistrictDto districtDto) {
+        this.location = districtDto.getLocation();
+        this.country_code = districtDto.getCountry_code();
+        this.confirmed = districtDto.getConfirmed();
+        this.dead = districtDto.getDead();
+        this.recovered = districtDto.getRecovered();
+        this.velocity_confirmed = districtDto.getVelocity_confirmed();
+        this.velocity_dead = districtDto.getVelocity_dead();
+        this.velocity_recovered = districtDto.getVelocity_recovered();
+        this.updated = districtDto.getUpdated();
     }
 
     public String getLocation() {

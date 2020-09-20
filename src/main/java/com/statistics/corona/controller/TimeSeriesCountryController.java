@@ -28,11 +28,6 @@ public class TimeSeriesCountryController {
     private static final String CONFIRMED_RESULT = "confirmedResult";
     private static final String RECOVERED_RESULT = "recoveredResult";
     private static final String DEATHS_RESULT = "deathsResult";
-    private static final String CONFIRMED_LIST = "confirmedList";
-    private static final String RECOVERED_LIST = "recoveredList";
-    private static final String DEATHS_LIST = "deathsList";
-    private static final String TITLE = "title";
-    private static final String NO_DATA = "noDataForThisCountry";
     private final TimeSeriesCountryService timeSeriesCountryService;
     private final DailyReportService dailyReportService;
     private final DateFormat dateFormat;
@@ -48,7 +43,7 @@ public class TimeSeriesCountryController {
         log.info("Invoke controller show time series of country {}", country);
         model.addAttribute("countryDetails", new CountryDetailsDto());
         model.addAttribute("dailyReport", new DailyReportDto());
-        model.addAttribute(TITLE, "COVID-19 - Data for " + country);
+        model.addAttribute("title", "COVID-19 - Data for " + country);
         model.addAttribute("selectedCountry", country);
         getCountryNames(model);
         List<DailyReportDto> dailyReportDtoList = dailyReportService.getAllDailyReports();
@@ -71,32 +66,31 @@ public class TimeSeriesCountryController {
                     List<String> datesList = new ArrayList<>(getLastTSValue.get().getDataMap().keySet());
                     Map<String, List<Integer>> finalResultMap = timeSeriesCountryService.generateFinalTSResult(countryTSValuesMap);
                     if (!finalResultMap.isEmpty()) {
-                        getBaseData(model, countryDetailsDto.get(), finalResultMap, datesList);
+                        getBaseDataCountry(model, countryDetailsDto.get(), finalResultMap, datesList);
                         log.debug("Get data for selected country {}", country);
                         return TIME_SERIES;
                     }
                 }
             }
         }
-        getBaseData(model, new CountryDetailsDto(), Collections.emptyMap(), Collections.emptyList());
-        model.addAttribute(NO_DATA, true);
+        getBaseDataCountry(model, new CountryDetailsDto(), Collections.emptyMap(), Collections.emptyList());
+        model.addAttribute("noDataForThisCountry", true);
         log.warn("No data for the country {}", country);
         return TIME_SERIES;
     }
 
-    private void getBaseData(Model model, CountryDetailsDto countryDetailsDto, Map<String, List<Integer>> result, List<String> datesList) {
+    private void getBaseDataCountry(Model model, CountryDetailsDto countryDetailsDto, Map<String, List<Integer>> result, List<String> datesList) {
         int activeCases = countryDetailsDto.getConfirmed() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
         model.addAttribute("activeCases", activeCases);
 
-        int confirmedYesterday = timeSeriesCountryService.getLastValue(result.get(CONFIRMED_RESULT));
-        int recoveredYesterday = timeSeriesCountryService.getLastValue(result.get(RECOVERED_RESULT));
-        int deathsYesterday = timeSeriesCountryService.getLastValue(result.get(DEATHS_RESULT));
-        int activeCasesYesterday = confirmedYesterday - recoveredYesterday - deathsYesterday;
+        int activeCasesYesterday = timeSeriesCountryService.getLastValue(result.get(CONFIRMED_RESULT)) -
+                timeSeriesCountryService.getLastValue(result.get(RECOVERED_RESULT)) -
+                timeSeriesCountryService.getLastValue(result.get(DEATHS_RESULT));
         model.addAttribute("differenceActiveCases", (activeCases - activeCasesYesterday));
 
-        model.addAttribute(CONFIRMED_LIST, timeSeriesCountryService.getEverySecondValue(result.get(CONFIRMED_RESULT)));
-        model.addAttribute(RECOVERED_LIST, timeSeriesCountryService.getEverySecondValue(result.get(RECOVERED_RESULT)));
-        model.addAttribute(DEATHS_LIST, timeSeriesCountryService.getEverySecondValue(result.get(DEATHS_RESULT)));
+        model.addAttribute("confirmedList", timeSeriesCountryService.getEverySecondValue(result.get(CONFIRMED_RESULT)));
+        model.addAttribute("recoveredList", timeSeriesCountryService.getEverySecondValue(result.get(RECOVERED_RESULT)));
+        model.addAttribute("deathsList", timeSeriesCountryService.getEverySecondValue(result.get(DEATHS_RESULT)));
         model.addAttribute("dateList", timeSeriesCountryService.getEverySecondDate(datesList));
 
         model.addAttribute("dailyTrendConfirmed", timeSeriesCountryService.getOneDayValues(result.get(CONFIRMED_RESULT)));

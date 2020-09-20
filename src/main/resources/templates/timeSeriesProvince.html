@@ -33,7 +33,7 @@
                     <a class="button is-small is-link is-rounded" href="/sir" type="submit">SIR-Model</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/symptoms">Symptoms</a>
                     <a class="button is-small is-link is-rounded"
-                       th:href="@{/covid19/timeSeries/{country}(country = ${provinceDetails.getCountry()})}"
+                       th:href="@{/covid19/timeSeries/country/{country}(country = ${provinceDetails.getCountry()})}"
                        type="submit">Back</a>
                 </div>
                 <div class="buttons is-centered">
@@ -186,6 +186,18 @@
         <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
             <div class="has-text-centered">Source JHU <a class="is-link" href="https://github.com/CSSEGISandData"
                                                          target="_blank">github.com/CSSEGISandData</a>
+            </div>
+            <div class="has-text-centered">
+                <a class="is-link" href="https://about-corona.net/" target="_blank">about-corona.net</a>
+            </div>
+            <div class="has-text-centered">
+                <a class="is-link" href="https://github.com/mathdroid/covid-19-api" target="_blank">github.com/mathdroid/covid-19-api</a>
+            </div>
+            <div class="has-text-centered">
+                <a class="is-link" href="https://corona.lmao.ninja/" target="_blank">corona.lmao.ninja</a>
+            </div>
+            <div class="has-text-centered">
+                <a class="is-link" href="https://www.trackcorona.live/" target="_blank">trackcorona.live</a>
             </div>
             <div class="has-text-centered">Contact: <a href="mailto:info@tracker-covid19.de">info (at)
                 tracker-covid19.de</a></div>
