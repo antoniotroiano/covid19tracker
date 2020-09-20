@@ -13,9 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -56,6 +54,7 @@ public class TimeSeriesWorldController {
         model.addAttribute("latestDataWorld", timeSeriesWorldService.getLatestDataWorldValue(timeSeriesWorldDtoList));
         model.addAttribute("lastUpdate", date + " " + time + " h");
         model.addAttribute("secondValueWorld", timeSeriesWorldService.getSecondWorldValue(timeSeriesWorldDtoList));
+        model.addAttribute("secondDate", timeSeriesCountryService.getEverySecondDate(timeSeriesWorldService.getListDates(timeSeriesWorldDtoList)));
         model.addAttribute("confirmed",
                 timeSeriesCountryService.getEverySecondValue(timeSeriesWorldService.getConfirmedValueWorld(timeSeriesWorldDtoList)));
         model.addAttribute("recovered",
@@ -73,7 +72,7 @@ public class TimeSeriesWorldController {
         model.addAttribute("newConfirmed", timeSeriesWorldService.getNewConfirmedValueWorld(timeSeriesWorldDtoList));
         model.addAttribute("newRecovered", timeSeriesWorldService.getNewRecoveredValueWorld(timeSeriesWorldDtoList));
         model.addAttribute("newDeaths", timeSeriesWorldService.getNewDeathsValueWorld(timeSeriesWorldDtoList));
-        model.addAttribute("dateTimeSeries", timeSeriesCountryService.getEverySecondDate(timeSeriesWorldService.getListDates(timeSeriesWorldDtoList)));
+        model.addAttribute("dateListPerDay", timeSeriesWorldService.getListDates(timeSeriesWorldDtoList));
 
         List<DailyReportDto> dailyReportServiceList = dailyReportService.getAllDailyReports();
         List<DailyReportDto> allValues = dailyReportService.getAllDailyCountryValuesCalculated(dailyReportServiceList);

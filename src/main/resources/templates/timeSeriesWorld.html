@@ -140,7 +140,6 @@
                 </div>
             </div>
         </div>
-
         <div class="columns is-mobile is-centered">
             <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
                 <div class="switch-toggle switch-ios">
@@ -164,6 +163,29 @@
                 <canvas id="canvasWorld"></canvas>
             </div>
         </div>
+        <br>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <br>
+                <div class="has-text-centered is-size-4">Daily trend of COVID-19 worldwide</div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <canvas class="box" id="confirmedOneDay"></canvas>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <canvas class="box" id="recoveredOneDay"></canvas>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <canvas class="box" id="deathsOneDay"></canvas>
+            </div>
+        </div>
+        <br>
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
                 <br>
@@ -423,8 +445,11 @@
 <footer class="footer">
     <div class="columns is-mobile is-centered">
         <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-            <div class="has-text-centered">Source JHU <a class="is-link" href="https://github.com/CSSEGISandData"
-                                                         target="_blank">github.com/CSSEGISandData</a>
+            <div class="has-text-centered">
+                Source
+            </div>
+            <div class="has-text-centered">
+                <a class="is-link" href="https://github.com/CSSEGISandData" target="_blank">github.com/CSSEGISandData</a>
             </div>
             <div class="has-text-centered">
                 <a class="is-link" href="https://about-corona.net/" target="_blank">about-corona.net</a>
@@ -446,7 +471,7 @@
 <script th:inline="javascript">
     let canvasWorld = document.getElementById('canvasWorld');
     /*<![CDATA[*/
-    let dates = /*[[${dateTimeSeries}]]*/ '';
+    let dates = /*[[${secondDate}]]*/ '';
     let confList = /*[[${confirmed}]]*/ '';
     let recList = /*[[${recovered}]]*/ '';
     let deaList = /*[[${deaths}]]*/ '';
@@ -473,6 +498,17 @@
     function toggleToDeaths() {
         changeChart(canvasWorld, dates, 'Deaths', confList, recList, deaList);
     }
+
+    /*<![CDATA[*/
+    let confirmedOneDay = /*[[${newConfirmed}]]*/ '';
+    let recoveredOneDay = /*[[${newRecovered}]]*/ '';
+    let deathsOneDay = /*[[${newDeaths}]]*/ '';
+    let datesOneDay = /*[[${dateListPerDay}]]*/ '';
+    /*]]>*/
+
+    changedBarChartPerDay(document.getElementById('confirmedOneDay'), datesOneDay, confirmedOneDay, 'Confirmed');
+    changedBarChartPerDay(document.getElementById('recoveredOneDay'), datesOneDay, recoveredOneDay, 'Recovered');
+    changedBarChartPerDay(document.getElementById('deathsOneDay'), datesOneDay, deathsOneDay, 'Deaths');
 </script>
 </body>
 </html>

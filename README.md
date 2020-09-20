@@ -3,6 +3,9 @@
 * Details for worldwide
     + Overview of daily data (confirmed / recovered / death / active cases) and daily increment
     * Time series in different charts (line / bar)
+    * A daily trend for confirmed, recovered and deaths (bar chart)
+    * Additional data for:
+        * Deaths and recovery rate
 
 * A sorted list by confirmed, active cases and death with all countries
 
@@ -10,10 +13,15 @@
     * Overview of daily data (confirmed / recovered / death / active cases) and daily increment
     * Additional data for:
         * Critical cases
-        * Death, recovery and increment rate
+        * Critical per one mil.
+        * Death, recovery and incidence rate
+        * Active per one mil.
+        * Recovered per one mil.
         * Population
             * Cases per 100.000
             * Deaths per 100.000
+        * Number of tests
+        * Tests per one mil.
     * Time series in different charts (line / bar)
     * A daily trend for confirmed, recovered and deaths (bar chart)
     * If available, additional data for provinces and districts
@@ -33,4 +41,6 @@ For feedback or else: [info@tracker-covid19.de](mailto:info@tracker-covid19.de)
 Source: \
 https://github.com/CSSEGISandData \
 https://about-corona.net \
+https://github.com/mathdroid/covid-19-api \
+https://corona.lmao.ninja \
 https://www.trackcorona.live
