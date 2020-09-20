@@ -16,15 +16,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 @Slf4j
 public class CsvUtilsDailyReports {
 
-    private static final String URL_DAILY_REPORT = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/";
-    private static final String URL_DAILY_REPORT_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/";
+    private static final String URL_DAILY_REPORT =
+            "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/";
+    private static final String URL_DAILY_REPORT_US =
+            "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/";
 
     public URL getURL() {
         URL url = null;
@@ -32,7 +34,6 @@ public class CsvUtilsDailyReports {
             LocalDate yesterdayDate = LocalDate.now().minusDays(1);
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
             url = new URL(URL_DAILY_REPORT + yesterdayDate.format(dtf) + ".csv");
-
             HttpURLConnection huc = (HttpURLConnection) url.openConnection();
             huc.setRequestMethod("GET");
             huc.connect();
@@ -53,8 +54,6 @@ public class CsvUtilsDailyReports {
 
     public List<DailyReportDto> readDailyReportsCSV() {
         log.debug("Invoke read daily CSV from github");
-        List<DailyReportDto> dailyReportDtoList = new ArrayList<>();
-
         try (BufferedReader in = new BufferedReader(new InputStreamReader(getURL().openStream()));
              CSVReader reader = new CSVReaderBuilder(in)
                      .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES)
@@ -63,12 +62,13 @@ public class CsvUtilsDailyReports {
             CsvToBean<DailyReportDto> csvToBean = new CsvToBeanBuilder<DailyReportDto>(reader)
                     .withType(DailyReportDto.class)
                     .build();
-            dailyReportDtoList = csvToBean.parse();
-            log.debug("Add all daily reports to list");
+            List<DailyReportDto> dailyReportDtoList = csvToBean.parse();
+            log.info("Add all daily reports to list");
+            return dailyReportDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading csv from github {}", e.getMessage());
+            return Collections.emptyList();
         }
-        return dailyReportDtoList;
     }
 
     public URL getURLUs() {
@@ -77,7 +77,6 @@ public class CsvUtilsDailyReports {
             LocalDate yesterdayDate = LocalDate.now().minusDays(1);
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
             urlUs = new URL(URL_DAILY_REPORT_US + yesterdayDate.format(dtf) + ".csv");
-
             HttpURLConnection huc = (HttpURLConnection) urlUs.openConnection();
             huc.setRequestMethod("GET");
             huc.connect();
@@ -98,8 +97,6 @@ public class CsvUtilsDailyReports {
 
     public List<DailyReportUsDto> readDailyReportUsCSV() {
         log.debug("Invoke read daily CSV US from github.");
-        List<DailyReportUsDto> dailyReportUsDtoList = new ArrayList<>();
-
         try (BufferedReader in = new BufferedReader(new InputStreamReader(getURLUs().openStream()));
              CSVReader reader = new CSVReaderBuilder(in)
                      .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES)
@@ -108,11 +105,12 @@ public class CsvUtilsDailyReports {
             CsvToBean<DailyReportUsDto> csvToBean = new CsvToBeanBuilder<DailyReportUsDto>(reader)
                     .withType(DailyReportUsDto.class)
                     .build();
-            dailyReportUsDtoList = csvToBean.parse();
-            log.debug("Add all daily reports US to list");
+            List<DailyReportUsDto> dailyReportUsDtoList = csvToBean.parse();
+            log.info("Add all daily reports US to list");
+            return dailyReportUsDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading csv US from github {}", e.getMessage());
+            return Collections.emptyList();
         }
-        return dailyReportUsDtoList;
     }
 }

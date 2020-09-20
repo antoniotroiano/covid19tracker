@@ -45,6 +45,7 @@ public class TimeSeriesProvinceService {
             getValues(province, allValuesProvince, getAllValuesCountry, RECOVERED_LIST);
             getValues(province, allValuesProvince, getAllValuesCountry, DEATHS_LIST);
         }
+        log.info("Return map with selected province time series values");
         return allValuesProvince;
     }
 
@@ -59,28 +60,27 @@ public class TimeSeriesProvinceService {
     }
 
     private List<TimeSeriesDto> getConfirmedUS() {
-        log.debug("Invoke get ts confirmed value of us");
+        log.debug("Invoke get time series confirmed value of us");
         List<TimeSeriesDto> timeSeriesDtoList = csvUtilsTimeSeries.readUsConfirmedCsv();
         if (timeSeriesDtoList == null || timeSeriesDtoList.isEmpty()) {
-            log.warn("No ts values for confirmed of us");
+            log.warn("No time series values for confirmed of us");
             return Collections.emptyList();
         }
-        log.info("Return ts values for confirmed of us");
+        log.info("Return time series values for confirmed of us");
         return timeSeriesDtoList;
     }
 
     private List<TimeSeriesDto> getDeathsUS() {
-        log.debug("Invoke get ts deaths value of us");
+        log.debug("Invoke get time series deaths value of us");
         List<TimeSeriesDto> timeSeriesDtoList = csvUtilsTimeSeries.readUsDeathsCsv();
         if (timeSeriesDtoList == null || timeSeriesDtoList.isEmpty()) {
-            log.warn("No ts values for deaths of us");
+            log.warn("No time series values for deaths of us");
             return Collections.emptyList();
         }
-        log.info("Return ts values for deaths of us");
+        log.info("Return time series values for deaths of us");
         return timeSeriesDtoList;
     }
 
-    //Nie Optional of nullable wenn ich ne Liste habe. Da ich schon den null chek gemacht habe und empty brauche ich das hier nicht.
     public Map<String, List<TimeSeriesDto>> getUsProvinceTSValues(String province) {
         log.debug("Invoke get all values for us province {}", province);
         Map<String, List<TimeSeriesDto>> allValues = new HashMap<>();
@@ -94,6 +94,7 @@ public class TimeSeriesProvinceService {
                 .collect(Collectors.toList());
         allValues.put(CONFIRMED_LIST, confirmedListCountry);
         allValues.put(DEATHS_LIST, deathsListCountry);
+        log.info("Return all values for us province");
         return allValues;
     }
 
@@ -104,6 +105,7 @@ public class TimeSeriesProvinceService {
         List<Integer> deathsResult = timeSeriesCountryService.finalResult(allValuesOfUsProvince.get(DEATHS_LIST));
         mapUsFinalResult.put("confirmedResult", confirmedResult);
         mapUsFinalResult.put("deathsResult", deathsResult);
+        log.info("Return all final result for us");
         return mapUsFinalResult;
     }
 }

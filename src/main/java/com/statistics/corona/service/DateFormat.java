@@ -42,13 +42,6 @@ public class DateFormat {
         return outputFormatterTime.format(time);
     }
 
-    public String formatDate(String date) {
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.GERMAN);
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.GERMAN);
-        LocalDate dates = LocalDate.parse(date, inputFormatter);
-        return outputFormatter.format(dates);
-    }
-
     public String formatUnixToDate(long unixTime) {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy HH:mm", Locale.GERMAN);
         return Instant.ofEpochMilli(unixTime)

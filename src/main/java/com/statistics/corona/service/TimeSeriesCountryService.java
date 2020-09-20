@@ -36,7 +36,7 @@ public class TimeSeriesCountryService {
             log.warn("No confirmed time series values");
             return Collections.emptyList();
         }
-        log.debug("Return list with confirmed time series values");
+        log.info("Return list with confirmed time series values");
         return confirmedTSList;
     }
 
@@ -47,7 +47,7 @@ public class TimeSeriesCountryService {
             log.warn("No recovered time series values");
             return Collections.emptyList();
         }
-        log.debug("Return list with recovered time series values");
+        log.info("Return list with recovered time series values");
         return recoveredTSList;
     }
 
@@ -58,7 +58,7 @@ public class TimeSeriesCountryService {
             log.warn("No deaths time series values");
             return Collections.emptyList();
         }
-        log.debug("Return list with deaths time series values");
+        log.info("Return list with deaths time series values");
         return deathsTSList;
     }
 
@@ -77,6 +77,7 @@ public class TimeSeriesCountryService {
                 .stream()
                 .filter(c -> c.getCountry().equals(country))
                 .collect(Collectors.toList()));
+        log.info("Return map with all values for {}", country);
         return allValues;
     }
 
@@ -97,13 +98,10 @@ public class TimeSeriesCountryService {
         log.debug("Invoke get final result for one selected country");
         Map<String, List<Integer>> mapFinalResult = new HashMap<>();
 
-        List<Integer> confirmedResult = finalResult(allValuesOfCountry.get(CONFIRMED_LIST));
-        List<Integer> recoveredResult = finalResult(allValuesOfCountry.get(RECOVERED_LIST));
-        List<Integer> deathsResult = finalResult(allValuesOfCountry.get(DEATHS_LIST));
-
-        mapFinalResult.put("confirmedResult", confirmedResult);
-        mapFinalResult.put("recoveredResult", recoveredResult);
-        mapFinalResult.put("deathsResult", deathsResult);
+        mapFinalResult.put("confirmedResult", finalResult(allValuesOfCountry.get(CONFIRMED_LIST)));
+        mapFinalResult.put("recoveredResult", finalResult(allValuesOfCountry.get(RECOVERED_LIST)));
+        mapFinalResult.put("deathsResult", finalResult(allValuesOfCountry.get(DEATHS_LIST)));
+        log.info("Return map with final result for selected country");
         return mapFinalResult;
     }
 
@@ -115,8 +113,7 @@ public class TimeSeriesCountryService {
             return Collections.emptyList();
         }
         for (TimeSeriesDto timeSeriesDto : dataList) {
-            List<Integer> values = new ArrayList<>(timeSeriesDto.getDataMap()
-                    .values());
+            List<Integer> values = new ArrayList<>(timeSeriesDto.getDataMap().values());
             interimResultList.add(values);
         }
         log.info("Return interim result");

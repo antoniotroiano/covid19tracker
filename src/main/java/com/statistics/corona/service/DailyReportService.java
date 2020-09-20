@@ -32,7 +32,7 @@ public class DailyReportService {
         this.jsonUtils = jsonUtils;
     }
 
-    //3 methods for get all values of districs, us daily report and all country daily reports
+    //3 methods for get all values of districts, us daily report and all country daily reports
     public List<DailyReportDto> getAllDailyReports() {
         log.debug("Invoke get all daily reports for all countries");
         List<DailyReportDto> dailyReportDtoList = readDailyReportCSV.readDailyReportsCSV();
@@ -127,14 +127,13 @@ public class DailyReportService {
             log.warn("No values available for all counties");
             return Collections.emptyList();
         }
-        List<DailyReportDto> allCountryValues;
         List<String> countryWithProvince = dailyReportDtoList
                 .stream()
                 .filter(c -> Strings.isNotEmpty(c.getProvince()))
                 .map(DailyReportDto::getCountry)
                 .distinct()
                 .collect(Collectors.toList());
-        allCountryValues = getCalculatedCountry(countryWithProvince, dailyReportDtoList);
+        List<DailyReportDto> allCountryValues = getCalculatedCountry(countryWithProvince, dailyReportDtoList);
         for (DailyReportDto allDailyReport : dailyReportDtoList) {
             if (!countryWithProvince.contains(allDailyReport.getCountry())) {
                 allCountryValues.add(allDailyReport);
@@ -189,13 +188,12 @@ public class DailyReportService {
 
     public Optional<DailyReportDto> getProvinceDetails(String province) {
         log.debug("Invoke get details for selected province {}", province);
-        List<DailyReportDto> testList = readDailyReportCSV.readDailyReportsCSV();
-        Optional<DailyReportDto> dailyReportDto = testList
+        Optional<DailyReportDto> dailyReportDto = readDailyReportCSV.readDailyReportsCSV()
                 .stream()
                 .filter(p -> p.getProvince().equals(province))
                 .findAny();
         if (dailyReportDto.isPresent()) {
-            log.debug("Returned dto for selected province {}", province);
+            log.info("Returned dto for selected province {}", province);
             return dailyReportDto;
         }
         log.warn("No values for dto available of {}", province);
@@ -209,7 +207,7 @@ public class DailyReportService {
                 .filter(p -> p.getProvince().equals(province))
                 .findAny();
         if (dailyReportUsDto.isPresent()) {
-            log.debug("Returned values of us province {}", province);
+            log.info("Returned values of us province {}", province);
             return dailyReportUsDto;
         }
         log.debug("No values available for us province {}", province);

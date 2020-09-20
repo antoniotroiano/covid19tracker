@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -26,18 +25,17 @@ public class TimeSeriesWorldService {
 
     public List<TimeSeriesWorldDto> getAllValuesWorld() {
         log.debug("Invoke get all values of world");
-        List<TimeSeriesWorldDto> timeSeriesWorldDtoList = new ArrayList<>();
         try {
-            timeSeriesWorldDtoList = jsonUtils.readWorldValuesOfJson();
+            List<TimeSeriesWorldDto> timeSeriesWorldDtoList = jsonUtils.readWorldValuesOfJson();
             if (timeSeriesWorldDtoList == null || timeSeriesWorldDtoList.isEmpty()) {
                 log.warn("No data available for world time series");
                 return Collections.emptyList();
             }
-            log.debug("Returned all values of world time series");
+            log.info("Returned all values of world time series");
             return timeSeriesWorldDtoList;
         } catch (Exception e) {
             log.warn("Failed get data of world time series: {}", e.getMessage());
-            return timeSeriesWorldDtoList;
+            return Collections.emptyList();
         }
     }
 
@@ -66,6 +64,7 @@ public class TimeSeriesWorldService {
                 //.sorted(Integer::compareTo)
                 .collect(Collectors.toList());
         Collections.reverse(listConfirmed);
+        log.info("Return list confirmed values of world");
         return listConfirmed;
     }
 
@@ -76,6 +75,7 @@ public class TimeSeriesWorldService {
                 .map(TimeSeriesWorldDto::getRecovered)
                 .collect(Collectors.toList());
         Collections.reverse(listRecovered);
+        log.info("Return list recovered values of world");
         return listRecovered;
     }
 
@@ -86,6 +86,7 @@ public class TimeSeriesWorldService {
                 .map(TimeSeriesWorldDto::getDeaths)
                 .collect(Collectors.toList());
         Collections.reverse(listDeaths);
+        log.info("Return list deaths values of world");
         return listDeaths;
     }
 
@@ -95,6 +96,7 @@ public class TimeSeriesWorldService {
                 .map(TimeSeriesWorldDto::getActive)
                 .collect(Collectors.toList());
         Collections.reverse(listActive);
+        log.info("Return list active values of world");
         return listActive;
     }
 
@@ -104,6 +106,7 @@ public class TimeSeriesWorldService {
                 .map(TimeSeriesWorldDto::getNew_confirmed)
                 .collect(Collectors.toList());
         Collections.reverse(listNewConfirmed);
+        log.info("Return list new confirmed values of world");
         return listNewConfirmed;
     }
 
@@ -113,6 +116,7 @@ public class TimeSeriesWorldService {
                 .map(TimeSeriesWorldDto::getNew_recovered)
                 .collect(Collectors.toList());
         Collections.reverse(listNewRecovered);
+        log.info("Return list new recovered values of world");
         return listNewRecovered;
     }
 
@@ -122,6 +126,7 @@ public class TimeSeriesWorldService {
                 .map(TimeSeriesWorldDto::getNew_deaths)
                 .collect(Collectors.toList());
         Collections.reverse(listNewDeaths);
+        log.info("Return list new deaths values of world");
         return listNewDeaths;
     }
 

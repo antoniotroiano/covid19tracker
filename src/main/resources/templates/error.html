@@ -1,11 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="/img/bar-chart-outline.svg" rel="icon" type="image/svg">
+    <title>COVID-19 - Error</title>
+    <link href="css/myStyles.css" rel="stylesheet" th:href="@{/css/myStyles.css}">
+    <link href="css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
 </head>
 <body>
-
+<div class="container">
+    <section class="section">
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <div class="title is-3 has-text-centered">COVID-19 tracker - Error</div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-tablet is-11-desktop is-10-widescreen is-9-fullhd">
+                <div class="has-text-centered is-size-5">
+                    <div>Sorry, an error occurred. Please contact the admin for help or try again later:<br><a
+                            href="mailto:info@tracker-covid19.de">info (at)
+                        tracker-covid19.de</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
+                <article class="message" th:if="${param.get('errorMessage') != null}">
+                    <div class="message-body">
+                        <p th:text="${#dates.createNow().toString() + ': ' + param.get('errorMessage')}"></p>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                <article class="message" th:if="${error != 'None'}">
+                    <div class="message-header">
+                        Error infos
+                    </div>
+                    <div class="message-body">
+                        <table class="table is-fullwidth">
+                            <caption></caption>
+                            <tr>
+                                <th scope="row">Date</th>
+                                <td th:text="${timestamp}"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Path</th>
+                                <td th:text="${path}"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Error</th>
+                                <td th:text="${error}"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Status</th>
+                                <td th:text="${status}"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Message</th>
+                                <td th:text="${message}"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Exception</th>
+                                <td th:text="${exception}">---</td>
+                            </tr>
+                        </table>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-12-mobile is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
+                <div class="buttons is-mobile is-centered">
+                    <a class="button is-rounded" th:href="${#httpServletRequest.getHeader('referer')}">Go back</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 <footer class="footer">
     <div class="columns is-mobile is-centered">
         <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">

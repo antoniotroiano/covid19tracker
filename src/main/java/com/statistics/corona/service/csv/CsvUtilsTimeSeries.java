@@ -13,6 +13,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -23,76 +24,76 @@ import java.util.stream.Collectors;
 public class CsvUtilsTimeSeries {
 
     private final DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyy", Locale.GERMAN);
-    private final LocalDate startDate = LocalDate.of(2020, 01, 22);
+    private final LocalDate startDate = LocalDate.of(2020, 1, 22);
 
     public List<TimeSeriesDto> readConfirmedCsv() {
         log.debug("Invoke read confirmed time series CSV from github");
-        List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
             URL confirmed = new URL(
                     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
-            timeSeriesDtoList = readTimeSeriesCSV(confirmed);
+            List<TimeSeriesDto> timeSeriesDtoList = readTimeSeriesCSV(confirmed);
+            log.info("Returned time series list with all confirmed values");
+            return timeSeriesDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading confirmed CSV from github {}", e.getMessage());
+            return Collections.emptyList();
         }
-        log.debug("Returned time series list with all confirmed values");
-        return timeSeriesDtoList;
     }
 
     public List<TimeSeriesDto> readRecoveredCsv() {
         log.debug("Invoke read recovered time series CSV from github");
-        List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
             URL recovered = new URL(
                     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
-            timeSeriesDtoList = readTimeSeriesCSV(recovered);
+            List<TimeSeriesDto> timeSeriesDtoList = readTimeSeriesCSV(recovered);
+            log.info("Returned time series list with all recovered values");
+            return timeSeriesDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading recovered CSV from github {}", e.getMessage());
+            return Collections.emptyList();
         }
-        log.debug("Returned time series list with all recovered values");
-        return timeSeriesDtoList;
     }
 
     public List<TimeSeriesDto> readDeathsCsv() {
         log.debug("Invoke read deaths time series CSV from github");
-        List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
             URL deaths = new URL(
                     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
-            timeSeriesDtoList = readTimeSeriesCSV(deaths);
+            List<TimeSeriesDto> timeSeriesDtoList = readTimeSeriesCSV(deaths);
+            log.info("Returned time series list with all deaths values");
+            return timeSeriesDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading deaths CSV from github {}", e.getMessage());
+            return Collections.emptyList();
         }
-        log.debug("Returned time series list with all deaths values");
-        return timeSeriesDtoList;
     }
 
     public List<TimeSeriesDto> readUsConfirmedCsv() {
         log.debug("Invoke read us confirmed time series CSV from github");
-        List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
             URL confirmed = new URL(
                     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv");
-            timeSeriesDtoList = readTimeSeriesUsConfirmedCSV(confirmed);
+            List<TimeSeriesDto> timeSeriesDtoList = readTimeSeriesUsConfirmedCSV(confirmed);
+            log.info("Returned time series list with all us confirmed values");
+            return timeSeriesDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading us confirmed CSV from github {}", e.getMessage());
+            return Collections.emptyList();
         }
-        log.debug("Returned time series list with all us confirmed values");
-        return timeSeriesDtoList;
     }
 
     public List<TimeSeriesDto> readUsDeathsCsv() {
         log.debug("Invoke read us deaths time series CSV from github");
-        List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         try {
             URL deaths = new URL(
                     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv");
-            timeSeriesDtoList = readTimeSeriesUsDeathsCSV(deaths);
+            List<TimeSeriesDto> timeSeriesDtoList = readTimeSeriesUsDeathsCSV(deaths);
+            log.info("Returned time series list with all us deaths values");
+            return timeSeriesDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading us deaths CSV from github {}", e.getMessage());
+            return Collections.emptyList();
         }
-        log.debug("Returned time series list with all us deaths values");
-        return timeSeriesDtoList;
     }
 
     public List<String> readCountryName() {
@@ -127,11 +128,12 @@ public class CsvUtilsTimeSeries {
                 timeSeriesDto.setDataMap(mapValues);
                 timeSeriesDtoList.add(timeSeriesDto);
             }
-            log.debug("Add all time series object to list");
+            log.info("Add all time series object to list");
+            return timeSeriesDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading csv on github {}", e.getMessage());
+            return Collections.emptyList();
         }
-        return timeSeriesDtoList;
     }
 
     private List<TimeSeriesDto> readTimeSeriesUsConfirmedCSV(URL url) {
@@ -159,11 +161,12 @@ public class CsvUtilsTimeSeries {
                 timeSeriesDto.setDataMap(mapValues);
                 timeSeriesDtoList.add(timeSeriesDto);
             }
-            log.debug("Add all time series object of us confirmed to list");
+            log.info("Add all time series object of us confirmed to list");
+            return timeSeriesDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading CSV for us confirmed on github {}", e.getMessage());
+            return Collections.emptyList();
         }
-        return timeSeriesDtoList;
     }
 
     private List<TimeSeriesDto> readTimeSeriesUsDeathsCSV(URL url) {
@@ -192,10 +195,11 @@ public class CsvUtilsTimeSeries {
                 timeSeriesDto.setDataMap(mapValues);
                 timeSeriesDtoList.add(timeSeriesDto);
             }
-            log.debug("Add all time series object of us deaths to list");
+            log.info("Add all time series object of us deaths to list");
+            return timeSeriesDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading CSV for us deaths on github {}", e.getMessage());
+            return Collections.emptyList();
         }
-        return timeSeriesDtoList;
     }
 }

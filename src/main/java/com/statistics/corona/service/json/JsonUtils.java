@@ -10,9 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +23,7 @@ public class JsonUtils {
         List<TimeSeriesWorldDto> timeSeriesWorldDtoList = Objects.requireNonNull(restTemplate
                 .getForObject("https://corona-api.com/timeline", DataObject.class))
                 .getTimeSeriesWorldDtoList();
-        log.debug("Returned world time series of JSON");
+        log.info("Returned world time series from JSON");
         return timeSeriesWorldDtoList;
     }
 
@@ -61,7 +58,7 @@ public class JsonUtils {
         countryDetailsDto.setCasesPerOneHundred((int) casesPerOneHundred);
         double deathsPerOneHundred = ((double) countryDetailsDto.getDeaths() / (double) countryDetailsDto.getPopulation()) * 100000;
         countryDetailsDto.setDeathsPerOneHundred((int) deathsPerOneHundred);
-        log.debug("Returned details for {}", country);
+        log.info("Returned details for {}", country);
         return countryDetailsDto;
     }
 
@@ -71,15 +68,13 @@ public class JsonUtils {
         List<DistrictDto> districtDtoList = Objects.requireNonNull(restTemplate
                 .getForObject("https://www.trackcorona.live/api/cities", DataObjectDistrict.class))
                 .getDistrictDtoList();
-        log.debug("Return list with all district values of ");
+        log.info("Return list with all district values of ");
         return districtDtoList;
     }
-
     //debug wenn sich Daten ändern
     //info in der Produktionseben, wenn sich was an den Datenfluss ändern
-
-    @PostConstruct
+    /*@PostConstruct
     public void initialize() {
         log.info("Test");
-    }
+    }*/
 }
