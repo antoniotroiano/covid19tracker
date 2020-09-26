@@ -5,7 +5,7 @@
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="/img/bar-chart-outline.svg" rel="icon" type="image/svg">
     <title>COVID-19 - Data for worldwide</title>
-    <link href="css/myStyles.css" rel="stylesheet" th:href="@{/css/myStyles.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" rel="stylesheet">
     <link href="css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
     <link href="css/toggle-switch.css" rel="stylesheet" th:href="@{/css/toggle-switch.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
@@ -114,7 +114,7 @@
                                      th:if="${latestDataWorld.getActive() - secondValueWorld.getActive() < 0}"
                                      th:text="'- ' + ${#numbers.formatInteger(inverted,3,'POINT')}"
                                      th:with="inverted=${-(latestDataWorld.getActive() - secondValueWorld.getActive())}"></div>
-                                <hr class="dropdown-divider">
+                                <hr class="dropdown-divider-own">
                                 <div class="is-size-5">Last update</div>
                                 <div class="is-size-6" th:text="${latestDataWorld.getUpdated_at() == null} ? ${'No value'}
                                          : ${lastUpdate}"></div>
@@ -130,7 +130,7 @@
                                  th:text="${deathsRate == 0} ? ${'No value'}
                                          : ${#numbers.formatDecimal(deathsRate, 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                             <div class="is-size-6">Deaths rate:</div>
-                            <hr class="dropdown-divider">
+                            <hr class="dropdown-divider-own">
                             <div class="is-size-7 is-pulled-right tag is-success"
                                  th:text="${recoveryRate == 0} ? ${'No value'}
                                          : ${#numbers.formatDecimal(recoveryRate, 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
@@ -246,7 +246,7 @@
                         </div>
                         <div class="hide-on-big">
                             <div th:each="dailyReportDto : ${totalTable}">
-                                <hr class="dropdown-divider">
+                                <hr class="dropdown-divider-own">
                                 <div class="collapsible">
                                     <div class="is-pulled-left" th:text="${dailyReportDto.getCountry()}"></div>
                                     <div class="is-pulled-right contentSign"
@@ -324,7 +324,7 @@
                         </div>
                         <div class="hide-on-big">
                             <div th:each="dailyReportDto : ${activeTable}">
-                                <hr class="dropdown-divider">
+                                <hr class="dropdown-divider-own">
                                 <div class="collapsible">
                                     <div class="is-pulled-left" th:text="${dailyReportDto.getCountry()}"></div>
                                     <div class="is-pulled-right contentSign"
@@ -402,7 +402,7 @@
                         </div>
                         <div class="hide-on-big">
                             <div th:each="dailyReportDto : ${deathsTable}">
-                                <hr class="dropdown-divider">
+                                <hr class="dropdown-divider-own">
                                 <div class="collapsible">
                                     <div class="is-pulled-left" th:text="${dailyReportDto.getCountry()}"></div>
                                     <div class="is-pulled-right contentSign"
@@ -449,7 +449,8 @@
                 Source
             </div>
             <div class="has-text-centered">
-                <a class="is-link" href="https://github.com/CSSEGISandData" target="_blank">github.com/CSSEGISandData</a>
+                <a class="is-link" href="https://github.com/CSSEGISandData"
+                   target="_blank">github.com/CSSEGISandData</a>
             </div>
             <div class="has-text-centered">
                 <a class="is-link" href="https://about-corona.net/" target="_blank">about-corona.net</a>

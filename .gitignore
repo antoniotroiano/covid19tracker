@@ -35,3 +35,4 @@ logs/
 .DS_Store
 
 **/mybulma/**
+**/myStyles.css
