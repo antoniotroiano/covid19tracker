@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 @Slf4j
@@ -48,7 +49,7 @@ public class ProvinceDistrictController {
                 return "timeSeriesCountryDetailsUs";
             }
             model.addAttribute("allValuesProvinceUS", dailyReportUsDtoList);
-            getDistrictValues(model, code.toLowerCase());
+            //getDistrictValues(model, code.toLowerCase());
             log.debug("Returned all data of provinces and districts for US");
             return "timeSeriesCountryDetailsUs";
         }
@@ -63,17 +64,11 @@ public class ProvinceDistrictController {
         }
         List<String> provinceWithTimeSeries = Arrays.asList("Canada", "United Kingdom", "China", "Netherlands",
                 "Australia", "Denmark", "France");
-        /*List<String> provinceWithTimeSeries = dailyReportDtoList
-                .stream()
-                .filter(c -> Strings.isNotEmpty(c.getProvince()))
-                .map(DailyReportDto::getCountry)
-                .distinct()
-                .collect(Collectors.toList());*/
         if (provinceWithTimeSeries.contains(country)) {
             model.addAttribute("timeSeriesAvailable", true);
         }
         model.addAttribute("allValuesProvince", allValuesProvince);
-        getDistrictValues(model, code.toLowerCase());
+        //getDistrictValues(model, code.toLowerCase());
         log.debug("Returned all data of provinces and districts for country {}", country);
         return "timeSeriesCountryDetails";
     }
@@ -96,7 +91,7 @@ public class ProvinceDistrictController {
         model.addAttribute(TITLE, "COVID-19 - Details for US");
     }
 
-    public void getDistrictValues(Model model, String code) {
+    public void getDistrictValues(Model model, String code) throws ExecutionException, InterruptedException {
         List<DistrictDto> selectedDistrictValues = dailyReportService.getDistrictValuesOfSelectedCountry(code);
         if (selectedDistrictValues.isEmpty()) {
             model.addAttribute("noDistrictValues", true);

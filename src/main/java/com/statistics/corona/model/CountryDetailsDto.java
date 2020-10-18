@@ -9,8 +9,8 @@ public class CountryDetailsDto {
     String country;
     @JsonProperty("countryInfo")
     DataObjectCountryInfo dataObjectCountryInfo;
-    int confirmed;
-    int todayConfirmed;
+    int cases;
+    int todayCases;
     int deaths;
     int todayDeaths;
     int recovered;
@@ -41,8 +41,8 @@ public class CountryDetailsDto {
         this.updated = countryDetailsDto.getUpdated();
         this.country = countryDetailsDto.getCountry();
         this.dataObjectCountryInfo = countryDetailsDto.getDataObjectCountryInfo();
-        this.confirmed = countryDetailsDto.getConfirmed();
-        this.todayConfirmed = countryDetailsDto.getTodayConfirmed();
+        this.cases = countryDetailsDto.getCases();
+        this.todayCases = countryDetailsDto.getTodayCases();
         this.deaths = countryDetailsDto.getDeaths();
         this.todayDeaths = countryDetailsDto.getTodayDeaths();
         this.recovered = countryDetailsDto.getRecovered();
@@ -91,20 +91,20 @@ public class CountryDetailsDto {
         this.dataObjectCountryInfo = dataObjectCountryInfo;
     }
 
-    public int getConfirmed() {
-        return confirmed;
+    public int getCases() {
+        return cases;
     }
 
-    public void setConfirmed(int confirmed) {
-        this.confirmed = confirmed;
+    public void setCases(int confirmed) {
+        this.cases = confirmed;
     }
 
-    public int getTodayConfirmed() {
-        return todayConfirmed;
+    public int getTodayCases() {
+        return todayCases;
     }
 
-    public void setTodayConfirmed(int todayConfirmed) {
-        this.todayConfirmed = todayConfirmed;
+    public void setTodayCases(int todayConfirmed) {
+        this.todayCases = todayConfirmed;
     }
 
     public int getDeaths() {
@@ -289,8 +289,8 @@ public class CountryDetailsDto {
                 "updated=" + updated +
                 ", country='" + country + '\'' +
                 ", dataObjectCountryInfo='" + dataObjectCountryInfo + '\'' +
-                ", confirmed=" + confirmed +
-                ", todayConfirmed=" + todayConfirmed +
+                ", confirmed=" + cases +
+                ", todayConfirmed=" + todayCases +
                 ", deaths=" + deaths +
                 ", todayDeaths=" + todayDeaths +
                 ", recovered=" + recovered +

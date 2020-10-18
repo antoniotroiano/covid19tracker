@@ -80,7 +80,7 @@ public class TimeSeriesCountryController {
     }
 
     private void getBaseDataCountry(Model model, CountryDetailsDto countryDetailsDto, Map<String, List<Integer>> result, List<String> datesList) {
-        int activeCases = countryDetailsDto.getConfirmed() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
+        int activeCases = countryDetailsDto.getCases() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
         model.addAttribute("activeCases", activeCases);
 
         int activeCasesYesterday = timeSeriesCountryService.getLastValue(result.get(CONFIRMED_RESULT)) -

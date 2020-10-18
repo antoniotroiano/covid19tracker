@@ -1,4 +1,3 @@
-/*
 package com.statistics.corona.configuration;
 
 import org.springframework.context.annotation.Bean;
@@ -17,10 +16,9 @@ public class AsyncConfiguration {
         final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(2);
         executor.setMaxPoolSize(2);
-        executor.setQueueCapacity(100);
-        executor.setThreadNamePrefix("CarThread-");
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("RegionProvinceThread-");
         executor.initialize();
         return executor;
     }
 }
-*/

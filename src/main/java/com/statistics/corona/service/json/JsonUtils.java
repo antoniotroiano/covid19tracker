@@ -40,21 +40,21 @@ public class JsonUtils {
         }
         RestTemplate restTemplate = new RestTemplate();
         CountryDetailsDto countryDetailsDto = restTemplate
-                .getForObject("https://corona.lmao.ninja/v2/countries/" + country, CountryDetailsDto.class);
+                .getForObject("https://corona.lmao.ninja/v2/countries/" + country + "?yesterday=true&strict=true&query =", CountryDetailsDto.class);
         if (country.equals("UK")) {
             country = "United Kingdom";
         }
         RestTemplate restTemplate2 = new RestTemplate();
         DataObjectCountry dataObjectCountry = Objects.requireNonNull(restTemplate2
                 .getForObject("https://covid19.mathdro.id/api/countries/" + country, DataObjectCountry.class));
-        countryDetailsDto.setConfirmed(dataObjectCountry.getDataValueConfirmed().getValue());
+        countryDetailsDto.setCases(dataObjectCountry.getDataValueConfirmed().getValue());
         countryDetailsDto.setRecovered(dataObjectCountry.getDataValueRecovered().getValue());
         countryDetailsDto.setDeaths(dataObjectCountry.getDataValueDeaths().getValue());
-        double deathRate = ((double) countryDetailsDto.getDeaths() / (double) countryDetailsDto.getConfirmed()) * 100;
+        double deathRate = ((double) countryDetailsDto.getDeaths() / (double) countryDetailsDto.getCases()) * 100;
         countryDetailsDto.setDeathRate(deathRate);
-        double recoveryRate = ((double) countryDetailsDto.getRecovered() / (double) countryDetailsDto.getConfirmed()) * 100;
+        double recoveryRate = ((double) countryDetailsDto.getRecovered() / (double) countryDetailsDto.getCases()) * 100;
         countryDetailsDto.setRecoveryRate(recoveryRate);
-        double casesPerOneHundred = ((double) countryDetailsDto.getConfirmed() / (double) countryDetailsDto.getPopulation()) * 100000;
+        double casesPerOneHundred = ((double) countryDetailsDto.getCases() / (double) countryDetailsDto.getPopulation()) * 100000;
         countryDetailsDto.setCasesPerOneHundred((int) casesPerOneHundred);
         double deathsPerOneHundred = ((double) countryDetailsDto.getDeaths() / (double) countryDetailsDto.getPopulation()) * 100000;
         countryDetailsDto.setDeathsPerOneHundred((int) deathsPerOneHundred);
@@ -71,10 +71,4 @@ public class JsonUtils {
         log.info("Return list with all district values of ");
         return districtDtoList;
     }
-    //debug wenn sich Daten ändern
-    //info in der Produktionseben, wenn sich was an den Datenfluss ändern
-    /*@PostConstruct
-    public void initialize() {
-        log.info("Test");
-    }*/
 }

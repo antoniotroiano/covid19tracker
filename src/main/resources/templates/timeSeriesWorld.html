@@ -17,7 +17,7 @@
     </script>
 </head>
 <body>
-<div class="container">
+<div class="has-background-light">
     <section class="section">
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
@@ -27,7 +27,6 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons is-mobile is-centered">
-                    <a class="button is-small is-link is-rounded" href="/sir" type="submit">SIR-Model</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/symptoms">Symptoms</a>
                     <a class="button is-small is-link is-rounded" href="/" id="loadingUpdate"
                        onclick="loading('loadingUpdate')">Update</a>
@@ -58,52 +57,45 @@
                 <div class="tile is-ancestor">
                     <div class="tile is-horizontal">
                         <div class="tile is-parent">
-                            <div class="tile is-child notification is-info">
-                                <span class="icon is-pulled-right"><img alt="checkmark"
-                                                                        src="/img/checkmark-outline.svg"></span>
-                                <div class="is-size-5">Confirmed</div>
+                            <div class="tile is-child box has-text-info has-text-weight-bold">
                                 <div class="is-size-6"
                                      th:text="${latestDataWorld.getConfirmed() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(latestDataWorld.getConfirmed(),3,'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${latestDataWorld.getNew_confirmed() != 0}"
                                      th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNew_confirmed(),3,'POINT')}"></div>
+                                <span class="icon is-pulled-right"><img alt="checkmark"
+                                                                        src="/img/checkmark-outline.svg"></span>
+                                <div class="is-size-5">Confirmed</div>
                             </div>
                         </div>
                         <div class="tile is-parent">
-                            <div class="tile is-child notification is-success">
-                                <span class="icon is-pulled-right"><img alt="fitness"
-                                                                        src="/img/fitness-outline.svg"></span>
-                                <div class="is-size-5">Recovered</div>
+                            <div class="tile is-child box has-text-success has-text-weight-bold">
                                 <div class="is-size-6"
                                      th:text="${latestDataWorld.getRecovered() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(latestDataWorld.getRecovered(),3,'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${latestDataWorld.getNew_recovered() != 0}"
                                      th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNew_recovered(),3,'POINT')}"></div>
+                                <span class="icon is-pulled-right"><img alt="fitness"
+                                                                        src="/img/fitness-outline.svg"></span>
+                                <div class="is-size-5">Recovered</div>
                             </div>
                         </div>
                         <div class="tile is-parent">
-                            <div class="tile is-child notification is-danger">
-                                <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
-                                <div class="is-size-5">Deaths</div>
+                            <div class="tile is-child box has-text-danger has-text-weight-bold">
                                 <div class="is-size-6"
                                      th:text="${latestDataWorld.getDeaths() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(latestDataWorld.getDeaths(),3,'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${latestDataWorld.getNew_deaths() != 0}"
                                      th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNew_deaths(),3,'POINT')}"></div>
+                                <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
+                                <div class="is-size-5">Deaths</div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="tile is-ancestor">
-                    <div class="tile is-horizontal">
                         <div class="tile is-parent">
-                            <div class="tile is-child notification is-warning">
-                                <span class="icon is-pulled-right"><img alt="medkit"
-                                                                        src="/img/medkit-outline.svg"></span>
-                                <div class="is-size-5">Active cases</div>
+                            <div class="tile is-child box has-text-weight-bold has-text-warning-dark">
                                 <div class="is-size-6"
                                      th:text="${latestDataWorld.getActive() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(latestDataWorld.getActive(),3,'POINT')}"></div>
@@ -114,27 +106,36 @@
                                      th:if="${latestDataWorld.getActive() - secondValueWorld.getActive() < 0}"
                                      th:text="'- ' + ${#numbers.formatInteger(inverted,3,'POINT')}"
                                      th:with="inverted=${-(latestDataWorld.getActive() - secondValueWorld.getActive())}"></div>
-                                <hr class="dropdown-divider-own">
-                                <div class="is-size-5">Last update</div>
-                                <div class="is-size-6" th:text="${latestDataWorld.getUpdated_at() == null} ? ${'No value'}
-                                         : ${lastUpdate}"></div>
+                                <span class="icon is-pulled-right"><img alt="medkit"
+                                                                        src="/img/medkit-outline.svg"></span>
+                                <div class="is-size-5">Active cases</div>
                             </div>
                         </div>
                     </div>
-                    <div class="tile is-parent">
-                        <div class="tile is-child notification is-light">
+                </div>
+                <div class="columns is-mobile is-centered">
+                    <div class="column is-7-tablet is-6-desktop is-5-widescreen is-4-fullhd">
+                        <div class="tile is-ancestor">
+                            <div class="tile is-parent">
+                                <div class="tile is-child box">
                                 <span class="icon is-pulled-right"><img alt="analytics"
                                                                         src="/img/analytics-outline.svg"></span>
-                            <div class="is-size-5">Data</div>
-                            <div class="is-size-7 is-pulled-right tag is-danger"
-                                 th:text="${deathsRate == 0} ? ${'No value'}
+                                    <div class="is-size-5">Data</div>
+                                    <div class="is-size-7 is-pulled-right tag is-danger"
+                                         th:text="${deathsRate == 0} ? ${'No value'}
                                          : ${#numbers.formatDecimal(deathsRate, 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                            <div class="is-size-6">Deaths rate:</div>
-                            <hr class="dropdown-divider-own">
-                            <div class="is-size-7 is-pulled-right tag is-success"
-                                 th:text="${recoveryRate == 0} ? ${'No value'}
+                                    <div class="is-size-6">Deaths rate:</div>
+                                    <hr class="dropdown-divider-own">
+                                    <div class="is-size-7 is-pulled-right tag is-success"
+                                         th:text="${recoveryRate == 0} ? ${'No value'}
                                          : ${#numbers.formatDecimal(recoveryRate, 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                            <div class="is-size-6">Recovery rate:</div>
+                                    <div class="is-size-6">Recovery rate:</div>
+                                    <hr class="dropdown-divider-own">
+                                    <div class="is-size-5">Last update</div>
+                                    <div class="is-size-6" th:text="${latestDataWorld.getUpdated_at() == null} ? ${'No value'}
+                                         : ${lastUpdate}"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -158,279 +159,293 @@
                 <br>
             </div>
         </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd box">
-                <canvas id="canvasWorld"></canvas>
-            </div>
-        </div>
-        <br>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <br>
-                <div class="has-text-centered is-size-4">Daily trend of COVID-19 worldwide</div>
-            </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <canvas class="box" id="confirmedOneDay"></canvas>
-            </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <canvas class="box" id="recoveredOneDay"></canvas>
-            </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <canvas class="box" id="deathsOneDay"></canvas>
-            </div>
-        </div>
-        <br>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
-                <br>
-                <div class="title has-text-centered is-size-3">Rest of world</div>
-                <div class="buttons has-addons-centered is-centered" id="myDIV">
-                    <button class="button is-rounded is-small btn activeButton" id="buttonTotal">Total cases</button>
-                    <button class="button is-rounded is-small btn" id="buttonActive">Active cases</button>
-                    <button class="button is-rounded is-small btn" id="buttonDeaths">Deaths</button>
-                </div>
-                <div class="has-text-centered is-size-5" th:if="${noValuesAllCountries}">No values for all countries
-                    available!
+        <div class="container">
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd box">
+                    <canvas id="canvasWorld"></canvas>
                 </div>
             </div>
+            <br>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <br>
+                    <div class="has-text-centered is-size-4">Daily trend of COVID-19 worldwide</div>
+                </div>
+            </div>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <canvas class="box" id="confirmedOneDay"></canvas>
+                </div>
+            </div>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <canvas class="box" id="recoveredOneDay"></canvas>
+                </div>
+            </div>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <canvas class="box" id="deathsOneDay"></canvas>
+                </div>
+            </div>
+            <br>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <div class="box" style="overflow: auto; height: 40em">
-                    <div id="listTotal">
-                        <div class="hide-on-small">
-                            <table class="table is-striped is-fullwidth">
-                                <thead>
-                                <tr>
-                                    <th>Country</th>
-                                    <th>Total cases</th>
-                                    <th>Recovered</th>
-                                    <th>Active</th>
-                                    <th>Deaths</th>
-                                    <th>More details</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="dailyReportDto : ${totalTable}">
-                                    <td th:text="${dailyReportDto.getCountry()}"></td>
-                                    <td><span class="tag is-info"
-                                              th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
-                                    </td>
-                                    <td><span
-                                            class="tag is-success"
-                                            th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
-                                    </td>
-                                    <td><span
-                                            class="tag is-warning"
-                                            th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
-                                    </td>
-                                    <td><span
-                                            class="tag is-danger"
-                                            th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
-                                    </td>
-                                    <td>
-                                        <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
-                                           th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
-                                            Details
-                                        </a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+            <div class="column is-8-tablet is-8-desktop is-7-widescreen is-6-fullhd">
+                <div class="columns is-mobile is-centered">
+                    <div class="column is-12-mobile is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
+                        <br>
+                        <div class="title has-text-centered is-size-3">Rest of world</div>
+                        <div class="buttons has-addons-centered is-centered" id="myDIV">
+                            <button class="button is-rounded is-small btn activeButton" id="buttonTotal">Total cases
+                            </button>
+                            <button class="button is-rounded is-small btn" id="buttonActive">Active cases</button>
+                            <button class="button is-rounded is-small btn" id="buttonDeaths">Deaths</button>
                         </div>
-                        <div class="hide-on-big">
-                            <div th:each="dailyReportDto : ${totalTable}">
-                                <hr class="dropdown-divider-own">
-                                <div class="collapsible">
-                                    <div class="is-pulled-left" th:text="${dailyReportDto.getCountry()}"></div>
-                                    <div class="is-pulled-right contentSign"
-                                         th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></div>
-                                </div>
-                                <div class="content">
-                                    <div class="card" style="margin-top: 0.2em;">
-                                        <div class="card-content">
-                                            <div class="field">Total cases: <span
-                                                    class="is-pulled-right tag is-info"
-                                                    th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
-                                            </div>
-                                            <div class="field">Recovered: <span
-                                                    class="is-pulled-right tag is-success"
-                                                    th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
-                                            </div>
-                                            <div class="field">Active: <span class="is-pulled-right tag is-warning"
-                                                                             th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
-                                            </div>
-                                            <div class="field">Deaths: <span class="is-pulled-right tag is-danger"
-                                                                             th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="buttons has-addons is-centered">
-                                        <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
-                                           th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
-                                            Details
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="has-text-centered is-size-5" th:if="${noValuesAllCountries}">No values for all
+                            countries
+                            available!
                         </div>
                     </div>
-                    <div id="listActive" style="display: none;">
-                        <div class="hide-on-small">
-                            <table class="table is-striped is-fullwidth">
-                                <thead>
-                                <tr>
-                                    <th>Country</th>
-                                    <th>Active</th>
-                                    <th>Total cases</th>
-                                    <th>Recovered</th>
-                                    <th>Deaths</th>
-                                    <th>More details</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="dailyReportDto : ${activeTable}">
-                                    <td th:text="${dailyReportDto.getCountry()}"></td>
-                                    <td><span
-                                            class="tag is-warning"
-                                            th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
-                                    </td>
-                                    <td><span class="tag is-info"
-                                              th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
-                                    </td>
-                                    <td><span
-                                            class="tag is-success"
-                                            th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
-                                    </td>
-                                    <td><span
-                                            class="tag is-danger"
-                                            th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
-                                    </td>
-                                    <td>
-                                        <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
-                                           th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
-                                            Details
-                                        </a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="hide-on-big">
-                            <div th:each="dailyReportDto : ${activeTable}">
-                                <hr class="dropdown-divider-own">
-                                <div class="collapsible">
-                                    <div class="is-pulled-left" th:text="${dailyReportDto.getCountry()}"></div>
-                                    <div class="is-pulled-right contentSign"
-                                         th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></div>
-                                </div>
-                                <div class="content">
-                                    <div class="card" style="margin-top: 0.2em;">
-                                        <div class="card-content">
-                                            <div class="field">Total cases: <span
-                                                    class="is-pulled-right tag is-info"
-                                                    th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
-                                            </div>
-                                            <div class="field">Recovered: <span
-                                                    class="is-pulled-right tag is-success"
+                </div>
+                <div class="columns is-mobile is-centered">
+                    <div class="column is-12-desktop is-12-widescreen is-12-fullhd">
+                        <div class="box" style="overflow: auto; height: 40em">
+                            <div id="listTotal">
+                                <div class="hide-on-small">
+                                    <table class="table is-striped is-fullwidth">
+                                        <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th>Total cases</th>
+                                            <th>Recovered</th>
+                                            <th>Active</th>
+                                            <th>Deaths</th>
+                                            <th>More details</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="dailyReportDto : ${totalTable}">
+                                            <td th:text="${dailyReportDto.getCountry()}"></td>
+                                            <td><span class="tag is-info"
+                                                      th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
+                                            </td>
+                                            <td><span
+                                                    class="tag is-success"
                                                     th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
-                                            </div>
-                                            <div class="field">Active: <span class="is-pulled-right tag is-warning"
-                                                                             th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
-                                            </div>
-                                            <div class="field">Deaths: <span class="is-pulled-right tag is-danger"
-                                                                             th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
-                                            </div>
+                                            </td>
+                                            <td><span
+                                                    class="tag is-warning"
+                                                    th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
+                                            </td>
+                                            <td><span
+                                                    class="tag is-danger"
+                                                    th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
+                                            </td>
+                                            <td>
+                                                <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
+                                                   th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
+                                                    Details
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="hide-on-big">
+                                    <div th:each="dailyReportDto : ${totalTable}">
+                                        <hr class="dropdown-divider-own">
+                                        <div class="collapsible">
+                                            <div class="is-pulled-left" th:text="${dailyReportDto.getCountry()}"></div>
+                                            <div class="is-pulled-right contentSign"
+                                                 th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></div>
                                         </div>
-                                    </div>
-                                    <div class="buttons has-addons is-centered">
-                                        <div class="button is-rounded is-small" style="margin-top: 0.5rem;"
-                                             th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
-                                            Details
+                                        <div class="content">
+                                            <div class="card" style="margin-top: 0.2em;">
+                                                <div class="card-content">
+                                                    <div class="field">Total cases: <span
+                                                            class="is-pulled-right tag is-info"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
+                                                    </div>
+                                                    <div class="field">Recovered: <span
+                                                            class="is-pulled-right tag is-success"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
+                                                    </div>
+                                                    <div class="field">Active: <span
+                                                            class="is-pulled-right tag is-warning"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
+                                                    </div>
+                                                    <div class="field">Deaths: <span
+                                                            class="is-pulled-right tag is-danger"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="buttons has-addons is-centered">
+                                                <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
+                                                   th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
+                                                    Details
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div id="listDeaths" style="display: none">
-                        <div class="hide-on-small">
-                            <table class="table is-striped is-fullwidth">
-                                <thead>
-                                <tr>
-                                    <th>Country</th>
-                                    <th>Deaths</th>
-                                    <th>Total cases</th>
-                                    <th>Recovered</th>
-                                    <th>Active</th>
-                                    <th>More details</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="dailyReportDto : ${deathsTable}">
-                                    <td th:text="${dailyReportDto.getCountry()}"></td>
-                                    <td><span
-                                            class="tag is-danger"
-                                            th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
-                                    </td>
-                                    <td><span class="tag is-info"
-                                              th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
-                                    </td>
-                                    <td><span
-                                            class="tag is-success"
-                                            th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
-                                    </td>
-                                    <td><span
-                                            class="tag is-warning"
-                                            th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
-                                    </td>
-                                    <td>
-                                        <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
-                                           th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
-                                            Details
-                                        </a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="hide-on-big">
-                            <div th:each="dailyReportDto : ${deathsTable}">
-                                <hr class="dropdown-divider-own">
-                                <div class="collapsible">
-                                    <div class="is-pulled-left" th:text="${dailyReportDto.getCountry()}"></div>
-                                    <div class="is-pulled-right contentSign"
-                                         th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></div>
-                                </div>
-                                <div class="content">
-                                    <div class="card" style="margin-top: 0.2em;">
-                                        <div class="card-content">
-                                            <div class="field">Total cases: <span
-                                                    class="is-pulled-right tag is-info"
-                                                    th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
-                                            </div>
-                                            <div class="field">Recovered: <span
-                                                    class="is-pulled-right tag is-success"
+                            <div id="listActive" style="display: none;">
+                                <div class="hide-on-small">
+                                    <table class="table is-striped is-fullwidth">
+                                        <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th>Active</th>
+                                            <th>Total cases</th>
+                                            <th>Recovered</th>
+                                            <th>Deaths</th>
+                                            <th>More details</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="dailyReportDto : ${activeTable}">
+                                            <td th:text="${dailyReportDto.getCountry()}"></td>
+                                            <td><span
+                                                    class="tag is-warning"
+                                                    th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
+                                            </td>
+                                            <td><span class="tag is-info"
+                                                      th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
+                                            </td>
+                                            <td><span
+                                                    class="tag is-success"
                                                     th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
+                                            </td>
+                                            <td><span
+                                                    class="tag is-danger"
+                                                    th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
+                                            </td>
+                                            <td>
+                                                <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
+                                                   th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
+                                                    Details
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="hide-on-big">
+                                    <div th:each="dailyReportDto : ${activeTable}">
+                                        <hr class="dropdown-divider-own">
+                                        <div class="collapsible">
+                                            <div class="is-pulled-left" th:text="${dailyReportDto.getCountry()}"></div>
+                                            <div class="is-pulled-right contentSign"
+                                                 th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></div>
+                                        </div>
+                                        <div class="content">
+                                            <div class="card" style="margin-top: 0.2em;">
+                                                <div class="card-content">
+                                                    <div class="field">Total cases: <span
+                                                            class="is-pulled-right tag is-info"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
+                                                    </div>
+                                                    <div class="field">Recovered: <span
+                                                            class="is-pulled-right tag is-success"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
+                                                    </div>
+                                                    <div class="field">Active: <span
+                                                            class="is-pulled-right tag is-warning"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
+                                                    </div>
+                                                    <div class="field">Deaths: <span
+                                                            class="is-pulled-right tag is-danger"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="field">Active: <span class="is-pulled-right tag is-warning"
-                                                                             th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
-                                            </div>
-                                            <div class="field">Deaths: <span class="is-pulled-right tag is-danger"
-                                                                             th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
+                                            <div class="buttons has-addons is-centered">
+                                                <div class="button is-rounded is-small" style="margin-top: 0.5rem;"
+                                                     th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
+                                                    Details
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="buttons has-addons is-centered">
-                                        <div class="button is-rounded is-small" style="margin-top: 0.5rem;"
-                                             th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
-                                            Details
+                                </div>
+                            </div>
+                            <div id="listDeaths" style="display: none">
+                                <div class="hide-on-small">
+                                    <table class="table is-striped is-fullwidth">
+                                        <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th>Deaths</th>
+                                            <th>Total cases</th>
+                                            <th>Recovered</th>
+                                            <th>Active</th>
+                                            <th>More details</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="dailyReportDto : ${deathsTable}">
+                                            <td th:text="${dailyReportDto.getCountry()}"></td>
+                                            <td><span
+                                                    class="tag is-danger"
+                                                    th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
+                                            </td>
+                                            <td><span class="tag is-info"
+                                                      th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
+                                            </td>
+                                            <td><span
+                                                    class="tag is-success"
+                                                    th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
+                                            </td>
+                                            <td><span
+                                                    class="tag is-warning"
+                                                    th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
+                                            </td>
+                                            <td>
+                                                <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
+                                                   th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
+                                                    Details
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="hide-on-big">
+                                    <div th:each="dailyReportDto : ${deathsTable}">
+                                        <hr class="dropdown-divider-own">
+                                        <div class="collapsible">
+                                            <div class="is-pulled-left" th:text="${dailyReportDto.getCountry()}"></div>
+                                            <div class="is-pulled-right contentSign"
+                                                 th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></div>
+                                        </div>
+                                        <div class="content">
+                                            <div class="card" style="margin-top: 0.2em;">
+                                                <div class="card-content">
+                                                    <div class="field">Total cases: <span
+                                                            class="is-pulled-right tag is-info"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getConfirmed(),3,'POINT')}"></span>
+                                                    </div>
+                                                    <div class="field">Recovered: <span
+                                                            class="is-pulled-right tag is-success"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getRecovered(),3,'POINT')}"></span>
+                                                    </div>
+                                                    <div class="field">Active: <span
+                                                            class="is-pulled-right tag is-warning"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getActive(),3,'POINT')}"></span>
+                                                    </div>
+                                                    <div class="field">Deaths: <span
+                                                            class="is-pulled-right tag is-danger"
+                                                            th:text="${#numbers.formatInteger(dailyReportDto.getDeaths(),3,'POINT')}"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="buttons has-addons is-centered">
+                                                <div class="button is-rounded is-small" style="margin-top: 0.5rem;"
+                                                     th:onclick="/*<![CDATA[*/ getCountryV2(/*[[${dailyReportDto.getCountry()}]]*/) /*]]>*/">
+                                                    Details
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

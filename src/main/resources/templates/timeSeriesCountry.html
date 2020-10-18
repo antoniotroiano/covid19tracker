@@ -17,7 +17,7 @@
     </script>
 </head>
 <body>
-<div class="container">
+<div class="has-background-light">
     <section class="section">
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
@@ -29,7 +29,6 @@
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons is-centered">
                     <a class="button is-small is-link is-rounded" href="/" type="submit">Home</a>
-                    <a class="button is-small is-link is-rounded" href="/sir" type="submit">SIR-Model</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/symptoms">Symptoms</a>
                     <a class="button is-small is-link is-rounded" id="loadingUpdate"
                        onclick="loading('loadingUpdate')"
@@ -61,52 +60,45 @@
                 <div class="tile is-ancestor">
                     <div class="tile is-horizontal">
                         <div class="tile is-parent">
-                            <div class="tile is-child notification is-info">
+                            <div class="tile is-child box has-text-info has-text-weight-bold">
+                                <div class="is-size-6"
+                                     th:text="${countryDetails.getCases() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryDetails.getCases(), 3, 'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${countryDetails.getCases() != null}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayCases(), 3, 'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="checkmark"
                                                                         src="/img/checkmark-outline.svg"></span>
                                 <div class="is-size-5">Confirmed</div>
-                                <div class="is-size-6"
-                                     th:text="${countryDetails.getConfirmed() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDetails.getConfirmed(), 3, 'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${countryDetails.getConfirmed() != null}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayConfirmed(), 3, 'POINT')}"></div>
                             </div>
                         </div>
                         <div class="tile is-parent">
-                            <div class="tile is-child notification is-success">
-                                <span class="icon is-pulled-right"><img alt="fitness"
-                                                                        src="/img/fitness-outline.svg"></span>
-                                <div class="is-size-5">Recovered</div>
+                            <div class="tile is-child box has-text-success has-text-weight-bold">
                                 <div class="is-size-6"
                                      th:text="${countryDetails.getRecovered() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDetails.getRecovered(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${(countryDetails.getRecovered()) != null}"
                                      th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayRecovered(), 3, 'POINT')}"></div>
+                                <span class="icon is-pulled-right"><img alt="fitness"
+                                                                        src="/img/fitness-outline.svg"></span>
+                                <div class="is-size-5">Recovered</div>
                             </div>
                         </div>
                         <div class="tile is-parent">
-                            <div class="tile is-child notification is-danger">
-                                <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
-                                <div class="is-size-5">Deaths</div>
+                            <div class="tile is-child box has-text-danger has-text-weight-bold">
                                 <div class="is-size-6"
                                      th:text="${countryDetails.getDeaths() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDetails.getDeaths(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${countryDetails.getDeaths() != null}"
                                      th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayDeaths(), 3, 'POINT')}"></div>
+                                <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
+                                <div class="is-size-5">Deaths</div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="tile is-ancestor">
-                    <div class="tile is-horizontal">
                         <div class="tile is-parent">
-                            <div class="tile is-child notification is-warning">
-                                <span class="icon is-pulled-right"><img alt="medikit"
-                                                                        src="/img/medkit-outline.svg"></span>
-                                <div class="is-size-5">Active cases</div>
+                            <div class="tile is-child box has-text-weight-bold has-text-warning-dark">
                                 <div class="is-size-6"
                                      th:text="${activeCases == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(activeCases, 3, 'POINT')}"></div>
@@ -122,16 +114,31 @@
                                          : '- ' + ${#numbers.formatInteger(inverted, 3, 'POINT')}"
                                      th:with="inverted=${differenceActiveCases == 0} ? ${0}
                                          : ${-(differenceActiveCases)}"></div>
-                                <hr class="dropdown-divider-own">
+                                <span class="icon is-pulled-right"><img alt="medikit"
+                                                                        src="/img/medkit-outline.svg"></span>
+                                <div class="is-size-5">Active cases</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-ancestor">
+                    <div class="tile is-horizontal">
+                        <div class="tile is-parent">
+                            <div class="tile is-child box">
                                 <div class="is-size-5">Critical</div>
                                 <div class="is-size-6"
                                      th:text="${countryDetails.getCritical() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDetails.getCritical(), 3, 'POINT')}"></div>
                                 <hr class="dropdown-divider-own">
-                                <div class="is-size-6 is-pulled-right tag is-warning"
+                                <div class="is-size-7 is-pulled-right tag is-warning"
                                      th:text="${countryDetails.getCriticalPerOneMillion() == null} ? ${'No value'}
                                          : ${#numbers.formatDecimal(countryDetails.getCriticalPerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
-                                <div class="is-size-6">Critical per one mil.:</div>
+                                <div class="is-size-6">Critical / one mil.:</div>
+                                <hr class="dropdown-divider-own">
+                                <div class="is-size-7 is-pulled-right tag is-warning"
+                                     th:text="${countryDetails.getActivePerOneMillion() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryDetails.getActivePerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
+                                <div class="is-size-6">Active / one mil.:</div>
                                 <hr class="dropdown-divider-own">
                                 <div class="is-size-6 is-pulled-right"
                                      th:text="${date == null} ? ${'No value'} : ${date}"></div>
@@ -139,7 +146,7 @@
                             </div>
                         </div>
                         <div class="tile is-parent">
-                            <div class="tile is-child notification is-light">
+                            <div class="tile is-child box">
                                 <span class="icon is-pulled-right"><img alt="analytics"
                                                                         src="/img/analytics-outline.svg"></span>
                                 <div class="is-size-5">Rate</div>
@@ -158,19 +165,14 @@
                                          : ${#numbers.formatDecimal(dailyReport.getIncidenceRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                 <div class="is-size-6">Incidence rate:</div>
                                 <hr class="dropdown-divider-own">
-                                <div class="is-size-7 is-pulled-right tag is-warning"
-                                     th:text="${countryDetails.getActivePerOneMillion() == null} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(countryDetails.getActivePerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
-                                <div class="is-size-6">Active per one mil.:</div>
-                                <hr class="dropdown-divider-own">
                                 <div class="is-size-7 is-pulled-right tag is-success"
                                      th:text="${countryDetails.getRecoveredPerOneMillion() == null} ? ${'No value'}
                                          : ${#numbers.formatDecimal(countryDetails.getRecoveredPerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
-                                <div class="is-size-6">Recovered per one mil.:</div>
+                                <div class="is-size-6">Recovered / one mil.:</div>
                             </div>
                         </div>
                         <div class="tile is-parent">
-                            <div class="tile is-child notification is-light">
+                            <div class="tile is-child box">
                                 <span class="icon is-pulled-right"><img alt="analytics"
                                                                         src="/img/analytics-outline.svg"></span>
                                 <div class="is-size-5">Data</div>
@@ -182,12 +184,12 @@
                                 <div class="is-size-6 is-pulled-right"
                                      th:text="${countryDetails.getCasesPerOneHundred() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDetails.getCasesPerOneHundred(), 3, 'POINT')}"></div>
-                                <div class="is-size-6">Cases per 100.000:</div>
+                                <div class="is-size-6">Cases / 100.000:</div>
                                 <hr class="dropdown-divider-own">
                                 <div class="is-size-6 is-pulled-right"
                                      th:text="${countryDetails.getDeathsPerOneHundred() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDetails.getDeathsPerOneHundred(), 3, 'POINT')}"></div>
-                                <div class="is-size-6">Deaths per 100.000:</div>
+                                <div class="is-size-6">Deaths / 100.000:</div>
                                 <hr class="dropdown-divider-own">
                                 <div class="is-size-6 is-pulled-right"
                                      th:text="${countryDetails.getTests() == null} ? ${'No value'}
@@ -197,7 +199,7 @@
                                 <div class="is-size-6 is-pulled-right"
                                      th:text="${countryDetails.getTestsPerOneMillion() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDetails.getTestsPerOneMillion(), 3, 'POINT')}"></div>
-                                <div class="is-size-6">Tests per one mil.:</div>
+                                <div class="is-size-6">Tests / one mil.:</div>
                             </div>
                         </div>
                     </div>
@@ -230,38 +232,40 @@
                 </div>
             </div>
         </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <div class="has-text-centered is-size-5" th:if="${noDataForThisCountry}">No dataset available at the
-                    moment!
+        <div class="container">
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <div class="has-text-centered is-size-5" th:if="${noDataForThisCountry}">No dataset available at the
+                        moment!
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <canvas class="box" id="canvasCountry"></canvas>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <canvas class="box" id="canvasCountry"></canvas>
+                </div>
             </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <br>
-                <div class="has-text-centered is-size-4">Daily trend of COVID-19 for <span
-                        th:text="${selectedCountry}"></span></div>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <br>
+                    <div class="has-text-centered is-size-4">Daily trend of COVID-19 for <span
+                            th:text="${selectedCountry}"></span></div>
+                </div>
             </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <canvas class="box" id="confirmedOneDay"></canvas>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <canvas class="box" id="confirmedOneDay"></canvas>
+                </div>
             </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <canvas class="box" id="recoveredOneDay"></canvas>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <canvas class="box" id="recoveredOneDay"></canvas>
+                </div>
             </div>
-        </div>
-        <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                <canvas class="box" id="deathsOneDay"></canvas>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <canvas class="box" id="deathsOneDay"></canvas>
+                </div>
             </div>
         </div>
     </section>

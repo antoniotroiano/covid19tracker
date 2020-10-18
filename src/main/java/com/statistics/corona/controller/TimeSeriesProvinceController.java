@@ -113,7 +113,7 @@ public class TimeSeriesProvinceController {
     }
 
     private void getBaseDataProvince(Model model, CountryDetailsDto countryDetailsDto, Map<String, List<Integer>> result, List<String> datesList, String province) {
-        int activeCasesProvince = countryDetailsDto.getConfirmed() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
+        int activeCasesProvince = countryDetailsDto.getCases() - countryDetailsDto.getRecovered() - countryDetailsDto.getDeaths();
         model.addAttribute("timeSeriesDto", new TimeSeriesDto());
         model.addAttribute("title", "COVID-19 - Details for " + province);
         model.addAttribute("selectedProvince", province);

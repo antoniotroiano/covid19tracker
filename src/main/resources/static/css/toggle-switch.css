@@ -304,7 +304,7 @@
     opacity: 1;
     color: #fff; }
   .switch-ios.switch-toggle {
-    background-color: whitesmoke;
+    background-color: #ffffff;
     border-radius: 10px;
     /*box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 0;*/ }
     .switch-ios.switch-toggle a {

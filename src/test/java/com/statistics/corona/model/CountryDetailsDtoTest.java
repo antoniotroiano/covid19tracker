@@ -20,7 +20,7 @@ public class CountryDetailsDtoTest {
         countryDetailsDto.setPopulation(83000000);
         //countryDetailsDto.setLastUpdate("0000.00.00");
         countryDetailsDto.setDeaths(100);
-        countryDetailsDto.setConfirmed(100);
+        countryDetailsDto.setCases(100);
         countryDetailsDto.setRecovered(100);
         countryDetailsDto.setCritical(100);
         countryDetailsDto.setDeathRate(0.1);
@@ -38,7 +38,7 @@ public class CountryDetailsDtoTest {
         assertThat(countryDetailsDtoMapping.getPopulation()).isEqualTo(countryDetailsDto.getPopulation());
         assertThat(countryDetailsDtoMapping.getUpdated()).isEqualTo(countryDetailsDto.getUpdated());
         assertThat(countryDetailsDtoMapping.getDeaths()).isEqualTo(countryDetailsDto.getDeaths());
-        assertThat(countryDetailsDtoMapping.getConfirmed()).isEqualTo(countryDetailsDto.getConfirmed());
+        assertThat(countryDetailsDtoMapping.getCases()).isEqualTo(countryDetailsDto.getCases());
         assertThat(countryDetailsDtoMapping.getRecovered()).isEqualTo(countryDetailsDto.getRecovered());
         assertThat(countryDetailsDtoMapping.getCritical()).isEqualTo(countryDetailsDto.getCritical());
         assertThat(countryDetailsDtoMapping.getDeathRate()).isEqualTo(countryDetailsDto.getDeathRate());
