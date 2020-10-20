@@ -57,7 +57,7 @@
                         <div class="buttons is-centered">
                             <div class="field is-horizontal">
                                 <div class="field-label is-normal">
-                                    <label class="label">Search</label>
+                                    <label class="label has-text-centered">Search</label>
                                 </div>
                                 <div class="field-body">
                                     <div class="field is-narrow">
@@ -70,17 +70,17 @@
                         </div>
                     </div>
                     <br>
-                    <div class="box hide-on-smallUS" style="overflow: auto; height: 20em">
+                    <div class="box hide-on-smallUS" style="overflow: auto; height: 30em">
                         <table class="table is-striped is-hoverable is-fullwidth" id="provinceTable">
                             <thead>
                             <tr>
                                 <th>Province</th>
-                                <th>Total cases</th>
+                                <th>Cases</th>
                                 <th>Recovered</th>
                                 <th>Active</th>
                                 <th>Deaths</th>
                                 <th>Incident rate</th>
-                                <th>People Tested</th>
+                                <th>People tested</th>
                                 <th>People hospitalized</th>
                                 <th>Mortality rate</th>
                                 <th>Testing rate</th>
@@ -152,7 +152,7 @@
                         <div class="buttons is-centered">
                             <div class="field is-horizontal">
                                 <div class="field-label is-normal">
-                                    <label class="label">Search</label>
+                                    <label class="label has-text-centered">Search</label>
                                 </div>
                                 <div class="field-body">
                                     <div class="field is-narrow">
@@ -163,7 +163,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <br><br>
+                            <br>
                         </div>
                     </div>
                     <div class="box hide-on-bigUS" style="overflow: auto; height: 40em">
@@ -183,7 +183,7 @@
                                     <div class="content">
                                         <div class="card" style="margin-top: 0.2em;">
                                             <div class="card-content">
-                                                <div class="field">Total cases: <span
+                                                <div class="field">Cases: <span
                                                         class="is-pulled-right tag is-info"
                                                         th:text="${dailyReportUsDto.getConfirmed() == null} ? ${'No value'}
                                                                                   : ${#numbers.formatInteger(dailyReportUsDto.getConfirmed(),3,'POINT')}"></span>
@@ -206,7 +206,7 @@
                                                         th:text="${dailyReportUsDto.getIncidentRate() == null} ? ${'No value'}
                                                                                   : ${#numbers.formatInteger(dailyReportUsDto.getIncidentRate(),3,'POINT') + ' %'}"></span>
                                                 </div>
-                                                <div class="field">People Tested: <span
+                                                <div class="field">People tested: <span
                                                         class="is-pulled-right tag is-light"
                                                         th:text="${dailyReportUsDto.getPeopleTested() == null} ? ${'No value'}
                                                                                   : ${#numbers.formatInteger(dailyReportUsDto.getPeopleTested(),3,'POINT')}"></span>

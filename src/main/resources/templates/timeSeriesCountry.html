@@ -22,7 +22,10 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="title is-3 has-text-centered">COVID-19 <span
-                        th:text="${selectedCountry}"></span></div>
+                        th:text="${selectedCountry}"></span>
+                    <img alt="countryFlag" class="icon" style="border-radius: 15px"
+                         th:src="${countryDetails.getDataObjectCountryInfo().getFlag()}"/>
+                </div>
             </div>
         </div>
         <div class="columns is-mobile is-centered">
@@ -125,10 +128,10 @@
                     <div class="tile is-horizontal">
                         <div class="tile is-parent">
                             <div class="tile is-child box">
-                                <div class="is-size-5">Critical</div>
-                                <div class="is-size-6"
+                                <div class="is-size-6 is-pulled-right"
                                      th:text="${countryDetails.getCritical() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDetails.getCritical(), 3, 'POINT')}"></div>
+                                <div class="is-size-6">Critical</div>
                                 <hr class="dropdown-divider-own">
                                 <div class="is-size-7 is-pulled-right tag is-warning"
                                      th:text="${countryDetails.getCriticalPerOneMillion() == null} ? ${'No value'}
