@@ -60,7 +60,6 @@ public class TimeSeriesWorldService {
         log.debug("Get confirmed value of world data");
         List<Integer> listConfirmed = allValuesWorld
                 .stream()
-                .skip(1)
                 .map(TimeSeriesWorldDto::getConfirmed)
                 //.sorted(Integer::compareTo)
                 .collect(Collectors.toList());
@@ -73,7 +72,6 @@ public class TimeSeriesWorldService {
         log.debug("Get recovered value of world data");
         List<Integer> listRecovered = allValuesWorld
                 .stream()
-                .skip(1)
                 .map(TimeSeriesWorldDto::getRecovered)
                 .collect(Collectors.toList());
         Collections.reverse(listRecovered);
@@ -85,7 +83,6 @@ public class TimeSeriesWorldService {
         log.debug("Get deaths value of world data");
         List<Integer> listDeaths = allValuesWorld
                 .stream()
-                .skip(1)
                 .map(TimeSeriesWorldDto::getDeaths)
                 .collect(Collectors.toList());
         Collections.reverse(listDeaths);
@@ -106,7 +103,6 @@ public class TimeSeriesWorldService {
     public List<Integer> getNewConfirmedValueWorld(List<TimeSeriesWorldDto> allValuesWorld) {
         log.debug("Get new confirmed values of world data");
         List<Integer> listNewConfirmed = allValuesWorld.stream()
-                .skip(1)
                 .map(TimeSeriesWorldDto::getNew_confirmed)
                 .collect(Collectors.toList());
         Collections.reverse(listNewConfirmed);
@@ -117,7 +113,6 @@ public class TimeSeriesWorldService {
     public List<Integer> getNewRecoveredValueWorld(List<TimeSeriesWorldDto> allValuesWorld) {
         log.debug("Get new recovered values of world data");
         List<Integer> listNewRecovered = allValuesWorld.stream()
-                .skip(1)
                 .map(TimeSeriesWorldDto::getNew_recovered)
                 .collect(Collectors.toList());
         Collections.reverse(listNewRecovered);
@@ -128,7 +123,6 @@ public class TimeSeriesWorldService {
     public List<Integer> getNewDeathsValueWorld(List<TimeSeriesWorldDto> allValuesWorld) {
         log.debug("Get new deaths values of world data");
         List<Integer> listNewDeaths = allValuesWorld.stream()
-                .skip(1)
                 .map(TimeSeriesWorldDto::getNew_deaths)
                 .collect(Collectors.toList());
         Collections.reverse(listNewDeaths);
