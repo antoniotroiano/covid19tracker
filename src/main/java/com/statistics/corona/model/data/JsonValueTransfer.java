@@ -1,6 +1,6 @@
 package com.statistics.corona.model.data;
 
-public class DataValue {
+public class JsonValueTransfer {
 
     Integer value;
 

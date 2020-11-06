@@ -59,11 +59,11 @@
                         <div class="tile is-parent">
                             <div class="tile is-child box has-text-info has-text-weight-bold">
                                 <div class="is-size-6"
-                                     th:text="${latestDataWorld.getConfirmed() == 0} ? ${'No value'}
-                                         : ${#numbers.formatInteger(latestDataWorld.getConfirmed(),3,'POINT')}"></div>
+                                     th:text="${worldValuesDto.getConfirmed().getValue() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(worldValuesDto.getConfirmed().getValue(),3,'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${latestDataWorld.getNew_confirmed() != 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNew_confirmed(),3,'POINT')}"></div>
+                                     th:if="${worldValuesDto.getNewConfirmed() != 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getNewConfirmed(),3,'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="checkmark"
                                                                         src="/img/checkmark-outline.svg"></span>
                                 <div class="is-size-5">Confirmed</div>
@@ -72,11 +72,11 @@
                         <div class="tile is-parent">
                             <div class="tile is-child box has-text-success has-text-weight-bold">
                                 <div class="is-size-6"
-                                     th:text="${latestDataWorld.getRecovered() == 0} ? ${'No value'}
-                                         : ${#numbers.formatInteger(latestDataWorld.getRecovered(),3,'POINT')}"></div>
+                                     th:text="${worldValuesDto.getRecovered().getValue() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(worldValuesDto.getRecovered().getValue(),3,'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${latestDataWorld.getNew_recovered() != 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNew_recovered(),3,'POINT')}"></div>
+                                     th:if="${worldValuesDto.getNewRecovered() != 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getNewRecovered(),3,'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="fitness"
                                                                         src="/img/fitness-outline.svg"></span>
                                 <div class="is-size-5">Recovered</div>
@@ -85,11 +85,11 @@
                         <div class="tile is-parent">
                             <div class="tile is-child box has-text-danger has-text-weight-bold">
                                 <div class="is-size-6"
-                                     th:text="${latestDataWorld.getDeaths() == 0} ? ${'No value'}
-                                         : ${#numbers.formatInteger(latestDataWorld.getDeaths(),3,'POINT')}"></div>
+                                     th:text="${worldValuesDto.getDeaths().getValue() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(worldValuesDto.getDeaths().getValue(),3,'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${latestDataWorld.getNew_deaths() != 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getNew_deaths(),3,'POINT')}"></div>
+                                     th:if="${worldValuesDto.getNewDeaths() != 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getNewDeaths(),3,'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
                                 <div class="is-size-5">Deaths</div>
                             </div>
@@ -97,15 +97,15 @@
                         <div class="tile is-parent">
                             <div class="tile is-child box has-text-weight-bold has-text-warning-dark">
                                 <div class="is-size-6"
-                                     th:text="${latestDataWorld.getActive() == 0} ? ${'No value'}
-                                         : ${#numbers.formatInteger(latestDataWorld.getActive(),3,'POINT')}"></div>
+                                     th:text="${worldValuesDto.getActive() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(worldValuesDto.getActive(),3,'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${latestDataWorld.getActive() - secondValueWorld.getActive() >= 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(latestDataWorld.getActive() - secondValueWorld.getActive(),3,'POINT')}"></div>
+                                     th:if="${worldValuesDto.getActive() - activeYesterday >= 0}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getActive() - activeYesterday,3,'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${latestDataWorld.getActive() - secondValueWorld.getActive() < 0}"
+                                     th:if="${worldValuesDto.getActive() - activeYesterday < 0}"
                                      th:text="'- ' + ${#numbers.formatInteger(inverted,3,'POINT')}"
-                                     th:with="inverted=${-(latestDataWorld.getActive() - secondValueWorld.getActive())}"></div>
+                                     th:with="inverted=${-(worldValuesDto.getActive() - activeYesterday)}"></div>
                                 <span class="icon is-pulled-right"><img alt="medkit"
                                                                         src="/img/medkit-outline.svg"></span>
                                 <div class="is-size-5">Cases</div>
@@ -122,17 +122,17 @@
                                                                         src="/img/analytics-outline.svg"></span>
                                     <div class="is-size-5">Data</div>
                                     <div class="is-size-7 is-pulled-right tag is-danger"
-                                         th:text="${deathsRate == 0} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(deathsRate, 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                         th:text="${worldValuesDto.getDeathsRate() == 0} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(worldValuesDto.getDeathsRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                     <div class="is-size-6">Deaths rate:</div>
                                     <hr class="dropdown-divider-own">
                                     <div class="is-size-7 is-pulled-right tag is-success"
-                                         th:text="${recoveryRate == 0} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(recoveryRate, 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                         th:text="${worldValuesDto.getRecoveryRate() == 0} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(worldValuesDto.getRecoveryRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                     <div class="is-size-6">Recovery rate:</div>
                                     <hr class="dropdown-divider-own">
                                     <div class="is-size-5">Last update</div>
-                                    <div class="is-size-6" th:text="${latestDataWorld.getUpdated_at() == null} ? ${'No value'}
+                                    <div class="is-size-6" th:text="${worldValuesDto.getLastUpdate() == null} ? ${'No value'}
                                          : ${lastUpdate}"></div>
                                 </div>
                             </div>
@@ -526,7 +526,7 @@
 <script th:inline="javascript">
     let canvasWorld = document.getElementById('canvasWorld');
     /*<![CDATA[*/
-    let dates = /*[[${secondDate}]]*/ '';
+    let dates = /*[[${dateTS}]]*/ '';
     let confList = /*[[${confirmed}]]*/ '';
     let recList = /*[[${recovered}]]*/ '';
     let deaList = /*[[${deaths}]]*/ '';
@@ -555,10 +555,10 @@
     }
 
     /*<![CDATA[*/
-    let confirmedOneDay = /*[[${newConfirmed}]]*/ '';
-    let recoveredOneDay = /*[[${newRecovered}]]*/ '';
-    let deathsOneDay = /*[[${newDeaths}]]*/ '';
-    let datesOneDay = /*[[${dateListPerDay}]]*/ '';
+    let confirmedOneDay = /*[[${dailyConfirmed}]]*/ '';
+    let recoveredOneDay = /*[[${dailyRecovered}]]*/ '';
+    let deathsOneDay = /*[[${dailyDeaths}]]*/ '';
+    let datesOneDay = /*[[${dateTS}]]*/ '';
     /*]]>*/
 
     changedBarChartPerDay(document.getElementById('confirmedOneDay'), datesOneDay, confirmedOneDay, 'Confirmed');

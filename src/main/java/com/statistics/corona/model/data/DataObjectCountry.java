@@ -5,44 +5,44 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class DataObjectCountry {
 
     @JsonProperty("confirmed")
-    DataValue dataValueConfirmed;
+    JsonValueTransfer jsonValueTransferConfirmed;
 
     @JsonProperty("recovered")
-    DataValue dataValueRecovered;
+    JsonValueTransfer jsonValueTransferRecovered;
 
     @JsonProperty("deaths")
-    DataValue dataValueDeaths;
+    JsonValueTransfer jsonValueTransferDeaths;
 
-    public DataValue getDataValueConfirmed() {
-        return dataValueConfirmed;
+    public JsonValueTransfer getDataValueConfirmed() {
+        return jsonValueTransferConfirmed;
     }
 
-    public void setDataValueConfirmed(DataValue dataValueConfirmed) {
-        this.dataValueConfirmed = dataValueConfirmed;
+    public void setDataValueConfirmed(JsonValueTransfer jsonValueTransferConfirmed) {
+        this.jsonValueTransferConfirmed = jsonValueTransferConfirmed;
     }
 
-    public DataValue getDataValueRecovered() {
-        return dataValueRecovered;
+    public JsonValueTransfer getDataValueRecovered() {
+        return jsonValueTransferRecovered;
     }
 
-    public void setDataValueRecovered(DataValue dataValueRecovered) {
-        this.dataValueRecovered = dataValueRecovered;
+    public void setDataValueRecovered(JsonValueTransfer jsonValueTransferRecovered) {
+        this.jsonValueTransferRecovered = jsonValueTransferRecovered;
     }
 
-    public DataValue getDataValueDeaths() {
-        return dataValueDeaths;
+    public JsonValueTransfer getDataValueDeaths() {
+        return jsonValueTransferDeaths;
     }
 
-    public void setDataValueDeaths(DataValue dataValueDeaths) {
-        this.dataValueDeaths = dataValueDeaths;
+    public void setDataValueDeaths(JsonValueTransfer jsonValueTransferDeaths) {
+        this.jsonValueTransferDeaths = jsonValueTransferDeaths;
     }
 
     @Override
     public String toString() {
         return "DataObjectCountry{" +
-                "dataValueConfirmed=" + dataValueConfirmed +
-                ", dataValueRecovered=" + dataValueRecovered +
-                ", dataValueDeaths=" + dataValueDeaths +
+                "dataValueConfirmed=" + jsonValueTransferConfirmed +
+                ", dataValueRecovered=" + jsonValueTransferRecovered +
+                ", dataValueDeaths=" + jsonValueTransferDeaths +
                 '}';
     }
 }

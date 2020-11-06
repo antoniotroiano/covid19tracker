@@ -82,11 +82,11 @@ function barLineChartAllValues(canvas, dates, label, confirmed, recovered, death
                     stacked: booleanStacked,
                     gridLines: {
                         display: true
-                    },
+                    }/*,
                     ticks: {
                         autoSkip: true,
                         maxTicksLimit: 17
-                    }
+                    }*/
                 }],
                 yAxes: [{
                     display: true,
@@ -154,11 +154,11 @@ function barChartSelectedCountry(canvas, dates, label, listData) {
                     display: true,
                     gridLines: {
                         display: true
-                    },
+                    }/*,
                     ticks: {
                         autoSkip: true,
                         maxTicksLimit: 17
-                    }
+                    }*/
                     /*callback: function (dataLabel) {
                         dateDeath.push(dataLabel);
                         if (dateDeath.filter(d => d === dataLabel).length >= 2) {
@@ -257,11 +257,11 @@ function barChartSelectedCountryPerDay(canvasPerDay, datesPerDay, labelPerDay, l
                     display: true,
                     gridLines: {
                         display: true
-                    },
+                    }/*,
                     ticks: {
                         autoSkip: true,
                         maxTicksLimit: 17
-                    }
+                    }*/
                 }],
                 yAxes: [{
                     display: true,
@@ -301,12 +301,13 @@ function barChartSelectedCountryPerDay(canvasPerDay, datesPerDay, labelPerDay, l
     });
 }
 
-/*V1*/
+/*
+/!*V1*!/
 let stackedBoolean = false;
 let charType = 'line';
 let chartToggle;
 
-/*Toggle line and bar chart*/
+/!*Toggle line and bar chart*!/
 function change(newType, toggleCharts, dates, confirmed, recovered, deaths, countryToggle) {
     chartToggle.destroy();
 
@@ -321,7 +322,7 @@ function change(newType, toggleCharts, dates, confirmed, recovered, deaths, coun
     }
 }
 
-/*Line or bar chart*/
+/!*Line or bar chart*!/
 function toggleChartTypes(toggleCharts, dates, confirmed, recovered, deaths, countryToggle) {
     chartToggle = new Chart(toggleCharts, {
         type: charType,
@@ -410,7 +411,7 @@ function toggleChartTypes(toggleCharts, dates, confirmed, recovered, deaths, cou
     });
 }
 
-/*Sir Model*/
+/!*Sir Model*!/
 function sirModelChart(sirModelCanvas, sus, inf, rec) {
     let days = [];
     for (let i = 1; i <= sus.length; i++) {
@@ -468,4 +469,4 @@ function sirModelChart(sirModelCanvas, sus, inf, rec) {
             }
         }
     });
-}
+}*/
