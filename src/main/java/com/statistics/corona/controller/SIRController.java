@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+@Deprecated
 @Controller
 @Slf4j
 @RequestMapping("sir")

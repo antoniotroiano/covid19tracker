@@ -3,15 +3,21 @@ package com.statistics.corona.service;
 import com.statistics.corona.model.CountryDetailsDto;
 import com.statistics.corona.model.DistrictDto;
 import com.statistics.corona.model.TimeSeriesWorldDto;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DeprecadedCode {
+@Deprecated
+@Slf4j
+public class DeprecatedCode {
 
     private static final String CONFIRMED = "confirmed";
     private static final String RECOVERED = "recovered";
@@ -28,42 +34,41 @@ public class DeprecadedCode {
         return new JSONObject(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
     }
 
-    public List<TimeSeriesWorldDto> readWorldValuesOfJson() {
-        /*List<TimeSeriesWorldDto> allValuesWorld = new ArrayList<>();
+    public List<TimeSeriesWorldDto> readWorldValuesOfJson() throws IOException {
+        List<TimeSeriesWorldDto> allValuesWorld = new ArrayList<>();
         JSONObject jsonObjectWorld = getJSONObject("https://corona-api.com/timeline");
         JSONArray jsonArrayWorld = jsonObjectWorld.getJSONArray("data");
         for (int i = 0; i < jsonArrayWorld.length(); i++) {
             TimeSeriesWorldDto timeSeriesWorldDto = new TimeSeriesWorldDto();
-            timeSeriesWorldDto.setLastUpdate(jsonArrayWorld.getJSONObject(i).optString("updated_at", "2000-01-01'T'00:00:00.000'Z'"));
-            timeSeriesWorldDto.setDate(dateFormat.formatDate(jsonArrayWorld.getJSONObject(i).optString("date", "2000-01-01")));
+            timeSeriesWorldDto.setUpdated_at(jsonArrayWorld.getJSONObject(i).optString("updated_at", "2000-01-01'T'00:00:00.000'Z'"));
+            //timeSeriesWorldDto.setDate(dateFormat.formatDate(jsonArrayWorld.getJSONObject(i).optString("date", "2000-01-01")));
             timeSeriesWorldDto.setConfirmed(jsonArrayWorld.getJSONObject(i).optInt(CONFIRMED, 0));
             timeSeriesWorldDto.setRecovered(jsonArrayWorld.getJSONObject(i).optInt(RECOVERED, 0));
             timeSeriesWorldDto.setDeaths(jsonArrayWorld.getJSONObject(i).optInt(DEATHS, 0));
             timeSeriesWorldDto.setActive(jsonArrayWorld.getJSONObject(i).optInt("active", 0));
-            timeSeriesWorldDto.setNewConfirmed(jsonArrayWorld.getJSONObject(i).optInt("new_confirmed", 0));
-            timeSeriesWorldDto.setNewRecovered(jsonArrayWorld.getJSONObject(i).optInt("new_recovered", 0));
-            timeSeriesWorldDto.setNewDeaths(jsonArrayWorld.getJSONObject(i).optInt("new_deaths", 0));
+            timeSeriesWorldDto.setNew_confirmed(jsonArrayWorld.getJSONObject(i).optInt("new_confirmed", 0));
+            timeSeriesWorldDto.setNew_recovered(jsonArrayWorld.getJSONObject(i).optInt("new_recovered", 0));
+            timeSeriesWorldDto.setNew_deaths(jsonArrayWorld.getJSONObject(i).optInt("new_deaths", 0));
             if (i == 0) {
-                timeSeriesWorldDto.setInProgress(jsonArrayWorld.getJSONObject(i).optBoolean("is_in_progress", false));
+                timeSeriesWorldDto.setIs_in_progress(jsonArrayWorld.getJSONObject(i).optBoolean("is_in_progress", false));
             }
             allValuesWorld.add(timeSeriesWorldDto);
         }
         log.debug("Returned world time series of JSON");
-        return allValuesWorld;*/
-        return null;
+        return allValuesWorld;
     }
 
-    public CountryDetailsDto readCountryValuesOfJson(String country) {
-        /*JSONObject jsonObjectFirst = getJSONObject("https://covid19.mathdro.id/api/countries/" +
+    public CountryDetailsDto readCountryValuesOfJson(String country) throws IOException {
+        JSONObject jsonObjectFirst = getJSONObject("https://covid19.mathdro.id/api/countries/" +
                 URLEncoder.encode(country, StandardCharsets.UTF_8).replace("+", "%20"));
-        countryDetailsDto.setConfirmed(jsonObjectFirst.getJSONObject(CONFIRMED).optInt(VALUE, 0));
+        /*countryDetailsDto.setConfirmed(jsonObjectFirst.getJSONObject(CONFIRMED).optInt(VALUE, 0));
         countryDetailsDto.setRecovered(jsonObjectFirst.getJSONObject(RECOVERED).optInt(VALUE, 0));
-        countryDetailsDto.setDeaths(jsonObjectFirst.getJSONObject(DEATHS).optInt(VALUE, 0));*/
+        countryDetailsDto.setDeaths(jsonObjectFirst.getJSONObject(DEATHS).optInt(VALUE, 0));
 
-        /*JSONObject jsonObject = getJSONObject("https://corona.lmao.ninja/v2/countries/" + country);
+        JSONObject jsonObject = getJSONObject("https://corona.lmao.ninja/v2/countries/" + country);
         countryDetailsDto.setUpdated(jsonObject.optLong("updated", 0));
         countryDetailsDto.setCountry(jsonObject.optString("country", NO_NAME));
-        //countryDetailsDto.set(jsonObject.getJSONObject("countryInfo").optString("iso2", NO_NAME));
+        countryDetailsDto.set(jsonObject.getJSONObject("countryInfo").optString("iso2", NO_NAME));
         countryDetailsDto.setTodayConfirmed(jsonObject.optInt("todayCases", 0));
         countryDetailsDto.setTodayDeaths(jsonObject.optInt("todayDeaths", 0));
         countryDetailsDto.setTodayRecovered(jsonObject.optInt("todayRecovered", 0));
@@ -84,7 +89,7 @@ public class DeprecadedCode {
         return null;
     }
 
-/*    private String checkCountryName(String country) {
+    private String checkCountryName(String country) {
         if (country.equals("US")) {
             return "United States";
         }
@@ -111,10 +116,10 @@ public class DeprecadedCode {
             return "Taiwan";
         }
         return country;
-    }*/
+    }
 
-    public List<DistrictDto> readDistrictsValues() {
-        /*List<DistrictDto> districtDtoList = new ArrayList<>();
+    public List<DistrictDto> readDistrictsValues() throws IOException {
+        List<DistrictDto> districtDtoList = new ArrayList<>();
 
         JSONObject jsonObject = getJSONObject("https://www.trackcorona.live/api/cities");
         JSONArray jsonArray = jsonObject.getJSONArray("data");
@@ -132,7 +137,6 @@ public class DeprecadedCode {
             districtDtoList.add(districtDto);
         }
         log.debug("Return list with all district values of ");
-        return districtDtoList;*/
-        return null;
+        return districtDtoList;
     }
 }

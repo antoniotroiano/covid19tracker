@@ -5,6 +5,7 @@ import com.statistics.corona.model.TimeSeriesWorldDto;
 
 import java.util.List;
 
+@Deprecated
 public class DataObject {
 
     @JsonProperty("data")

@@ -1,5 +1,6 @@
 package com.statistics.corona.model;
 
+@Deprecated
 public class TimeSeriesWorldDto {
 
     String updated_at;
