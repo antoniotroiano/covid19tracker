@@ -1,26 +1,26 @@
-package com.statistics.corona.model;
+package com.statistics.corona.model.dto;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class TimeSeriesDto {
+public class CountryTimeSeriesDto {
 
     String district;
     String province;
     String country;
     String combinedKey;
     int population;
-    LinkedHashMap<String, Integer> dataMap;
+    Map<String, Integer> values;
 
-    public TimeSeriesDto() {
+    public CountryTimeSeriesDto() {
     }
 
-    public TimeSeriesDto(TimeSeriesDto timeSeriesDto) {
-        this.district = timeSeriesDto.getDistrict();
-        this.province = timeSeriesDto.getProvince();
-        this.country = timeSeriesDto.getCountry();
-        this.combinedKey = timeSeriesDto.getCombinedKey();
-        this.population = timeSeriesDto.getPopulation();
-        this.dataMap = timeSeriesDto.getDataMap();
+    public CountryTimeSeriesDto(CountryTimeSeriesDto countryTimeSeriesDto) {
+        this.district = countryTimeSeriesDto.getDistrict();
+        this.province = countryTimeSeriesDto.getProvince();
+        this.country = countryTimeSeriesDto.getCountry();
+        this.combinedKey = countryTimeSeriesDto.getCombinedKey();
+        this.population = countryTimeSeriesDto.getPopulation();
+        this.values = countryTimeSeriesDto.getValues();
     }
 
     public String getDistrict() {
@@ -63,23 +63,23 @@ public class TimeSeriesDto {
         this.population = population;
     }
 
-    public LinkedHashMap<String, Integer> getDataMap() {
-        return dataMap;
+    public Map<String, Integer> getValues() {
+        return values;
     }
 
-    public void setDataMap(LinkedHashMap<String, Integer> dataMap) {
-        this.dataMap = dataMap;
+    public void setValues(Map<String, Integer> values) {
+        this.values = values;
     }
 
     @Override
     public String toString() {
-        return "TimeSeriesDto{" +
+        return "CountryTimeSeriesDto{" +
                 "district='" + district + '\'' +
                 ", province='" + province + '\'' +
                 ", country='" + country + '\'' +
                 ", combinedKey='" + combinedKey + '\'' +
-                ", population='" + population + '\'' +
-                ", dataMap=" + dataMap +
+                ", population=" + population +
+                ", cases=" + values +
                 '}';
     }
 }

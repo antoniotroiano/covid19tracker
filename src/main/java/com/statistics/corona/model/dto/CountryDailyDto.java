@@ -1,8 +1,8 @@
-package com.statistics.corona.model;
+package com.statistics.corona.model.dto;
 
 import com.opencsv.bean.CsvBindByPosition;
 
-public class DailyReportDto {
+public class CountryDailyDto {
 
     @CsvBindByPosition(position = 0)
     Integer fips;
@@ -29,23 +29,23 @@ public class DailyReportDto {
     @CsvBindByPosition(position = 13)
     Double caseFatalityRatio;
 
-    public DailyReportDto() {
+    public CountryDailyDto() {
         //Always needed an empty constructor
     }
 
-    public DailyReportDto(DailyReportDto dailyReportDto) {
-        this.fips = dailyReportDto.getFips();
-        this.admin2 = dailyReportDto.getAdmin2();
-        this.province = dailyReportDto.getProvince();
-        this.country = dailyReportDto.getCountry();
-        this.lastUpdate = dailyReportDto.getLastUpdate();
-        this.confirmed = dailyReportDto.getConfirmed();
-        this.deaths = dailyReportDto.getDeaths();
-        this.recovered = dailyReportDto.getRecovered();
-        this.active = dailyReportDto.getActive();
-        this.combinedKey = dailyReportDto.getCombinedKey();
-        this.incidenceRate = dailyReportDto.getIncidenceRate();
-        this.caseFatalityRatio = dailyReportDto.getCaseFatalityRatio();
+    public CountryDailyDto(CountryDailyDto countryDailyDto) {
+        this.fips = countryDailyDto.getFips();
+        this.admin2 = countryDailyDto.getAdmin2();
+        this.province = countryDailyDto.getProvince();
+        this.country = countryDailyDto.getCountry();
+        this.lastUpdate = countryDailyDto.getLastUpdate();
+        this.confirmed = countryDailyDto.getConfirmed();
+        this.deaths = countryDailyDto.getDeaths();
+        this.recovered = countryDailyDto.getRecovered();
+        this.active = countryDailyDto.getActive();
+        this.combinedKey = countryDailyDto.getCombinedKey();
+        this.incidenceRate = countryDailyDto.getIncidenceRate();
+        this.caseFatalityRatio = countryDailyDto.getCaseFatalityRatio();
     }
 
     public Integer getFips() {

@@ -1,14 +1,14 @@
 package com.statistics.corona.service.json;
 
+import com.statistics.corona.service.CountryService;
 import com.statistics.corona.service.TimeSeriesUtils;
 import com.statistics.corona.service.WorldService;
+import com.statistics.corona.service.csv.CsvUtilsTimeSeries;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @SpringBootTest
@@ -18,6 +18,15 @@ public class JsonUtilsTest {
     private final JsonUtils jsonUtils = new JsonUtils();
     private final WorldService worldService = new WorldService(jsonUtils);
     private final TimeSeriesUtils timeSeriesUtils = new TimeSeriesUtils();
+    private final CsvUtilsTimeSeries csvUtilsTimeSeries = new CsvUtilsTimeSeries();
+    private final CountryService countryService = new CountryService(csvUtilsTimeSeries, timeSeriesUtils, jsonUtils);
+
+    @Test
+    void test1() {
+        //System.out.println(countryService.mapTStoDTO(jsonUtils.readCountryValuesOfJson("Germany")).getCasesValues());
+        //System.out.println(countryService.mapTStoDTO(jsonUtils.readCountryValuesOfJson("Germany")).getPopulation());
+        //System.out.println(countryService.calculateSevenDayIncidence(countryService.mapTStoDTO(jsonUtils.readCountryValuesOfJson("Germany"))));
+    }
 
     @Test
      void test() {

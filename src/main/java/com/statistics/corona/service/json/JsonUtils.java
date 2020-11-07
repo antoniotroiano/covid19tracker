@@ -1,9 +1,9 @@
 package com.statistics.corona.service.json;
 
-import com.statistics.corona.model.CountryDetailsDto;
 import com.statistics.corona.model.DistrictDto;
-import com.statistics.corona.model.data.DataObjectCountry;
+import com.statistics.corona.model.data.CountryValuesTransfer;
 import com.statistics.corona.model.data.DataObjectDistrict;
+import com.statistics.corona.model.dto.CountryValuesDto;
 import com.statistics.corona.model.dto.WorldTimeSeriesDto;
 import com.statistics.corona.model.dto.WorldValuesDto;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class JsonUtils {
         return worldValuesDto;
     }
 
-    public CountryDetailsDto readCountryValuesOfJson(String country) {
+    public CountryValuesDto readCountryValuesOfJson(String country) {
         log.debug("Invoke get country details for {}", country);
         if (country.equals("Korea, South")) {
             country = "South Korea";
@@ -59,30 +59,33 @@ public class JsonUtils {
             country = "UK";
         }
         RestTemplate restTemplate = new RestTemplate();
-        CountryDetailsDto countryDetailsDto = restTemplate
+        CountryValuesDto countryValuesDto = restTemplate
                 .getForObject("https://corona.lmao.ninja/v3/covid-19/countries/" + country +
-                        "?yesterday=false&twoDaysAgo=false&strict=true&allowNull=true", CountryDetailsDto.class);
+                        "?yesterday=false&twoDaysAgo=false&strict=true&allowNull=true", CountryValuesDto.class);
         if (country.equals("UK")) {
             country = "United Kingdom";
         }
         RestTemplate restTemplate2 = new RestTemplate();
-        DataObjectCountry dataObjectCountry = Objects.requireNonNull(restTemplate2
-                .getForObject("https://covid19.mathdro.id/api/countries/" + country, DataObjectCountry.class));
-        if (countryDetailsDto != null) {
-            countryDetailsDto.setCases(dataObjectCountry.getDataValueConfirmed().getValue());
-            countryDetailsDto.setRecovered(dataObjectCountry.getDataValueRecovered().getValue());
-            countryDetailsDto.setDeaths(dataObjectCountry.getDataValueDeaths().getValue());
-            double deathRate = ((double) countryDetailsDto.getDeaths() / (double) countryDetailsDto.getCases()) * 100;
-            countryDetailsDto.setDeathRate(deathRate);
-            double recoveryRate = ((double) countryDetailsDto.getRecovered() / (double) countryDetailsDto.getCases()) * 100;
-            countryDetailsDto.setRecoveryRate(recoveryRate);
-            double casesPerOneHundred = ((double) countryDetailsDto.getCases() / (double) countryDetailsDto.getPopulation()) * 100000;
-            countryDetailsDto.setCasesPerOneHundred((int) casesPerOneHundred);
-            double deathsPerOneHundred = ((double) countryDetailsDto.getDeaths() / (double) countryDetailsDto.getPopulation()) * 100000;
-            countryDetailsDto.setDeathsPerOneHundred((int) deathsPerOneHundred);
+        CountryValuesTransfer countryValuesTransfer = Objects.requireNonNull(restTemplate2
+                .getForObject("https://covid19.mathdro.id/api/countries/" + country, CountryValuesTransfer.class));
+        if (countryValuesDto != null) {
+            countryValuesDto.setCases(countryValuesTransfer.getDataValueConfirmed().getValue());
+            countryValuesDto.setRecovered(countryValuesTransfer.getDataValueRecovered().getValue());
+            countryValuesDto.setDeaths(countryValuesTransfer.getDataValueDeaths().getValue());
+            int active = countryValuesTransfer.getDataValueConfirmed().getValue() - countryValuesTransfer.getDataValueRecovered().getValue() -
+                    countryValuesTransfer.getDataValueDeaths().getValue();
+            countryValuesDto.setActive(active);
+            double deathRate = ((double) countryValuesDto.getDeaths() / (double) countryValuesDto.getCases()) * 100;
+            countryValuesDto.setDeathRate(deathRate);
+            double recoveryRate = ((double) countryValuesDto.getRecovered() / (double) countryValuesDto.getCases()) * 100;
+            countryValuesDto.setRecoveryRate(recoveryRate);
+            double casesPerOneHundred = ((double) countryValuesDto.getCases() / (double) countryValuesDto.getPopulation()) * 100000;
+            countryValuesDto.setCasesPerOneHundred((int) casesPerOneHundred);
+            double deathsPerOneHundred = ((double) countryValuesDto.getDeaths() / (double) countryValuesDto.getPopulation()) * 100000;
+            countryValuesDto.setDeathsPerOneHundred((int) deathsPerOneHundred);
         }
         log.info("Returned details for {}", country);
-        return countryDetailsDto;
+        return countryValuesDto;
     }
 
     public List<DistrictDto> readDistrictsValues() {

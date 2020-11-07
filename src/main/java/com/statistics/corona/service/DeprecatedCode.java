@@ -1,6 +1,6 @@
 package com.statistics.corona.service;
 
-import com.statistics.corona.model.CountryDetailsDto;
+import com.statistics.corona.model.dto.CountryValuesDto;
 import com.statistics.corona.model.DistrictDto;
 import com.statistics.corona.model.TimeSeriesWorldDto;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ public class DeprecatedCode {
         return allValuesWorld;
     }
 
-    public CountryDetailsDto readCountryValuesOfJson(String country) throws IOException {
+    public CountryValuesDto readCountryValuesOfJson(String country) throws IOException {
         JSONObject jsonObjectFirst = getJSONObject("https://covid19.mathdro.id/api/countries/" +
                 URLEncoder.encode(country, StandardCharsets.UTF_8).replace("+", "%20"));
         /*countryDetailsDto.setConfirmed(jsonObjectFirst.getJSONObject(CONFIRMED).optInt(VALUE, 0));

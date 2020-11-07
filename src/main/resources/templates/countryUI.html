@@ -24,7 +24,7 @@
                 <div class="title is-3 has-text-centered">COVID-19 <span
                         th:text="${selectedCountry}"></span>
                     <img alt="countryFlag" class="icon" style="border-radius: 15px"
-                         th:src="${countryDetails.getDataObjectCountryInfo().getFlag()}"/>
+                         th:src="${countryValuesDto.getDataObjectCountryInfo().getFlag()}"/>
                 </div>
             </div>
         </div>
@@ -65,11 +65,11 @@
                         <div class="tile is-parent">
                             <div class="tile is-child box has-text-info has-text-weight-bold">
                                 <div class="is-size-6"
-                                     th:text="${countryDetails.getCases() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDetails.getCases(), 3, 'POINT')}"></div>
+                                     th:text="${countryValuesDto.getCases() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getCases(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${countryDetails.getCases() != null}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayCases(), 3, 'POINT')}"></div>
+                                     th:if="${countryValuesDto.getCases() != null}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryValuesDto.getTodayCases(), 3, 'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="checkmark"
                                                                         src="/img/checkmark-outline.svg"></span>
                                 <div class="is-size-5">Confirmed</div>
@@ -78,11 +78,11 @@
                         <div class="tile is-parent">
                             <div class="tile is-child box has-text-success has-text-weight-bold">
                                 <div class="is-size-6"
-                                     th:text="${countryDetails.getRecovered() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDetails.getRecovered(), 3, 'POINT')}"></div>
+                                     th:text="${countryValuesDto.getRecovered() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getRecovered(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${(countryDetails.getRecovered()) != null}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayRecovered(), 3, 'POINT')}"></div>
+                                     th:if="${(countryValuesDto.getRecovered()) != null}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryValuesDto.getTodayRecovered(), 3, 'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="fitness"
                                                                         src="/img/fitness-outline.svg"></span>
                                 <div class="is-size-5">Recovered</div>
@@ -91,11 +91,11 @@
                         <div class="tile is-parent">
                             <div class="tile is-child box has-text-danger has-text-weight-bold">
                                 <div class="is-size-6"
-                                     th:text="${countryDetails.getDeaths() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDetails.getDeaths(), 3, 'POINT')}"></div>
+                                     th:text="${countryValuesDto.getDeaths() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getDeaths(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${countryDetails.getDeaths() != null}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryDetails.getTodayDeaths(), 3, 'POINT')}"></div>
+                                     th:if="${countryValuesDto.getDeaths() != null}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(countryValuesDto.getTodayDeaths(), 3, 'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
                                 <div class="is-size-5">Deaths</div>
                             </div>
@@ -103,8 +103,8 @@
                         <div class="tile is-parent">
                             <div class="tile is-child box has-text-weight-bold has-text-warning-dark">
                                 <div class="is-size-6"
-                                     th:text="${activeCases == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(activeCases, 3, 'POINT')}"></div>
+                                     th:text="${countryValuesDto.getActive() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getActive(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
                                      th:if="${differenceActiveCases == 0} ? ${'No value'}
                                          : ${(differenceActiveCases) >= 0}"
@@ -128,49 +128,51 @@
                     <div class="tile is-horizontal">
                         <div class="tile is-parent">
                             <div class="tile is-child box">
-                                <div class="is-size-6 is-pulled-right"
-                                     th:text="${countryDetails.getCritical() == 0} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDetails.getCritical(), 3, 'POINT')}"></div>
-                                <div class="is-size-6">Critical</div>
-                                <hr class="dropdown-divider-own">
-                                <div class="is-size-7 is-pulled-right tag is-warning"
-                                     th:text="${countryDetails.getCriticalPerOneMillion() == null} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(countryDetails.getCriticalPerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
-                                <div class="is-size-6">Critical / one mil.:</div>
-                                <hr class="dropdown-divider-own">
-                                <div class="is-size-7 is-pulled-right tag is-warning"
-                                     th:text="${countryDetails.getActivePerOneMillion() == null} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(countryDetails.getActivePerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
-                                <div class="is-size-6">Active / one mil.:</div>
-                                <hr class="dropdown-divider-own">
-                                <div class="is-size-6 is-pulled-right"
-                                     th:text="${date == null} ? ${'No value'} : ${date}"></div>
-                                <div class="is-size-6">Updated:</div>
+                                <div class="is-size-7 is-pulled-right tag"
+                                     th:classappend="${countryValuesDto.getSevenDayIncidence() >= 50} ? 'is-danger' : ''"
+                                     th:text="${countryValuesDto.getSevenDayIncidence() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getSevenDayIncidence(), 3, 'POINT')}"></div>
+                                <div class="is-size-6">7-day-incidence / 100.000:</div>
                             </div>
                         </div>
                         <div class="tile is-parent">
                             <div class="tile is-child box">
+                                <div class="is-size-7 is-pulled-right tag is-danger"
+                                     th:text="${countryValuesDto.getDeathRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryValuesDto.getDeathRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                <div class="is-size-6">Death rate:</div>
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child box">
+                                <div class="is-size-7 is-pulled-right tag is-warning"
+                                     th:text="${countryValuesDto.getCritical() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getCritical(), 3, 'POINT')}"></div>
+                                <div class="is-size-6">Critical</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-ancestor">
+                    <div class="tile is-horizontal">
+                        <div class="tile is-parent">
+                            <div class="tile is-child box">
                                 <span class="icon is-pulled-right"><img alt="analytics"
                                                                         src="/img/analytics-outline.svg"></span>
-                                <div class="is-size-5">Rate</div>
-                                <div class="is-size-7 is-pulled-right tag is-danger"
-                                     th:text="${countryDetails.getDeathRate() == null} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(countryDetails.getDeathRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                                <div class="is-size-6">Death rate:</div>
+                                <div class="is-size-5">Data</div>
+                                <div class="is-size-7 is-pulled-right tag is-warning"
+                                     th:text="${countryValuesDto.getCriticalPerOneMillion() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryValuesDto.getCriticalPerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
+                                <div class="is-size-6">Critical / one mil.:</div>
+                                <hr class="dropdown-divider-own">
+                                <div class="is-size-7 is-pulled-right tag is-warning"
+                                     th:text="${countryValuesDto.getActivePerOneMillion() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryValuesDto.getActivePerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
+                                <div class="is-size-6">Active / one mil.:</div>
                                 <hr class="dropdown-divider-own">
                                 <div class="is-size-7 is-pulled-right tag is-success"
-                                     th:text="${countryDetails.getRecoveryRate() == null} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(countryDetails.getRecoveryRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                                <div class="is-size-6">Recovery rate:</div>
-                                <hr class="dropdown-divider-own">
-                                <div class="is-size-7 is-pulled-right tag is-info"
-                                     th:text="${dailyReport.getIncidenceRate() == null} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(dailyReport.getIncidenceRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                                <div class="is-size-6">Incidence rate:</div>
-                                <hr class="dropdown-divider-own">
-                                <div class="is-size-7 is-pulled-right tag is-success"
-                                     th:text="${countryDetails.getRecoveredPerOneMillion() == null} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(countryDetails.getRecoveredPerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
+                                     th:text="${countryValuesDto.getRecoveredPerOneMillion() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryValuesDto.getRecoveredPerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
                                 <div class="is-size-6">Recovered / one mil.:</div>
                             </div>
                         </div>
@@ -179,29 +181,49 @@
                                 <span class="icon is-pulled-right"><img alt="analytics"
                                                                         src="/img/analytics-outline.svg"></span>
                                 <div class="is-size-5">Data</div>
+                                <div class="is-size-7 is-pulled-right tag is-success"
+                                     th:text="${countryValuesDto.getRecoveryRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryValuesDto.getRecoveryRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                <div class="is-size-6">Recovery rate:</div>
+                                <hr class="dropdown-divider-own">
+                                <div class="is-size-7 is-pulled-right tag is-info"
+                                     th:text="${countryDailyDto.getIncidenceRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryDailyDto.getIncidenceRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                                <div class="is-size-6">Incidence rate:</div>
+                                <hr class="dropdown-divider-own">
                                 <div class="is-size-6 is-pulled-right"
-                                     th:text="${countryDetails.getPopulation() == 0} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDetails.getPopulation(), 3, 'POINT')}"></div>
+                                     th:text="${countryValuesDto.getPopulation() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getPopulation(), 3, 'POINT')}"></div>
                                 <div class="is-size-6">Population:</div>
                                 <hr class="dropdown-divider-own">
                                 <div class="is-size-6 is-pulled-right"
-                                     th:text="${countryDetails.getCasesPerOneHundred() == 0} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDetails.getCasesPerOneHundred(), 3, 'POINT')}"></div>
+                                     th:text="${updated == null} ? ${'No value'} : ${updated}"></div>
+                                <div class="is-size-6">Updated:</div>
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child box">
+                                <span class="icon is-pulled-right"><img alt="analytics"
+                                                                        src="/img/analytics-outline.svg"></span>
+                                <div class="is-size-5">Data</div>
+                                <div class="is-size-6 is-pulled-right"
+                                     th:text="${countryValuesDto.getCasesPerOneHundred() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getCasesPerOneHundred(), 3, 'POINT')}"></div>
                                 <div class="is-size-6">Cases / 100.000:</div>
                                 <hr class="dropdown-divider-own">
                                 <div class="is-size-6 is-pulled-right"
-                                     th:text="${countryDetails.getDeathsPerOneHundred() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDetails.getDeathsPerOneHundred(), 3, 'POINT')}"></div>
+                                     th:text="${countryValuesDto.getDeathsPerOneHundred() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getDeathsPerOneHundred(), 3, 'POINT')}"></div>
                                 <div class="is-size-6">Deaths / 100.000:</div>
                                 <hr class="dropdown-divider-own">
                                 <div class="is-size-6 is-pulled-right"
-                                     th:text="${countryDetails.getTests() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDetails.getTests(), 3, 'POINT')}"></div>
+                                     th:text="${countryValuesDto.getTests() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getTests(), 3, 'POINT')}"></div>
                                 <div class="is-size-6">Tests all:</div>
                                 <hr class="dropdown-divider-own">
                                 <div class="is-size-6 is-pulled-right"
-                                     th:text="${countryDetails.getTestsPerOneMillion() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDetails.getTestsPerOneMillion(), 3, 'POINT')}"></div>
+                                     th:text="${countryValuesDto.getTestsPerOneMillion() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(countryValuesDto.getTestsPerOneMillion(), 3, 'POINT')}"></div>
                                 <div class="is-size-6">Tests / one mil.:</div>
                             </div>
                         </div>
@@ -213,7 +235,8 @@
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons has-addons is-centered">
                     <a class="button is-rounded is-info"
-                       th:href="@{/covid19/timeSeries/country/provinces/{country}/{code}(country = ${selectedCountry}, code = ${countryCode})}"
+                       th:href="@{/covid19/timeSeries/country/provinces/{country}/{code}(country = ${selectedCountry},
+                       code = ${countryValuesDto.getDataObjectCountryInfo().getIso2()})}"
                        th:if="${moreDetailsAvailable}">Province for&nbsp;<span th:text="${selectedCountry}"></span></a>
                 </div>
             </div>
@@ -336,7 +359,7 @@
     let confirmedOneDay = /*[[${dailyTrendConfirmed}]]*/ '';
     let recoveredOneDay = /*[[${dailyTrendRecovered}]]*/ '';
     let deathsOneDay = /*[[${dailyTrendDeaths}]]*/ '';
-    let datesOneDay = /*[[${dateListPerDay}]]*/ '';
+    let datesOneDay = /*[[${dateList}]]*/ '';
     /*]]>*/
 
     changedBarChartPerDay(document.getElementById('confirmedOneDay'), datesOneDay, confirmedOneDay, 'Confirmed');

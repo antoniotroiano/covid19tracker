@@ -1,6 +1,6 @@
 package com.statistics.corona.model.data;
 
-public class DataObjectCountryInfo {
+public class CountryInfo {
 
     int _id;
     String iso2;

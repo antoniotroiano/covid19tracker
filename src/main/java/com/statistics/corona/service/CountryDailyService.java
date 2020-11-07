@@ -1,9 +1,8 @@
 package com.statistics.corona.service;
 
-import com.statistics.corona.model.CountryDetailsDto;
-import com.statistics.corona.model.DailyReportDto;
 import com.statistics.corona.model.DailyReportUsDto;
 import com.statistics.corona.model.DistrictDto;
+import com.statistics.corona.model.dto.CountryDailyDto;
 import com.statistics.corona.service.csv.CsvUtilsDailyReports;
 import com.statistics.corona.service.json.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -21,27 +20,27 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class DailyReportService {
+public class CountryDailyService {
 
     private final CsvUtilsDailyReports readDailyReportCSV;
     private final JsonUtils jsonUtils;
 
     @Autowired
-    public DailyReportService(CsvUtilsDailyReports readDailyReportCSV, JsonUtils jsonUtils) {
+    public CountryDailyService(CsvUtilsDailyReports readDailyReportCSV, JsonUtils jsonUtils) {
         this.readDailyReportCSV = readDailyReportCSV;
         this.jsonUtils = jsonUtils;
     }
 
     //3 methods for get all values of districts, us daily report and all country daily reports
-    public List<DailyReportDto> getAllDailyReports() {
+    public List<CountryDailyDto> getAllDailyReports() {
         log.debug("Invoke get all daily reports for all countries");
-        List<DailyReportDto> dailyReportDtoList = readDailyReportCSV.readDailyReportsCSV();
-        if (dailyReportDtoList == null || dailyReportDtoList.isEmpty()) {
+        List<CountryDailyDto> countryDailyDtoList = readDailyReportCSV.readDailyReportsCSV();
+        if (countryDailyDtoList == null || countryDailyDtoList.isEmpty()) {
             log.warn("No values available for daily reports of all countries");
             return Collections.emptyList();
         }
         log.info("Return all daily reports for all countries");
-        return dailyReportDtoList;
+        return countryDailyDtoList;
     }
 
     public List<DailyReportUsDto> getAllDailyReportsUS() {
@@ -66,21 +65,32 @@ public class DailyReportService {
         return districtDtoList;
     }
 
-    //Get values for a selected country
-    public Optional<CountryDetailsDto> getSelectedCountryValues(String country) {
-        log.debug("Invoke get details for country {}", country);
-        try {
-            CountryDetailsDto countryDetailsDto = jsonUtils.readCountryValuesOfJson(country);
-            if (countryDetailsDto == null) {
-                log.warn("No value available for country {}", country);
-                return Optional.of(new CountryDetailsDto());
-            }
-            log.info("Return value for country {}", country);
-            return Optional.of(countryDetailsDto);
-        } catch (Exception e) {
-            log.warn("Failed get details for country {}: {}", country, e.getMessage());
-            return Optional.of(new CountryDetailsDto());
+    //Get one value of a selected country calculated from a csv
+    public Optional<CountryDailyDto> getDailyReportSelectedCountry(List<CountryDailyDto> countryDailyDtoList, String country) {
+        log.debug("Invoke get daily report of {}", country);
+        Optional<CountryDailyDto> dailyReportDto = getAllDailyCountryValuesCalculated(countryDailyDtoList)
+                .stream()
+                .filter(c -> c.getCountry().equals(country))
+                .findFirst();
+        if (dailyReportDto.isEmpty()) {
+            log.warn("No daily report for selected country {}", country);
+            return Optional.of(new CountryDailyDto());
         }
+        log.info("Return daily report for country {}", country);
+        return dailyReportDto;
+    }
+
+    //Get province values of a selected country
+    public List<CountryDailyDto> getDailyReportsOfProvince(List<CountryDailyDto> countryDailyDtoList, String country) {
+        log.debug("Invoke get daily reports for province of country {}", country);
+        if (countryDailyDtoList == null || countryDailyDtoList.isEmpty()) {
+            log.warn("No daily reports available for {}", country);
+            return Collections.emptyList();
+        }
+        log.info("Return all daily reports for province of country {}", country);
+        return countryDailyDtoList.stream()
+                .filter(c -> c.getCountry().equals(country))
+                .collect(Collectors.toList());
     }
 
     //Get district values of a selected country by country code
@@ -92,49 +102,21 @@ public class DailyReportService {
                 .collect(Collectors.toList());
     }
 
-    //Get province values of a selected country
-    public List<DailyReportDto> getDailyReportsOfProvince(List<DailyReportDto> dailyReportDtoList, String country) {
-        log.debug("Invoke get daily reports for province of country {}", country);
-        if (dailyReportDtoList == null || dailyReportDtoList.isEmpty()) {
-            log.warn("No daily reports available for {}", country);
-            return Collections.emptyList();
-        }
-        log.info("Return all daily reports for province of country {}", country);
-        return dailyReportDtoList.stream()
-                .filter(c -> c.getCountry().equals(country))
-                .collect(Collectors.toList());
-    }
-
-    //Get one value of a selected country calculated from a csv
-    public Optional<DailyReportDto> getDailyReportSelectedCountry(List<DailyReportDto> dailyReportDtoList, String country) {
-        log.debug("Invoke get daily report of {}", country);
-        Optional<DailyReportDto> dailyReportDto = getAllDailyCountryValuesCalculated(dailyReportDtoList)
-                .stream()
-                .filter(c -> c.getCountry().equals(country))
-                .findFirst();
-        if (dailyReportDto.isEmpty()) {
-            log.warn("No daily report for selected country {}", country);
-            return Optional.of(new DailyReportDto());
-        }
-        log.info("Return daily report for country {}", country);
-        return dailyReportDto;
-    }
-
     //Get all country values calculated
-    public List<DailyReportDto> getAllDailyCountryValuesCalculated(List<DailyReportDto> dailyReportDtoList) {
+    public List<CountryDailyDto> getAllDailyCountryValuesCalculated(List<CountryDailyDto> countryDailyDtoList) {
         log.debug("Invoke get all daily reports for all countries calculated");
-        if (dailyReportDtoList == null || dailyReportDtoList.isEmpty()) {
+        if (countryDailyDtoList == null || countryDailyDtoList.isEmpty()) {
             log.warn("No values available for all counties");
             return Collections.emptyList();
         }
-        List<String> countryWithProvince = dailyReportDtoList
+        List<String> countryWithProvince = countryDailyDtoList
                 .stream()
                 .filter(c -> Strings.isNotEmpty(c.getProvince()))
-                .map(DailyReportDto::getCountry)
+                .map(CountryDailyDto::getCountry)
                 .distinct()
                 .collect(Collectors.toList());
-        List<DailyReportDto> allCountryValues = getCalculatedCountry(countryWithProvince, dailyReportDtoList);
-        for (DailyReportDto allDailyReport : dailyReportDtoList) {
+        List<CountryDailyDto> allCountryValues = getCalculatedCountry(countryWithProvince, countryDailyDtoList);
+        for (CountryDailyDto allDailyReport : countryDailyDtoList) {
             if (!countryWithProvince.contains(allDailyReport.getCountry())) {
                 allCountryValues.add(allDailyReport);
             }
@@ -143,52 +125,53 @@ public class DailyReportService {
         return allCountryValues;
     }
 
-    private List<DailyReportDto> getCalculatedCountry(List<String> countryWithProvince, List<DailyReportDto> allDailyReports) {
-        List<DailyReportDto> allCountryValues = new ArrayList<>();
+    private List<CountryDailyDto> getCalculatedCountry(List<String> countryWithProvince, List<CountryDailyDto> allDailyReports) {
+        List<CountryDailyDto> allCountryValues = new ArrayList<>();
         for (String country : countryWithProvince) {
-            DailyReportDto dailyReportDto = new DailyReportDto();
-            dailyReportDto.setCountry(country);
-            dailyReportDto.setConfirmed(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumConfirmed"));
-            dailyReportDto.setRecovered(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumRecovered"));
-            dailyReportDto.setDeaths(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumDeaths"));
-            dailyReportDto.setActive(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumActive"));
-            allCountryValues.add(dailyReportDto);
+            CountryDailyDto countryDailyDto = new CountryDailyDto();
+            countryDailyDto.setCountry(country);
+            countryDailyDto.setConfirmed(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumConfirmed"));
+            countryDailyDto.setRecovered(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumRecovered"));
+            countryDailyDto.setDeaths(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumDeaths"));
+            countryDailyDto.setActive(getSumValues(getAllValuesGivenCountry(allDailyReports, country)).get("sumActive"));
+            allCountryValues.add(countryDailyDto);
         }
         return allCountryValues;
     }
 
-    private List<DailyReportDto> getAllValuesGivenCountry(List<DailyReportDto> dailyReportDtoList, String country) {
+    private List<CountryDailyDto> getAllValuesGivenCountry(List<CountryDailyDto> countryDailyDtoList, String country) {
         log.debug("Invoke get all values of given country");
-        return dailyReportDtoList.stream()
+        return countryDailyDtoList.stream()
                 .filter(c -> c.getCountry().equals(country))
                 .collect(Collectors.toList());
     }
 
-    private Map<String, Integer> getSumValues(List<DailyReportDto> dailyReportDtoList) {
+    private Map<String, Integer> getSumValues(List<CountryDailyDto> countryDailyDtoList) {
         log.debug("Invoke get sum of values");
         Map<String, Integer> sumValues = new HashMap<>();
-        sumValues.put("sumConfirmed", dailyReportDtoList.stream()
+        sumValues.put("sumConfirmed", countryDailyDtoList.stream()
                 .filter(c -> c.getConfirmed() != null)
-                .mapToInt(DailyReportDto::getConfirmed)
+                .mapToInt(CountryDailyDto::getConfirmed)
                 .sum());
-        sumValues.put("sumRecovered", dailyReportDtoList.stream()
+        sumValues.put("sumRecovered", countryDailyDtoList.stream()
                 .filter(c -> c.getRecovered() != null)
-                .mapToInt(DailyReportDto::getRecovered)
+                .mapToInt(CountryDailyDto::getRecovered)
                 .sum());
-        sumValues.put("sumDeaths", dailyReportDtoList.stream()
+        sumValues.put("sumDeaths", countryDailyDtoList.stream()
                 .filter(c -> c.getDeaths() != null)
-                .mapToInt(DailyReportDto::getDeaths)
+                .mapToInt(CountryDailyDto::getDeaths)
                 .sum());
-        sumValues.put("sumActive", dailyReportDtoList.stream()
+        sumValues.put("sumActive", countryDailyDtoList.stream()
                 .filter(c -> c.getActive() != null)
-                .mapToInt(DailyReportDto::getActive)
+                .mapToInt(CountryDailyDto::getActive)
                 .sum());
         return sumValues;
     }
 
-    public Optional<DailyReportDto> getProvinceDetails(String province) {
+    //Get province details for selected province
+    public Optional<CountryDailyDto> getProvinceDetails(String province) {
         log.debug("Invoke get details for selected province {}", province);
-        Optional<DailyReportDto> dailyReportDto = readDailyReportCSV.readDailyReportsCSV()
+        Optional<CountryDailyDto> dailyReportDto = readDailyReportCSV.readDailyReportsCSV()
                 .stream()
                 .filter(p -> p.getProvince().equals(province))
                 .findAny();
@@ -197,9 +180,10 @@ public class DailyReportService {
             return dailyReportDto;
         }
         log.warn("No values for dto available of {}", province);
-        return Optional.of(new DailyReportDto());
+        return Optional.of(new CountryDailyDto());
     }
 
+    //Get us provine details for selected province
     public Optional<DailyReportUsDto> getUsProvinceDetails(String province) {
         log.debug("Invoke get details for us province {}", province);
         Optional<DailyReportUsDto> dailyReportUsDto = readDailyReportCSV.readDailyReportUsCSV()

@@ -1,11 +1,11 @@
 package com.statistics.corona.controller;
 
-import com.statistics.corona.model.CountryDetailsDto;
-import com.statistics.corona.model.DailyReportDto;
+import com.statistics.corona.model.dto.CountryValuesDto;
+import com.statistics.corona.model.dto.CountryDailyDto;
 import com.statistics.corona.model.dto.WorldValuesDto;
-import com.statistics.corona.service.DailyReportService;
+import com.statistics.corona.service.CountryDailyService;
 import com.statistics.corona.service.DateFormat;
-import com.statistics.corona.service.TimeSeriesCountryService;
+import com.statistics.corona.service.CountryService;
 import com.statistics.corona.service.TimeSeriesUtils;
 import com.statistics.corona.service.WorldService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,22 +25,22 @@ import java.util.Optional;
 @RequestMapping("covid19")
 public class WorldController {
 
-    private static final String TIME_SERIES = "timeSeriesWorld";
+    private static final String TIME_SERIES = "worldUI";
     private final WorldService worldService;
-    private final TimeSeriesCountryService timeSeriesCountryService;
-    private final DailyReportService dailyReportService;
+    private final CountryService countryService;
+    private final CountryDailyService countryDailyService;
     private final TimeSeriesUtils timeSeriesUtils;
     private final DateFormat dateFormat;
 
     @Autowired
     public WorldController(WorldService worldService,
-                           TimeSeriesCountryService timeSeriesCountryService,
-                           DailyReportService dailyReportService,
+                           CountryService countryService,
+                           CountryDailyService countryDailyService,
                            TimeSeriesUtils timeSeriesUtils,
                            DateFormat dateFormat) {
         this.worldService = worldService;
-        this.timeSeriesCountryService = timeSeriesCountryService;
-        this.dailyReportService = dailyReportService;
+        this.countryService = countryService;
+        this.countryDailyService = countryDailyService;
         this.timeSeriesUtils = timeSeriesUtils;
         this.dateFormat = dateFormat;
     }
@@ -49,12 +49,12 @@ public class WorldController {
     public String showWorldTimeSeries(@RequestParam(value = "value") String value, Model model) {
         log.info("Invoke controller for time series world");
         model.addAttribute("worldValuesDto", new WorldValuesDto());
-        model.addAttribute("dailyReportDto", new DailyReportDto());
-        model.addAttribute("listCountries", timeSeriesCountryService.getCountryNames());
+        model.addAttribute("dailyReportDto", new CountryDailyDto());
+        model.addAttribute("listCountries", countryService.getCountryNames());
 
         Optional<WorldValuesDto> worldValuesDto = worldService.getWorldValues(value);
         if (worldValuesDto.isEmpty()) {
-            model.addAttribute("latestDataWorld", new CountryDetailsDto());
+            model.addAttribute("latestDataWorld", new CountryValuesDto());
             model.addAttribute("noDataForWorldTimeSeries", true);
             log.warn("No data available for world time series");
             return TIME_SERIES;
@@ -76,8 +76,8 @@ public class WorldController {
         model.addAttribute("dailyRecovered", timeSeriesUtils.getDailyTrend(worldValuesDto.get().getWorldTimeSeriesDto().getRecovered()));
         model.addAttribute("dailyDeaths", timeSeriesUtils.getDailyTrend(worldValuesDto.get().getWorldTimeSeriesDto().getDeaths()));
 
-        List<DailyReportDto> dailyReportServiceList = dailyReportService.getAllDailyReports();
-        List<DailyReportDto> allValues = dailyReportService.getAllDailyCountryValuesCalculated(dailyReportServiceList);
+        List<CountryDailyDto> dailyReportServiceList = countryDailyService.getAllDailyReports();
+        List<CountryDailyDto> allValues = countryDailyService.getAllDailyCountryValuesCalculated(dailyReportServiceList);
         if (allValues.isEmpty()) {
             model.addAttribute("noValuesAllCountries", true);
             log.warn("No values available for all countries");

@@ -1,14 +1,20 @@
-package com.statistics.corona.model;
+package com.statistics.corona.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.statistics.corona.model.data.DataObjectCountryInfo;
+import com.statistics.corona.model.data.CountryInfo;
 
-public class CountryDetailsDto {
+import java.util.Map;
+
+public class CountryValuesDto {
 
     long updated;
     String country;
+    String district;
+    String province;
+
     @JsonProperty("countryInfo")
-    DataObjectCountryInfo dataObjectCountryInfo;
+    CountryInfo countryInfo;
+
     int cases;
     int todayCases;
     int deaths;
@@ -33,38 +39,48 @@ public class CountryDetailsDto {
     double recoveryRate;
     int casesPerOneHundred;
     int deathsPerOneHundred;
+    int sevenDayIncidence;
+    Map<String, Integer> casesValues;
+    Map<String, Integer> recoveredValues;
+    Map<String, Integer> deathsValues;
 
-    public CountryDetailsDto() {
+    public CountryValuesDto() {
     }
 
-    public CountryDetailsDto(CountryDetailsDto countryDetailsDto) {
-        this.updated = countryDetailsDto.getUpdated();
-        this.country = countryDetailsDto.getCountry();
-        this.dataObjectCountryInfo = countryDetailsDto.getDataObjectCountryInfo();
-        this.cases = countryDetailsDto.getCases();
-        this.todayCases = countryDetailsDto.getTodayCases();
-        this.deaths = countryDetailsDto.getDeaths();
-        this.todayDeaths = countryDetailsDto.getTodayDeaths();
-        this.recovered = countryDetailsDto.getRecovered();
-        this.todayRecovered = countryDetailsDto.getTodayRecovered();
-        this.active = countryDetailsDto.getActive();
-        this.critical = countryDetailsDto.getCritical();
-        this.casesPerOneMillion = countryDetailsDto.getCasesPerOneMillion();
-        this.deathsPerOneMillion = countryDetailsDto.getDeathsPerOneMillion();
-        this.tests = countryDetailsDto.getTests();
-        this.testsPerOneMillion = countryDetailsDto.getTestsPerOneMillion();
-        this.population = countryDetailsDto.getPopulation();
-        this.continent = countryDetailsDto.getContinent();
-        this.oneCasePerPeople = countryDetailsDto.getOneCasePerPeople();
-        this.oneDeathPerPeople = countryDetailsDto.getOneDeathPerPeople();
-        this.oneTestPerPeople = countryDetailsDto.getOneTestPerPeople();
-        this.activePerOneMillion = countryDetailsDto.getActivePerOneMillion();
-        this.recoveredPerOneMillion = countryDetailsDto.getRecoveredPerOneMillion();
-        this.criticalPerOneMillion = countryDetailsDto.getCriticalPerOneMillion();
-        this.deathRate = countryDetailsDto.getDeathRate();
-        this.recoveryRate = countryDetailsDto.getRecoveryRate();
-        this.casesPerOneHundred = countryDetailsDto.getCasesPerOneHundred();
-        this.deathsPerOneHundred = countryDetailsDto.getDeathsPerOneHundred();
+    public CountryValuesDto(CountryValuesDto countryValuesDto) {
+        this.updated = countryValuesDto.getUpdated();
+        this.country = countryValuesDto.getCountry();
+        this.district = countryValuesDto.getDistrict();
+        this.province = countryValuesDto.getProvince();
+        this.countryInfo = countryValuesDto.getDataObjectCountryInfo();
+        this.cases = countryValuesDto.getCases();
+        this.todayCases = countryValuesDto.getTodayCases();
+        this.deaths = countryValuesDto.getDeaths();
+        this.todayDeaths = countryValuesDto.getTodayDeaths();
+        this.recovered = countryValuesDto.getRecovered();
+        this.todayRecovered = countryValuesDto.getTodayRecovered();
+        this.active = countryValuesDto.getActive();
+        this.critical = countryValuesDto.getCritical();
+        this.casesPerOneMillion = countryValuesDto.getCasesPerOneMillion();
+        this.deathsPerOneMillion = countryValuesDto.getDeathsPerOneMillion();
+        this.tests = countryValuesDto.getTests();
+        this.testsPerOneMillion = countryValuesDto.getTestsPerOneMillion();
+        this.population = countryValuesDto.getPopulation();
+        this.continent = countryValuesDto.getContinent();
+        this.oneCasePerPeople = countryValuesDto.getOneCasePerPeople();
+        this.oneDeathPerPeople = countryValuesDto.getOneDeathPerPeople();
+        this.oneTestPerPeople = countryValuesDto.getOneTestPerPeople();
+        this.activePerOneMillion = countryValuesDto.getActivePerOneMillion();
+        this.recoveredPerOneMillion = countryValuesDto.getRecoveredPerOneMillion();
+        this.criticalPerOneMillion = countryValuesDto.getCriticalPerOneMillion();
+        this.deathRate = countryValuesDto.getDeathRate();
+        this.recoveryRate = countryValuesDto.getRecoveryRate();
+        this.casesPerOneHundred = countryValuesDto.getCasesPerOneHundred();
+        this.deathsPerOneHundred = countryValuesDto.getDeathsPerOneHundred();
+        this.sevenDayIncidence = countryValuesDto.getSevenDayIncidence();
+        this.casesValues = countryValuesDto.getCasesValues();
+        this.recoveredValues = countryValuesDto.getRecoveredValues();
+        this.deathsValues = countryValuesDto.getDeathsValues();
     }
 
     public long getUpdated() {
@@ -83,12 +99,28 @@ public class CountryDetailsDto {
         this.country = country;
     }
 
-    public DataObjectCountryInfo getDataObjectCountryInfo() {
-        return dataObjectCountryInfo;
+    public String getDistrict() {
+        return district;
     }
 
-    public void setDataObjectCountryInfo(DataObjectCountryInfo dataObjectCountryInfo) {
-        this.dataObjectCountryInfo = dataObjectCountryInfo;
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public CountryInfo getDataObjectCountryInfo() {
+        return countryInfo;
+    }
+
+    public void setDataObjectCountryInfo(CountryInfo countryInfo) {
+        this.countryInfo = countryInfo;
     }
 
     public int getCases() {
@@ -283,14 +315,48 @@ public class CountryDetailsDto {
         this.deathsPerOneHundred = deathsPerOneHundred;
     }
 
+    public int getSevenDayIncidence() {
+        return sevenDayIncidence;
+    }
+
+    public void setSevenDayIncidence(int sevenDayIncidence) {
+        this.sevenDayIncidence = sevenDayIncidence;
+    }
+
+    public Map<String, Integer> getCasesValues() {
+        return casesValues;
+    }
+
+    public void setCasesValues(Map<String, Integer> casesValues) {
+        this.casesValues = casesValues;
+    }
+
+    public Map<String, Integer> getRecoveredValues() {
+        return recoveredValues;
+    }
+
+    public void setRecoveredValues(Map<String, Integer> recoveredValues) {
+        this.recoveredValues = recoveredValues;
+    }
+
+    public Map<String, Integer> getDeathsValues() {
+        return deathsValues;
+    }
+
+    public void setDeathsValues(Map<String, Integer> deathsValues) {
+        this.deathsValues = deathsValues;
+    }
+
     @Override
     public String toString() {
-        return "CountryDetailsDto{" +
+        return "CountryValuesDto{" +
                 "updated=" + updated +
                 ", country='" + country + '\'' +
-                ", dataObjectCountryInfo='" + dataObjectCountryInfo + '\'' +
-                ", confirmed=" + cases +
-                ", todayConfirmed=" + todayCases +
+                ", district='" + district + '\'' +
+                ", province='" + province + '\'' +
+                ", dataObjectCountryInfo=" + countryInfo +
+                ", cases=" + cases +
+                ", todayCases=" + todayCases +
                 ", deaths=" + deaths +
                 ", todayDeaths=" + todayDeaths +
                 ", recovered=" + recovered +
@@ -313,6 +379,10 @@ public class CountryDetailsDto {
                 ", recoveryRate=" + recoveryRate +
                 ", casesPerOneHundred=" + casesPerOneHundred +
                 ", deathsPerOneHundred=" + deathsPerOneHundred +
+                ", sevenDayIncidence=" + sevenDayIncidence +
+                ", casesValues=" + casesValues +
+                ", recoveredValues=" + recoveredValues +
+                ", deathsValues=" + deathsValues +
                 '}';
     }
 }

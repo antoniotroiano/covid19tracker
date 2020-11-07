@@ -5,7 +5,7 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
-import com.statistics.corona.model.DailyReportDto;
+import com.statistics.corona.model.dto.CountryDailyDto;
 import com.statistics.corona.model.DailyReportUsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -52,19 +52,19 @@ public class CsvUtilsDailyReports {
         }
     }
 
-    public List<DailyReportDto> readDailyReportsCSV() {
+    public List<CountryDailyDto> readDailyReportsCSV() {
         log.debug("Invoke read daily CSV from github");
         try (BufferedReader in = new BufferedReader(new InputStreamReader(getURL().openStream()));
              CSVReader reader = new CSVReaderBuilder(in)
                      .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES)
                      .withSkipLines(1)
                      .build()) {
-            CsvToBean<DailyReportDto> csvToBean = new CsvToBeanBuilder<DailyReportDto>(reader)
-                    .withType(DailyReportDto.class)
+            CsvToBean<CountryDailyDto> csvToBean = new CsvToBeanBuilder<CountryDailyDto>(reader)
+                    .withType(CountryDailyDto.class)
                     .build();
-            List<DailyReportDto> dailyReportDtoList = csvToBean.parse();
+            List<CountryDailyDto> countryDailyDtoList = csvToBean.parse();
             log.info("Add all daily reports to list");
-            return dailyReportDtoList;
+            return countryDailyDtoList;
         } catch (Exception e) {
             log.warn("Occurred an exception while reading csv from github {}", e.getMessage());
             return Collections.emptyList();

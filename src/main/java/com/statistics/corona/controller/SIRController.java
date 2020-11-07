@@ -2,7 +2,7 @@ package com.statistics.corona.controller;
 
 import com.statistics.corona.model.SIRModel;
 import com.statistics.corona.service.DerivativeService;
-import com.statistics.corona.service.TimeSeriesCountryService;
+import com.statistics.corona.service.CountryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,13 +22,13 @@ import java.util.List;
 public class SIRController {
 
     private static final String SIR_MODEL = "sir";
-    private final TimeSeriesCountryService timeSeriesCountryService;
+    private final CountryService countryService;
     private final DerivativeService derivativeService;
 
     @GetMapping
     public String showSIRModel(SIRModel sirModel, Model model) {
         log.info("Invoke v2 sir-model");
-        List<String> allCountries = timeSeriesCountryService.getCountryNames();
+        List<String> allCountries = countryService.getCountryNames();
         model.addAttribute("listCountries", allCountries);
 
         SIRModel sirModelInit = new SIRModel();

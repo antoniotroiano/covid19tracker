@@ -1,6 +1,6 @@
 package com.statistics.corona.service;
 
-import com.statistics.corona.model.DailyReportDto;
+import com.statistics.corona.model.dto.CountryDailyDto;
 import com.statistics.corona.model.dto.WorldValuesDto;
 import com.statistics.corona.service.json.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -63,26 +63,26 @@ public class WorldService {
         return 0;
     }
 
-    public List<DailyReportDto> getEachCountriesConfirmedDescending(List<DailyReportDto> allCountryDailyReports) {
+    public List<CountryDailyDto> getEachCountriesConfirmedDescending(List<CountryDailyDto> allCountryDailyReports) {
         log.debug("Get all countries confirmed cases descending");
         return allCountryDailyReports.stream()
-                .sorted(Comparator.comparing(DailyReportDto::getConfirmed)
+                .sorted(Comparator.comparing(CountryDailyDto::getConfirmed)
                         .reversed())
                 .collect(Collectors.toList());
     }
 
-    public List<DailyReportDto> getEachCountriesActiveDescending(List<DailyReportDto> allCountryDailyReports) {
+    public List<CountryDailyDto> getEachCountriesActiveDescending(List<CountryDailyDto> allCountryDailyReports) {
         log.debug("Get all countries active cases descending");
         return allCountryDailyReports.stream()
-                .sorted(Comparator.comparing(DailyReportDto::getActive)
+                .sorted(Comparator.comparing(CountryDailyDto::getActive)
                         .reversed())
                 .collect(Collectors.toList());
     }
 
-    public List<DailyReportDto> getEachCountriesDeathsDescending(List<DailyReportDto> allCountryDailyReports) {
+    public List<CountryDailyDto> getEachCountriesDeathsDescending(List<CountryDailyDto> allCountryDailyReports) {
         log.debug("Get all countries deaths cases descending");
         return allCountryDailyReports.stream()
-                .sorted(Comparator.comparing(DailyReportDto::getDeaths)
+                .sorted(Comparator.comparing(CountryDailyDto::getDeaths)
                         .reversed())
                 .collect(Collectors.toList());
     }

@@ -2,7 +2,7 @@ package com.statistics.corona.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DataObjectCountry {
+public class CountryValuesTransfer {
 
     @JsonProperty("confirmed")
     JsonValueTransfer jsonValueTransferConfirmed;

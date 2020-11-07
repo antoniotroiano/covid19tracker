@@ -1,10 +1,10 @@
 package com.statistics.corona.controller;
 
-import com.statistics.corona.model.DailyReportDto;
+import com.statistics.corona.model.dto.CountryDailyDto;
 import com.statistics.corona.model.DailyReportUsDto;
 import com.statistics.corona.model.DistrictDto;
-import com.statistics.corona.service.DailyReportService;
-import com.statistics.corona.service.TimeSeriesCountryService;
+import com.statistics.corona.service.CountryDailyService;
+import com.statistics.corona.service.CountryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,13 +24,13 @@ import java.util.concurrent.ExecutionException;
 public class ProvinceDistrictController {
 
     private static final String TITLE = "title";
-    private final TimeSeriesCountryService timeSeriesCountryService;
-    private final DailyReportService dailyReportService;
+    private final CountryService countryService;
+    private final CountryDailyService countryDailyService;
 
     @Autowired
-    public ProvinceDistrictController(TimeSeriesCountryService timeSeriesCountryService, DailyReportService dailyReportService) {
-        this.timeSeriesCountryService = timeSeriesCountryService;
-        this.dailyReportService = dailyReportService;
+    public ProvinceDistrictController(CountryService countryService, CountryDailyService countryDailyService) {
+        this.countryService = countryService;
+        this.countryDailyService = countryDailyService;
     }
 
     @GetMapping("/country/provinces/{country}/{code}")
@@ -42,7 +42,7 @@ public class ProvinceDistrictController {
 
         if (country.equals("US")) {
             getBaseDataDetailsUS(model);
-            List<DailyReportUsDto> dailyReportUsDtoList = dailyReportService.getAllDailyReportsUS();
+            List<DailyReportUsDto> dailyReportUsDtoList = countryDailyService.getAllDailyReportsUS();
             if (dailyReportUsDtoList.isEmpty()) {
                 model.addAttribute("noDetailsProvinceUs", true);
                 log.warn("No values for province of US available");
@@ -54,9 +54,9 @@ public class ProvinceDistrictController {
             return "timeSeriesCountryDetailsUs";
         }
 
-        List<DailyReportDto> dailyReportDtoList = dailyReportService.getAllDailyReports();
+        List<CountryDailyDto> countryDailyDtoList = countryDailyService.getAllDailyReports();
         getBaseDataDetails(model, country);
-        List<DailyReportDto> allValuesProvince = dailyReportService.getDailyReportsOfProvince(dailyReportDtoList, country);
+        List<CountryDailyDto> allValuesProvince = countryDailyService.getDailyReportsOfProvince(countryDailyDtoList, country);
         if (allValuesProvince.isEmpty()) {
             model.addAttribute("noDetailsProvince", true);
             log.warn("No values for provinces and districts for country {} available", country);
@@ -74,7 +74,7 @@ public class ProvinceDistrictController {
     }
 
     private void getCountryNames(Model model) {
-        List<String> allCountries = timeSeriesCountryService.getCountryNames();
+        List<String> allCountries = countryService.getCountryNames();
         if (allCountries.isEmpty()) {
             model.addAttribute("listCountries", Collections.emptyList());
         }
@@ -82,7 +82,7 @@ public class ProvinceDistrictController {
     }
 
     private void getBaseDataDetails(Model model, String country) {
-        model.addAttribute("dailyReportDto", new DailyReportDto());
+        model.addAttribute("dailyReportDto", new CountryDailyDto());
         model.addAttribute(TITLE, "COVID-19 - Details for " + country);
     }
 
@@ -92,7 +92,7 @@ public class ProvinceDistrictController {
     }
 
     public void getDistrictValues(Model model, String code) throws ExecutionException, InterruptedException {
-        List<DistrictDto> selectedDistrictValues = dailyReportService.getDistrictValuesOfSelectedCountry(code);
+        List<DistrictDto> selectedDistrictValues = countryDailyService.getDistrictValuesOfSelectedCountry(code);
         if (selectedDistrictValues.isEmpty()) {
             model.addAttribute("noDistrictValues", true);
         }
