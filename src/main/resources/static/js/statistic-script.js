@@ -108,6 +108,11 @@ function getCountryV2(country) {
     document.location.replace("/covid19/timeSeries/country/" + country);
 }
 
+/*Refresh page with selected value*/
+function selectedValue(value) {
+    document.location.replace("/covid19/world?value=" + value);
+}
+
 /*Modal with bulma for all country without US*/
 /*function openModal(province, region, confirmed, recovered, deaths, active) {
     let $activeElement = undefined;
@@ -167,6 +172,34 @@ $(function () {
         $('.activeButton').not(this).removeClass('activeButton');
         $(this).toggleClass('activeButton');
     })
+});
+
+$(document).ready(function () {
+    const loc = window.location.href;
+    if (loc.search("=all") !== -1) {
+        $('.all').addClass("activeButtonDays");
+        $('.180').removeClass("activeButtonDays");
+        $('.120').removeClass("activeButtonDays");
+        $('.60').removeClass("activeButtonDays");
+    }
+    if (loc.search("=180") !== -1) {
+        $('.all').removeClass("activeButtonDays");
+        $('.180').addClass("activeButtonDays");
+        $('.120').removeClass("activeButtonDays");
+        $('.60').removeClass("activeButtonDays");
+    }
+    if (loc.search("=120") !== -1) {
+        $('.all').removeClass("activeButtonDays");
+        $('.180').removeClass("activeButtonDays");
+        $('.120').addClass("activeButtonDays");
+        $('.60').removeClass("activeButtonDays");
+    }
+    if (loc.search("=60") !== -1) {
+        $('.all').removeClass("activeButtonDays");
+        $('.180').removeClass("activeButtonDays");
+        $('.120').removeClass("activeButtonDays");
+        $('.60').addClass("activeButtonDays");
+    }
 });
 
 /*Toggle between lists*/

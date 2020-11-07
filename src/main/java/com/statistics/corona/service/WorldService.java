@@ -49,9 +49,13 @@ public class WorldService {
             LocalDate yesterday = LocalDate.now().minus(1, ChronoUnit.DAYS);
             DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("M/d/yy", Locale.GERMAN);
             String yesterdayFormat = outputFormatter.format(yesterday);
-            int cases = worldValuesDto.get().getWorldTimeSeriesDto().getCases().get(yesterdayFormat);
-            int recovered = worldValuesDto.get().getWorldTimeSeriesDto().getRecovered().get(yesterdayFormat);
-            int deaths = worldValuesDto.get().getWorldTimeSeriesDto().getDeaths().get(yesterdayFormat);
+            Integer cases = worldValuesDto.get().getWorldTimeSeriesDto().getCases().get(yesterdayFormat);
+            Integer recovered = worldValuesDto.get().getWorldTimeSeriesDto().getRecovered().get(yesterdayFormat);
+            Integer deaths = worldValuesDto.get().getWorldTimeSeriesDto().getDeaths().get(yesterdayFormat);
+            if (cases == null || recovered == null || deaths == null) {
+                log.debug("At the moment no new yesterday value available");
+                return 0;
+            }
             log.debug("Returned yesterday active");
             return cases - recovered - deaths;
         }

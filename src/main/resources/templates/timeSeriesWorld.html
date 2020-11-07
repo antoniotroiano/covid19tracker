@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="/img/bar-chart-outline.svg" rel="icon" type="image/svg">
+    <link href="../img/bar-chart-outline.svg" rel="icon" th:href="@{../img/bar-chart-outline.svg}"
+          type="image/svg">
     <title>COVID-19 - Data for worldwide</title>
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" rel="stylesheet">
-    <link href="css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
-    <link href="css/toggle-switch.css" rel="stylesheet" th:href="@{/css/toggle-switch.css}">
+    <link href="../css/statistic-style.css" rel="stylesheet" th:href="@{../css/statistic-style.css}">
+    <link href="../css/toggle-switch.css" rel="stylesheet" th:href="@{../css/toggle-switch.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-    <script th:src="@{/js/charts.js}"></script>
-    <script th:src="@{/js/statistic-script.js}"></script>
+    <script th:src="@{../js/charts.js}"></script>
+    <script th:src="@{../js/statistic-script.js}"></script>
     <script th:inline="javascript">
         getCountryV2(country);
     </script>
@@ -100,10 +101,10 @@
                                      th:text="${worldValuesDto.getActive() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(worldValuesDto.getActive(),3,'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${worldValuesDto.getActive() - activeYesterday >= 0}"
+                                     th:if="${activeYesterday != 0 && worldValuesDto.getActive() - activeYesterday >= 0}"
                                      th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getActive() - activeYesterday,3,'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${worldValuesDto.getActive() - activeYesterday < 0}"
+                                     th:if="${activeYesterday != 0 && worldValuesDto.getActive() - activeYesterday < 0}"
                                      th:text="'- ' + ${#numbers.formatInteger(inverted,3,'POINT')}"
                                      th:with="inverted=${-(worldValuesDto.getActive() - activeYesterday)}"></div>
                                 <span class="icon is-pulled-right"><img alt="medkit"
@@ -159,6 +160,18 @@
                 <br>
             </div>
         </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
+                <div class="has-text-centered">Select number of displayed values</div>
+                <br>
+                <div class="buttons is-mobile is-centered">
+                    <a class="button is-rounded is-small all btn" onclick=selectedValue("all")>All</a>
+                    <a class="button is-rounded is-small 180 btn" onclick=selectedValue(180)>180 days</a>
+                    <a class="button is-rounded is-small 120 btn" onclick=selectedValue(120)>120 days</a>
+                    <a class="button is-rounded is-small 60 btn" onclick=selectedValue(60)>60 days</a>
+                </div>
+            </div>
+        </div>
         <div class="container">
             <div class="columns is-mobile is-centered">
                 <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd box">
@@ -195,7 +208,7 @@
                     <div class="column is-12-mobile is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
                         <br>
                         <div class="title has-text-centered is-size-3">Rest of world</div>
-                        <div class="buttons has-addons-centered is-centered" id="myDIV">
+                        <div class="buttons has-addons-centered is-centered">
                             <button class="button is-rounded is-small btn activeButton" id="buttonTotal">Cases</button>
                             <button class="button is-rounded is-small btn" id="buttonActive">Active</button>
                             <button class="button is-rounded is-small btn" id="buttonDeaths">Deaths</button>
@@ -211,14 +224,15 @@
                             <div id="listTotal">
                                 <div class="box hide-on-small" style="overflow: auto; height: 40em">
                                     <table class="table is-striped is-hoverable is-fullwidth">
+                                        <caption></caption>
                                         <thead>
                                         <tr>
-                                            <th>Country</th>
-                                            <th>Cases</th>
-                                            <th>Recovered</th>
-                                            <th>Active</th>
-                                            <th>Deaths</th>
-                                            <th>Details</th>
+                                            <th scope="col">Country</th>
+                                            <th scope="col">Cases</th>
+                                            <th scope="col">Recovered</th>
+                                            <th scope="col">Active</th>
+                                            <th scope="col">Deaths</th>
+                                            <th scope="col">Details</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -251,9 +265,10 @@
                                 </div>
                                 <div class="box hide-on-big" style="overflow: auto; height: 30em">
                                     <table class="table is-striped is-hoverable is-fullwidth">
+                                        <caption></caption>
                                         <thead>
                                         <tr>
-                                            <th>Cases</th>
+                                            <th scope="col">Cases</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -305,14 +320,15 @@
                             <div id="listActive" style="display: none;">
                                 <div class="box hide-on-small" style="overflow: auto; height: 40em">
                                     <table class="table is-striped is-hoverable is-fullwidth">
+                                        <caption></caption>
                                         <thead>
                                         <tr>
-                                            <th>Country</th>
-                                            <th>Active</th>
-                                            <th>Cases</th>
-                                            <th>Recovered</th>
-                                            <th>Deaths</th>
-                                            <th>Details</th>
+                                            <th scope="col">Country</th>
+                                            <th scope="col">Active</th>
+                                            <th scope="col">Cases</th>
+                                            <th scope="col">Recovered</th>
+                                            <th scope="col">Deaths</th>
+                                            <th scope="col">Details</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -345,9 +361,10 @@
                                 </div>
                                 <div class="box hide-on-big" style="overflow: auto; height: 30em">
                                     <table class="table is-striped is-hoverable is-fullwidth">
+                                        <caption></caption>
                                         <thead>
                                         <tr>
-                                            <th>Active</th>
+                                            <th scope="col">Active</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -399,14 +416,15 @@
                             <div id="listDeaths" style="display: none">
                                 <div class="box hide-on-small" style="overflow: auto; height: 40em">
                                     <table class="table is-striped is-hoverable is-fullwidth">
+                                        <caption></caption>
                                         <thead>
                                         <tr>
-                                            <th>Country</th>
-                                            <th>Deaths</th>
-                                            <th>Cases</th>
-                                            <th>Recovered</th>
-                                            <th>Active</th>
-                                            <th>Details</th>
+                                            <th scope="col">Country</th>
+                                            <th scope="col">Deaths</th>
+                                            <th scope="col">Cases</th>
+                                            <th scope="col">Recovered</th>
+                                            <th scope="col">Active</th>
+                                            <th scope="col">Details</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -439,15 +457,15 @@
                                 </div>
                                 <div class="box hide-on-big" style="overflow: auto; height: 30em">
                                     <table class="table is-striped is-hoverable is-fullwidth">
+                                        <caption></caption>
                                         <thead>
                                         <tr>
-                                            <th>Deaths</th>
+                                            <th scope="col">Deaths</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr th:each="dailyReportDto : ${deathsTable}">
                                             <td>
-                                                <!--<hr class="dropdown-divider-own">-->
                                                 <div class="collapsible">
                                                     <div class="is-pulled-left"
                                                          th:text="${dailyReportDto.getCountry()}"></div>
@@ -504,19 +522,20 @@
             </div>
             <div class="has-text-centered">
                 <a class="is-link" href="https://github.com/CSSEGISandData"
-                   target="_blank">github.com/CSSEGISandData</a>
+                   rel="noopener noreferrer" target="_blank">github.com/CSSEGISandData</a>
             </div>
             <div class="has-text-centered">
-                <a class="is-link" href="https://about-corona.net/" target="_blank">about-corona.net</a>
+                <a class="is-link" href="https://about-corona.net/" rel="noopener noreferrer" target="_blank">about-corona.net</a>
             </div>
             <div class="has-text-centered">
-                <a class="is-link" href="https://github.com/mathdroid/covid-19-api" target="_blank">github.com/mathdroid/covid-19-api</a>
+                <a class="is-link" href="https://github.com/mathdroid/covid-19-api" rel="noopener noreferrer"
+                   target="_blank">github.com/mathdroid/covid-19-api</a>
             </div>
             <div class="has-text-centered">
-                <a class="is-link" href="https://corona.lmao.ninja/" target="_blank">corona.lmao.ninja</a>
+                <a class="is-link" href="https://corona.lmao.ninja/" rel="noopener noreferrer" target="_blank">corona.lmao.ninja</a>
             </div>
             <div class="has-text-centered">
-                <a class="is-link" href="https://www.trackcorona.live/" target="_blank">trackcorona.live</a>
+                <a class="is-link" href="https://www.trackcorona.live/" rel="noopener noreferrer" target="_blank">trackcorona.live</a>
             </div>
             <div class="has-text-centered">Contact: <a href="mailto:info@tracker-covid19.de">info (at)
                 tracker-covid19.de</a></div>

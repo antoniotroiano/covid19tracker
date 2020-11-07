@@ -72,6 +72,12 @@
     color: #fff;
 }
 
+.activeButtonDays {
+    background-color: #3273dc;
+    border-color: #3273dc;
+    color: #fff;
+}
+
 /*List toggle for content world values*/
 .collapsible {
     display: flow-root;

@@ -23,7 +23,7 @@ public class TimeSeriesUtils {
         for (int i = 0; i < valueList.size(); i++) {
             int sumPerDay = 0;
             if (i == 0) {
-                worldDailyTrend.add(0);
+                log.info("First element is 0. Doesn't add to list.");
             } else {
                 sumPerDay = valueList.get(i) - valueList.get(i - 1);
                 if (sumPerDay < 0) {
@@ -33,7 +33,7 @@ public class TimeSeriesUtils {
                 worldDailyTrend.add(sumPerDay);
             }
         }
-        log.info("Return list with daily trend");
+        log.debug("Return list with daily trend");
         return worldDailyTrend;
     }
 }

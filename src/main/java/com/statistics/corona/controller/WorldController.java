@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.Optional;
 
 @Controller
 @Slf4j
-@RequestMapping("covid19/world")
+@RequestMapping("covid19")
 public class WorldController {
 
     private static final String TIME_SERIES = "timeSeriesWorld";
@@ -44,14 +45,14 @@ public class WorldController {
         this.dateFormat = dateFormat;
     }
 
-    @GetMapping()
-    public String showWorldTimeSeries(Model model) {
+    @GetMapping("/world")
+    public String showWorldTimeSeries(@RequestParam(value = "value") String value, Model model) {
         log.info("Invoke controller for time series world");
         model.addAttribute("worldValuesDto", new WorldValuesDto());
         model.addAttribute("dailyReportDto", new DailyReportDto());
         model.addAttribute("listCountries", timeSeriesCountryService.getCountryNames());
 
-        Optional<WorldValuesDto> worldValuesDto = worldService.getWorldValues("all");
+        Optional<WorldValuesDto> worldValuesDto = worldService.getWorldValues(value);
         if (worldValuesDto.isEmpty()) {
             model.addAttribute("latestDataWorld", new CountryDetailsDto());
             model.addAttribute("noDataForWorldTimeSeries", true);
