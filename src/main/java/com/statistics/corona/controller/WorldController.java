@@ -1,11 +1,11 @@
 package com.statistics.corona.controller;
 
-import com.statistics.corona.model.dto.CountryValuesDto;
 import com.statistics.corona.model.dto.CountryDailyDto;
+import com.statistics.corona.model.dto.CountryValuesDto;
 import com.statistics.corona.model.dto.WorldValuesDto;
 import com.statistics.corona.service.CountryDailyService;
-import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.CountryService;
+import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.TimeSeriesUtils;
 import com.statistics.corona.service.WorldService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class WorldController {
     public String showWorldTimeSeries(@RequestParam(value = "value") String value, Model model) {
         log.info("Invoke controller for time series world");
         model.addAttribute("worldValuesDto", new WorldValuesDto());
-        model.addAttribute("dailyReportDto", new CountryDailyDto());
+        model.addAttribute("countryDailyDto", new CountryDailyDto());
         model.addAttribute("listCountries", countryService.getCountryNames());
 
         Optional<WorldValuesDto> worldValuesDto = worldService.getWorldValues(value);

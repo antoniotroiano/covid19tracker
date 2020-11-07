@@ -105,7 +105,7 @@ function searchFunctionDistrictMobile() {
 
 /*Get selected country*/
 function getCountryV2(country) {
-    document.location.replace("/covid19/timeSeries/country/" + country);
+    document.location.replace("/covid19/country/" + country);
 }
 
 /*Refresh page with selected value*/

@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Controller
 @Slf4j
-@RequestMapping("covid19/timeSeries")
+@RequestMapping("covid19")
 public class CountryController {
 
     private static final String TIME_SERIES = "countryUI";
