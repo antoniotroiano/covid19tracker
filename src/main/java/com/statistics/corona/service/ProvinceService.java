@@ -149,4 +149,40 @@ public class ProvinceService {
         log.info("Return the population for {}", province);
         return population;
     }
+
+    public Optional<CountryDailyDto> getYesterdayValues(String province) {
+        log.debug("Invoke get yesterday values of province {}", province);
+        Optional<CountryDailyDto> countryDailyDto = csvUtilsDailyReports.readDailyReportsYesterdayCsv().stream()
+                .filter(p -> Objects.nonNull(p.getProvince()))
+                .filter(c -> c.getProvince().equals(province))
+                .findAny();
+
+        if (countryDailyDto.isPresent()) {
+            log.info("Returned yesterday values of province {}", province);
+            return countryDailyDto;
+        }
+        log.warn("No value for yesterday of province {} available", province);
+        return Optional.empty();
+    }
+
+    public Map<String, Integer> getTodayIncrementForProvince(String province) {
+        log.debug("Invoke get today increment for province {}", province);
+        Optional<CountryDailyDto> todayCountryDailyDto = getProvinceDetails(province);
+        Optional<CountryDailyDto> yesterdayCountryDailyDto = getYesterdayValues(province);
+        Map<String, Integer> todayIncrement = new HashMap<>();
+        if (todayCountryDailyDto.isPresent() && yesterdayCountryDailyDto.isPresent()) {
+            int todayConfirmed = todayCountryDailyDto.get().getConfirmed() - yesterdayCountryDailyDto.get().getConfirmed();
+            int todayRecovered = todayCountryDailyDto.get().getRecovered() - yesterdayCountryDailyDto.get().getRecovered();
+            int todayDeaths = todayCountryDailyDto.get().getDeaths() - yesterdayCountryDailyDto.get().getDeaths();
+            int todayActive = todayCountryDailyDto.get().getActive() - yesterdayCountryDailyDto.get().getActive();
+            todayIncrement.put("todayConfirmed", todayConfirmed);
+            todayIncrement.put("todayRecovered", todayRecovered);
+            todayIncrement.put("todayDeath", todayDeaths);
+            todayIncrement.put("todayActive", todayActive);
+            log.info("Returned today increment of province {}", province);
+            return todayIncrement;
+        }
+        log.warn("No today increment available for province {}", province);
+        return Collections.emptyMap();
+    }
 }

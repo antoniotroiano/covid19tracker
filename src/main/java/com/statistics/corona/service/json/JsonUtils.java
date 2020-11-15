@@ -86,6 +86,9 @@ public class JsonUtils {
             int active = countryValuesTransfer.getDataValueConfirmed().getValue() - countryValuesTransfer.getDataValueRecovered().getValue() -
                     countryValuesTransfer.getDataValueDeaths().getValue();
             countryValuesDto.setActive(active);
+            countryValuesDto.setTodayCases(getYesterdayValues(country).getTodayCases());
+            countryValuesDto.setTodayRecovered(getYesterdayValues(country).getTodayRecovered());
+            countryValuesDto.setTodayDeaths(getYesterdayValues(country).getTodayDeaths());
             double deathRate = ((double) countryValuesDto.getDeaths() / (double) countryValuesDto.getCases()) * 100;
             countryValuesDto.setDeathRate(deathRate);
             double recoveryRate = ((double) countryValuesDto.getRecovered() / (double) countryValuesDto.getCases()) * 100;
@@ -97,6 +100,29 @@ public class JsonUtils {
         }
         log.info("Returned details for {}", country);
         return countryValuesDto;
+    }
+
+    private CountryValuesDto getYesterdayValues(String country) {
+        log.debug("Invoke get country details for yesterday {}", country);
+        if (country.equals("Korea, South")) {
+            country = "South Korea";
+        }
+        if (country.equals("Taiwan*")) {
+            country = "Taiwan";
+        }
+        if (country.equals("United Kingdom")) {
+            country = "UK";
+        }
+        RestTemplate restTemplate = new RestTemplate();
+        CountryValuesDto countryValuesDto = restTemplate
+                .getForObject("https://corona.lmao.ninja/v3/covid-19/countries/" + country +
+                        "?yesterday=true&twoDaysAgo=false&strict=true&allowNull=true", CountryValuesDto.class);
+        if (countryValuesDto != null) {
+            log.info("Returned details for yesterday{}", country);
+            return countryValuesDto;
+        }
+        log.warn("Returned empty details for yesterday{}", country);
+        return new CountryValuesDto();
     }
 
     public List<DistrictDto> readDistrictsValues() {

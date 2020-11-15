@@ -59,7 +59,7 @@ public class ProvinceDistrictController {
             log.warn("No values for provinces and districts for country {} available", country);
             return "provinceDistrictUI";
         }
-        List<String> provinceWithTimeSeries = Arrays.asList("Australia", "Canada", "China", "Denmark", "France",
+        List<String> provinceWithTimeSeries = Arrays.asList("Australia", "China", "Denmark", "France",
                 "Netherlands", "United Kingdom");
         if (provinceWithTimeSeries.contains(country)) {
             model.addAttribute("timeSeriesAvailable", true);

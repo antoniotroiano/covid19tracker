@@ -118,6 +118,11 @@ public class ProvinceController {
         provinceTSValuesMap.get(DEATHS)
                 .ifPresent(dailyTrendDeaths
                         -> model.addAttribute("dailyTrendDeaths", utilsService.getDailyTrend(dailyTrendDeaths.getValues())));
+
+        model.addAttribute("todayConfirmed", provinceService.getTodayIncrementForProvince(province).get("todayConfirmed"));
+        model.addAttribute("todayRecovered", provinceService.getTodayIncrementForProvince(province).get("todayRecovered"));
+        model.addAttribute("todayDeaths", provinceService.getTodayIncrementForProvince(province).get("todayDeath"));
+        model.addAttribute("todayActive", provinceService.getTodayIncrementForProvince(province).get("todayActive"));
     }
 
     private void getBaseDataUsProvince(Model model, Map<String, Map<String, Integer>> provinceTSValuesMap, String province) {

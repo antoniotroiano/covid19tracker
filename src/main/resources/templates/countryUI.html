@@ -80,10 +80,10 @@
                             <div class="tile is-child box has-text-success has-text-weight-bold">
                                 <div class="is-size-6"
                                      th:text="${countryValuesDto.getRecovered() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryValuesDto.getRecovered(), 3, 'POINT')}"></div>
+                                         : '~ ' + ${#numbers.formatInteger(countryValuesDto.getRecovered(), 3, 'POINT')}"></div>
                                 <div class="is-size-6"
-                                     th:if="${(countryValuesDto.getRecovered()) != null}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryValuesDto.getTodayRecovered(), 3, 'POINT')}"></div>
+                                     th:if="${countryValuesDto.getRecovered() != null}"
+                                     th:text="'+ ~ ' + ${#numbers.formatInteger(countryValuesDto.getTodayRecovered(), 3, 'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="fitness"
                                                                         src="/img/fitness-outline.svg"></span>
                                 <div class="is-size-5">Recovered</div>

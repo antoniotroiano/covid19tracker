@@ -75,7 +75,7 @@
                             <div class="tile is-child box has-text-success has-text-weight-bold">
                                 <div class="is-size-6"
                                      th:text="${usDailyDto.getRecovered() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(usDailyDto.getRecovered(), 3, 'POINT')}"></div>
+                                         : '~ ' + ${#numbers.formatInteger(usDailyDto.getRecovered(), 3, 'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="fitness"
                                                                         src="/img/fitness-outline.svg"></span>
                                 <div class="is-size-5">Recovered</div>

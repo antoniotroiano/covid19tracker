@@ -66,6 +66,9 @@
                                 <div class="is-size-6"
                                      th:text="${countryDailyDto.getConfirmed() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDailyDto.getConfirmed(), 3, 'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${todayConfirmed != null}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(todayConfirmed, 3, 'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="checkmark"
                                                                         src="/img/checkmark-outline.svg"></span>
                                 <div class="is-size-5">Confirmed</div>
@@ -75,7 +78,10 @@
                             <div class="tile is-child box has-text-success has-text-weight-bold">
                                 <div class="is-size-6"
                                      th:text="${countryDailyDto.getRecovered() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryDailyDto.getRecovered(), 3, 'POINT')}"></div>
+                                         : '~ ' + ${#numbers.formatInteger(countryDailyDto.getRecovered(), 3, 'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${todayRecovered != null}"
+                                     th:text="'+ ~ ' + ${#numbers.formatInteger(todayRecovered, 3, 'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="fitness"
                                                                         src="/img/fitness-outline.svg"></span>
                                 <div class="is-size-5">Recovered</div>
@@ -87,6 +93,9 @@
                                      th:text="${countryDailyDto.getDeaths() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDailyDto.getDeaths(), 3, 'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
+                                <div class="is-size-6"
+                                     th:if="${todayDeaths != null}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(todayDeaths, 3, 'POINT')}"></div>
                                 <div class="is-size-5">Deaths</div>
                             </div>
                         </div>
@@ -95,6 +104,9 @@
                                 <div class="is-size-6"
                                      th:text="${countryDailyDto.getActive() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryDailyDto.getActive(), 3, 'POINT')}"></div>
+                                <div class="is-size-6"
+                                     th:if="${todayActive != null}"
+                                     th:text="'+ ' + ${#numbers.formatInteger(todayActive, 3, 'POINT')}"></div>
                                 <span class="icon is-pulled-right"><img alt="medikit"
                                                                         src="/img/medkit-outline.svg"></span>
                                 <div class="is-size-5">Active cases</div>
