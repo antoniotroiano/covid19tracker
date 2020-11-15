@@ -10,23 +10,20 @@ pipeline {
             }
         }
         stage('build artifact + tests') {
-            agent {
-                docker {
-                    image 'maven:3.6.3-jdk-11-slim'
-                    args '-v /root/.m2:/root/.m2'
-                }
-            }
+            agent any
             steps {
-                withMaven(
-                        maven: 'Maven 3.6.x') {
-                    sh 'mvn clean'
-                    sh 'mvn -B -DskipTests clean package'
-                    sh 'mvn test'
+                script{
+                    docker.image('maven:3.6.3-jdk-11-slim').inside{
+                        sh 'pwd'
+                        sh 'mvn -v'
+                        sh 'mvn clean'
+                        sh 'mvn -B -DskipTests clean package'
+                    }
                 }
             }
             post {
                 always {
-                    junit 'target/surefire-reports/*.xml'
+                    junit allowEmptyResults: true, testResults: '**/test-results/*.xml'
                 }
             }
         }
