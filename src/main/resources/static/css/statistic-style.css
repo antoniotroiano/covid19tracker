@@ -22,6 +22,12 @@
     }
 }
 
+@media screen and (max-width: 768px) {
+    .extra {
+        display: flex;
+    }
+}
+
 /*Dropdown country*/
 .toggle {
     display: none;

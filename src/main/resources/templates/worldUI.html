@@ -57,84 +57,63 @@
                 <br>
                 <div class="tile is-ancestor">
                     <div class="tile is-horizontal">
-                        <div class="tile is-parent">
-                            <div class="tile is-child box has-text-info has-text-weight-bold">
-                                <div class="is-size-6"
-                                     th:text="${worldValuesDto.getConfirmed().getValue() == 0} ? ${'No value'}
-                                         : ${#numbers.formatInteger(worldValuesDto.getConfirmed().getValue(),3,'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${worldValuesDto.getNewConfirmed() != 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getNewConfirmed(),3,'POINT')}"></div>
-                                <span class="icon is-pulled-right"><img alt="checkmark"
-                                                                        src="/img/checkmark-outline.svg"></span>
-                                <div class="is-size-5">Confirmed</div>
-                            </div>
-                        </div>
-                        <div class="tile is-parent">
-                            <div class="tile is-child box has-text-success has-text-weight-bold">
-                                <div class="is-size-6"
-                                     th:text="${worldValuesDto.getRecovered().getValue() == 0} ? ${'No value'}
-                                         : '~ ' + ${#numbers.formatInteger(worldValuesDto.getRecovered().getValue(),3,'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${worldValuesDto.getNewRecovered() != 0}"
-                                     th:text="'+ ~ ' + ${#numbers.formatInteger(worldValuesDto.getNewRecovered(),3,'POINT')}"></div>
-                                <span class="icon is-pulled-right"><img alt="fitness"
-                                                                        src="/img/fitness-outline.svg"></span>
-                                <div class="is-size-5">Recovered</div>
-                            </div>
-                        </div>
-                        <div class="tile is-parent">
-                            <div class="tile is-child box has-text-danger has-text-weight-bold">
-                                <div class="is-size-6"
-                                     th:text="${worldValuesDto.getDeaths().getValue() == 0} ? ${'No value'}
-                                         : ${#numbers.formatInteger(worldValuesDto.getDeaths().getValue(),3,'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${worldValuesDto.getNewDeaths() != 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getNewDeaths(),3,'POINT')}"></div>
-                                <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
-                                <div class="is-size-5">Deaths</div>
-                            </div>
-                        </div>
-                        <div class="tile is-parent">
-                            <div class="tile is-child box has-text-weight-bold has-text-warning-dark">
-                                <div class="is-size-6"
-                                     th:text="${worldValuesDto.getActive() == 0} ? ${'No value'}
-                                         : ${#numbers.formatInteger(worldValuesDto.getActive(),3,'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${activeYesterday != 0 && worldValuesDto.getActive() - activeYesterday >= 0}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getActive() - activeYesterday,3,'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${activeYesterday != 0 && worldValuesDto.getActive() - activeYesterday < 0}"
-                                     th:text="'- ' + ${#numbers.formatInteger(inverted,3,'POINT')}"
-                                     th:with="inverted=${-(worldValuesDto.getActive() - activeYesterday)}"></div>
-                                <span class="icon is-pulled-right"><img alt="medkit"
-                                                                        src="/img/medkit-outline.svg"></span>
-                                <div class="is-size-5">Cases</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="columns is-mobile is-centered">
-                    <div class="column is-7-tablet is-6-desktop is-5-widescreen is-4-fullhd">
-                        <div class="tile is-ancestor">
+                        <div class="tile extra">
                             <div class="tile is-parent">
-                                <div class="tile is-child box">
-                                <span class="icon is-pulled-right"><img alt="analytics"
-                                                                        src="/img/analytics-outline.svg"></span>
-                                    <div class="is-size-5">Data</div>
-                                    <div class="is-size-7 is-pulled-right tag is-danger"
-                                         th:text="${worldValuesDto.getDeathsRate() == 0} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(worldValuesDto.getDeathsRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                                    <div class="is-size-6">Deaths rate:</div>
-                                    <hr class="dropdown-divider-own">
-                                    <div class="is-size-7 is-pulled-right tag is-success"
-                                         th:text="${worldValuesDto.getRecoveryRate() == 0} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(worldValuesDto.getRecoveryRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                                    <div class="is-size-6">Recovery rate:</div>
-                                    <hr class="dropdown-divider-own">
-                                    <div class="is-size-5">Last update</div>
-                                    <div class="is-size-6" th:text="${worldValuesDto.getLastUpdate() == null} ? ${'No value'}
-                                         : ${lastUpdate}"></div>
+                                <div class="tile is-child box has-text-info has-text-weight-bold">
+                                    <div class="is-size-6"
+                                         th:text="${worldValuesDto.getConfirmed().getValue() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(worldValuesDto.getConfirmed().getValue(),3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:if="${worldValuesDto.getNewConfirmed() != 0}"
+                                         th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getNewConfirmed(),3,'POINT')}"></div>
+                                    <span class="icon is-pulled-right"><img alt="checkmark"
+                                                                            src="/img/checkmark-outline.svg"></span>
+                                    <div class="is-size-5">Confirmed</div>
+                                </div>
+                            </div>
+                            <div class="tile is-parent">
+                                <div class="tile is-child box has-text-success has-text-weight-bold">
+                                    <div class="is-size-6"
+                                         th:text="${worldValuesDto.getRecovered().getValue() == 0} ? ${'No value'}
+                                         : '~ ' + ${#numbers.formatInteger(worldValuesDto.getRecovered().getValue(),3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:if="${worldValuesDto.getNewRecovered() != 0}"
+                                         th:text="'+ ~ ' + ${#numbers.formatInteger(worldValuesDto.getNewRecovered(),3,'POINT')}"></div>
+                                    <span class="icon is-pulled-right"><img alt="fitness"
+                                                                            src="/img/fitness-outline.svg"></span>
+                                    <div class="is-size-5">Recovered</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tile extra">
+                            <div class="tile is-parent">
+                                <div class="tile is-child box has-text-danger has-text-weight-bold">
+                                    <div class="is-size-6"
+                                         th:text="${worldValuesDto.getDeaths().getValue() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(worldValuesDto.getDeaths().getValue(),3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:if="${worldValuesDto.getNewDeaths() != 0}"
+                                         th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getNewDeaths(),3,'POINT')}"></div>
+                                    <span class="icon is-pulled-right"><img alt="skull"
+                                                                            src="/img/skull-outline.svg"></span>
+                                    <div class="is-size-5">Deaths</div>
+                                </div>
+                            </div>
+                            <div class="tile is-parent">
+                                <div class="tile is-child box has-text-weight-bold has-text-warning-dark">
+                                    <div class="is-size-6"
+                                         th:text="${worldValuesDto.getActive() == 0} ? ${'No value'}
+                                         : ${#numbers.formatInteger(worldValuesDto.getActive(),3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:if="${activeYesterday != 0 && worldValuesDto.getActive() - activeYesterday >= 0}"
+                                         th:text="'+ ' + ${#numbers.formatInteger(worldValuesDto.getActive() - activeYesterday,3,'POINT')}"></div>
+                                    <div class="is-size-6"
+                                         th:if="${activeYesterday != 0 && worldValuesDto.getActive() - activeYesterday < 0}"
+                                         th:text="'- ' + ${#numbers.formatInteger(inverted,3,'POINT')}"
+                                         th:with="inverted=${-(worldValuesDto.getActive() - activeYesterday)}"></div>
+                                    <span class="icon is-pulled-right"><img alt="medkit"
+                                                                            src="/img/medkit-outline.svg"></span>
+                                    <div class="is-size-5">Active</div>
                                 </div>
                             </div>
                         </div>
@@ -142,6 +121,34 @@
                 </div>
             </div>
         </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-6-tablet is-5-desktop is-4-widescreen is-3-fullhd">
+                <div class="tile is-ancestor">
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">
+                                <span class="icon is-pulled-right"><img alt="analytics"
+                                                                        src="/img/analytics-outline.svg"></span>
+                            <div class="is-size-5">Data</div>
+                            <div class="is-size-7 is-pulled-right tag is-danger"
+                                 th:text="${worldValuesDto.getDeathsRate() == 0} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(worldValuesDto.getDeathsRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                            <div class="is-size-6">Deaths rate:</div>
+                            <hr class="dropdown-divider-own">
+                            <div class="is-size-7 is-pulled-right tag is-success"
+                                 th:text="${worldValuesDto.getRecoveryRate() == 0} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(worldValuesDto.getRecoveryRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
+                            <div class="is-size-6">Recovery rate:</div>
+                            <hr class="dropdown-divider-own">
+                            <div class="is-size-6 is-pulled-right"
+                                 th:text="${worldValuesDto.getLastUpdate() == null} ? ${'No value'}
+                                         : ${lastUpdate}"></div>
+                            <div class="is-size-5">Last update</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
         <div class="columns is-mobile is-centered">
             <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
                 <div class="switch-toggle switch-ios">
@@ -162,8 +169,6 @@
         </div>
         <div class="columns is-mobile is-centered">
             <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
-                <div class="has-text-centered">Select number of displayed values</div>
-                <br>
                 <div class="buttons is-mobile is-centered">
                     <a class="button is-rounded is-small all btn" onclick=selectedValue("all")>All</a>
                     <a class="button is-rounded is-small 180 btn" onclick=selectedValue(180)>180 days</a>
@@ -180,24 +185,27 @@
             </div>
             <br>
             <div class="columns is-mobile is-centered">
+                <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
+                    <div class="switch-toggle switch-ios">
+                        <input checked id="dailyConfirmed" name="view" onclick="toggleToDailyConfirmed()" type="radio">
+                        <label class="is-size-7-mobile" for="dailyConfirmed" onclick="">Daily confirmed</label>
+                        <input id="dailyRecovered" name="view" onclick="toggleToDailyRecovered()" type="radio">
+                        <label class="is-size-7-mobile" for="dailyRecovered" onclick="">Daily recovered</label>
+                        <input id="dailyDeaths" name="view" onclick="toggleToDailyDeaths()" type="radio">
+                        <label class="is-size-7-mobile" for="dailyDeaths" onclick="">Daily deaths</label>
+                        <a></a>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="columns is-mobile is-centered">
                 <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                    <br>
                     <div class="has-text-centered is-size-4">Daily trend of COVID-19 worldwide</div>
                 </div>
             </div>
             <div class="columns is-mobile is-centered">
-                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                    <canvas class="box" id="confirmedOneDay"></canvas>
-                </div>
-            </div>
-            <div class="columns is-mobile is-centered">
-                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                    <canvas class="box" id="recoveredOneDay"></canvas>
-                </div>
-            </div>
-            <div class="columns is-mobile is-centered">
-                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                    <canvas class="box" id="deathsOneDay"></canvas>
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd box">
+                    <canvas id="canvasOneDay"></canvas>
                 </div>
             </div>
             <br>
@@ -544,45 +552,55 @@
 </footer>
 <script th:inline="javascript">
     let canvasWorld = document.getElementById('canvasWorld');
+    let canvasOneDay = document.getElementById('canvasOneDay')
     /*<![CDATA[*/
-    let dates = /*[[${dateTS}]]*/ '';
+    let datesList = /*[[${dateTS}]]*/ '';
     let confList = /*[[${confirmed}]]*/ '';
     let recList = /*[[${recovered}]]*/ '';
     let deaList = /*[[${deaths}]]*/ '';
     /*]]>*/
 
-    barLineChartAllValues(canvasWorld, dates, 'World', confList, recList, deaList);
+    barLineChartAllValues(canvasWorld, datesList, 'World', confList, recList, deaList);
 
     function toggleToBarChart() {
-        changeChart(canvasWorld, dates, 'World', confList, recList, deaList, 'bar');
+        changeChart(canvasWorld, datesList, 'World', confList, recList, deaList, 'bar');
     }
 
     function toggleToLineChart() {
-        changeChart(canvasWorld, dates, 'World', confList, recList, deaList, 'line');
+        changeChart(canvasWorld, datesList, 'World', confList, recList, deaList, 'line');
     }
 
     function toggleToConfirmed() {
-        changeChart(canvasWorld, dates, 'Confirmed', confList, recList, deaList)
+        changeChart(canvasWorld, datesList, 'Confirmed', confList, recList, deaList);
     }
 
     function toggleToRecovered() {
-        changeChart(canvasWorld, dates, 'Recovered', confList, recList, deaList);
+        changeChart(canvasWorld, datesList, 'Recovered', confList, recList, deaList);
     }
 
     function toggleToDeaths() {
-        changeChart(canvasWorld, dates, 'Deaths', confList, recList, deaList);
+        changeChart(canvasWorld, datesList, 'Deaths', confList, recList, deaList);
     }
 
     /*<![CDATA[*/
     let confirmedOneDay = /*[[${dailyConfirmed}]]*/ '';
     let recoveredOneDay = /*[[${dailyRecovered}]]*/ '';
     let deathsOneDay = /*[[${dailyDeaths}]]*/ '';
-    let datesOneDay = /*[[${dateTS}]]*/ '';
     /*]]>*/
 
-    changedBarChartPerDay(document.getElementById('confirmedOneDay'), datesOneDay, confirmedOneDay, 'Confirmed');
-    changedBarChartPerDay(document.getElementById('recoveredOneDay'), datesOneDay, recoveredOneDay, 'Recovered');
-    changedBarChartPerDay(document.getElementById('deathsOneDay'), datesOneDay, deathsOneDay, 'Deaths');
+    barChartSelectedCountryPerDay(canvasOneDay, datesList, 'Confirmed', confirmedOneDay);
+
+    function toggleToDailyConfirmed() {
+        changedBarChartPerDay(canvasOneDay, datesList, confirmedOneDay, recoveredOneDay, deathsOneDay, 'Confirmed');
+    }
+
+    function toggleToDailyRecovered() {
+        changedBarChartPerDay(canvasOneDay, datesList, confirmedOneDay, recoveredOneDay, deathsOneDay, 'Recovered');
+    }
+
+    function toggleToDailyDeaths() {
+        changedBarChartPerDay(canvasOneDay, datesList, confirmedOneDay, recoveredOneDay, deathsOneDay, 'Deaths');
+    }
 </script>
 </body>
 </html>

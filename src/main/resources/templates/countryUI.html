@@ -63,64 +63,69 @@
                 <br>
                 <div class="tile is-ancestor">
                     <div class="tile is-horizontal">
-                        <div class="tile is-parent">
-                            <div class="tile is-child box has-text-info has-text-weight-bold">
-                                <div class="is-size-6"
-                                     th:text="${countryValuesDto.getCases() == null} ? ${'No value'}
+                        <div class="tile extra">
+                            <div class="tile is-parent">
+                                <div class="tile is-child box has-text-info has-text-weight-bold">
+                                    <div class="is-size-6"
+                                         th:text="${countryValuesDto.getCases() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryValuesDto.getCases(), 3, 'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${countryValuesDto.getCases() != null}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryValuesDto.getTodayCases(), 3, 'POINT')}"></div>
-                                <span class="icon is-pulled-right"><img alt="checkmark"
-                                                                        src="/img/checkmark-outline.svg"></span>
-                                <div class="is-size-5">Confirmed</div>
+                                    <div class="is-size-6"
+                                         th:if="${countryValuesDto.getCases() != null}"
+                                         th:text="'+ ' + ${#numbers.formatInteger(countryValuesDto.getTodayCases(), 3, 'POINT')}"></div>
+                                    <span class="icon is-pulled-right"><img alt="checkmark"
+                                                                            src="/img/checkmark-outline.svg"></span>
+                                    <div class="is-size-5">Confirmed</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="tile is-parent">
-                            <div class="tile is-child box has-text-success has-text-weight-bold">
-                                <div class="is-size-6"
-                                     th:text="${countryValuesDto.getRecovered() == null} ? ${'No value'}
+                            <div class="tile is-parent">
+                                <div class="tile is-child box has-text-success has-text-weight-bold">
+                                    <div class="is-size-6"
+                                         th:text="${countryValuesDto.getRecovered() == null} ? ${'No value'}
                                          : '~ ' + ${#numbers.formatInteger(countryValuesDto.getRecovered(), 3, 'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${countryValuesDto.getRecovered() != null}"
-                                     th:text="'+ ~ ' + ${#numbers.formatInteger(countryValuesDto.getTodayRecovered(), 3, 'POINT')}"></div>
-                                <span class="icon is-pulled-right"><img alt="fitness"
-                                                                        src="/img/fitness-outline.svg"></span>
-                                <div class="is-size-5">Recovered</div>
+                                    <div class="is-size-6"
+                                         th:if="${countryValuesDto.getRecovered() != null}"
+                                         th:text="'+ ~ ' + ${#numbers.formatInteger(countryValuesDto.getTodayRecovered(), 3, 'POINT')}"></div>
+                                    <span class="icon is-pulled-right"><img alt="fitness"
+                                                                            src="/img/fitness-outline.svg"></span>
+                                    <div class="is-size-5">Recovered</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="tile is-parent">
-                            <div class="tile is-child box has-text-danger has-text-weight-bold">
-                                <div class="is-size-6"
-                                     th:text="${countryValuesDto.getDeaths() == null} ? ${'No value'}
+                        <div class="tile extra">
+                            <div class="tile is-parent">
+                                <div class="tile is-child box has-text-danger has-text-weight-bold">
+                                    <div class="is-size-6"
+                                         th:text="${countryValuesDto.getDeaths() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryValuesDto.getDeaths(), 3, 'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${countryValuesDto.getDeaths() != null}"
-                                     th:text="'+ ' + ${#numbers.formatInteger(countryValuesDto.getTodayDeaths(), 3, 'POINT')}"></div>
-                                <span class="icon is-pulled-right"><img alt="skull" src="/img/skull-outline.svg"></span>
-                                <div class="is-size-5">Deaths</div>
+                                    <div class="is-size-6"
+                                         th:if="${countryValuesDto.getDeaths() != null}"
+                                         th:text="'+ ' + ${#numbers.formatInteger(countryValuesDto.getTodayDeaths(), 3, 'POINT')}"></div>
+                                    <span class="icon is-pulled-right"><img alt="skull"
+                                                                            src="/img/skull-outline.svg"></span>
+                                    <div class="is-size-5">Deaths</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="tile is-parent">
-                            <div class="tile is-child box has-text-weight-bold has-text-warning-dark">
-                                <div class="is-size-6"
-                                     th:text="${countryValuesDto.getActive() == null} ? ${'No value'}
+                            <div class="tile is-parent">
+                                <div class="tile is-child box has-text-weight-bold has-text-warning-dark">
+                                    <div class="is-size-6"
+                                         th:text="${countryValuesDto.getActive() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryValuesDto.getActive(), 3, 'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${differenceActiveCases == 0} ? ${'No value'}
+                                    <div class="is-size-6"
+                                         th:if="${differenceActiveCases == 0} ? ${'No value'}
                                          : ${(differenceActiveCases) >= 0}"
-                                     th:text="${differenceActiveCases == 0} ? ${'No value'}
+                                         th:text="${differenceActiveCases == 0} ? ${'No value'}
                                          : '+ ' + ${#numbers.formatInteger(differenceActiveCases, 3, 'POINT')}"></div>
-                                <div class="is-size-6"
-                                     th:if="${differenceActiveCases == 0} ? ${'No value'}
+                                    <div class="is-size-6"
+                                         th:if="${differenceActiveCases == 0} ? ${'No value'}
                                          : ${(differenceActiveCases) < 0}"
-                                     th:text="${differenceActiveCases == 0} ? ${'No value'}
+                                         th:text="${differenceActiveCases == 0} ? ${'No value'}
                                          : '- ' + ${#numbers.formatInteger(inverted, 3, 'POINT')}"
-                                     th:with="inverted=${differenceActiveCases == 0} ? ${0}
+                                         th:with="inverted=${differenceActiveCases == 0} ? ${0}
                                          : ${-(differenceActiveCases)}"></div>
-                                <span class="icon is-pulled-right"><img alt="medikit"
-                                                                        src="/img/medkit-outline.svg"></span>
-                                <div class="is-size-5">Active cases</div>
+                                    <span class="icon is-pulled-right"><img alt="medikit"
+                                                                            src="/img/medkit-outline.svg"></span>
+                                    <div class="is-size-5">Active</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -268,10 +273,25 @@
                 </div>
             </div>
             <div class="columns is-mobile is-centered">
-                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                    <canvas class="box" id="canvasCountry"></canvas>
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd box">
+                    <canvas id="canvasCountry"></canvas>
                 </div>
             </div>
+            <br>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
+                    <div class="switch-toggle switch-ios">
+                        <input checked id="dailyConfirmed" name="view" onclick="toggleToDailyConfirmed()" type="radio">
+                        <label class="is-size-7-mobile" for="dailyConfirmed" onclick="">Daily confirmed</label>
+                        <input id="dailyRecovered" name="view" onclick="toggleToDailyRecovered()" type="radio">
+                        <label class="is-size-7-mobile" for="dailyRecovered" onclick="">Daily recovered</label>
+                        <input id="dailyDeaths" name="view" onclick="toggleToDailyDeaths()" type="radio">
+                        <label class="is-size-7-mobile" for="dailyDeaths" onclick="">Daily deaths</label>
+                        <a></a>
+                    </div>
+                </div>
+            </div>
+            <br>
             <div class="columns is-mobile is-centered">
                 <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                     <br>
@@ -280,18 +300,8 @@
                 </div>
             </div>
             <div class="columns is-mobile is-centered">
-                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                    <canvas class="box" id="confirmedOneDay"></canvas>
-                </div>
-            </div>
-            <div class="columns is-mobile is-centered">
-                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                    <canvas class="box" id="recoveredOneDay"></canvas>
-                </div>
-            </div>
-            <div class="columns is-mobile is-centered">
-                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                    <canvas class="box" id="deathsOneDay"></canvas>
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd box">
+                    <canvas id="canvasOneDay"></canvas>
                 </div>
             </div>
         </div>
@@ -326,6 +336,7 @@
 </footer>
 <script th:inline="javascript">
     let canvasCountry = document.getElementById('canvasCountry');
+    let canvasOneDay = document.getElementById('canvasOneDay');
     /*<![CDATA[*/
     let label = /*[[${selectedCountry}]]*/ '';
     let confirmedList = /*[[${confirmedList}]]*/ '';
@@ -360,12 +371,21 @@
     let confirmedOneDay = /*[[${dailyTrendConfirmed}]]*/ '';
     let recoveredOneDay = /*[[${dailyTrendRecovered}]]*/ '';
     let deathsOneDay = /*[[${dailyTrendDeaths}]]*/ '';
-    let datesOneDay = /*[[${dateList}]]*/ '';
     /*]]>*/
 
-    changedBarChartPerDay(document.getElementById('confirmedOneDay'), datesOneDay, confirmedOneDay, 'Confirmed');
-    changedBarChartPerDay(document.getElementById('recoveredOneDay'), datesOneDay, recoveredOneDay, 'Recovered');
-    changedBarChartPerDay(document.getElementById('deathsOneDay'), datesOneDay, deathsOneDay, 'Deaths');
+    barChartSelectedCountryPerDay(canvasOneDay, datesList, 'Confirmed', confirmedOneDay);
+
+    function toggleToDailyConfirmed() {
+        changedBarChartPerDay(canvasOneDay, datesList, confirmedOneDay, recoveredOneDay, deathsOneDay, 'Confirmed');
+    }
+
+    function toggleToDailyRecovered() {
+        changedBarChartPerDay(canvasOneDay, datesList, confirmedOneDay, recoveredOneDay, deathsOneDay, 'Recovered');
+    }
+
+    function toggleToDailyDeaths() {
+        changedBarChartPerDay(canvasOneDay, datesList, confirmedOneDay, recoveredOneDay, deathsOneDay, 'Deaths');
+    }
 </script>
 </body>
 </html>
