@@ -1,8 +1,8 @@
-package com.statistics.corona.model;
+package com.statistics.corona.model.dto;
 
 import com.opencsv.bean.CsvBindByPosition;
 
-public class DailyReportUsDto {
+public class UsDailyDto {
 
     @CsvBindByPosition(position = 0)
     String province;
@@ -31,24 +31,24 @@ public class DailyReportUsDto {
     @CsvBindByPosition(position = 17)
     Double hospitalizationRate;
 
-    public DailyReportUsDto() {
+    public UsDailyDto() {
         //Always needed an empty constructor
     }
 
-    public DailyReportUsDto(DailyReportUsDto dailyReportUsDto) {
-        this.province = dailyReportUsDto.getProvince();
-        this.country = dailyReportUsDto.getCountry();
-        this.lastUpdate = dailyReportUsDto.getLastUpdate();
-        this.confirmed = dailyReportUsDto.getConfirmed();
-        this.deaths = dailyReportUsDto.getDeaths();
-        this.recovered = dailyReportUsDto.getRecovered();
-        this.active = dailyReportUsDto.getActive();
-        this.incidentRate = dailyReportUsDto.getIncidentRate();
-        this.peopleTested = dailyReportUsDto.getPeopleTested();
-        this.peopleHospitalized = dailyReportUsDto.getPeopleHospitalized();
-        this.mortalityRate = dailyReportUsDto.getMortalityRate();
-        this.testingRate = dailyReportUsDto.getTestingRate();
-        this.hospitalizationRate = dailyReportUsDto.getHospitalizationRate();
+    public UsDailyDto(UsDailyDto usDailyDto) {
+        this.province = usDailyDto.getProvince();
+        this.country = usDailyDto.getCountry();
+        this.lastUpdate = usDailyDto.getLastUpdate();
+        this.confirmed = usDailyDto.getConfirmed();
+        this.deaths = usDailyDto.getDeaths();
+        this.recovered = usDailyDto.getRecovered();
+        this.active = usDailyDto.getActive();
+        this.incidentRate = usDailyDto.getIncidentRate();
+        this.peopleTested = usDailyDto.getPeopleTested();
+        this.peopleHospitalized = usDailyDto.getPeopleHospitalized();
+        this.mortalityRate = usDailyDto.getMortalityRate();
+        this.testingRate = usDailyDto.getTestingRate();
+        this.hospitalizationRate = usDailyDto.getHospitalizationRate();
     }
 
     public String getProvince() {

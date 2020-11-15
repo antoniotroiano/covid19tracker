@@ -6,7 +6,7 @@ import com.statistics.corona.model.dto.WorldValuesDto;
 import com.statistics.corona.service.CountryDailyService;
 import com.statistics.corona.service.CountryService;
 import com.statistics.corona.service.DateFormat;
-import com.statistics.corona.service.TimeSeriesUtils;
+import com.statistics.corona.service.UtilsService;
 import com.statistics.corona.service.WorldService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +29,19 @@ public class WorldController {
     private final WorldService worldService;
     private final CountryService countryService;
     private final CountryDailyService countryDailyService;
-    private final TimeSeriesUtils timeSeriesUtils;
+    private final UtilsService utilsService;
     private final DateFormat dateFormat;
 
     @Autowired
     public WorldController(WorldService worldService,
                            CountryService countryService,
                            CountryDailyService countryDailyService,
-                           TimeSeriesUtils timeSeriesUtils,
+                           UtilsService utilsService,
                            DateFormat dateFormat) {
         this.worldService = worldService;
         this.countryService = countryService;
         this.countryDailyService = countryDailyService;
-        this.timeSeriesUtils = timeSeriesUtils;
+        this.utilsService = utilsService;
         this.dateFormat = dateFormat;
     }
 
@@ -59,11 +59,11 @@ public class WorldController {
             log.warn("No data available for world time series");
             return TIME_SERIES;
         }
-        String date = dateFormat.formatLastUpdateToDate(worldValuesDto.get().getLastUpdate());
-        String time = dateFormat.formatLastUpdateToTime(worldValuesDto.get().getLastUpdate());
 
         model.addAttribute("worldValuesDto", worldValuesDto.get());
-        model.addAttribute("lastUpdate", date + " " + time + " h");
+        model.addAttribute("lastUpdate",
+                dateFormat.formatLastUpdateToDate(worldValuesDto.get().getLastUpdate()) + " " +
+                        dateFormat.formatLastUpdateToTime(worldValuesDto.get().getLastUpdate()) + " h");
         model.addAttribute("activeYesterday", worldService.getYesterdayActive(worldValuesDto));
         model.addAttribute("dateTS", worldValuesDto.get().getWorldTimeSeriesDto().getCases().keySet());
         model.addAttribute("confirmed", new ArrayList<>(worldValuesDto.get().getWorldTimeSeriesDto().getCases().values()));
@@ -72,9 +72,9 @@ public class WorldController {
 
         //ToDo: Diagram for daily active values
         //Incident Rate: sum new confirmed of a period divided by the size of population * 100
-        model.addAttribute("dailyConfirmed", timeSeriesUtils.getDailyTrend(worldValuesDto.get().getWorldTimeSeriesDto().getCases()));
-        model.addAttribute("dailyRecovered", timeSeriesUtils.getDailyTrend(worldValuesDto.get().getWorldTimeSeriesDto().getRecovered()));
-        model.addAttribute("dailyDeaths", timeSeriesUtils.getDailyTrend(worldValuesDto.get().getWorldTimeSeriesDto().getDeaths()));
+        model.addAttribute("dailyConfirmed", utilsService.getDailyTrend(worldValuesDto.get().getWorldTimeSeriesDto().getCases()));
+        model.addAttribute("dailyRecovered", utilsService.getDailyTrend(worldValuesDto.get().getWorldTimeSeriesDto().getRecovered()));
+        model.addAttribute("dailyDeaths", utilsService.getDailyTrend(worldValuesDto.get().getWorldTimeSeriesDto().getDeaths()));
 
         List<CountryDailyDto> dailyReportServiceList = countryDailyService.getAllDailyReports();
         List<CountryDailyDto> allValues = countryDailyService.getAllDailyCountryValuesCalculated(dailyReportServiceList);

@@ -1,8 +1,8 @@
 package com.statistics.corona.service;
 
-import com.statistics.corona.model.dto.CountryValuesDto;
-import com.statistics.corona.model.DistrictDto;
 import com.statistics.corona.model.TimeSeriesWorldDto;
+import com.statistics.corona.model.dto.CountryValuesDto;
+import com.statistics.corona.model.dto.DistrictDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -139,4 +139,72 @@ public class DeprecatedCode {
         log.debug("Return list with all district values of ");
         return districtDtoList;
     }
+
+    /*    //Kommt weg
+    public List<Integer> getEverySecondValue(List<Integer> values) {
+        log.debug("Invoke get every second value");
+        if (values == null || values.isEmpty()) {
+            log.warn("Values list is null or empty for getEverySecondValue");
+            return Collections.emptyList();
+        }
+        log.info("Return list with every second value");
+        return IntStream.range(0, values.size())
+                .filter(n -> n % 2 == 0)
+                .mapToObj(values::get)
+                .collect(Collectors.toList());
+    }
+
+    //Kommt weg
+    public List<String> getEverySecondDate(List<String> dates) {
+        log.debug("Invoke get every second date");
+        if (dates == null || dates.isEmpty()) {
+            log.warn("Date list is null or empty for getEverySecondDate");
+            return Collections.emptyList();
+        }
+        log.info("Return list with every second date ");
+        return IntStream.range(0, dates.size())
+                .filter(n -> n % 2 == 0)
+                .mapToObj(dates::get).collect(Collectors.toList());
+    }*/
+
+/*    //Wird vermutlich gelöscht
+    public Map<String, List<Integer>> generateFinalTSResult(Map<String, List<CountryTimeSeriesDto>> allValuesOfCountry) {
+        log.debug("Invoke get final result for one selected country");
+        Map<String, List<Integer>> mapFinalResult = new HashMap<>();
+
+        mapFinalResult.put("confirmedResult", finalResult(allValuesOfCountry.get(CONFIRMED_LIST)));
+        mapFinalResult.put("recoveredResult", finalResult(allValuesOfCountry.get(RECOVERED_LIST)));
+        mapFinalResult.put("deathsResult", finalResult(allValuesOfCountry.get(DEATHS_LIST)));
+        log.info("Return map with final result for selected country");
+        return mapFinalResult;
+    }*/
+
+    /*    private void getValues(String province, Map<String, List<CountryTimeSeriesDto>> allValuesProvince, Map<String, List<CountryTimeSeriesDto>> getAllValuesCountry, String key) {
+        log.debug("Invoke get values");
+        List<CountryTimeSeriesDto> countryTimeSeriesDtoList = getAllValuesCountry.get(key)
+                .stream()
+                .filter(p -> Objects.nonNull(p.getProvince()))
+                .filter(p -> p.getProvince().equals(province))
+                .collect(Collectors.toList());
+        allValuesProvince.put(key, countryTimeSeriesDtoList);
+    }*/
+
+/*    public Map<String, List<CountryTimeSeriesDto>> getTSValuesForOneCountry(String country) {
+        log.debug("Invoke get all values for {}", country);
+        Map<String, List<CountryTimeSeriesDto>> allValues = new HashMap<>();
+        allValues.put(CONFIRMED_LIST, getAllConfirmedTSValues()
+                .stream()
+                .filter(c -> c.getCountry().equals(country))
+                .collect(Collectors.toList()));
+        allValues.put(RECOVERED_LIST, getAllRecoveredTSValues()
+                .stream()
+                .filter(c -> c.getCountry().equals(country))
+                .collect(Collectors.toList()));
+        allValues.put(DEATHS_LIST, getAllDeathsTSValues()
+                .stream()
+                .filter(c -> c.getCountry().equals(country))
+                .collect(Collectors.toList()));
+        log.info("Return map with all values for {}", country);
+        return allValues;
+    }*/
 }

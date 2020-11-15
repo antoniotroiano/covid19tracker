@@ -1,7 +1,7 @@
 package com.statistics.corona.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.statistics.corona.model.DistrictDto;
+import com.statistics.corona.model.dto.DistrictDto;
 
 import java.util.List;
 

@@ -11,28 +11,23 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 @Slf4j
 public class CountryService {
 
-    private static final String CONFIRMED_LIST = "confirmedList";
-    private static final String RECOVERED_LIST = "recoveredList";
-    private static final String DEATHS_LIST = "deathsList";
     private final CsvUtilsTimeSeries csvUtilsTimeSeries;
-    private final TimeSeriesUtils timeSeriesUtils;
+    private final UtilsService utilsService;
     private final JsonUtils jsonUtils;
 
     @Autowired
-    public CountryService(CsvUtilsTimeSeries csvUtilsTimeSeries, TimeSeriesUtils timeSeriesUtils, JsonUtils jsonUtils) {
+    public CountryService(CsvUtilsTimeSeries csvUtilsTimeSeries,
+                          UtilsService utilsService,
+                          JsonUtils jsonUtils) {
         this.csvUtilsTimeSeries = csvUtilsTimeSeries;
-        this.timeSeriesUtils = timeSeriesUtils;
+        this.utilsService = utilsService;
         this.jsonUtils = jsonUtils;
     }
 
@@ -89,28 +84,36 @@ public class CountryService {
     private CountryValuesDto mapTStoDTO(CountryValuesDto countryValuesDto) {
         log.debug("Invoke map time series to countryValuesDto");
         String country = countryValuesDto.getCountry();
+        if (country.equals("USA")) {
+            country = "US";
+        }
+        String finalCountry = country;
         Optional<CountryTimeSeriesDto> confirmed = getAllConfirmedTSValues()
                 .stream()
-                .filter(c -> c.getCountry().equals(country))
+                .filter(c -> c.getCountry().equals(finalCountry))
                 .findFirst();
 
         Optional<CountryTimeSeriesDto> recovered = getAllRecoveredTSValues()
                 .stream()
-                .filter(c -> c.getCountry().equals(country))
+                .filter(c -> c.getCountry().equals(finalCountry))
                 .findFirst();
 
         Optional<CountryTimeSeriesDto> deaths = getAllDeathsTSValues()
                 .stream()
-                .filter(c -> c.getCountry().equals(country))
+                .filter(c -> c.getCountry().equals(finalCountry))
                 .findFirst();
 
         if (confirmed.isPresent() && recovered.isPresent() && deaths.isPresent()) {
             countryValuesDto.setCasesValues(confirmed.get().getValues());
             countryValuesDto.setRecoveredValues(recovered.get().getValues());
             countryValuesDto.setDeathsValues(deaths.get().getValues());
+            int sevenDayIncidence = (int) calculateSevenDayIncidence(countryValuesDto);
+            countryValuesDto.setSevenDayIncidence(sevenDayIncidence);
+        } else {
+            countryValuesDto.setCasesValues(Collections.emptyMap());
+            countryValuesDto.setRecoveredValues(Collections.emptyMap());
+            countryValuesDto.setDeathsValues(Collections.emptyMap());
         }
-        int sevenDayIncidence = (int) calculateSevenDayIncidence(countryValuesDto);
-        countryValuesDto.setSevenDayIncidence(sevenDayIncidence);
         log.info("Return countryValuesDto with time series");
         return countryValuesDto;
     }
@@ -119,55 +122,12 @@ public class CountryService {
     private double calculateSevenDayIncidence(CountryValuesDto countryValuesDto) {
         log.debug("Invoke calculate the seven day incidence");
         int size = countryValuesDto.getCasesValues().size();
-        int sumSevenDayValues = timeSeriesUtils.getDailyTrend(countryValuesDto.getCasesValues())
+        int sumSevenDayValues = utilsService.getDailyTrend(countryValuesDto.getCasesValues())
                 .stream()
                 .skip((long) size - 7)
                 .mapToInt(Integer::intValue)
                 .sum();
         return ((double) sumSevenDayValues / countryValuesDto.getPopulation()) * 100000;
-    }
-
-    public Map<String, List<CountryTimeSeriesDto>> getTSValuesForOneCountry(String country) {
-        log.debug("Invoke get all values for {}", country);
-        Map<String, List<CountryTimeSeriesDto>> allValues = new HashMap<>();
-        allValues.put(CONFIRMED_LIST, getAllConfirmedTSValues()
-                .stream()
-                .filter(c -> c.getCountry().equals(country))
-                .collect(Collectors.toList()));
-        allValues.put(RECOVERED_LIST, getAllRecoveredTSValues()
-                .stream()
-                .filter(c -> c.getCountry().equals(country))
-                .collect(Collectors.toList()));
-        allValues.put(DEATHS_LIST, getAllDeathsTSValues()
-                .stream()
-                .filter(c -> c.getCountry().equals(country))
-                .collect(Collectors.toList()));
-        log.info("Return map with all values for {}", country);
-        return allValues;
-    }
-
-/*    public Optional<CountryTimeSeriesDto> getLastTimeSeriesValueSelectedCountry(Map<String, List<CountryTimeSeriesDto>> timeSeriesMap) {
-        log.debug("Invoke get last time series value of selected country");
-        Optional<CountryTimeSeriesDto> getLastTimeSeries = timeSeriesMap.get(CONFIRMED_LIST).stream()
-                .map(CountryTimeSeriesDto::new)
-                .findFirst();
-        if (getLastTimeSeries.isEmpty()) {
-            log.warn("No last time series value of selected country");
-            return Optional.of(new CountryTimeSeriesDto());
-        }
-        log.info("Return last time series value of selected country");
-        return getLastTimeSeries;
-    }*/
-
-    public Map<String, List<Integer>> generateFinalTSResult(Map<String, List<CountryTimeSeriesDto>> allValuesOfCountry) {
-        log.debug("Invoke get final result for one selected country");
-        Map<String, List<Integer>> mapFinalResult = new HashMap<>();
-
-        mapFinalResult.put("confirmedResult", finalResult(allValuesOfCountry.get(CONFIRMED_LIST)));
-        mapFinalResult.put("recoveredResult", finalResult(allValuesOfCountry.get(RECOVERED_LIST)));
-        mapFinalResult.put("deathsResult", finalResult(allValuesOfCountry.get(DEATHS_LIST)));
-        log.info("Return map with final result for selected country");
-        return mapFinalResult;
     }
 
     private List<List<Integer>> interimResult(List<CountryTimeSeriesDto> dataList) {
@@ -204,31 +164,6 @@ public class CountryService {
         return finalResult;
     }
 
-    //Kommt weg
-    public List<Integer> getOneDayValues(List<Integer> values) {
-        log.debug("Invoke get one day values");
-        if (values == null || values.isEmpty()) {
-            log.warn("Values is null for getOneDayValues");
-            return Collections.emptyList();
-        }
-        List<Integer> oneDayValues = new ArrayList<>();
-        for (int i = 0; i < values.size(); i++) {
-            int sumPerDay = 0;
-            if (i == 0) {
-                oneDayValues.add(values.get(i));
-            } else {
-                sumPerDay = values.get(i) - values.get(i - 1);
-                if (sumPerDay < 0) {
-                    sumPerDay = 0;
-                    oneDayValues.add(sumPerDay);
-                }
-                oneDayValues.add(sumPerDay);
-            }
-        }
-        log.info("Return list with one day values");
-        return oneDayValues;
-    }
-
     private int getYesterdayValues(Collection<Integer> values) {
         log.debug("Invoke get last value");
         int lastValueInt = 0;
@@ -248,40 +183,20 @@ public class CountryService {
         return lastValueInt;
     }
 
-    public int calculateYesterdayActive(CountryValuesDto countryValuesDto) {
+    //Eventuell vereinfachen Prüfen ob es dann noch geht mit der null
+    public Integer calculateYesterdayActive(CountryValuesDto countryValuesDto) {
         log.debug("Invoke calculate yesterday active");
-        return getYesterdayValues(countryValuesDto.getCasesValues().values()) -
+        Integer yesterdayActive = getYesterdayValues(countryValuesDto.getCasesValues().values()) -
                 getYesterdayValues(countryValuesDto.getRecoveredValues().values()) -
                 getYesterdayValues(countryValuesDto.getDeathsValues().values());
-    }
-
-    //Kommt weg
-    public List<Integer> getEverySecondValue(List<Integer> values) {
-        log.debug("Invoke get every second value");
-        if (values == null || values.isEmpty()) {
-            log.warn("Values list is null or empty for getEverySecondValue");
-            return Collections.emptyList();
+        if (yesterdayActive == null) {
+            return 0;
+        } else {
+            return yesterdayActive;
         }
-        log.info("Return list with every second value");
-        return IntStream.range(0, values.size())
-                .filter(n -> n % 2 == 0)
-                .mapToObj(values::get)
-                .collect(Collectors.toList());
     }
 
-    //Kommt weg
-    public List<String> getEverySecondDate(List<String> dates) {
-        log.debug("Invoke get every second date");
-        if (dates == null || dates.isEmpty()) {
-            log.warn("Date list is null or empty for getEverySecondDate");
-            return Collections.emptyList();
-        }
-        log.info("Return list with every second date ");
-        return IntStream.range(0, dates.size())
-                .filter(n -> n % 2 == 0)
-                .mapToObj(dates::get).collect(Collectors.toList());
-    }
-
+    //ToDo: Maybe to the UtilsService
     public List<String> getCountryNames() {
         log.debug("Invoke get all country names");
         List<String> allCountries = csvUtilsTimeSeries.readCountryName();

@@ -1,9 +1,9 @@
 package com.statistics.corona.service.json;
 
-import com.statistics.corona.model.DistrictDto;
 import com.statistics.corona.model.data.CountryValuesTransfer;
 import com.statistics.corona.model.data.DataObjectDistrict;
 import com.statistics.corona.model.dto.CountryValuesDto;
+import com.statistics.corona.model.dto.DistrictDto;
 import com.statistics.corona.model.dto.WorldTimeSeriesDto;
 import com.statistics.corona.model.dto.WorldValuesDto;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +31,22 @@ public class JsonUtils {
 
         long count = worldTimeSeriesDto.getCases().values().size();
         worldValuesDto.setNewConfirmed(worldValuesDto.getConfirmed().getValue() -
-                worldTimeSeriesDto.getCases().values().stream().skip(count - 1).findFirst().get());
+                worldTimeSeriesDto.getCases().values()
+                        .stream()
+                        .skip(count - 1)
+                        .findFirst()
+                        .get());
         worldValuesDto.setNewRecovered(worldValuesDto.getRecovered().getValue() -
-                worldTimeSeriesDto.getRecovered().values().stream().skip(count - 1).findFirst().get());
+                worldTimeSeriesDto.getRecovered().values()
+                        .stream()
+                        .skip(count - 1).findFirst()
+                        .get());
         worldValuesDto.setNewDeaths(worldValuesDto.getDeaths().getValue() -
-                worldTimeSeriesDto.getDeaths().values().stream().skip(count - 1).findFirst().get());
+                worldTimeSeriesDto.getDeaths().values()
+                        .stream()
+                        .skip(count - 1)
+                        .findFirst()
+                        .get());
         worldValuesDto.setActive(worldValuesDto.getConfirmed().getValue() - worldValuesDto.getRecovered().getValue() -
                 worldValuesDto.getDeaths().getValue());
         worldValuesDto.setDeathsRate((double) worldValuesDto.getDeaths().getValue() /

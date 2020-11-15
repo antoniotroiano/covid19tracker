@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class TimeSeriesUtils {
+public class UtilsService {
 
     public List<Integer> getDailyTrend(Map<String, Integer> values) {
         log.debug("Invoke get daily trend");

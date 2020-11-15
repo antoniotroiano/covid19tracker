@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="/img/bar-chart-outline.svg" rel="icon" type="image/svg">
+    <link href="/img/bar-chart-outline.svg" rel="icon" th:href="@{/img/bar-chart-outline.svg}" type="image/svg">
     <title th:text="${title}"></title>
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" rel="stylesheet">
-    <link href="css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
+    <link href="/css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
     <script th:src="@{/js/charts.js}"></script>
@@ -24,10 +24,11 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons is-centered">
-                    <a class="button is-small is-link is-rounded" href="/" type="submit">Home</a>
+                    <a class="button is-small is-link is-rounded" href="/covid19/world?value=all"
+                       type="submit">World</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/symptoms">Symptoms</a>
                     <a class="button is-small is-link is-rounded"
-                       th:href="@{/covid19/timeSeries/country/{country}(country = ${selectedCountry})}" type="submit">Back</a>
+                       th:href="@{/covid19/country/{country}(country = ${selectedCountry})}" type="submit">Back</a>
                 </div>
                 <div class="buttons is-centered">
                     <div class="dropdown">
@@ -89,60 +90,60 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="dailyReportUsDto : ${allValuesProvinceUS}">
-                                <td th:text="${dailyReportUsDto.getProvince()}"></td>
+                            <tr th:each="usDailyDto : ${usDailyDto}">
+                                <td th:text="${usDailyDto.getProvince()}"></td>
                                 <td><span class="tag is-info"
-                                          th:text="${dailyReportUsDto.getConfirmed() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(dailyReportUsDto.getConfirmed(),3,'POINT')}"></span>
+                                          th:text="${usDailyDto.getConfirmed() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(usDailyDto.getConfirmed(),3,'POINT')}"></span>
                                 </td>
                                 <td><span
                                         class="tag is-success"
-                                        th:text="${dailyReportUsDto.getRecovered() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(dailyReportUsDto.getRecovered(),3,'POINT')}"></span>
+                                        th:text="${usDailyDto.getRecovered() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(usDailyDto.getRecovered(),3,'POINT')}"></span>
                                 </td>
                                 <td><span
                                         class="tag is-warning"
-                                        th:text="${dailyReportUsDto.getActive() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(dailyReportUsDto.getActive(),3,'POINT')}"></span>
+                                        th:text="${usDailyDto.getActive() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(usDailyDto.getActive(),3,'POINT')}"></span>
                                 </td>
                                 <td><span
                                         class="tag is-danger"
-                                        th:text="${dailyReportUsDto.getDeaths() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(dailyReportUsDto.getDeaths(),3,'POINT')}"></span>
+                                        th:text="${usDailyDto.getDeaths() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(usDailyDto.getDeaths(),3,'POINT')}"></span>
                                 </td>
                                 <td><span
                                         class="tag is-light"
-                                        th:text="${dailyReportUsDto.getIncidentRate() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(dailyReportUsDto.getIncidentRate(),3,'POINT')}"></span>
+                                        th:text="${usDailyDto.getIncidentRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(usDailyDto.getIncidentRate(),3,'POINT')}"></span>
                                 </td>
                                 <td><span
                                         class="tag is-light"
-                                        th:text="${dailyReportUsDto.getPeopleTested() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(dailyReportUsDto.getPeopleTested(),3,'POINT')}"></span>
+                                        th:text="${usDailyDto.getPeopleTested() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(usDailyDto.getPeopleTested(),3,'POINT')}"></span>
                                 </td>
                                 <td><span
                                         class="tag is-light"
-                                        th:text="${dailyReportUsDto.getPeopleHospitalized() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(dailyReportUsDto.getPeopleHospitalized(),3,'POINT')}"></span>
+                                        th:text="${usDailyDto.getPeopleHospitalized() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(usDailyDto.getPeopleHospitalized(),3,'POINT')}"></span>
                                 </td>
                                 <td><span
                                         class="tag is-light"
-                                        th:text="${dailyReportUsDto.getMortalityRate() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(dailyReportUsDto.getMortalityRate(),3,'POINT')}"></span>
+                                        th:text="${usDailyDto.getMortalityRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(usDailyDto.getMortalityRate(),3,'POINT')}"></span>
                                 </td>
                                 <td><span
                                         class="tag is-light"
-                                        th:text="${dailyReportUsDto.getTestingRate() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(dailyReportUsDto.getTestingRate(),3,'POINT')}"></span>
+                                        th:text="${usDailyDto.getTestingRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(usDailyDto.getTestingRate(),3,'POINT')}"></span>
                                 </td>
                                 <td><span
                                         class="tag is-light"
-                                        th:text="${dailyReportUsDto.getHospitalizationRate() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(dailyReportUsDto.getHospitalizationRate(),3,'POINT')}"></span>
+                                        th:text="${usDailyDto.getHospitalizationRate() == null} ? ${'No value'}
+                                         : ${#numbers.formatInteger(usDailyDto.getHospitalizationRate(),3,'POINT')}"></span>
                                 </td>
                                 <td>
                                     <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
-                                       th:href="@{/covid19/timeSeries/province/us/{usProvince}(usProvince=${dailyReportUsDto.getProvince()})}">Details</a>
+                                       th:href="@{/covid19/province/us/{usProvince}(usProvince=${usDailyDto.getProvince()})}">Details</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -174,10 +175,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="dailyReportUsDto : ${allValuesProvinceUS}">
+                            <tr th:each="usDailyDto : ${usDailyDto}">
                                 <td>
                                     <div class="collapsible">
-                                        <div class="is-pulled-left" th:text="${dailyReportUsDto.getProvince()}"></div>
+                                        <div class="is-pulled-left" th:text="${usDailyDto.getProvince()}"></div>
                                         <div class="is-pulled-right contentSign"></div>
                                     </div>
                                     <div class="content">
@@ -185,57 +186,57 @@
                                             <div class="card-content">
                                                 <div class="field">Cases: <span
                                                         class="is-pulled-right tag is-info"
-                                                        th:text="${dailyReportUsDto.getConfirmed() == null} ? ${'No value'}
-                                                                                  : ${#numbers.formatInteger(dailyReportUsDto.getConfirmed(),3,'POINT')}"></span>
+                                                        th:text="${usDailyDto.getConfirmed() == null} ? ${'No value'}
+                                                                                  : ${#numbers.formatInteger(usDailyDto.getConfirmed(),3,'POINT')}"></span>
                                                 </div>
                                                 <div class="field">Recovered: <span
                                                         class="is-pulled-right tag is-success"
-                                                        th:text="${dailyReportUsDto.getRecovered() == null} ? ${'No value'}
-                                                                                  : ${#numbers.formatInteger(dailyReportUsDto.getRecovered(),3,'POINT')}"></span>
+                                                        th:text="${usDailyDto.getRecovered() == null} ? ${'No value'}
+                                                                                  : ${#numbers.formatInteger(usDailyDto.getRecovered(),3,'POINT')}"></span>
                                                 </div>
                                                 <div class="field">Active: <span class="is-pulled-right tag is-warning"
-                                                                                 th:text="${dailyReportUsDto.getActive() == null} ? ${'No value'}
-                                                                                  : ${#numbers.formatInteger(dailyReportUsDto.getActive(),3,'POINT')}"></span>
+                                                                                 th:text="${usDailyDto.getActive() == null} ? ${'No value'}
+                                                                                  : ${#numbers.formatInteger(usDailyDto.getActive(),3,'POINT')}"></span>
                                                 </div>
                                                 <div class="field">Deaths: <span class="is-pulled-right tag is-danger"
-                                                                                 th:text="${dailyReportUsDto.getDeaths() == null} ? ${'No value'}
-                                                                                  : ${#numbers.formatInteger(dailyReportUsDto.getDeaths(),3,'POINT')}"></span>
+                                                                                 th:text="${usDailyDto.getDeaths() == null} ? ${'No value'}
+                                                                                  : ${#numbers.formatInteger(usDailyDto.getDeaths(),3,'POINT')}"></span>
                                                 </div>
                                                 <div class="field">Incident rate: <span
                                                         class="is-pulled-right tag is-light"
-                                                        th:text="${dailyReportUsDto.getIncidentRate() == null} ? ${'No value'}
-                                                                                  : ${#numbers.formatInteger(dailyReportUsDto.getIncidentRate(),3,'POINT') + ' %'}"></span>
+                                                        th:text="${usDailyDto.getIncidentRate() == null} ? ${'No value'}
+                                                                                  : ${#numbers.formatInteger(usDailyDto.getIncidentRate(),3,'POINT') + ' %'}"></span>
                                                 </div>
                                                 <div class="field">People tested: <span
                                                         class="is-pulled-right tag is-light"
-                                                        th:text="${dailyReportUsDto.getPeopleTested() == null} ? ${'No value'}
-                                                                                  : ${#numbers.formatInteger(dailyReportUsDto.getPeopleTested(),3,'POINT')}"></span>
+                                                        th:text="${usDailyDto.getPeopleTested() == null} ? ${'No value'}
+                                                                                  : ${#numbers.formatInteger(usDailyDto.getPeopleTested(),3,'POINT')}"></span>
                                                 </div>
                                                 <div class="field">People hospitalized: <span
                                                         class="is-pulled-right tag is-light"
-                                                        th:text="${dailyReportUsDto.getPeopleHospitalized() == null} ? ${'No value'}
-                                                    : ${#numbers.formatInteger(dailyReportUsDto.getPeopleHospitalized(),3,'POINT')}"></span>
+                                                        th:text="${usDailyDto.getPeopleHospitalized() == null} ? ${'No value'}
+                                                    : ${#numbers.formatInteger(usDailyDto.getPeopleHospitalized(),3,'POINT')}"></span>
                                                 </div>
                                                 <div class="field">Mortality rate: <span
                                                         class="is-pulled-right tag is-light"
-                                                        th:text="${dailyReportUsDto.getMortalityRate() == null} ? ${'No value'}
-                                                    : ${#numbers.formatInteger(dailyReportUsDto.getMortalityRate(),3,'POINT') + ' %'}"></span>
+                                                        th:text="${usDailyDto.getMortalityRate() == null} ? ${'No value'}
+                                                    : ${#numbers.formatInteger(usDailyDto.getMortalityRate(),3,'POINT') + ' %'}"></span>
                                                 </div>
                                                 <div class="field">Testing rate: <span
                                                         class="is-pulled-right tag is-light"
-                                                        th:text="${dailyReportUsDto.getTestingRate() == null} ? ${'No value'}
-                                                                                  : ${#numbers.formatInteger(dailyReportUsDto.getTestingRate(),3,'POINT') + ' %'}"></span>
+                                                        th:text="${usDailyDto.getTestingRate() == null} ? ${'No value'}
+                                                                                  : ${#numbers.formatInteger(usDailyDto.getTestingRate(),3,'POINT') + ' %'}"></span>
                                                 </div>
                                                 <div class="field">Hospitalization rate: <span
                                                         class="is-pulled-right tag is-light"
-                                                        th:text="${dailyReportUsDto.getHospitalizationRate() == null} ? ${'No value'}
-                                                    : ${#numbers.formatInteger(dailyReportUsDto.getHospitalizationRate(),3,'POINT') + ' %'}"></span>
+                                                        th:text="${usDailyDto.getHospitalizationRate() == null} ? ${'No value'}
+                                                    : ${#numbers.formatInteger(usDailyDto.getHospitalizationRate(),3,'POINT') + ' %'}"></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="buttons has-addons is-centered">
                                             <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
-                                               th:href="@{/covid19/timeSeries/province/us/{usProvince}(usProvince=${dailyReportUsDto.getProvince()})}">Details</a>
+                                               th:href="@{/covid19/province/us/{usProvince}(usProvince=${usDailyDto.getProvince()})}">Details</a>
                                         </div>
                                     </div>
                                 </td>

@@ -1,7 +1,7 @@
 package com.statistics.corona.service.json;
 
 import com.statistics.corona.service.CountryService;
-import com.statistics.corona.service.TimeSeriesUtils;
+import com.statistics.corona.service.UtilsService;
 import com.statistics.corona.service.WorldService;
 import com.statistics.corona.service.csv.CsvUtilsTimeSeries;
 import org.junit.jupiter.api.DisplayName;
@@ -17,9 +17,9 @@ public class JsonUtilsTest {
 
     private final JsonUtils jsonUtils = new JsonUtils();
     private final WorldService worldService = new WorldService(jsonUtils);
-    private final TimeSeriesUtils timeSeriesUtils = new TimeSeriesUtils();
+    private final UtilsService utilsService = new UtilsService();
     private final CsvUtilsTimeSeries csvUtilsTimeSeries = new CsvUtilsTimeSeries();
-    private final CountryService countryService = new CountryService(csvUtilsTimeSeries, timeSeriesUtils, jsonUtils);
+    private final CountryService countryService = new CountryService(csvUtilsTimeSeries, utilsService, jsonUtils);
 
     @Test
     void test1() {
@@ -38,7 +38,7 @@ public class JsonUtilsTest {
         System.out.println(jsonUtils.mapWorldJsonToObject("30").getWorldTimeSeriesDto().getCases().get("11/5/20"));
         System.out.println(worldService.getYesterdayActive(Optional.of(jsonUtils.mapWorldJsonToObject("10"))));
 
-        List<Integer> test = timeSeriesUtils.getDailyTrend(jsonUtils.mapWorldJsonToObject("8").getWorldTimeSeriesDto().getCases());
+        List<Integer> test = utilsService.getDailyTrend(jsonUtils.mapWorldJsonToObject("8").getWorldTimeSeriesDto().getCases());
 
         System.out.println(test);
         System.out.println(test.stream().mapToInt(Integer::intValue).sum());

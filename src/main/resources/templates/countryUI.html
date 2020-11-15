@@ -236,7 +236,7 @@
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons has-addons is-centered">
                     <a class="button is-rounded is-info"
-                       th:href="@{/covid19/timeSeries/country/provinces/{country}/{code}(country = ${selectedCountry},
+                       th:href="@{/covid19/provinces/{country}/{code}(country = ${selectedCountry},
                        code = ${countryValuesDto.getDataObjectCountryInfo().getIso2()})}"
                        th:if="${moreDetailsAvailable}">Province for&nbsp;<span th:text="${selectedCountry}"></span></a>
                 </div>

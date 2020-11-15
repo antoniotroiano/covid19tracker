@@ -1,8 +1,8 @@
 package com.statistics.corona.service;
 
-import com.statistics.corona.model.DailyReportUsDto;
-import com.statistics.corona.model.DistrictDto;
 import com.statistics.corona.model.dto.CountryDailyDto;
+import com.statistics.corona.model.dto.DistrictDto;
+import com.statistics.corona.model.dto.UsDailyDto;
 import com.statistics.corona.service.csv.CsvUtilsDailyReports;
 import com.statistics.corona.service.json.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,19 +22,20 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CountryDailyService {
 
-    private final CsvUtilsDailyReports readDailyReportCSV;
+    private final CsvUtilsDailyReports csvUtilsDailyReports;
     private final JsonUtils jsonUtils;
 
     @Autowired
-    public CountryDailyService(CsvUtilsDailyReports readDailyReportCSV, JsonUtils jsonUtils) {
-        this.readDailyReportCSV = readDailyReportCSV;
+    public CountryDailyService(CsvUtilsDailyReports csvUtilsDailyReports,
+                               JsonUtils jsonUtils) {
+        this.csvUtilsDailyReports = csvUtilsDailyReports;
         this.jsonUtils = jsonUtils;
     }
 
     //3 methods for get all values of districts, us daily report and all country daily reports
     public List<CountryDailyDto> getAllDailyReports() {
         log.debug("Invoke get all daily reports for all countries");
-        List<CountryDailyDto> countryDailyDtoList = readDailyReportCSV.readDailyReportsCSV();
+        List<CountryDailyDto> countryDailyDtoList = csvUtilsDailyReports.readDailyReportsCSV();
         if (countryDailyDtoList == null || countryDailyDtoList.isEmpty()) {
             log.warn("No values available for daily reports of all countries");
             return Collections.emptyList();
@@ -43,15 +44,15 @@ public class CountryDailyService {
         return countryDailyDtoList;
     }
 
-    public List<DailyReportUsDto> getAllDailyReportsUS() {
+    public List<UsDailyDto> getAllDailyReportsUS() {
         log.debug("Invoke get all daily reports for us");
-        List<DailyReportUsDto> dailyReportUsDtoList = readDailyReportCSV.readDailyReportUsCSV();
-        if (dailyReportUsDtoList == null || dailyReportUsDtoList.isEmpty()) {
+        List<UsDailyDto> usDailyDtoList = csvUtilsDailyReports.readDailyReportUsCSV();
+        if (usDailyDtoList == null || usDailyDtoList.isEmpty()) {
             log.warn("No values available for daily reports of us");
             return Collections.emptyList();
         }
         log.info("Return all daily reports us");
-        return dailyReportUsDtoList;
+        return usDailyDtoList;
     }
 
     public List<DistrictDto> getAllDistrictValues() {
@@ -65,24 +66,10 @@ public class CountryDailyService {
         return districtDtoList;
     }
 
-    //Get one value of a selected country calculated from a csv
-    public Optional<CountryDailyDto> getDailyReportSelectedCountry(List<CountryDailyDto> countryDailyDtoList, String country) {
-        log.debug("Invoke get daily report of {}", country);
-        Optional<CountryDailyDto> dailyReportDto = getAllDailyCountryValuesCalculated(countryDailyDtoList)
-                .stream()
-                .filter(c -> c.getCountry().equals(country))
-                .findFirst();
-        if (dailyReportDto.isEmpty()) {
-            log.warn("No daily report for selected country {}", country);
-            return Optional.of(new CountryDailyDto());
-        }
-        log.info("Return daily report for country {}", country);
-        return dailyReportDto;
-    }
-
     //Get province values of a selected country
-    public List<CountryDailyDto> getDailyReportsOfProvince(List<CountryDailyDto> countryDailyDtoList, String country) {
+    public List<CountryDailyDto> getAllDailyReportsOfProvince(String country) {
         log.debug("Invoke get daily reports for province of country {}", country);
+        List<CountryDailyDto> countryDailyDtoList = getAllDailyReports();
         if (countryDailyDtoList == null || countryDailyDtoList.isEmpty()) {
             log.warn("No daily reports available for {}", country);
             return Collections.emptyList();
@@ -102,6 +89,23 @@ public class CountryDailyService {
                 .collect(Collectors.toList());
     }
 
+    //Brauche ich das überhaupt? Wird nur für den incident rate bei country verwendet. Kann man doch sicher berechnen
+    //Get one value of a selected country calculated from a csv
+    public Optional<CountryDailyDto> getDailyReportSelectedCountry(List<CountryDailyDto> countryDailyDtoList, String country) {
+        log.debug("Invoke get daily report of {}", country);
+        Optional<CountryDailyDto> dailyReportDto = getAllDailyCountryValuesCalculated(countryDailyDtoList)
+                .stream()
+                .filter(c -> c.getCountry().equals(country))
+                .findFirst();
+        if (dailyReportDto.isEmpty()) {
+            log.warn("No daily report for selected country {}", country);
+            return Optional.of(new CountryDailyDto());
+        }
+        log.info("Return daily report for country {}", country);
+        return dailyReportDto;
+    }
+
+    //Auch das wird nur im world controller verwendet für die untere Tabelle, was ich aber auch anders bekommen kann über eine API
     //Get all country values calculated
     public List<CountryDailyDto> getAllDailyCountryValuesCalculated(List<CountryDailyDto> countryDailyDtoList) {
         log.debug("Invoke get all daily reports for all countries calculated");
@@ -166,35 +170,5 @@ public class CountryDailyService {
                 .mapToInt(CountryDailyDto::getActive)
                 .sum());
         return sumValues;
-    }
-
-    //Get province details for selected province
-    public Optional<CountryDailyDto> getProvinceDetails(String province) {
-        log.debug("Invoke get details for selected province {}", province);
-        Optional<CountryDailyDto> dailyReportDto = readDailyReportCSV.readDailyReportsCSV()
-                .stream()
-                .filter(p -> p.getProvince().equals(province))
-                .findAny();
-        if (dailyReportDto.isPresent()) {
-            log.info("Returned dto for selected province {}", province);
-            return dailyReportDto;
-        }
-        log.warn("No values for dto available of {}", province);
-        return Optional.of(new CountryDailyDto());
-    }
-
-    //Get us provine details for selected province
-    public Optional<DailyReportUsDto> getUsProvinceDetails(String province) {
-        log.debug("Invoke get details for us province {}", province);
-        Optional<DailyReportUsDto> dailyReportUsDto = readDailyReportCSV.readDailyReportUsCSV()
-                .stream()
-                .filter(p -> p.getProvince().equals(province))
-                .findAny();
-        if (dailyReportUsDto.isPresent()) {
-            log.info("Returned values of us province {}", province);
-            return dailyReportUsDto;
-        }
-        log.debug("No values available for us province {}", province);
-        return Optional.of(new DailyReportUsDto());
     }
 }
