@@ -86,9 +86,9 @@ public class JsonUtils {
             int active = countryValuesTransfer.getDataValueConfirmed().getValue() - countryValuesTransfer.getDataValueRecovered().getValue() -
                     countryValuesTransfer.getDataValueDeaths().getValue();
             countryValuesDto.setActive(active);
-            countryValuesDto.setTodayCases(getYesterdayValues(country).getTodayCases());
+            /*countryValuesDto.setTodayCases(getYesterdayValues(country).getTodayCases());
             countryValuesDto.setTodayRecovered(getYesterdayValues(country).getTodayRecovered());
-            countryValuesDto.setTodayDeaths(getYesterdayValues(country).getTodayDeaths());
+            countryValuesDto.setTodayDeaths(getYesterdayValues(country).getTodayDeaths());*/
             double deathRate = ((double) countryValuesDto.getDeaths() / (double) countryValuesDto.getCases()) * 100;
             countryValuesDto.setDeathRate(deathRate);
             double recoveryRate = ((double) countryValuesDto.getRecovered() / (double) countryValuesDto.getCases()) * 100;
