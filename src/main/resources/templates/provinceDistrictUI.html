@@ -127,6 +127,62 @@
                         <br>
                     </div>
                 </div>
+
+
+                <br>
+                <div class="box hide-on-big" style="overflow: auto; height: 40em">
+                    <div class="has-text-centered is-8">Province</div>
+                    <div class="buttons is-centered">
+                        <table class="table is-striped is-fullwidth" id="provinceTableMobile2">
+                            <tbody>
+                            <tr th:each="countryDailyDto : ${countryDailyDto}">
+                                <td>
+                                    <div class="divTable">
+                                        <div class="divTableBody">
+                                            <div class="divTableRow">
+                                                <div class="divTableCell collapsible"
+                                                     th:text="${countryDailyDto.getProvince()}"></div>
+                                                <div class="divTableCell"></div>
+                                                <div class="divTableCell"></div>
+                                                <div class="divTableCell">
+                                                    <a class="button is-rounded is-small"
+                                                       style="margin-top: 0.5rem;"
+                                                       th:href="@{/covid19/province/{province}(province=${countryDailyDto.getProvince()})}"
+                                                       th:if="${timeSeriesAvailable}">Details
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="divTableRow">
+                                                <div class="divTableCell"></div>
+                                                <div class="divTableCell">Confirmed</div>
+                                                <div class="divTableCell">Recovered</div>
+                                                <div class="divTableCell">Deaths</div>
+                                            </div>
+                                            <div class="divTableRow">
+                                                <div class="divTableCell">New</div>
+                                                <div class="divTableCell">1</div>
+                                                <div class="divTableCell">2</div>
+                                                <div class="divTableCell">3</div>
+                                            </div>
+                                            <div class="divTableRow">
+                                                <div class="divTableCell">Total</div>
+                                                <div class="divTableCell"
+                                                     th:text="${#numbers.formatInteger(countryDailyDto.getConfirmed(),3,'POINT')}">
+                                                </div>
+                                                <div class="divTableCell"
+                                                     th:text="${#numbers.formatInteger(countryDailyDto.getRecovered(),3,'POINT')}"></div>
+                                                <div class="divTableCell"
+                                                     th:text="${#numbers.formatInteger(countryDailyDto.getDeaths(),3,'POINT')}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="box hide-on-big" style="overflow: auto; height: 30em">
                     <div class="buttons is-centered">
                         <table class="table is-striped is-hoverable is-fullwidth" id="provinceTableMobile">
