@@ -1,4 +1,4 @@
-package com.statistics.corona.controller;
+package com.statistics.corona.resource;
 
 import com.statistics.corona.service.CountryService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping("covid19/symptoms")
 @RequiredArgsConstructor
-public class SymptomsController {
+public class SymptomsResource {
 
     private final CountryService countryService;
 

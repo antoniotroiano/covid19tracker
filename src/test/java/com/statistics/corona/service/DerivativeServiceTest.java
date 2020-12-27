@@ -5,11 +5,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Deprecated
 @SpringBootTest
-public class DerivativeServiceTest {
+class DerivativeServiceTest {
 
     @Test
-    public void calculateSIRModel() {
+    void calculateSIRModel() {
 
         DerivativeService derivativeService = new DerivativeService();
 

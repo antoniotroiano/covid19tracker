@@ -29,6 +29,10 @@ public class CountryDailyDto {
     @CsvBindByPosition(position = 13)
     Double caseFatalityRatio;
 
+    Integer incrementConfirmed;
+    Integer incrementRecovered;
+    Integer incrementDeaths;
+
     public CountryDailyDto() {
         //Always needed an empty constructor
     }
@@ -46,6 +50,9 @@ public class CountryDailyDto {
         this.combinedKey = countryDailyDto.getCombinedKey();
         this.incidenceRate = countryDailyDto.getIncidenceRate();
         this.caseFatalityRatio = countryDailyDto.getCaseFatalityRatio();
+        this.incrementConfirmed = countryDailyDto.getIncrementConfirmed();
+        this.incrementRecovered = countryDailyDto.getIncrementRecovered();
+        this.incrementDeaths = countryDailyDto.getIncrementDeaths();
     }
 
     public Integer getFips() {
@@ -144,9 +151,33 @@ public class CountryDailyDto {
         this.caseFatalityRatio = caseFatalityRatio;
     }
 
+    public Integer getIncrementConfirmed() {
+        return incrementConfirmed;
+    }
+
+    public void setIncrementConfirmed(Integer incrementConfirmed) {
+        this.incrementConfirmed = incrementConfirmed;
+    }
+
+    public Integer getIncrementRecovered() {
+        return incrementRecovered;
+    }
+
+    public void setIncrementRecovered(Integer incrementRecovered) {
+        this.incrementRecovered = incrementRecovered;
+    }
+
+    public Integer getIncrementDeaths() {
+        return incrementDeaths;
+    }
+
+    public void setIncrementDeaths(Integer incrementDeaths) {
+        this.incrementDeaths = incrementDeaths;
+    }
+
     @Override
     public String toString() {
-        return "DailyReportDto{" +
+        return "CountryDailyDto{" +
                 "fips=" + fips +
                 ", admin2='" + admin2 + '\'' +
                 ", province='" + province + '\'' +
@@ -159,6 +190,9 @@ public class CountryDailyDto {
                 ", combinedKey='" + combinedKey + '\'' +
                 ", incidenceRate=" + incidenceRate +
                 ", caseFatalityRatio=" + caseFatalityRatio +
+                ", incrementConfirmed=" + incrementConfirmed +
+                ", incrementRecovered=" + incrementRecovered +
+                ", incrementDeaths=" + incrementDeaths +
                 '}';
     }
 }

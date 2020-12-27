@@ -1,48 +1,64 @@
 package com.statistics.corona.service.json;
 
-import com.statistics.corona.service.CountryService;
-import com.statistics.corona.service.UtilsService;
+import com.statistics.corona.service.ProvinceService;
 import com.statistics.corona.service.WorldService;
+import com.statistics.corona.service.csv.CsvUtilsDailyReports;
 import com.statistics.corona.service.csv.CsvUtilsTimeSeries;
+import com.statistics.corona.utils.ServiceUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-import java.util.Optional;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+
+import static org.apache.logging.log4j.core.impl.ThrowableFormatOptions.FILE_NAME;
 
 @SpringBootTest
 @DisplayName("ReadJSON tests")
-public class JsonUtilsTest {
+class JsonUtilsTest {
 
     private final JsonUtils jsonUtils = new JsonUtils();
     private final WorldService worldService = new WorldService(jsonUtils);
-    private final UtilsService utilsService = new UtilsService();
+    private final ServiceUtils serviceUtils = new ServiceUtils();
+    private final CsvUtilsDailyReports csvUtilsDailyReports = new CsvUtilsDailyReports();
     private final CsvUtilsTimeSeries csvUtilsTimeSeries = new CsvUtilsTimeSeries();
-    private final CountryService countryService = new CountryService(csvUtilsTimeSeries, utilsService, jsonUtils);
 
     @Test
-    void test1() {
-        //System.out.println(countryService.mapTStoDTO(jsonUtils.readCountryValuesOfJson("Germany")).getCasesValues());
-        //System.out.println(countryService.mapTStoDTO(jsonUtils.readCountryValuesOfJson("Germany")).getPopulation());
-        //System.out.println(countryService.calculateSevenDayIncidence(countryService.mapTStoDTO(jsonUtils.readCountryValuesOfJson("Germany"))));
+    void testYesterdayValues() {
+        ProvinceService provinceService = new ProvinceService(csvUtilsTimeSeries, csvUtilsDailyReports);
+        System.out.println(provinceService.getYesterdayValuesOfCountry("Germany"));
     }
 
     @Test
-     void test() {
-        System.out.println(jsonUtils.mapWorldJsonToObject("10").getWorldTimeSeriesDto().getCases().values());
-        System.out.println(jsonUtils.mapWorldJsonToObject("10").getWorldTimeSeriesDto().getCases().keySet());
-        System.out.println(jsonUtils.mapWorldJsonToObject("10").getConfirmed().getValue());
-        System.out.println(jsonUtils.mapWorldJsonToObject("10").getLastUpdate());
+    void testNewLink() {
+        CsvUtilsDailyReports csvUtilsDailyReports = new CsvUtilsDailyReports();
 
-        System.out.println(jsonUtils.mapWorldJsonToObject("30").getWorldTimeSeriesDto().getCases().get("11/5/20"));
-        System.out.println(worldService.getYesterdayActive(Optional.of(jsonUtils.mapWorldJsonToObject("10"))));
+        System.out.println(csvUtilsDailyReports.readCountryLatestCSV().stream().filter(c -> c.getLocation().contains("Germany")).reduce((first, second) -> second).get());
+    }
 
-        List<Integer> test = utilsService.getDailyTrend(jsonUtils.mapWorldJsonToObject("8").getWorldTimeSeriesDto().getCases());
+    @Test
+    void test1() throws IOException, URISyntaxException {
 
-        System.out.println(test);
-        System.out.println(test.stream().mapToInt(Integer::intValue).sum());
-        System.out.println(((double)test.stream().mapToInt(Integer::intValue).sum() / 7823655300L) * 100000);
+/*        FileInputStream file =
+                new FileInputStream(new File("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Testzahlen-gesamt.xlsx?__blob=publicationFile"));
+
+        Workbook workbook = WorkbookFactory.create(new File("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Testzahlen-gesamt.xlsx?__blob=publicationFile"));
+        System.out.println("Workbook has " + workbook.getNumberOfSheets() + " Sheets : ");*/
+
+        URL url = new URL("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Testzahlen-gesamt.xlsx?__blob=publicationFile");
+        ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+        FileOutputStream fileOutputStream = new FileOutputStream(FILE_NAME);
+        FileChannel fileChannel = fileOutputStream.getChannel();
+        fileOutputStream.getChannel()
+                .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+        System.out.println(fileChannel.lock());
+
     }
 
 /*    @Test

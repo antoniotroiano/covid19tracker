@@ -1,6 +1,9 @@
 package com.statistics.corona.model;
 
-@Deprecated
+/**
+ * @deprecated Don't needed for now
+ */
+@Deprecated(since = "4.0.0-SNAPSHOT", forRemoval = false)
 public class SIRModel {
 
     Double transmissionRate;

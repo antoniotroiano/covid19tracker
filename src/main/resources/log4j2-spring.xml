@@ -45,7 +45,7 @@
         <Logger name="com.statistics.corona.model" level="info" additivity="false">
             <appender-ref ref="model-log" level="info"/>
         </Logger>
-        <Logger name="com.statistics.corona.controller" level="info" additivity="false">
+        <Logger name="com.statistics.corona.resource" level="info" additivity="false">
             <appender-ref ref="controller-log" level="info"/>
         </Logger>
         <Logger name="com.statistics.corona.service" level="info" additivity="false">

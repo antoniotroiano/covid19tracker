@@ -1,11 +1,13 @@
-package com.statistics.corona.controller;
+package com.statistics.corona.resource;
 
 import com.statistics.corona.model.dto.CountryDailyDto;
+import com.statistics.corona.model.dto.CountryLatestDto;
 import com.statistics.corona.model.dto.CountryValuesDto;
 import com.statistics.corona.service.CountryDailyService;
 import com.statistics.corona.service.CountryService;
 import com.statistics.corona.service.DateFormat;
-import com.statistics.corona.service.UtilsService;
+import com.statistics.corona.utils.ResourceUtils;
+import com.statistics.corona.utils.ServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,21 +22,24 @@ import java.util.Optional;
 @Controller
 @Slf4j
 @RequestMapping("covid19")
-public class CountryController {
+public class CountryResource {
 
     private final CountryService countryService;
     private final CountryDailyService countryDailyService;
+    private final ResourceUtils resourceUtils;
     private final DateFormat dateFormat;
-    private final UtilsService utilsService;
+    private final ServiceUtils serviceUtils;
 
-    public CountryController(CountryService countryService,
-                             CountryDailyService countryDailyService,
-                             DateFormat dateFormat,
-                             UtilsService utilsService) {
+    public CountryResource(CountryService countryService,
+                           CountryDailyService countryDailyService,
+                           ResourceUtils resourceUtils,
+                           DateFormat dateFormat,
+                           ServiceUtils serviceUtils) {
         this.countryService = countryService;
         this.countryDailyService = countryDailyService;
+        this.resourceUtils = resourceUtils;
         this.dateFormat = dateFormat;
-        this.utilsService = utilsService;
+        this.serviceUtils = serviceUtils;
     }
 
     @GetMapping("/country/{country}")
@@ -42,29 +47,29 @@ public class CountryController {
         log.info("Invoke controller show time series of country {}", country);
         model.addAttribute("countryValuesDto", new CountryValuesDto());
         model.addAttribute("countryDailyDto", new CountryDailyDto());
+        model.addAttribute("countryLatestDto", new CountryLatestDto());
         model.addAttribute("title", "COVID-19 - Data for " + country);
         model.addAttribute("selectedCountry", country);
         getCountryNames(model);
 
-        List<CountryDailyDto> countryDailyDtoList = countryDailyService.getAllDailyReports();
         checkMoreDetailsAvailable(model, country);
 
         Optional<CountryValuesDto> countryValuesDto = countryService.getSelectedCountryValues(country);
+        if (country.equals("US")) {
+            country = "United States";
+        }
+        Optional<CountryLatestDto> countryLatestDto = countryDailyService.getCountryLatestDto(country);
         if (countryValuesDto.isPresent()) {
+            countryLatestDto.ifPresent(latestDto -> model.addAttribute("countryLatestDto", new CountryLatestDto(latestDto)));
             model.addAttribute("updated", dateFormat.formatUnixToDate(countryValuesDto.get().getUpdated()));
             model.addAttribute("countryValuesDto", new CountryValuesDto(countryValuesDto.get()));
 
-            Optional<CountryDailyDto> countryDailyDto =
-                    countryDailyService.getDailyReportSelectedCountry(countryDailyDtoList, country);
-            countryDailyDto
-                    .ifPresent(reportDto ->
-                            model.addAttribute("countryDailyDto", new CountryDailyDto(reportDto)));
-
             getBaseDataCountry(model, countryValuesDto.get());
+            resourceUtils.getValues(model, countryValuesDto.get(), null, null, null);
             log.debug("Get data for selected country {}", country);
             return "countryUI";
         }
-        getBaseDataCountry(model, new CountryValuesDto());
+        getBaseDataCountry(model, new CountryValuesDto()); //ToDo: das kann so nicht bleiben. Durch das leere Objekt fliegt ein 500er
         model.addAttribute("noDataForThisCountry", true);
         log.warn("No data for the country available {}", country);
         return "countryUI";
@@ -77,9 +82,9 @@ public class CountryController {
         model.addAttribute("recoveredList", countryValuesDto.getRecoveredValues().values());
         model.addAttribute("deathsList", countryValuesDto.getDeathsValues().values());
         model.addAttribute("dateList", countryValuesDto.getCasesValues().keySet());
-        model.addAttribute("dailyTrendConfirmed", utilsService.getDailyTrend(countryValuesDto.getCasesValues()));
-        model.addAttribute("dailyTrendRecovered", utilsService.getDailyTrend(countryValuesDto.getRecoveredValues()));
-        model.addAttribute("dailyTrendDeaths", utilsService.getDailyTrend(countryValuesDto.getDeathsValues()));
+        model.addAttribute("dailyTrendConfirmed", serviceUtils.getDailyTrend(countryValuesDto.getCasesValues().values()));
+        model.addAttribute("dailyTrendRecovered", serviceUtils.getDailyTrend(countryValuesDto.getRecoveredValues().values()));
+        model.addAttribute("dailyTrendDeaths", serviceUtils.getDailyTrend(countryValuesDto.getDeathsValues().values()));
     }
 
     private void getCountryNames(Model model) {

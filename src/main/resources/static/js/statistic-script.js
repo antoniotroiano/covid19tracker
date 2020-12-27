@@ -27,7 +27,7 @@ function filterFunction() {
 }
 
 /*Search fields for tables*/
-function searchFunctionProvince() {
+/*function searchFunctionProvince() {
     let input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("searchProvince");
     filter = input.value.toUpperCase();
@@ -44,73 +44,11 @@ function searchFunctionProvince() {
             }
         }
     }
-}
-
-function searchFunctionProvinceMobile() {
-    let input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("searchProvinceMobile");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("provinceTableMobile");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        if (td) {
-            txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-}
-
-function searchFunctionDistrict() {
-    let input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("searchDistrict");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("districtTable");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        if (td) {
-            txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-}
-
-function searchFunctionDistrictMobile() {
-    let input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("searchDistrictMobile");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("districtTableMobile");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        if (td) {
-            txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-}
+}*/
 
 /*Get selected country*/
 function getCountryV2(country) {
     document.location.replace("/covid19/country/" + country);
-}
-
-/*Refresh page with selected value*/
-function selectedValue(value) {
-    document.location.replace("/covid19/world?value=" + value);
 }
 
 /*Modal with bulma for all country without US*/
@@ -137,36 +75,7 @@ function selectedValue(value) {
     });
 }*/
 
-/*Modal with bulma for US*/
-/*function openModalUs(province, confirmed, recovered, deaths, active, incidentRate, peopleTested, peopleHospitalized, mortalityRate, testingRate, hospitalizationRate) {
-    let $activeElementUs = undefined;
-
-    $(function () {
-        $(".modal-bulma").click(function () {
-            $activeElementUs = $(this);
-            $("#region").text($activeElementUs.data(province));
-            $("#confirmed").text($activeElementUs.data(confirmed));
-            $("#recovered").text($activeElementUs.data(recovered));
-            $("#deaths").text($activeElementUs.data(deaths));
-            $("#active").text($activeElementUs.data(active));
-            $("#incidentRate").text($activeElementUs.data(incidentRate));
-            $("#peopleTested").text($activeElementUs.data(peopleTested));
-            $("#peopleHospitalized").text($activeElementUs.data(peopleHospitalized));
-            $("#mortalityRate").text($activeElementUs.data(mortalityRate));
-            $("#testingRate").text($activeElementUs.data(testingRate));
-            $("#hospitalizationRate").text($activeElementUs.data(hospitalizationRate));
-            $(".modal").addClass("is-active");
-        });
-        $(".modal-close").click(function () {
-            $(".modal").removeClass("is-active");
-        });
-        $(".closeBtn").click(function () {
-            $(".modal").removeClass("is-active");
-        });
-    });
-}*/
-
-/*Active button*/
+/*Active buttons*/
 $(function () {
     $('.btn').on("click", function () {
         $('.activeButton').not(this).removeClass('activeButton');
@@ -174,7 +83,21 @@ $(function () {
     })
 });
 
-$(document).ready(function () {
+$(function () {
+    $('.btnDailyTrend').on("click", function () {
+        $('.activeButtonDailyTrend').not(this).removeClass('activeButtonDailyTrend');
+        $(this).toggleClass('activeButtonDailyTrend');
+    })
+});
+
+$(function () {
+    $('.btnNumber').on("click", function () {
+        $('.activeButtonNumber').not(this).removeClass('activeButtonNumber');
+        $(this).toggleClass('activeButtonNumber');
+    })
+});
+
+/*$(document).ready(function () {
     const loc = window.location.href;
     if (loc.search("=all") !== -1) {
         $('.all').addClass("activeButtonDays");
@@ -200,7 +123,7 @@ $(document).ready(function () {
         $('.120').removeClass("activeButtonDays");
         $('.60').addClass("activeButtonDays");
     }
-});
+});*/
 
 /*Toggle between lists*/
 $(function () {

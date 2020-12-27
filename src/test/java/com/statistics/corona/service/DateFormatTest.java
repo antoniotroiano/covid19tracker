@@ -8,13 +8,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @DisplayName("DateFormat tests")
-public class DateFormatTest {
+class DateFormatTest {
 
     private final DateFormat dateFormat = new DateFormat();
 
     @Test
     @DisplayName("Test all format for date and time")
-    public void dateFormat() {
+    void dateFormat() {
         String date = dateFormat.formatLastUpdateToDate("2020-05-18T00:32:18.000Z");
         String time = dateFormat.formatLastUpdateToTime("2020-05-18T00:32:18.000Z");
         String dateDaily = dateFormat.formatLastUpdateToDateDaily("2020-05-18 00:32:18");

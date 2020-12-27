@@ -1,10 +1,9 @@
 package com.statistics.corona.service;
 
 import com.statistics.corona.model.dto.CountryDailyDto;
-import com.statistics.corona.model.dto.DistrictDto;
+import com.statistics.corona.model.dto.CountryLatestDto;
 import com.statistics.corona.model.dto.UsDailyDto;
 import com.statistics.corona.service.csv.CsvUtilsDailyReports;
-import com.statistics.corona.service.json.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +22,10 @@ import java.util.stream.Collectors;
 public class CountryDailyService {
 
     private final CsvUtilsDailyReports csvUtilsDailyReports;
-    private final JsonUtils jsonUtils;
 
     @Autowired
-    public CountryDailyService(CsvUtilsDailyReports csvUtilsDailyReports,
-                               JsonUtils jsonUtils) {
+    public CountryDailyService(CsvUtilsDailyReports csvUtilsDailyReports) {
         this.csvUtilsDailyReports = csvUtilsDailyReports;
-        this.jsonUtils = jsonUtils;
     }
 
     //3 methods for get all values of districts, us daily report and all country daily reports
@@ -55,17 +51,6 @@ public class CountryDailyService {
         return usDailyDtoList;
     }
 
-    public List<DistrictDto> getAllDistrictValues() {
-        log.debug("Invoke get district values");
-        List<DistrictDto> districtDtoList = jsonUtils.readDistrictsValues();
-        if (districtDtoList == null || districtDtoList.isEmpty()) {
-            log.warn("No values available for districts");
-            return Collections.emptyList();
-        }
-        log.info("Return list with all values for districts");
-        return districtDtoList;
-    }
-
     //Get province values of a selected country
     public List<CountryDailyDto> getAllDailyReportsOfProvince(String country) {
         log.debug("Invoke get daily reports for province of country {}", country);
@@ -80,35 +65,11 @@ public class CountryDailyService {
                 .collect(Collectors.toList());
     }
 
-    //Get district values of a selected country by country code
-    public List<DistrictDto> getDistrictValuesOfSelectedCountry(String code) {
-        log.debug("Invoke get district values for {}", code);
-        return getAllDistrictValues()
-                .stream()
-                .filter(c -> c.getCountry_code().equals(code))
-                .collect(Collectors.toList());
-    }
-
-    //Brauche ich das überhaupt? Wird nur für den incident rate bei country verwendet. Kann man doch sicher berechnen
-    //Get one value of a selected country calculated from a csv
-    public Optional<CountryDailyDto> getDailyReportSelectedCountry(List<CountryDailyDto> countryDailyDtoList, String country) {
-        log.debug("Invoke get daily report of {}", country);
-        Optional<CountryDailyDto> dailyReportDto = getAllDailyCountryValuesCalculated(countryDailyDtoList)
-                .stream()
-                .filter(c -> c.getCountry().equals(country))
-                .findFirst();
-        if (dailyReportDto.isEmpty()) {
-            log.warn("No daily report for selected country {}", country);
-            return Optional.of(new CountryDailyDto());
-        }
-        log.info("Return daily report for country {}", country);
-        return dailyReportDto;
-    }
-
     //Auch das wird nur im world controller verwendet für die untere Tabelle, was ich aber auch anders bekommen kann über eine API
     //Get all country values calculated
-    public List<CountryDailyDto> getAllDailyCountryValuesCalculated(List<CountryDailyDto> countryDailyDtoList) {
+    public List<CountryDailyDto> getAllDailyCountryValuesCalculated() {
         log.debug("Invoke get all daily reports for all countries calculated");
+        List<CountryDailyDto> countryDailyDtoList = getAllDailyReports();
         if (countryDailyDtoList == null || countryDailyDtoList.isEmpty()) {
             log.warn("No values available for all counties");
             return Collections.emptyList();
@@ -170,5 +131,21 @@ public class CountryDailyService {
                 .mapToInt(CountryDailyDto::getActive)
                 .sum());
         return sumValues;
+    }
+
+    public Optional<CountryLatestDto> getCountryLatestDto(String country) {
+        log.debug("Invoke get latest country values");
+        List<CountryLatestDto> countryLatestDtoList = csvUtilsDailyReports.readCountryLatestCSV();
+        if (!(countryLatestDtoList == null || countryLatestDtoList.isEmpty())) {
+            Optional<CountryLatestDto> countryLatestDto = countryLatestDtoList.stream()
+                    .filter(c -> c.getLocation().contains(country))
+                    .findFirst();
+            if (countryLatestDto.isPresent()) {
+                log.debug("Returned latest values of country {}", country);
+                return countryLatestDto;
+            }
+        }
+        log.warn("No latest values available for country {}", country);
+        return Optional.empty();
     }
 }

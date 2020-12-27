@@ -7,7 +7,6 @@
     <title th:text="${title}"></title>
     <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css" rel="stylesheet">
     <link href="/css/statistic-style.css" rel="stylesheet" th:href="@{/css/statistic-style.css}">
-    <link href="/css/toggle-switch.css" rel="stylesheet" th:href="@{/css/toggle-switch.css}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
     <script th:src="@{/js/charts.js}"></script>
@@ -31,7 +30,7 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons is-centered">
-                    <a class="button is-small is-link is-rounded" href="/covid19/world?value=all"
+                    <a class="button is-small is-link is-rounded" href="/covid19/world"
                        type="submit">World</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/symptoms">Symptoms</a>
                     <a class="button is-small is-link is-rounded" id="loadingUpdate"
@@ -109,17 +108,17 @@
                                 <div class="tile is-child box has-text-weight-bold has-text-warning-dark">
                                     <div class="is-size-6"
                                          th:text="${countryValuesDto.getActive() == null} ? ${'No value'}
-                                         : ${#numbers.formatInteger(countryValuesDto.getActive(), 3, 'POINT')}"></div>
+                                         : '~ ' + ${#numbers.formatInteger(countryValuesDto.getActive(), 3, 'POINT')}"></div>
                                     <div class="is-size-6"
                                          th:if="${differenceActiveCases == 0} ? ${'No value'}
                                          : ${(differenceActiveCases) >= 0}"
                                          th:text="${differenceActiveCases == 0} ? ${'No value'}
-                                         : '+ ' + ${#numbers.formatInteger(differenceActiveCases, 3, 'POINT')}"></div>
+                                         : '+ ~ ' + ${#numbers.formatInteger(differenceActiveCases, 3, 'POINT')}"></div>
                                     <div class="is-size-6"
                                          th:if="${differenceActiveCases == 0} ? ${'No value'}
                                          : ${(differenceActiveCases) < 0}"
                                          th:text="${differenceActiveCases == 0} ? ${'No value'}
-                                         : '- ' + ${#numbers.formatInteger(inverted, 3, 'POINT')}"
+                                         : '- ~ ' + ${#numbers.formatInteger(inverted, 3, 'POINT')}"
                                          th:with="inverted=${differenceActiveCases == 0} ? ${0}
                                          : ${-(differenceActiveCases)}"></div>
                                     <span class="icon is-pulled-right"><img alt="medikit"
@@ -132,29 +131,41 @@
                 </div>
                 <div class="tile is-ancestor">
                     <div class="tile is-horizontal">
-                        <div class="tile is-parent">
-                            <div class="tile is-child box">
-                                <div class="is-size-7 is-pulled-right tag"
-                                     th:classappend="${countryValuesDto.getSevenDayIncidence() >= 50} ? 'is-danger' : ''"
-                                     th:text="${countryValuesDto.getSevenDayIncidence() == null} ? ${'No value'}
+                        <div class="tile extra">
+                            <div class="tile is-parent">
+                                <div class="tile is-child box">
+                                    <div class="is-size-7 is-pulled-right tag"
+                                         th:classappend="${countryValuesDto.getSevenDayIncidence() >= 50} ? 'is-danger' : ''"
+                                         th:text="${countryValuesDto.getSevenDayIncidence() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryValuesDto.getSevenDayIncidence(), 3, 'POINT')}"></div>
-                                <div class="is-size-6">7-day-incidence / 100.000:</div>
+                                    <div class="is-size-6">7-day-incidence / 100.000:</div>
+                                </div>
+                            </div>
+                            <div class="tile is-parent">
+                                <div class="tile is-child box">
+                                    <div class="is-size-7 is-pulled-right tag is-success"
+                                         th:text="${countryLatestDto.getTotal_vaccinations() == null} ? ${'No value'}
+                                         : ${#numbers.formatDecimal(countryLatestDto.getTotal_vaccinations(), 1, 'COMMA', 2, 'POINT')}"></div>
+                                    <div class="is-size-6">Vaccinations:</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="tile is-parent">
-                            <div class="tile is-child box">
-                                <div class="is-size-7 is-pulled-right tag is-danger"
-                                     th:text="${countryValuesDto.getDeathRate() == null} ? ${'No value'}
+                        <div class="tile extra">
+                            <div class="tile is-parent">
+                                <div class="tile is-child box">
+                                    <div class="is-size-7 is-pulled-right tag is-danger"
+                                         th:text="${countryValuesDto.getDeathRate() == null} ? ${'No value'}
                                          : ${#numbers.formatDecimal(countryValuesDto.getDeathRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                                <div class="is-size-6">Death rate:</div>
+                                    <div class="is-size-6">Death rate:</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="tile is-parent">
-                            <div class="tile is-child box">
-                                <div class="is-size-7 is-pulled-right tag is-warning"
-                                     th:text="${countryValuesDto.getCritical() == 0} ? ${'No value'}
+                            <div class="tile is-parent">
+                                <div class="tile is-child box">
+                                    <div class="is-size-7 is-pulled-right tag is-warning"
+                                         th:text="${countryValuesDto.getCritical() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryValuesDto.getCritical(), 3, 'POINT')}"></div>
-                                <div class="is-size-6">Critical</div>
+                                    <div class="is-size-6">Critical</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -180,31 +191,16 @@
                                      th:text="${countryValuesDto.getRecoveredPerOneMillion() == null} ? ${'No value'}
                                          : ${#numbers.formatDecimal(countryValuesDto.getRecoveredPerOneMillion(), 1, 'COMMA', 2, 'POINT')}"></div>
                                 <div class="is-size-6">Recovered / one mil.:</div>
-                            </div>
-                        </div>
-                        <div class="tile is-parent">
-                            <div class="tile is-child box">
-                                <span class="icon is-pulled-right"><img alt="analytics"
-                                                                        src="/img/analytics-outline.svg"></span>
-                                <div class="is-size-5">Data</div>
+                                <hr class="dropdown-divider-own">
                                 <div class="is-size-7 is-pulled-right tag is-success"
                                      th:text="${countryValuesDto.getRecoveryRate() == null} ? ${'No value'}
                                          : ${#numbers.formatDecimal(countryValuesDto.getRecoveryRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
                                 <div class="is-size-6">Recovery rate:</div>
                                 <hr class="dropdown-divider-own">
-                                <div class="is-size-7 is-pulled-right tag is-info"
-                                     th:text="${countryDailyDto.getIncidenceRate() == null} ? ${'No value'}
-                                         : ${#numbers.formatDecimal(countryDailyDto.getIncidenceRate(), 1, 'COMMA', 2, 'POINT') + ' %'}"></div>
-                                <div class="is-size-6">Incidence rate:</div>
-                                <hr class="dropdown-divider-own">
                                 <div class="is-size-6 is-pulled-right"
                                      th:text="${countryValuesDto.getPopulation() == 0} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryValuesDto.getPopulation(), 3, 'POINT')}"></div>
                                 <div class="is-size-6">Population:</div>
-                                <hr class="dropdown-divider-own">
-                                <div class="is-size-6 is-pulled-right"
-                                     th:text="${updated == null} ? ${'No value'} : ${updated}"></div>
-                                <div class="is-size-6">Updated:</div>
                             </div>
                         </div>
                         <div class="tile is-parent">
@@ -231,6 +227,10 @@
                                      th:text="${countryValuesDto.getTestsPerOneMillion() == null} ? ${'No value'}
                                          : ${#numbers.formatInteger(countryValuesDto.getTestsPerOneMillion(), 3, 'POINT')}"></div>
                                 <div class="is-size-6">Tests / one mil.:</div>
+                                <hr class="dropdown-divider-own">
+                                <div class="is-size-6 is-pulled-right"
+                                     th:text="${updated == null} ? ${'No value'} : ${updated}"></div>
+                                <div class="is-size-6">Updated:</div>
                             </div>
                         </div>
                     </div>
@@ -247,20 +247,32 @@
                 </div>
             </div>
         </div>
+        <br>
         <div class="columns is-mobile is-centered">
             <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
-                <div class="switch-toggle switch-ios">
-                    <input checked id="line" name="view" onclick="toggleToLineChart()" type="radio">
-                    <label class="is-size-7-mobile" for="line" onclick="">Line</label>
-                    <input id="bar" name="view" onclick="toggleToBarChart()" type="radio">
-                    <label class="is-size-7-mobile" for="bar" onclick="">Bar</label>
-                    <input id="confirmed" name="view" onclick="toggleToConfirmed()" type="radio">
-                    <label class="is-size-7-mobile" for="confirmed" onclick="">Confirmed</label>
-                    <input id="recovered" name="view" onclick="toggleToRecovered()" type="radio">
-                    <label class="is-size-7-mobile" for="recovered" onclick="">Recovered</label>
-                    <input id="deaths" name="view" onclick="toggleToDeaths()" type="radio">
-                    <label class="is-size-7-mobile" for="deaths" onclick="">Deaths</label>
-                    <a></a>
+                <div class="buttons is-mobile is-centered">
+                    <a class="button is-rounded is-small all btnNumber activeButtonNumber" id="allValues">All</a>
+                    <a class="button is-rounded is-small 180 btnNumber" id="oneHundredAndEighty">180 days</a>
+                    <a class="button is-rounded is-small 120 btnNumber" id="oneHundredTwenty">120 days</a>
+                    <a class="button is-rounded is-small 60 btnNumber" id="sixty">60 days</a>
+                </div>
+            </div>
+        </div>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
+                <div class="buttons has-addons-centered is-centered">
+                    <button class="button is-rounded is-small btn activeButton" id="line" onclick="toggleToLineChart()">
+                        Line
+                    </button>
+                    <button class="button is-rounded is-small btn" id="bar" onclick="toggleToBarChart()">Bar</button>
+                    <button class="button is-rounded is-small btn" id="confirmed" onclick="toggleToConfirmed()">
+                        Confirmed
+                    </button>
+                    <button class="button is-rounded is-small btn" id="recovered" onclick="toggleToRecovered()">
+                        Recovered
+                    </button>
+                    <button class="button is-rounded is-small btn" id="deaths" onclick="toggleToDeaths()">Deaths
+                    </button>
                 </div>
             </div>
         </div>
@@ -277,28 +289,30 @@
                     <canvas id="canvasCountry"></canvas>
                 </div>
             </div>
-            <br>
+            <br><br>
+            <div class="columns is-mobile is-centered">
+                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
+                    <div class="has-text-centered is-size-4">Daily trend for <span
+                            th:text="${selectedCountry}"></span></div>
+                    <div class="has-text-centered is-size-6">Data from JHU</div>
+                </div>
+            </div>
             <div class="columns is-mobile is-centered">
                 <div class="column is-8-tablet is-7-desktop is-6-widescreen is-5-fullhd">
-                    <div class="switch-toggle switch-ios">
-                        <input checked id="dailyConfirmed" name="view" onclick="toggleToDailyConfirmed()" type="radio">
-                        <label class="is-size-7-mobile" for="dailyConfirmed" onclick="">Daily confirmed</label>
-                        <input id="dailyRecovered" name="view" onclick="toggleToDailyRecovered()" type="radio">
-                        <label class="is-size-7-mobile" for="dailyRecovered" onclick="">Daily recovered</label>
-                        <input id="dailyDeaths" name="view" onclick="toggleToDailyDeaths()" type="radio">
-                        <label class="is-size-7-mobile" for="dailyDeaths" onclick="">Daily deaths</label>
-                        <a></a>
+                    <div class="buttons has-addons-centered is-centered">
+                        <button class="button is-rounded is-small btnDailyTrend activeButtonDailyTrend"
+                                id="dailyConfirmed" onclick="toggleToDailyConfirmed()">Confirmed
+                        </button>
+                        <button class="button is-rounded is-small btnDailyTrend" id="dailyRecovered"
+                                onclick="toggleToDailyRecovered()">Recovered
+                        </button>
+                        <button class="button is-rounded is-small btnDailyTrend" id="dailyDeaths"
+                                onclick="toggleToDailyDeaths()">Deaths
+                        </button>
                     </div>
                 </div>
             </div>
             <br>
-            <div class="columns is-mobile is-centered">
-                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
-                    <br>
-                    <div class="has-text-centered is-size-4">Daily trend of COVID-19 for <span
-                            th:text="${selectedCountry}"></span></div>
-                </div>
-            </div>
             <div class="columns is-mobile is-centered">
                 <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd box">
                     <canvas id="canvasOneDay"></canvas>
@@ -327,7 +341,8 @@
                 <a class="is-link" href="https://corona.lmao.ninja/" target="_blank">corona.lmao.ninja</a>
             </div>
             <div class="has-text-centered">
-                <a class="is-link" href="https://www.trackcorona.live/" target="_blank">trackcorona.live</a>
+                <a class="is-link" href="https://github.com/owid/covid-19-data/tree/master/public/data" target="_blank">Our
+                    World in Data</a>
             </div>
             <div class="has-text-centered">Contact: <a href="mailto:info@tracker-covid19.de">info (at)
                 tracker-covid19.de</a></div>
@@ -343,7 +358,66 @@
     let deathsList = /*[[${deathsList}]]*/ '';
     let recoveredList = /*[[${recoveredList}]]*/ '';
     let datesList = /*[[${dateList}]]*/ '';
+    let confirmedOneDay = /*[[${dailyTrendConfirmed}]]*/ '';
+    let recoveredOneDay = /*[[${dailyTrendRecovered}]]*/ '';
+    let deathsOneDay = /*[[${dailyTrendDeaths}]]*/ '';
     /*]]>*/
+
+    document.getElementById('sixty').onclick = function () {
+        /*<![CDATA[*/
+        confirmedList = /*[[${confirmedSixty}]]*/ '';
+        deathsList = /*[[${deathsSixty}]]*/ '';
+        recoveredList = /*[[${recoveredSixty}]]*/ '';
+        datesList = /*[[${datesSixty}]]*/ '';
+        confirmedOneDay = /*[[${dailyTrendConfirmedSixty}]]*/ '';
+        recoveredOneDay = /*[[${dailyTrendRecoveredSixty}]]*/ '';
+        deathsOneDay = /*[[${dailyTrendDeathsSixty}]]*/ '';
+        /*]]>*/
+        changeChart(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList, 'line');
+        changedBarChartPerDay(canvasOneDay, datesList, confirmedOneDay, recoveredOneDay, deathsOneDay, 'Confirmed');
+    }
+
+    document.getElementById('oneHundredTwenty').onclick = function () {
+        /*<![CDATA[*/
+        confirmedList = /*[[${confirmedOneHundredTwenty}]]*/ '';
+        deathsList = /*[[${deathsOneHundredTwenty}]]*/ '';
+        recoveredList = /*[[${recoveredOneHundredTwenty}]]*/ '';
+        datesList = /*[[${datesOneHundredTwenty}]]*/ '';
+        confirmedOneDay = /*[[${dailyTrendConfirmedOneHundredTwenty}]]*/ '';
+        recoveredOneDay = /*[[${dailyTrendRecoveredOneHundredTwenty}]]*/ '';
+        deathsOneDay = /*[[${dailyTrendDeathsOneHundredTwenty}]]*/ '';
+        /*]]>*/
+        changeChart(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList, 'line');
+        changedBarChartPerDay(canvasOneDay, datesList, confirmedOneDay, recoveredOneDay, deathsOneDay, 'Confirmed');
+    }
+
+    document.getElementById('oneHundredAndEighty').onclick = function () {
+        /*<![CDATA[*/
+        confirmedList = /*[[${confirmedOneHundredAndEighty}]]*/ '';
+        deathsList = /*[[${deathsOneHundredAndEighty}]]*/ '';
+        recoveredList = /*[[${recoveredOneHundredAndEighty}]]*/ '';
+        datesList = /*[[${datesOneHundredAndEighty}]]*/ '';
+        confirmedOneDay = /*[[${dailyTrendConfirmedOneHundredAndEighty}]]*/ '';
+        recoveredOneDay = /*[[${dailyTrendRecoveredOneHundredAndEighty}]]*/ '';
+        deathsOneDay = /*[[${dailyTrendDeathsOneHundredAndEighty}]]*/ '';
+        /*]]>*/
+        changeChart(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList, 'line');
+        changedBarChartPerDay(canvasOneDay, datesList, confirmedOneDay, recoveredOneDay, deathsOneDay, 'Confirmed');
+    }
+
+    document.getElementById('allValues').onclick = function () {
+        /*<![CDATA[*/
+        confirmedList = /*[[${confirmedList}]]*/ '';
+        deathsList = /*[[${deathsList}]]*/ '';
+        recoveredList = /*[[${recoveredList}]]*/ '';
+        datesList = /*[[${dateList}]]*/ '';
+        confirmedOneDay = /*[[${dailyTrendConfirmed}]]*/ '';
+        recoveredOneDay = /*[[${dailyTrendRecovered}]]*/ '';
+        deathsOneDay = /*[[${dailyTrendDeaths}]]*/ '';
+        /*]]>*/
+        changeChart(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList, 'line');
+        changedBarChartPerDay(canvasOneDay, datesList, confirmedOneDay, recoveredOneDay, deathsOneDay, 'Confirmed');
+    }
 
     barLineChartAllValues(canvasCountry, datesList, label, confirmedList, recoveredList, deathsList);
 
@@ -366,12 +440,6 @@
     function toggleToDeaths() {
         changeChart(canvasCountry, datesList, 'Deaths', confirmedList, recoveredList, deathsList);
     }
-
-    /*<![CDATA[*/
-    let confirmedOneDay = /*[[${dailyTrendConfirmed}]]*/ '';
-    let recoveredOneDay = /*[[${dailyTrendRecovered}]]*/ '';
-    let deathsOneDay = /*[[${dailyTrendDeaths}]]*/ '';
-    /*]]>*/
 
     barChartSelectedCountryPerDay(canvasOneDay, datesList, 'Confirmed', confirmedOneDay);
 

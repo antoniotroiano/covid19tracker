@@ -27,10 +27,10 @@ public class WorldService {
         this.jsonUtils = jsonUtils;
     }
 
-    public Optional<WorldValuesDto> getWorldValues(String query) {
+    public Optional<WorldValuesDto> getWorldValues() {
         log.debug("Invoke get all values of world");
         try {
-            WorldValuesDto worldValuesDto = jsonUtils.mapWorldJsonToObject(query);
+            WorldValuesDto worldValuesDto = jsonUtils.mapWorldJsonToObject();
             if (worldValuesDto == null) {
                 log.warn("No data available for world");
                 return Optional.of(new WorldValuesDto());

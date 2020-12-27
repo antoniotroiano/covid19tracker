@@ -1,4 +1,4 @@
-package com.statistics.corona.controller;
+package com.statistics.corona.resource;
 
 import com.statistics.corona.service.CountryService;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("SymptomsController tests")
-public class SymptomsControllerTest {
+class SymptomsResourceTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,7 +29,7 @@ public class SymptomsControllerTest {
 
     @Test
     @DisplayName("Show symptoms and prevention page successfully")
-    public void showSymptomsPage() throws Exception {
+    void showSymptomsPage() throws Exception {
         List<String> countries = Arrays.asList("Germany", "France");
         when(countryService.getCountryNames()).thenReturn(countries);
 

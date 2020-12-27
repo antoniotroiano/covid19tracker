@@ -1,9 +1,10 @@
-package com.statistics.corona.controller;
+package com.statistics.corona.resource;
 
 import com.statistics.corona.model.dto.CountryDailyDto;
 import com.statistics.corona.model.dto.UsDailyDto;
 import com.statistics.corona.service.CountryDailyService;
 import com.statistics.corona.service.CountryService;
+import com.statistics.corona.service.ProvinceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,22 +20,24 @@ import java.util.List;
 @Controller
 @Slf4j
 @RequestMapping("covid19")
-public class ProvinceDistrictController {
+public class ProvinceDistrictResource {
 
     private final CountryService countryService;
     private final CountryDailyService countryDailyService;
+    private final ProvinceService provinceService;
 
     @Autowired
-    public ProvinceDistrictController(CountryService countryService,
-                                      CountryDailyService countryDailyService) {
+    public ProvinceDistrictResource(CountryService countryService,
+                                    CountryDailyService countryDailyService,
+                                    ProvinceService provinceService) {
         this.countryService = countryService;
         this.countryDailyService = countryDailyService;
+        this.provinceService = provinceService;
     }
 
     @GetMapping("/provinces/{country}/{code}")
     public String showProvinceAndDistrict(@PathVariable("country") String country, @PathVariable("code") String code, Model model) {
         log.info("Invoke controller show list of provinces and districts for {}", country);
-        //model.addAttribute("districtDto", new DistrictDto());
         model.addAttribute("selectedCountry", country);
         getCountryNames(model);
 
@@ -47,13 +50,12 @@ public class ProvinceDistrictController {
                 return "provinceDistrictUsUI";
             }
             model.addAttribute("usDailyDto", usDailyDtoList);
-            //getDistrictValues(model, code.toLowerCase());
             log.debug("Returned all data of provinces and districts for US");
             return "provinceDistrictUsUI";
         }
 
         getBaseDataDetails(model, country);
-        List<CountryDailyDto> countryDailyDtoList = countryDailyService.getAllDailyReportsOfProvince(country);
+        List<CountryDailyDto> countryDailyDtoList = provinceService.getEnrichedCountryValues(country);
         if (countryDailyDtoList.isEmpty()) {
             model.addAttribute("noDetailsProvince", true);
             log.warn("No values for provinces and districts for country {} available", country);
@@ -65,7 +67,7 @@ public class ProvinceDistrictController {
             model.addAttribute("timeSeriesAvailable", true);
         }
         model.addAttribute("countryDailyDto", countryDailyDtoList);
-        //getDistrictValues(model, code.toLowerCase());
+        getYesterdayValues(model, country);
         log.debug("Returned all data of provinces and districts for country {}", country);
         return "provinceDistrictUI";
     }
@@ -88,11 +90,11 @@ public class ProvinceDistrictController {
         model.addAttribute("title", "COVID-19 - Details for US");
     }
 
-    /*public void getDistrictValues(Model model, String code) throws ExecutionException, InterruptedException {
-        List<DistrictDto> selectedDistrictValues = countryDailyService.getDistrictValuesOfSelectedCountry(code);
-        if (selectedDistrictValues.isEmpty()) {
-            model.addAttribute("noDistrictValues", true);
+    private void getYesterdayValues(Model model, String country) {
+        List<CountryDailyDto> yesterdayValues = provinceService.getYesterdayValuesOfCountry(country);
+        if (yesterdayValues.isEmpty()) {
+            model.addAttribute("yesterdayValues", Collections.emptyList());
         }
-        model.addAttribute("districtValues", selectedDistrictValues);
-    }*/
+        model.addAttribute("yesterdayValues", yesterdayValues);
+    }
 }

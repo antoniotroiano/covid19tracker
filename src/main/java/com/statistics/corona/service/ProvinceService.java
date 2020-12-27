@@ -25,15 +25,12 @@ public class ProvinceService {
 
     private static final String CONFIRMED = "confirmed";
     private static final String DEATHS = "deaths";
-    private final CountryService countryService;
     private final CsvUtilsTimeSeries csvUtilsTimeSeries;
     private final CsvUtilsDailyReports csvUtilsDailyReports;
 
     @Autowired
-    public ProvinceService(CountryService countryService,
-                           CsvUtilsTimeSeries csvUtilsTimeSeries,
+    public ProvinceService(CsvUtilsTimeSeries csvUtilsTimeSeries,
                            CsvUtilsDailyReports csvUtilsDailyReports) {
-        this.countryService = countryService;
         this.csvUtilsTimeSeries = csvUtilsTimeSeries;
         this.csvUtilsDailyReports = csvUtilsDailyReports;
     }
@@ -53,7 +50,7 @@ public class ProvinceService {
         return Optional.of(new CountryDailyDto());
     }
 
-    //Get us provine details for selected province
+    //Get us province details for selected province
     public Optional<UsDailyDto> getUsProvinceDetails(String province) {
         log.debug("Invoke get details for us province {}", province);
         Optional<UsDailyDto> dailyReportUsDto = csvUtilsDailyReports.readDailyReportUsCSV()
@@ -119,13 +116,13 @@ public class ProvinceService {
         List<String> confirmedKeys = new ArrayList<>(confirmedTS.get(0).getValues().keySet());
         Map<String, Integer> confirmedMap = new LinkedHashMap<>();
         for (int i = 0; i < confirmedKeys.size(); i++) {
-            confirmedMap.put(confirmedKeys.get(i), countryService.finalResult(confirmedTS).get(i));
+            confirmedMap.put(confirmedKeys.get(i), finalResult(confirmedTS).get(i));
         }
 
         List<String> deathsKeys = new ArrayList<>(confirmedTS.get(0).getValues().keySet());
         Map<String, Integer> deathsMap = new LinkedHashMap<>();
         for (int i = 0; i < deathsKeys.size(); i++) {
-            deathsMap.put(deathsKeys.get(i), countryService.finalResult(deathsTS).get(i));
+            deathsMap.put(deathsKeys.get(i), finalResult(deathsTS).get(i));
         }
 
         if (!confirmedTS.isEmpty() && !deathsTS.isEmpty()) {
@@ -137,6 +134,40 @@ public class ProvinceService {
         }
         log.info("Return map with time series for selected us province {}", province);
         return allValuesTS;
+    }
+
+    private List<List<Integer>> interimResult(List<CountryTimeSeriesDto> dataList) {
+        log.debug("Invoke interim result for time series");
+        List<List<Integer>> interimResultList = new ArrayList<>();
+        if (dataList == null || dataList.isEmpty()) {
+            log.warn("The list with data is empty. No calculation for interim result");
+            return Collections.emptyList();
+        }
+        for (CountryTimeSeriesDto countryTimeSeriesDto : dataList) {
+            List<Integer> values = new ArrayList<>(countryTimeSeriesDto.getValues().values());
+            interimResultList.add(values);
+        }
+        log.info("Return interim result");
+        return interimResultList;
+    }
+
+    public List<Integer> finalResult(List<CountryTimeSeriesDto> dataList) {
+        log.debug("Invoke final result for time series");
+        List<List<Integer>> interimResult = interimResult(dataList);
+        List<Integer> finalResult = new ArrayList<>();
+        if (interimResult.isEmpty()) {
+            log.warn("The interim result list is empty. No calculation for final result");
+            return Collections.emptyList();
+        }
+        for (int j = 0; j < interimResult.get(0).size(); j++) {
+            int sum = 0;
+            for (List<Integer> integers : interimResult) {
+                sum += integers.get(j);
+            }
+            finalResult.add(sum);
+        }
+        log.info("Return final result");
+        return finalResult;
     }
 
     public Integer getUsProvincePopulation(String province) {
@@ -184,5 +215,40 @@ public class ProvinceService {
         }
         log.warn("No today increment available for province {}", province);
         return Collections.emptyMap();
+    }
+
+    public List<CountryDailyDto> getYesterdayValuesOfCountry(String country) {
+        log.debug("Invoke get yesterday values of selected country {}", country);
+        List<CountryDailyDto> selectedCountry = csvUtilsDailyReports.readDailyReportsYesterdayCsv().stream()
+                .filter(c -> c.getCountry().contains(country))
+                .collect(Collectors.toList());
+        if (selectedCountry.isEmpty()) {
+            log.warn("No values from yesterday is available for {}", country);
+            return Collections.emptyList();
+        }
+        log.debug("Returned all values from yesterday for {}", country);
+        return selectedCountry;
+    }
+
+    public List<CountryDailyDto> getEnrichedCountryValues(String country) {
+        log.debug("Invoke merge yesterday with today values");
+        List<CountryDailyDto> countryDailyDtoList = csvUtilsDailyReports.readDailyReportsCSV().stream()
+                .filter(c -> c.getCountry().contains(country))
+                .collect(Collectors.toList());
+        List<CountryDailyDto> countryDailyDtoYesterdayList = getYesterdayValuesOfCountry(country);
+
+        List<CountryDailyDto> enrichedValues = new ArrayList<>();
+        for (CountryDailyDto countryDailyDto : countryDailyDtoList) {
+            for (CountryDailyDto countryDailyDto1 : countryDailyDtoYesterdayList) {
+                if (countryDailyDto.getProvince().equals(countryDailyDto1.getProvince())) {
+                    countryDailyDto.setIncrementConfirmed((countryDailyDto.getConfirmed() - countryDailyDto1.getConfirmed()));
+                    countryDailyDto.setIncrementRecovered((countryDailyDto.getRecovered() - countryDailyDto1.getRecovered()));
+                    countryDailyDto.setIncrementDeaths((countryDailyDto.getDeaths() - countryDailyDto1.getDeaths()));
+                    enrichedValues.add(countryDailyDto);
+                }
+            }
+        }
+        log.debug("Returned enriched values for selected country {}", country);
+        return enrichedValues;
     }
 }

@@ -10,12 +10,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @DisplayName("CountryDetailsDto tests")
-public class CountryValuesDtoTest {
+class CountryValuesDtoTest {
 
     private final CountryValuesDto countryValuesDto = new CountryValuesDto();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         countryValuesDto.setCountry("Germany");
         //countryDetailsDto.setCode("DE");
         countryValuesDto.setPopulation(83000000);
@@ -31,7 +31,7 @@ public class CountryValuesDtoTest {
 
     @Test
     @DisplayName("Check countryDetailsDto mapping")
-    public void checkCountryDetailsMapping() {
+    void checkCountryDetailsMapping() {
         CountryValuesDto countryValuesDtoMapping = new CountryValuesDto(countryValuesDto);
 
         assertThat(countryValuesDtoMapping.getCountry()).isEqualTo(countryValuesDto.getCountry());

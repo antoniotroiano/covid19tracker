@@ -4,12 +4,11 @@ import com.statistics.corona.model.dto.CountryTimeSeriesDto;
 import com.statistics.corona.model.dto.CountryValuesDto;
 import com.statistics.corona.service.csv.CsvUtilsTimeSeries;
 import com.statistics.corona.service.json.JsonUtils;
+import com.statistics.corona.utils.ServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -19,15 +18,15 @@ import java.util.Optional;
 public class CountryService {
 
     private final CsvUtilsTimeSeries csvUtilsTimeSeries;
-    private final UtilsService utilsService;
+    private final ServiceUtils serviceUtils;
     private final JsonUtils jsonUtils;
 
     @Autowired
     public CountryService(CsvUtilsTimeSeries csvUtilsTimeSeries,
-                          UtilsService utilsService,
+                          ServiceUtils serviceUtils,
                           JsonUtils jsonUtils) {
         this.csvUtilsTimeSeries = csvUtilsTimeSeries;
-        this.utilsService = utilsService;
+        this.serviceUtils = serviceUtils;
         this.jsonUtils = jsonUtils;
     }
 
@@ -118,11 +117,10 @@ public class CountryService {
         return countryValuesDto;
     }
 
-    //ToDo: calculate also the incidence of yesterday
     private double calculateSevenDayIncidence(CountryValuesDto countryValuesDto) {
-        log.debug("Invoke calculate the seven day incidence");
+        log.debug("Invoke calculate the seven day incidence of country {}", countryValuesDto.getCountry());
         int size = countryValuesDto.getCasesValues().size();
-        int sumSevenDayValues = utilsService.getDailyTrend(countryValuesDto.getCasesValues())
+        int sumSevenDayValues = serviceUtils.getDailyTrend(countryValuesDto.getCasesValues().values())
                 .stream()
                 .skip((long) size - 7)
                 .mapToInt(Integer::intValue)
@@ -130,73 +128,19 @@ public class CountryService {
         return ((double) sumSevenDayValues / countryValuesDto.getPopulation()) * 100000;
     }
 
-    private List<List<Integer>> interimResult(List<CountryTimeSeriesDto> dataList) {
-        log.debug("Invoke interim result for time series");
-        List<List<Integer>> interimResultList = new ArrayList<>();
-        if (dataList == null || dataList.isEmpty()) {
-            log.warn("The list with data is empty. No calculation for interim result");
-            return Collections.emptyList();
-        }
-        for (CountryTimeSeriesDto countryTimeSeriesDto : dataList) {
-            List<Integer> values = new ArrayList<>(countryTimeSeriesDto.getValues().values());
-            interimResultList.add(values);
-        }
-        log.info("Return interim result");
-        return interimResultList;
-    }
-
-    public List<Integer> finalResult(List<CountryTimeSeriesDto> dataList) {
-        log.debug("Invoke final result for time series");
-        List<List<Integer>> interimResult = interimResult(dataList);
-        List<Integer> finalResult = new ArrayList<>();
-        if (interimResult.isEmpty()) {
-            log.warn("The interim result list is empty. No calculation for final result");
-            return Collections.emptyList();
-        }
-        for (int j = 0; j < interimResult.get(0).size(); j++) {
-            int sum = 0;
-            for (List<Integer> integers : interimResult) {
-                sum += integers.get(j);
-            }
-            finalResult.add(sum);
-        }
-        log.info("Return final result");
-        return finalResult;
-    }
-
-    private int getYesterdayValues(Collection<Integer> values) {
-        log.debug("Invoke get last value");
-        int lastValueInt = 0;
-        if (values == null || values.isEmpty()) {
-            log.warn("Values is null for getLastValues");
-            return lastValueInt;
-        }
-        long count = values.size();
-        Optional<Integer> optionalValue = values
-                .stream()
-                .skip(count - 1)
-                .findFirst();
-        if (optionalValue.isPresent()) {
-            lastValueInt = optionalValue.get();
-        }
-        log.info("Return last value");
-        return lastValueInt;
-    }
-
     //Eventuell vereinfachen Prüfen ob es dann noch geht mit der null
     public Integer calculateYesterdayActive(CountryValuesDto countryValuesDto) {
         log.debug("Invoke calculate yesterday active");
-        Integer yesterdayActive = getYesterdayValues(countryValuesDto.getCasesValues().values()) -
-                getYesterdayValues(countryValuesDto.getRecoveredValues().values()) -
-                getYesterdayValues(countryValuesDto.getDeathsValues().values());
-        if (yesterdayActive == null) {
+        int yesterdayActive = serviceUtils.getYesterdayValues(countryValuesDto.getCasesValues().values()) -
+                serviceUtils.getYesterdayValues(countryValuesDto.getRecoveredValues().values()) -
+                serviceUtils.getYesterdayValues(countryValuesDto.getDeathsValues().values());
+        if (yesterdayActive == 0) {
             return 0;
         } else {
             return yesterdayActive;
         }
     }
 
-    //ToDo: Maybe to the UtilsService
     public List<String> getCountryNames() {
         log.debug("Invoke get all country names");
         List<String> allCountries = csvUtilsTimeSeries.readCountryName();

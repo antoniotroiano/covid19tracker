@@ -26,7 +26,7 @@
         <div class="columns is-mobile is-centered">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd">
                 <div class="buttons is-centered">
-                    <a class="button is-small is-link is-rounded" href="/covid19/world?value=all"
+                    <a class="button is-small is-link is-rounded" href="/covid19/world"
                        type="submit">World</a>
                     <a class="button is-small is-link is-rounded" href="/covid19/symptoms">Symptoms</a>
                     <a class="button is-small is-link is-rounded"
@@ -49,109 +49,29 @@
             </div>
         </div>
         <div class="columns is-mobile is-centered">
-            <div class="column is-12-mobile is-10-tablet is-9-desktop is-8-widescreen is-7-fullhd">
+            <div class="column is-12-mobile is-10-tablet is-9-desktop is-8-widescreen is-7-fullhd"
+                 style="padding: 0.01em">
                 <div class="has-text-centered is-size-5" th:if="${noDetailsProvince}">No values for province available
                 </div>
-                <div class="column is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd hide-on-small">
-                    <div class="buttons is-centered">
-                        <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label has-text-centered">Search</label>
-                            </div>
-                            <div class="field-body">
-                                <div class="field is-narrow">
-                                    <input class="input is-" id="searchProvince" onkeyup="searchFunctionProvince()"
-                                           placeholder="Search for province.." title="Type in a province name"
-                                           type="text">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <br>
-                <div class="box hide-on-small" style="overflow: auto; height: 30em">
-                    <table class="table is-striped is-hoverable is-fullwidth" id="provinceTable">
-                        <thead>
-                        <tr>
-                            <th>Province</th>
-                            <th>Cases</th>
-                            <th>Recovered</th>
-                            <th>Active</th>
-                            <th>Deaths</th>
-                            <th th:if="${timeSeriesAvailable}">Details</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="countryDailyDto : ${countryDailyDto}">
-                            <td th:text="${countryDailyDto.getProvince()}"></td>
-                            <td><span class="tag is-info"
-                                      th:text="${#numbers.formatInteger(countryDailyDto.getConfirmed(),3,'POINT')}"></span>
-                            </td>
-                            <td><span
-                                    class="tag is-success"
-                                    th:text="${#numbers.formatInteger(countryDailyDto.getRecovered(),3,'POINT')}"></span>
-                            </td>
-                            <td><span
-                                    class="tag is-warning"
-                                    th:text="${#numbers.formatInteger(countryDailyDto.getActive(),3,'POINT')}"></span>
-                            </td>
-                            <td><span
-                                    class="tag is-danger"
-                                    th:text="${#numbers.formatInteger(countryDailyDto.getDeaths(),3,'POINT')}"></span>
-                            </td>
-                            <td th:if="${timeSeriesAvailable}">
-                                <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
-                                   th:href="@{/covid19/province/{province}(province=${countryDailyDto.getProvince()})}">
-                                    Details
-                                </a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="column is-12-mobile is-12-tablet hide-on-big">
-                    <div class="buttons is-centered">
-                        <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label has-text-centered">Search</label>
-                            </div>
-                            <div class="field-body">
-                                <div class="field is-narrow">
-                                    <input class="input is-" id="searchProvinceMobile"
-                                           onkeyup="searchFunctionProvinceMobile()"
-                                           placeholder="Search for province.." title="Type in a province name"
-                                           type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                    </div>
-                </div>
-
-
+                <div class="has-text-centered is-size-4">Province</div>
                 <br>
-                <div class="box hide-on-big" style="overflow: auto; height: 40em">
-                    <div class="has-text-centered is-8">Province</div>
+                <div class="box" style="overflow: auto; height: 40em">
                     <div class="buttons is-centered">
-                        <table class="table is-striped is-fullwidth" id="provinceTableMobile2">
+                        <table class="table is-fullwidth">
                             <tbody>
                             <tr th:each="countryDailyDto : ${countryDailyDto}">
                                 <td>
+                                    <div class="is-pulled-left has-text-weight-bold"
+                                         th:text="${countryDailyDto.getProvince()}"></div>
+                                    <div class="is-pulled-right">
+                                        <a class="button is-rounded is-small"
+                                           th:href="@{/covid19/province/{province}(province=${countryDailyDto.getProvince()})}"
+                                           th:if="${timeSeriesAvailable}">Details
+                                        </a>
+                                    </div>
                                     <div class="divTable">
                                         <div class="divTableBody">
-                                            <div class="divTableRow">
-                                                <div class="divTableCell collapsible"
-                                                     th:text="${countryDailyDto.getProvince()}"></div>
-                                                <div class="divTableCell"></div>
-                                                <div class="divTableCell"></div>
-                                                <div class="divTableCell">
-                                                    <a class="button is-rounded is-small"
-                                                       style="margin-top: 0.5rem;"
-                                                       th:href="@{/covid19/province/{province}(province=${countryDailyDto.getProvince()})}"
-                                                       th:if="${timeSeriesAvailable}">Details
-                                                    </a>
-                                                </div>
-                                            </div>
                                             <div class="divTableRow">
                                                 <div class="divTableCell"></div>
                                                 <div class="divTableCell">Confirmed</div>
@@ -160,183 +80,26 @@
                                             </div>
                                             <div class="divTableRow">
                                                 <div class="divTableCell">New</div>
-                                                <div class="divTableCell">1</div>
-                                                <div class="divTableCell">2</div>
-                                                <div class="divTableCell">3</div>
+                                                <div class="divTableCell has-text-weight-bold"
+                                                     th:text="${#numbers.formatInteger(countryDailyDto.getIncrementConfirmed(),3,'POINT')}">
+                                                </div>
+                                                <div class="divTableCell has-text-weight-bold"
+                                                     th:text="${#numbers.formatInteger(countryDailyDto.getIncrementRecovered(),3,'POINT')}">
+                                                </div>
+                                                <div class="divTableCell has-text-weight-bold"
+                                                     th:text="${#numbers.formatInteger(countryDailyDto.getIncrementDeaths(),3,'POINT')}">
+                                                </div>
                                             </div>
                                             <div class="divTableRow">
                                                 <div class="divTableCell">Total</div>
-                                                <div class="divTableCell"
+                                                <div class="divTableCell has-text-weight-bold"
                                                      th:text="${#numbers.formatInteger(countryDailyDto.getConfirmed(),3,'POINT')}">
                                                 </div>
-                                                <div class="divTableCell"
-                                                     th:text="${#numbers.formatInteger(countryDailyDto.getRecovered(),3,'POINT')}"></div>
-                                                <div class="divTableCell"
-                                                     th:text="${#numbers.formatInteger(countryDailyDto.getDeaths(),3,'POINT')}"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="box hide-on-big" style="overflow: auto; height: 30em">
-                    <div class="buttons is-centered">
-                        <table class="table is-striped is-hoverable is-fullwidth" id="provinceTableMobile">
-                            <thead>
-                            <tr>
-                                <th>Province state</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="countryDailyDto : ${countryDailyDto}">
-                                <td>
-                                    <div class="collapsible">
-                                        <div class="is-pulled-left" th:text="${countryDailyDto.getCombinedKey()}"></div>
-                                        <div class="is-pulled-right contentSign"></div>
-                                    </div>
-                                    <div class="content">
-                                        <div class="card" style="margin-top: 0.2em;">
-                                            <div class="card-content">
-                                                <div class="field">Cases: <span
-                                                        class="is-pulled-right tag is-info"
-                                                        th:text="${#numbers.formatInteger(countryDailyDto.getConfirmed(),3,'POINT')}"></span>
+                                                <div class="divTableCell has-text-weight-bold"
+                                                     th:text="${#numbers.formatInteger(countryDailyDto.getRecovered(),3,'POINT')}">
                                                 </div>
-                                                <div class="field">Recovered: <span
-                                                        class="is-pulled-right tag is-success"
-                                                        th:text="${#numbers.formatInteger(countryDailyDto.getRecovered(),3,'POINT')}"></span>
-                                                </div>
-                                                <div class="field">Active: <span class="is-pulled-right tag is-warning"
-                                                                                 th:text="${#numbers.formatInteger(countryDailyDto.getActive(),3,'POINT')}"></span>
-                                                </div>
-                                                <div class="field">Deaths: <span class="is-pulled-right tag is-danger"
-                                                                                 th:text="${#numbers.formatInteger(countryDailyDto.getDeaths(),3,'POINT')}"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="buttons has-addons is-centered">
-                                            <a class="button is-rounded is-small" style="margin-top: 0.5rem;"
-                                               th:href="@{/covid19/province/{province}(province=${countryDailyDto.getProvince()})}"
-                                               th:if="${timeSeriesAvailable}">Details
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <br>
-                <!-- <div class="has-text-centered is-size-5" th:if="${noDistrictValues}">No values for districts available
-                </div>
-                <br>
-                               <div class="column is-12-tablet is-12-desktop is-12-widescreen is-12-fullhd hide-on-small">
-                                    <div class="buttons is-centered">
-                                        <div class="field is-horizontal">
-                                            <div class="field-label is-normal">
-                                                <label class="label">Search</label>
-                                            </div>
-                                            <div class="field-body">
-                                                <div class="field is-narrow">
-                                                    <input class="input is-" id="searchDistrict" onkeyup="searchFunctionDistrict()"
-                                                           placeholder="Search for district.." title="Type in a district name"
-                                                           type="text">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="box hide-on-small" style="overflow: auto; height: 20em">
-                                    <table class="table is-striped is-hoverable is-fullwidth" id="districtTable">
-                                        <thead>
-                                        <tr>
-                                            <th>District</th>
-                                            <th>Total cases</th>
-                                            <th>Recovered</th>
-                                            <th>Active</th>
-                                            <th>Deaths</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr th:each="districtDto : ${districtValues}">
-                                            <td th:text="${districtDto.getLocation()}"></td>
-                                            <td><span class="tag is-info"
-                                                      th:text="${#numbers.formatInteger(districtDto.getConfirmed(),3,'POINT')}"></span>
-                                            </td>
-                                            <td><span
-                                                    class="tag is-success"
-                                                    th:text="${#numbers.formatInteger(districtDto.getRecovered(),3,'POINT')}"></span>
-                                            </td>
-                                            <td><span
-                                                    class="tag is-warning"
-                                                    th:text="${districtDto.getRecovered() == 0} ? ${'No value'}
-                                                         : ${#numbers.formatInteger(districtDto.getConfirmed()
-                                                        - districtDto.getRecovered() - districtDto.getDead(),3,'POINT')}"></span>
-                                            </td>
-                                            <td><span
-                                                    class="tag is-danger"
-                                                    th:text="${#numbers.formatInteger(districtDto.getDead(),3,'POINT')}"></span>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="column is-12-mobile is-12-tablet hide-on-big">
-                                    <div class="buttons is-centered">
-                                        <div class="field is-horizontal">
-                                            <div class="field-label is-normal">
-                                                <label class="label">Search</label>
-                                            </div>
-                                            <div class="field-body">
-                                                <div class="field is-narrow">
-                                                    <input class="input is-" id="searchDistrictMobile"
-                                                           onkeyup="searchFunctionDistrictMobile()"
-                                                           placeholder="Search for district.." title="Type in a district name"
-                                                           type="text">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br><br>
-                                    </div>
-                                </div>-->
-                <!--<div class="box hide-on-big" style="overflow: auto; height: 20em">
-                    <div class="buttons is-centered">
-                        <table class="table is-striped is-hoverable is-fullwidth" id="districtTableMobile">
-                            <thead>
-                            <tr>
-                                <th>District</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="districtDto : ${districtValues}">
-                                <td>
-                                    <div class="collapsible">
-                                        <div class="is-pulled-left" th:text="${districtDto.getLocation()}"></div>
-                                        <div class="is-pulled-right contentSign"></div>
-                                    </div>
-                                    <div class="content">
-                                        <div class="card" style="margin-top: 0.2em;">
-                                            <div class="card-content">
-                                                <div class="field">Total cases: <span
-                                                        class="is-pulled-right tag is-info"
-                                                        th:text="${#numbers.formatInteger(districtDto.getConfirmed(),3,'POINT')}"></span>
-                                                </div>
-                                                <div class="field">Recovered: <span
-                                                        class="is-pulled-right tag is-success"
-                                                        th:text="${#numbers.formatInteger(districtDto.getRecovered(),3,'POINT')}"></span>
-                                                </div>
-                                                <div class="field">Active: <span class="is-pulled-right tag is-warning"
-                                                                                 th:text="${districtDto.getRecovered() == 0} ? ${'No value'}
-                                                                                 : ${#numbers.formatInteger(districtDto.getConfirmed()
-                                                                                 - districtDto.getRecovered() - districtDto.getDead(),3,'POINT')}"></span>
-                                                </div>
-                                                <div class="field">Deaths: <span class="is-pulled-right tag is-danger"
-                                                                                 th:text="${#numbers.formatInteger(districtDto.getDead(),3,'POINT')}"></span>
+                                                <div class="divTableCell has-text-weight-bold"
+                                                     th:text="${#numbers.formatInteger(countryDailyDto.getDeaths(),3,'POINT')}">
                                                 </div>
                                             </div>
                                         </div>
@@ -346,7 +109,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>-->
+                </div>
             </div>
         </div>
     </section>
@@ -371,7 +134,8 @@
                 <a class="is-link" href="https://corona.lmao.ninja/" target="_blank">corona.lmao.ninja</a>
             </div>
             <div class="has-text-centered">
-                <a class="is-link" href="https://www.trackcorona.live/" target="_blank">trackcorona.live</a>
+                <a class="is-link" href="https://github.com/owid/covid-19-data/tree/master/public/data" target="_blank">Our
+                    World in Data</a>
             </div>
             <div class="has-text-centered">Contact: <a href="mailto:info@tracker-covid19.de">info (at)
                 tracker-covid19.de</a></div>

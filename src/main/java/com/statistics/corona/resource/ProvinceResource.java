@@ -1,4 +1,4 @@
-package com.statistics.corona.controller;
+package com.statistics.corona.resource;
 
 import com.statistics.corona.model.dto.CountryDailyDto;
 import com.statistics.corona.model.dto.CountryTimeSeriesDto;
@@ -6,7 +6,8 @@ import com.statistics.corona.model.dto.UsDailyDto;
 import com.statistics.corona.service.CountryService;
 import com.statistics.corona.service.DateFormat;
 import com.statistics.corona.service.ProvinceService;
-import com.statistics.corona.service.UtilsService;
+import com.statistics.corona.utils.ResourceUtils;
+import com.statistics.corona.utils.ServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,23 +23,26 @@ import java.util.Optional;
 @Controller
 @Slf4j
 @RequestMapping("covid19")
-public class ProvinceController {
+public class ProvinceResource {
 
     private static final String CONFIRMED = "confirmed";
     private static final String RECOVERED = "recovered";
     private static final String DEATHS = "deaths";
     private final CountryService countryService;
     private final ProvinceService provinceService;
-    private final UtilsService utilsService;
+    private final ServiceUtils serviceUtils;
+    private final ResourceUtils resourceUtils;
     private final DateFormat dateFormat;
 
-    public ProvinceController(CountryService countryService,
-                              ProvinceService provinceService,
-                              UtilsService utilsService,
-                              DateFormat dateFormat) {
+    public ProvinceResource(CountryService countryService,
+                            ProvinceService provinceService,
+                            ServiceUtils serviceUtils,
+                            ResourceUtils resourceUtils,
+                            DateFormat dateFormat) {
         this.countryService = countryService;
         this.provinceService = provinceService;
-        this.utilsService = utilsService;
+        this.serviceUtils = serviceUtils;
+        this.resourceUtils = resourceUtils;
         this.dateFormat = dateFormat;
     }
 
@@ -58,6 +62,7 @@ public class ProvinceController {
             Map<String, Optional<CountryTimeSeriesDto>> provinceTSValuesMap = provinceService.getProvinceTSValues(province);
             if (!provinceTSValuesMap.isEmpty()) {
                 getBaseDataProvince(model, provinceTSValuesMap, province);
+                resourceUtils.getValues(model, null, null, provinceTSValuesMap, null);
                 log.debug("Return all values for selected province {}", province);
                 return "provinceUI";
             }
@@ -85,6 +90,7 @@ public class ProvinceController {
             if (!usProvinceTSValuesMap.isEmpty()) {
                 model.addAttribute("population", provinceService.getUsProvincePopulation(usProvince));
                 getBaseDataUsProvince(model, usProvinceTSValuesMap, usProvince);
+                resourceUtils.getValues(model, null, null, null, usProvinceTSValuesMap);
                 log.debug("Return all values for selected us province {}", usProvince);
                 return "provinceUsUI";
             }
@@ -111,13 +117,13 @@ public class ProvinceController {
 
         provinceTSValuesMap.get(CONFIRMED)
                 .ifPresent(dailyTrendConfirmed
-                        -> model.addAttribute("dailyTrendConfirmed", utilsService.getDailyTrend(dailyTrendConfirmed.getValues())));
+                        -> model.addAttribute("dailyTrendConfirmed", serviceUtils.getDailyTrend(dailyTrendConfirmed.getValues().values())));
         provinceTSValuesMap.get(RECOVERED)
                 .ifPresent(dailyTrendRecovered
-                        -> model.addAttribute("dailyTrendRecovered", utilsService.getDailyTrend(dailyTrendRecovered.getValues())));
+                        -> model.addAttribute("dailyTrendRecovered", serviceUtils.getDailyTrend(dailyTrendRecovered.getValues().values())));
         provinceTSValuesMap.get(DEATHS)
                 .ifPresent(dailyTrendDeaths
-                        -> model.addAttribute("dailyTrendDeaths", utilsService.getDailyTrend(dailyTrendDeaths.getValues())));
+                        -> model.addAttribute("dailyTrendDeaths", serviceUtils.getDailyTrend(dailyTrendDeaths.getValues().values())));
 
         model.addAttribute("todayConfirmed", provinceService.getTodayIncrementForProvince(province).get("todayConfirmed"));
         model.addAttribute("todayRecovered", provinceService.getTodayIncrementForProvince(province).get("todayRecovered"));
@@ -134,8 +140,8 @@ public class ProvinceController {
         model.addAttribute("deathsList", provinceTSValuesMap.get(DEATHS).values());
         model.addAttribute("dateList", provinceTSValuesMap.get(CONFIRMED).keySet());
 
-        model.addAttribute("dailyTrendConfirmed", utilsService.getDailyTrend(provinceTSValuesMap.get(CONFIRMED)));
-        model.addAttribute("dailyTrendDeaths", utilsService.getDailyTrend(provinceTSValuesMap.get(DEATHS)));
+        model.addAttribute("dailyTrendConfirmed", serviceUtils.getDailyTrend(provinceTSValuesMap.get(CONFIRMED).values()));
+        model.addAttribute("dailyTrendDeaths", serviceUtils.getDailyTrend(provinceTSValuesMap.get(DEATHS).values()));
     }
 
     private void getCountryNames(Model model) {

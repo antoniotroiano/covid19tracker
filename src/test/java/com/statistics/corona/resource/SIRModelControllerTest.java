@@ -1,4 +1,4 @@
-package com.statistics.corona.controller;
+package com.statistics.corona.resource;
 
 import com.statistics.corona.service.DerivativeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,10 +22,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Deprecated
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("SIRModelController tests")
-public class SIRModelControllerTest {
+class SIRModelControllerTest {
 
     private final Map<String, List<Double>> map = new HashMap<>();
 
@@ -36,7 +37,7 @@ public class SIRModelControllerTest {
     private DerivativeService derivativeService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 
         List<Double> susList = new ArrayList<>();
         susList.add(1.0);
@@ -54,7 +55,7 @@ public class SIRModelControllerTest {
 
     @Test
     @DisplayName("Show sir-model with init values")
-    public void showSIRModel() throws Exception {
+    void showSIRModel() throws Exception {
         when(derivativeService.calculation(anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyInt()))
                 .thenReturn(map);
 
@@ -64,7 +65,7 @@ public class SIRModelControllerTest {
 
     @Test
     @DisplayName("Show sir-model with new calculation")
-    public void showNewCalculation() throws Exception {
+    void showNewCalculation() throws Exception {
         when(derivativeService.calculation(anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyDouble(), anyInt()))
                 .thenReturn(map);
 

@@ -9,13 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Deprecated
+/**
+ * @deprecated Don't needed for now
+ */
+@Deprecated(since = "4.0.0-SNAPSHOT", forRemoval = false)
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class DerivativeService {
 
-    public Map<String, List<Double>> calculation(double susStart, double infStart, double reStart, double transRate, double reRate, int maxT) {
+    public Map<String, List<Double>> calculation(double susStart,
+                                                 double infStart,
+                                                 double reStart,
+                                                 double transRate,
+                                                 double reRate,
+                                                 int maxT) {
 
         double susceptible;
         double infected;

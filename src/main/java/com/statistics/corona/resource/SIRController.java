@@ -1,4 +1,4 @@
-package com.statistics.corona.controller;
+package com.statistics.corona.resource;
 
 import com.statistics.corona.model.SIRModel;
 import com.statistics.corona.service.CountryService;
@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@Deprecated
+/**
+ * @deprecated Don't needed for now
+ */
+@Deprecated(since = "4.0.0-SNAPSHOT", forRemoval = false)
 @Controller
 @Slf4j
 @RequestMapping("sir")
