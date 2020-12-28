@@ -114,6 +114,24 @@
     color: #fff;
 }
 
+.btnAll {
+    background-color: transparent;
+    border-color: #3273dc;
+    color: #3273dc;
+}
+
+.btnAll:hover, .btnAll:focus {
+    background-color: #3273dc;
+    border-color: #3273dc;
+    color: #fff;
+}
+
+.activeButtonAll {
+    background-color: #3273dc;
+    border-color: #3273dc;
+    color: #fff;
+}
+
 .activeButtonDays {
     background-color: #3273dc;
     border-color: #3273dc;

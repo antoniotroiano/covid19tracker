@@ -97,6 +97,13 @@ $(function () {
     })
 });
 
+$(function () {
+    $('.btnAll').on("click", function () {
+        $('.activeButtonAll').not(this).removeClass('activeButtonAll');
+        $(this).toggleClass('activeButtonAll');
+    })
+});
+
 /*$(document).ready(function () {
     const loc = window.location.href;
     if (loc.search("=all") !== -1) {

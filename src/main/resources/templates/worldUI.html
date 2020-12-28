@@ -220,9 +220,9 @@
                         <br>
                         <div class="title has-text-centered is-size-3">Rest of world</div>
                         <div class="buttons has-addons-centered is-centered">
-                            <button class="button is-rounded is-small btn activeButton" id="buttonTotal">Cases</button>
-                            <button class="button is-rounded is-small btn" id="buttonActive">Active</button>
-                            <button class="button is-rounded is-small btn" id="buttonDeaths">Deaths</button>
+                            <button class="button is-rounded is-small btnAll activeButtonAll" id="buttonTotal">Cases</button>
+                            <button class="button is-rounded is-small btnAll" id="buttonActive">Active</button>
+                            <button class="button is-rounded is-small btnAll" id="buttonDeaths">Deaths</button>
                         </div>
                         <div class="has-text-centered is-size-5" th:if="${noValuesAllCountries}">No values for all
                             countries available!
@@ -230,9 +230,10 @@
                     </div>
                 </div>
                 <div class="columns is-mobile is-centered">
-                    <div class="column is-10-tablet is-10-desktop is-10-widescreen is-11-fullhd">
+                    <div class="column is-12-mobile is-10-tablet is-9-desktop is-8-widescreen is-7-fullhd"
+                         style="padding: 0.01em">
                         <div id="listTotal">
-                            <div class="box" style="overflow: auto; height: 50em">
+                            <div class="box" style="overflow: auto; height: 40em">
                                 <div class="buttons is-centered">
                                     <table class="table is-fullwidth">
                                         <tbody>
@@ -251,7 +252,6 @@
                                                         <div class="divTableRow">
                                                             <div class="divTableCell"></div>
                                                             <div class="divTableCell">Confirmed</div>
-                                                            <div class="divTableCell">Recovered</div>
                                                             <div class="divTableCell">Deaths</div>
                                                             <div class="divTableCell">Active</div>
                                                         </div>
@@ -259,9 +259,6 @@
                                                             <div class="divTableCell">Total</div>
                                                             <div class="divTableCell has-text-weight-bold"
                                                                  th:text="${#numbers.formatInteger(countryDailyDto.getConfirmed(),3,'POINT')}">
-                                                            </div>
-                                                            <div class="divTableCell has-text-weight-bold"
-                                                                 th:text="${#numbers.formatInteger(countryDailyDto.getRecovered(),3,'POINT')}">
                                                             </div>
                                                             <div class="divTableCell has-text-weight-bold"
                                                                  th:text="${#numbers.formatInteger(countryDailyDto.getDeaths(),3,'POINT')}">
@@ -280,7 +277,7 @@
                             </div>
                         </div>
                         <div id="listActive" style="display: none;">
-                            <div class="box" style="overflow: auto; height: 50em">
+                            <div class="box" style="overflow: auto; height: 40em">
                                 <div class="buttons is-centered">
                                     <table class="table is-fullwidth">
                                         <tbody>
@@ -300,7 +297,6 @@
                                                             <div class="divTableCell"></div>
                                                             <div class="divTableCell">Active</div>
                                                             <div class="divTableCell">Confirmed</div>
-                                                            <div class="divTableCell">Recovered</div>
                                                             <div class="divTableCell">Deaths</div>
                                                         </div>
                                                         <div class="divTableRow">
@@ -310,9 +306,6 @@
                                                             </div>
                                                             <div class="divTableCell has-text-weight-bold"
                                                                  th:text="${#numbers.formatInteger(countryDailyDto.getConfirmed(),3,'POINT')}">
-                                                            </div>
-                                                            <div class="divTableCell has-text-weight-bold"
-                                                                 th:text="${#numbers.formatInteger(countryDailyDto.getRecovered(),3,'POINT')}">
                                                             </div>
                                                             <div class="divTableCell has-text-weight-bold"
                                                                  th:text="${#numbers.formatInteger(countryDailyDto.getDeaths(),3,'POINT')}">
@@ -328,7 +321,7 @@
                             </div>
                         </div>
                         <div id="listDeaths" style="display: none">
-                            <div class="box" style="overflow: auto; height: 50em">
+                            <div class="box" style="overflow: auto; height: 40em">
                                 <div class="buttons is-centered">
                                     <table class="table is-fullwidth">
                                         <tbody>
@@ -349,7 +342,6 @@
                                                             <div class="divTableCell">Deaths</div>
                                                             <div class="divTableCell">Active</div>
                                                             <div class="divTableCell">Confirmed</div>
-                                                            <div class="divTableCell">Recovered</div>
                                                         </div>
                                                         <div class="divTableRow">
                                                             <div class="divTableCell">Total</div>
@@ -361,9 +353,6 @@
                                                             </div>
                                                             <div class="divTableCell has-text-weight-bold"
                                                                  th:text="${#numbers.formatInteger(countryDailyDto.getConfirmed(),3,'POINT')}">
-                                                            </div>
-                                                            <div class="divTableCell has-text-weight-bold"
-                                                                 th:text="${#numbers.formatInteger(countryDailyDto.getRecovered(),3,'POINT')}">
                                                             </div>
                                                         </div>
                                                     </div>
