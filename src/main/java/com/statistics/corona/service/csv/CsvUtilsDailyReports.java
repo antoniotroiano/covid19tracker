@@ -154,6 +154,7 @@ public class CsvUtilsDailyReports {
         }
     }
 
+    //ToDo: nicht sicher führt zu abstürzen mit dem parseDoubleOrNull
     public List<CountryLatestDto> readCountryLatestCSV() {
         log.debug("Invoke read latest country values from github");
         List<CountryLatestDto> countryLatestDtoList = new ArrayList<>();
@@ -170,35 +171,35 @@ public class CsvUtilsDailyReports {
                 countryLatestDto.setIso_code(record[0]);
                 countryLatestDto.setContinent(record[1]);
                 countryLatestDto.setLocation(record[2]);
-                countryLatestDto.setTotal_cases(parseDoubleOrNull(record[3]));
-                countryLatestDto.setNew_cases(parseDoubleOrNull(record[4]));
-                countryLatestDto.setNew_case_smoothed(parseDoubleOrNull(record[5]));
-                countryLatestDto.setTotal_deaths(parseDoubleOrNull(record[6]));
-                countryLatestDto.setNew_deaths(parseDoubleOrNull(record[7]));
-                countryLatestDto.setNew_deaths_smoothed(parseDoubleOrNull(record[8]));
-                countryLatestDto.setTotal_cases_per_million(parseDoubleOrNull(record[9]));
-                countryLatestDto.setNew_cases_per_million(parseDoubleOrNull(record[10]));
-                countryLatestDto.setNew_cases_smoothed_per_million(parseDoubleOrNull(record[11]));
-                countryLatestDto.setTotal_deaths_per_million(parseDoubleOrNull(record[12]));
-                countryLatestDto.setNew_deaths_per_million(parseDoubleOrNull(record[13]));
-                countryLatestDto.setNew_deaths_smoothed_per_million(parseDoubleOrNull(record[14]));
-                countryLatestDto.setReproduction_rate(parseDoubleOrNull(record[15]));
-                countryLatestDto.setTotal_tests(parseDoubleOrNull(record[25]));
-                countryLatestDto.setTotal_tests_per_thousand(parseDoubleOrNull(record[26]));
-                countryLatestDto.setNew_tests_per_thousand(parseDoubleOrNull(record[27]));
-                countryLatestDto.setNew_tests_smoothed(parseDoubleOrNull(record[28]));
-                countryLatestDto.setNew_tests_smoothed_per_thousand(parseDoubleOrNull(record[29]));
-                countryLatestDto.setPositive_rate(parseDoubleOrNull(record[30]));
-                countryLatestDto.setTests_per_case(parseDoubleOrNull(record[31]));
-                countryLatestDto.setTotal_vaccinations(parseDoubleOrNull(record[33]));
-                countryLatestDto.setTotal_vaccinations_per_hundred(parseDoubleOrNull(record[34]));
-                countryLatestDto.setPopulation(parseDoubleOrNull(record[36]));
-                countryLatestDto.setMedian_age(parseDoubleOrNull(record[38]));
-                countryLatestDto.setAged_65_older(parseDoubleOrNull(record[39]));
-                countryLatestDto.setAged_70_older(parseDoubleOrNull(record[40]));
-                countryLatestDto.setHospital_beds_per_thousand(parseDoubleOrNull(record[48]));
-                countryLatestDto.setLife_expectancy(parseDoubleOrNull(record[49]));
-                countryLatestDto.setHuman_development_index(parseDoubleOrNull(record[50]));
+                countryLatestDto.setTotal_cases(parseDoubleOrNull(record[4]));
+                countryLatestDto.setNew_cases(parseDoubleOrNull(record[5]));
+                countryLatestDto.setNew_case_smoothed(parseDoubleOrNull(record[6]));
+                countryLatestDto.setTotal_deaths(parseDoubleOrNull(record[7]));
+                countryLatestDto.setNew_deaths(parseDoubleOrNull(record[8]));
+                countryLatestDto.setNew_deaths_smoothed(parseDoubleOrNull(record[9]));
+                countryLatestDto.setTotal_cases_per_million(parseDoubleOrNull(record[10]));
+                countryLatestDto.setNew_cases_per_million(parseDoubleOrNull(record[11]));
+                countryLatestDto.setNew_cases_smoothed_per_million(parseDoubleOrNull(record[12]));
+                countryLatestDto.setTotal_deaths_per_million(parseDoubleOrNull(record[13]));
+                countryLatestDto.setNew_deaths_per_million(parseDoubleOrNull(record[14]));
+                countryLatestDto.setNew_deaths_smoothed_per_million(parseDoubleOrNull(record[15]));
+                countryLatestDto.setReproduction_rate(parseDoubleOrNull(record[16]));
+                countryLatestDto.setTotal_tests(parseDoubleOrNull(record[26]));
+                countryLatestDto.setTotal_tests_per_thousand(parseDoubleOrNull(record[27]));
+                countryLatestDto.setNew_tests_per_thousand(parseDoubleOrNull(record[28]));
+                countryLatestDto.setNew_tests_smoothed(parseDoubleOrNull(record[29]));
+                countryLatestDto.setNew_tests_smoothed_per_thousand(parseDoubleOrNull(record[30]));
+                countryLatestDto.setPositive_rate(parseDoubleOrNull(record[31]));
+                countryLatestDto.setTests_per_case(parseDoubleOrNull(record[32]));
+                countryLatestDto.setTotal_vaccinations(parseDoubleOrNull(record[34]));
+                countryLatestDto.setTotal_vaccinations_per_hundred(parseDoubleOrNull(record[35]));
+                countryLatestDto.setPopulation(parseDoubleOrNull(record[37]));
+                countryLatestDto.setMedian_age(parseDoubleOrNull(record[39]));
+                countryLatestDto.setAged_65_older(parseDoubleOrNull(record[40]));
+                countryLatestDto.setAged_70_older(parseDoubleOrNull(record[41]));
+                countryLatestDto.setHospital_beds_per_thousand(parseDoubleOrNull(record[49]));
+                countryLatestDto.setLife_expectancy(parseDoubleOrNull(record[50]));
+                countryLatestDto.setHuman_development_index(parseDoubleOrNull(record[51]));
                 countryLatestDtoList.add(countryLatestDto);
             }
             log.debug("Add all latest country values from github to list");
