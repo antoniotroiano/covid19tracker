@@ -5,19 +5,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CountryValuesTransfer {
 
     @JsonProperty("confirmed")
-    JsonValueTransfer jsonValueTransferConfirmed;
+    private JsonValueTransfer jsonValueTransferConfirmed;
 
     @JsonProperty("recovered")
-    JsonValueTransfer jsonValueTransferRecovered;
+    private JsonValueTransfer jsonValueTransferRecovered;
 
     @JsonProperty("deaths")
-    JsonValueTransfer jsonValueTransferDeaths;
+    private JsonValueTransfer jsonValueTransferDeaths;
 
     public JsonValueTransfer getDataValueConfirmed() {
         return jsonValueTransferConfirmed;
     }
 
-    public void setDataValueConfirmed(JsonValueTransfer jsonValueTransferConfirmed) {
+    public void setDataValueConfirmed(final JsonValueTransfer jsonValueTransferConfirmed) {
         this.jsonValueTransferConfirmed = jsonValueTransferConfirmed;
     }
 
@@ -25,7 +25,7 @@ public class CountryValuesTransfer {
         return jsonValueTransferRecovered;
     }
 
-    public void setDataValueRecovered(JsonValueTransfer jsonValueTransferRecovered) {
+    public void setDataValueRecovered(final JsonValueTransfer jsonValueTransferRecovered) {
         this.jsonValueTransferRecovered = jsonValueTransferRecovered;
     }
 
@@ -33,13 +33,13 @@ public class CountryValuesTransfer {
         return jsonValueTransferDeaths;
     }
 
-    public void setDataValueDeaths(JsonValueTransfer jsonValueTransferDeaths) {
+    public void setDataValueDeaths(final JsonValueTransfer jsonValueTransferDeaths) {
         this.jsonValueTransferDeaths = jsonValueTransferDeaths;
     }
 
     @Override
     public String toString() {
-        return "DataObjectCountry{" +
+        return "CountryValuesTransfer{" +
                 "dataValueConfirmed=" + jsonValueTransferConfirmed +
                 ", dataValueRecovered=" + jsonValueTransferRecovered +
                 ", dataValueDeaths=" + jsonValueTransferDeaths +

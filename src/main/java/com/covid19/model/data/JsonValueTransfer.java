@@ -2,19 +2,27 @@ package com.covid19.model.data;
 
 public class JsonValueTransfer {
 
-    Integer value;
+    private Integer value;
+
+    public JsonValueTransfer() {
+
+    }
+
+    public JsonValueTransfer(final JsonValueTransfer jsonValueTransfer) {
+        this.value = jsonValueTransfer.getValue();
+    }
 
     public Integer getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(final Integer value) {
         this.value = value;
     }
 
     @Override
     public String toString() {
-        return "DataValue{" +
+        return "JsonValueTransfer{" +
                 "value=" + value +
                 '}';
     }

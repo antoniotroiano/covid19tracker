@@ -2,16 +2,27 @@ package com.covid19.model.data;
 
 public class CountryInfo {
 
-    int _id;
-    String iso2;
-    String iso3;
-    String flag;
+    private int _id;
+    private String iso2;
+    private String iso3;
+    private String flag;
 
-    public int get_id() {
+    public CountryInfo() {
+
+    }
+
+    public CountryInfo(final CountryInfo countryInfo) {
+        this._id = countryInfo.getId();
+        this.iso2 = countryInfo.getIso2();
+        this.iso3 = countryInfo.getIso3();
+        this.flag = countryInfo.getFlag();
+    }
+
+    public int getId() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void setId(final int _id) {
         this._id = _id;
     }
 
@@ -19,7 +30,7 @@ public class CountryInfo {
         return iso2 != null ? iso2 : "NO";
     }
 
-    public void setIso2(String iso2) {
+    public void setIso2(final String iso2) {
         this.iso2 = iso2;
     }
 
@@ -27,7 +38,7 @@ public class CountryInfo {
         return iso3;
     }
 
-    public void setIso3(String iso3) {
+    public void setIso3(final String iso3) {
         this.iso3 = iso3;
     }
 
@@ -35,13 +46,13 @@ public class CountryInfo {
         return flag;
     }
 
-    public void setFlag(String flag) {
+    public void setFlag(final String flag) {
         this.flag = flag;
     }
 
     @Override
     public String toString() {
-        return "DataObjectCountryInfo{" +
+        return "CountryInfo{" +
                 "_id=" + _id +
                 ", iso2='" + iso2 + '\'' +
                 ", iso3='" + iso3 + '\'' +

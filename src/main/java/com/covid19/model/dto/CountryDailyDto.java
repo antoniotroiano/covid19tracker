@@ -3,7 +3,7 @@ package com.covid19.model.dto;
 import com.opencsv.bean.CsvBindByPosition;
 
 public class CountryDailyDto {
-
+// Alles zu private und double machen
     @CsvBindByPosition(position = 0)
     Integer fips;
     @CsvBindByPosition(position = 1)
